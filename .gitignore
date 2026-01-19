@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Streamlit cache
+.streamlit/
+
+# IDEs
+.vscode/
+.idea/
+
+# Arquivos sensíveis
+.env
+*.env
+
+# OS
+.DS_Store
+Thumbs.db

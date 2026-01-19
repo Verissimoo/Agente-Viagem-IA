@@ -1,0 +1,9 @@
+crewai
+crewai-tools
+litellm
+streamlit
+requests
+python-dotenv
+pydantic
+tenacity
+PyYAML
