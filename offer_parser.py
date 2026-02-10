@@ -148,12 +148,36 @@ def _bucket_top_price(core: dict) -> tuple[float | None, str | None]:
     return best_price, best_currency
 
 
+def _leg_summary(data: dict, leg_id: str) -> dict | None:
+    legs_map = data.get("legs") or {}
+    if not (isinstance(legs_map, dict) and isinstance(leg_id, str) and leg_id in legs_map):
+        return None
+
+    leg = legs_map[leg_id]
+    departure_time = leg.get("departure")
+    arrival_time = leg.get("arrival")
+    duration_min = leg.get("duration") if isinstance(leg.get("duration"), int) else None
+
+    seg_refs = leg.get("segments") or []
+    stops = max(len(seg_refs) - 1, 0) if isinstance(seg_refs, list) else None
+
+    airlines = _airline_names_from_leg(data, leg)
+
+    return {
+        "leg_id": leg_id,
+        "departure_time": departure_time,
+        "arrival_time": arrival_time,
+        "duration_min": duration_min,
+        "stops": stops,
+        "airlines": airlines,
+    }
+
+
 def extract_offers(raw: dict) -> list[dict]:
     """
-    Ofertas completas:
-      - legs/segments => horários/duração/escalas/cia
-      - bookingOptions => menor preço real + provider
-    Dedup por leg_id (fica o mais barato).
+    Backward-compatible:
+      - ONEWAY continua igual (dedup por leg_id)
+      - Se vier ROUNDTRIP (core legs >=2), adiciona campos out_* e in_* e dedup por (out_leg_id,in_leg_id)
     """
     if not isinstance(raw, dict):
         return []
@@ -167,7 +191,7 @@ def extract_offers(raw: dict) -> list[dict]:
     if not isinstance(legs_map, dict) or not legs_map:
         return []
 
-    best_by_leg: dict[str, dict] = {}
+    best_by_key: dict[Any, dict] = {}
 
     for item in results:
         if not isinstance(item, dict):
@@ -176,54 +200,117 @@ def extract_offers(raw: dict) -> list[dict]:
             continue
 
         core_legs = item.get("legs") or []
-        if not (isinstance(core_legs, list) and core_legs and isinstance(core_legs[0], dict)):
+        if not isinstance(core_legs, list) or not core_legs:
             continue
 
-        leg_id = core_legs[0].get("id")
-        if not (isinstance(leg_id, str) and leg_id in legs_map):
+        # coleta ids das legs existentes (1 ou 2)
+        leg_ids = []
+        for x in core_legs:
+            if isinstance(x, dict) and isinstance(x.get("id"), str):
+                leg_ids.append(x["id"])
+
+        if not leg_ids:
             continue
 
         # pega o melhor preço real
         price, currency, provider_code, provider_name = _min_price_from_booking_options(item)
-
-        # fallback para buckets se por algum motivo bookingOptions não tiver preço
         if price is None:
             price, currency = _bucket_top_price(item)
-
         if price is None:
             continue
 
-        leg = legs_map[leg_id]
-        departure_time = leg.get("departure")
-        arrival_time = leg.get("arrival")
-        duration_min = leg.get("duration") if isinstance(leg.get("duration"), int) else None
+        # ===== ONEWAY =====
+        if len(leg_ids) == 1:
+            leg_id = leg_ids[0]
+            if leg_id not in legs_map:
+                continue
 
-        seg_refs = leg.get("segments") or []
-        stops = max(len(seg_refs) - 1, 0) if isinstance(seg_refs, list) else None
+            ls = _leg_summary(data, leg_id)
+            if not ls:
+                continue
 
-        airlines = _airline_names_from_leg(data, leg)
+            offer = {
+                "price": float(price),
+                "currency": (currency.upper() if isinstance(currency, str) else currency),
+                "departure_time": ls["departure_time"],
+                "arrival_time": ls["arrival_time"],
+                "duration_min": ls["duration_min"],
+                "stops": ls["stops"],
+                "airlines": ls["airlines"],
+                "leg_id": ls["leg_id"],
+                "shareableUrl": item.get("shareableUrl"),
+                "providerCode": provider_code,
+                "providerName": provider_name,
+                "trip_type": "oneway",
+            }
 
-        offer = {
-            "price": float(price),
-            "currency": (currency.upper() if isinstance(currency, str) else currency),
-            "departure_time": departure_time,
-            "arrival_time": arrival_time,
-            "duration_min": duration_min,
-            "stops": stops,
-            "airlines": airlines,
-            "leg_id": leg_id,
-            "shareableUrl": item.get("shareableUrl"),
-            "providerCode": provider_code,
-            "providerName": provider_name,
-        }
+            key = leg_id  # mantém seu dedup atual
+            prev = best_by_key.get(key)
+            if prev is None or offer["price"] < prev["price"]:
+                best_by_key[key] = offer
 
-        prev = best_by_leg.get(leg_id)
-        if prev is None or offer["price"] < prev["price"]:
-            best_by_leg[leg_id] = offer
+        # ===== ROUNDTRIP (2 legs) =====
+        else:
+            out_leg_id = leg_ids[0]
+            in_leg_id = leg_ids[1]
 
-    offers = list(best_by_leg.values())
+            if out_leg_id not in legs_map or in_leg_id not in legs_map:
+                continue
+
+            out_ls = _leg_summary(data, out_leg_id)
+            in_ls = _leg_summary(data, in_leg_id)
+            if not out_ls or not in_ls:
+                continue
+
+            # união de cias
+            airlines_total = []
+            for a in (out_ls["airlines"] or []) + (in_ls["airlines"] or []):
+                if a not in airlines_total:
+                    airlines_total.append(a)
+
+            # backward-compatible: mantém campos "genéricos" apontando para a IDA
+            offer = {
+                "price": float(price),
+                "currency": (currency.upper() if isinstance(currency, str) else currency),
+                "shareableUrl": item.get("shareableUrl"),
+                "providerCode": provider_code,
+                "providerName": provider_name,
+                "trip_type": "roundtrip",
+
+                # ida
+                "out_leg_id": out_ls["leg_id"],
+                "out_departure_time": out_ls["departure_time"],
+                "out_arrival_time": out_ls["arrival_time"],
+                "out_duration_min": out_ls["duration_min"],
+                "out_stops": out_ls["stops"],
+                "out_airlines": out_ls["airlines"],
+
+                # volta
+                "in_leg_id": in_ls["leg_id"],
+                "in_departure_time": in_ls["departure_time"],
+                "in_arrival_time": in_ls["arrival_time"],
+                "in_duration_min": in_ls["duration_min"],
+                "in_stops": in_ls["stops"],
+                "in_airlines": in_ls["airlines"],
+
+                # compat (mostra ida)
+                "leg_id": out_ls["leg_id"],
+                "departure_time": out_ls["departure_time"],
+                "arrival_time": out_ls["arrival_time"],
+                "duration_min": out_ls["duration_min"],
+                "stops": out_ls["stops"],
+                "airlines": airlines_total,
+            }
+
+            key = (out_leg_id, in_leg_id)
+            prev = best_by_key.get(key)
+            if prev is None or offer["price"] < prev["price"]:
+                best_by_key[key] = offer
+
+    offers = list(best_by_key.values())
     offers.sort(key=lambda x: x["price"])
     return offers
+
 
 
 
