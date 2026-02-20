@@ -1,0 +1,1556 @@
+{
+  "requestId": "ef4b9c83-9fff-444a-b22f-7bb6a39ff035",
+  "flightOffers": [
+    {
+      "id": "azul-jY1R6_Kpfw1u",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T17:50:00",
+                "city": "VCP",
+                "time": "17:50"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T19:25:00",
+                "city": "BSB",
+                "time": "19:25"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "4548",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 308.68,
+        "baseFare": 236.74,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 236.74,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 236.74,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8192647Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "vsnLCo0u6Flv96IoGHPmSAD_hSb72X0ki1CWDSQPUdtk9edPt_4r4fPzWCNxUMbkTHrv-7P5Zq_I8_gm5UMAFIQZCIvaNfPWOSzlju-JtxD_GDvSGRe1iFsmKRkL7mag0yiGPbjNzzo4hud8VdjN788o3hthTB3IybjiQh8ACQg7aj4HDVU_6KVaHkH1OjnFopiNXPeS8V3vhnlYxncuybpjy-FT3x8RcLnqOJr6xynnySW9d0oESWa9eLXDh0w0Djzjl-1OYfj0oD62B0nRHssRgViR4ZagcR2kEiLcLmNAfmAAKxIulv5wzncNajqXBFSMt0szRyHtJws8mnBKE5Sc3Pz6t_FB0NZibwavxCtakFWOEcj_Qd6Thz-kXrTuoAjNw3HY3pa8Ppin90BISCyvRshn8QERMiYgqT8pDOPhFOS2Xw93jroZQJIuHRVjqTNUyruQkoY979caVgaj59-w0Iz_kja-eE3E-G0QnIt1WiZLLiDVcGGfmkfMYcXEwzIwJ3bC50gQurMvL1IDOclZpDfuNC1-dcdbb5rL_q6YxDhxehCBvudKv81U5EsT9367n5einYEfyxgw7JH2D9hIxE-flQsQrKuccEArxcW7fO6Y48yoZz4JIBGusVLpE717aAj09Oy8WnHFs2g8nH2H2ZOitDNYMN7jG06d1OAXI_zzMCZmlBUC_oir8XV90o_4fI-0YFzsn9K6SKX2mlI_rmNRL5BpBOKahFb9lJY03MF-IGzzG92YGQ_raVnoOGX_KvwVK69vHPvIf_orWFg_0T4TmexSHCDN5m3Wc1rL18eFqKMaHPY8fhEOOE-NtWuU-CXIO1_IgnnFrvQZOqU4vYbVF-9YD7EYUfY-WF2Ne155ogfK48rN6j88GAZr6o1A_pR_fJks9WPlqgmXvr8fifXCkuhT_O5ETo1Y5H0LMPYWizTleyz18jAQcTTVoD9-GtGmxQkuS5oYOCiiiDh-aCAsCjrw6e6S0Ctnh9_LqKdIdWpnbk7LcFhWE6Ig_jjtYY2tLXB5gk-QfQMWNC9a_2ZN0hgSR6ZDTTr2a-QdSUwmpgqNZNYhrloWQ2-K6Z4Wuhd-tLFjmnCkukaRaMCc42EsRG6rmSwlP0Lvwjg_oigK2vE8SBFZzqqaMVhcjOTep2mPGOAxgntJ-fktfyKcYdyasY8T0TasD9Gq3tdd7IgNCrTzHOIPHJYTWAoH0bkt13DNLs7OIijeruMQculzUXL5_PgJAQwpGWre2ScmJSW0_0VwbRAeuqoDTDgc6sJ2Wciuiswsqhjr3T2tlVDdLR9UfW4zU2WEYhWk5pXaUZKMbki_g44cjfRbo0CUB5DxV8iYdVtK1mOvO7LpBzhktGArgvc6TxLNoIIwsPuTYOU8X7Tom8qkEgbAhOv7YZiCHcBbku5cmiEWQx2YAVdP0kuDx7XTEP9Oetwn4iA6_EZBu7K0FPh1js6s_5COVNLpwCt33FvPBRg1begwDYIkzxvcGyIGjKR1Q7cqu27qr4t3AonvApU9AcPUPRQ2jmAtzq0JANfeQkaH1yhIpBKvYHUb_WewvwYADc5XDOeSUEyUm-EVufqceyczI2p_Nw8ist7BsDIgmTcQIoZjRRW4lv8FzQW_aDdUuesLekAUEvkMS1E5AXAqvXCswSXePsooT5gHzLuxRWDM_7_pP-3vt_x7nlr_5J8aK_AAZhzu9zS1BMqzZ2XYKjVl8ufHs13gi8TC4AOiBifB9OiM1pzOdpPUtrzM7o3f3q04XFwqV2k7XlCVxQSY9h6-viRnEBuvQ00fSi-nWQwxFg_oVSwuKHdzCIneIQr8-QJrl3Ec2GInoc-07kFpJgDp2OZ1P65Y-a20Dy9bNxUCWxDTvCwhbHUQRSeEeP4JHJsdfybPl3BXaSj-DmGiI8kjkURY"
+      },
+      "timing": {
+        "period": "afternoon",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-89zHqPcAKvS2",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T23:00:00",
+                "city": "VCP",
+                "time": "23:00"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-31T00:35:00",
+                "city": "BSB",
+                "time": "00:35"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "4978",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 308.68,
+        "baseFare": 236.74,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 236.74,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 236.74,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193073Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "IIpn38mDRxiGFWWoSgghYspgKxvU4ICFwHCboshlD6KeLW-Ogdtl0CGye5i10S7yGrM26v51TVobbnhNJxYITuKaUV3CCVJWYf0psPiYilGCgDOXhi0f-dwIgRtZzjwCbbIxVuAML2sUgVreJ-im1bOpnxzC8YN9rtrJ-NIbpOespltKM1VpweZeSR2VqKYWiclneNJSgINaOQdvRADv0IaH3ZmLRKkGxx45n42gBmRFZNnc0mVmsDaoMX62Ufg0ToW5_nIglR5rZQVO-GZaW8Y9W3ZlRAYx7X-2b3gIijnP9ZX_jHpKRlQO7CsNB7MVSHzKJhsJp8QHCger_7tX0M-B2L8RNxoHvwskjn-0ykhtJjvZzjHQEV9nxmxw4LnZfzLoBvuLbuAZbtOt8zfugwozs9FckBLy5tY85dAd823i2mSy2YiOy07Z9wPrxmpxSFU-f538T1sSnjGiDVdJLaZXGiKWP8TxsCiAsFISBmk6sxYajfDe5p8uwb6EsnCijQSV_smlI7ANLu5pjUZV9TuvpKjRcLCve0Zl8qlCXqSCdnQFCk0YGN2Gc_bAgB7QbZ_4qyjuU1YkhXo4PsP1ScFkRhcSsFqia_sTu1Pp77DogavLMUGSxFL7ph9HVbF8FCjZD4AdhFsxLThT13OdItQ66reXObsY4scYqd7x1Xo4gX1kNNQiMf8WwNXAEK1lIP5eCHVOslFOvvOOfG-zXI-j1kPjr2_XblMzGSqVywi3geGVzVWvPOxW3Jk98oovoxXkftBcMFFLov8J3NswO_Rq1Y-iQS2JUgwkPj2eMtpHXbz8-elaBwVJMfTDNDW1RISqzYFMsxdQHojv6-QfKDgjMJZfZaHq4t2Yq6hfdCjonf0OvvwqyPFH0GJE_XNbr611ebtohZ35mRazK12MMexBN-dNAoHUyFniXmj7BSEJqP8FtvWc5-ZkiNnhMKYtaCl8VFldpdVk0g3LgOdDhYB693f5JW87btUEY9hv-7m9784VxXrxoJ0VEJdlITHNTxKVaH8ThXejhPCuziutEtkvdipD7uC2uyblHfgTsGBNAgKBhQVUeWkUIJdc9oVQIhEnclzMW7P0S9lO78RvguhRBihRfKv5hUidVzj-KfgtVia9ukPLLWOGieaYzRn0aMK__0fs450PiJB5y7ZVGbl5MGdkdu-v6xkcB49Xt93QqorT-hD2vKfoPmz5dTj_cdehJhuuOoxHAnrWBPcHqlEw2aYuXa5evXbbqLKLtKjlVmk3WEwGNMYgrBd5E2x61pGKTkGofzDv_DCv1hNAqzDOpvXVP5davjOKGV20jUZAjTlJSOTpxkwwJXiLniaXYmEqYck7dHndsOw6Rp-NqTNKOCMFJD_CF8UfhvqvkOdWSU-ZlJyRjbFIG3wUFBzXulsdXTDp10OCfK0koJoRH0boSXcFNd-SQ1PfGWW3way_xKYhpJ22OTxwopbe26zQ5QBmRymwkx6ClltZTDsjFMx50VcL-tfJEW93N-KqKBXXPFPMDVfP53utb8ucLgIpgDo2R5Ir5si-FhSJBHg8ebyg94LeKvi_fKEwiYHUq9RR9YCick_4Vo0H0gBA4x6Rbf6WNvRLZxtja1R62uFr1VOyF9i4LmUI2Hw5m6-ffNkPTX9lKWYVqdAXo4YLxh_9Ue16-Q43ZEXmtSBsqJJvDm5-0-js86e5aGxRa18OlUKVSPoXdvAyiezOL3qboFJwGM-L-jufPxjz04IWTNcadXDebUVsNo0UcidDyndpsmRXUxeh4mnYIkEFu7OUAyro1gODZA0CLXXhuk3v_YlmjjHCUKyswemnxUgxnOWzu4-Leya20vgB5PojgaplzhYqopuNbt8pN2h2696hFxoBlIqPlwXBf3ccFBxlsR9w6M0="
+      },
+      "timing": {
+        "period": "night",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-jvU1yyT-nW-x",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T22:10:00",
+                "city": "VCP",
+                "time": "22:10"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T23:45:00",
+                "city": "BSB",
+                "time": "23:45"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "6595",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 325.09,
+        "baseFare": 253.15,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 253.15,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 253.15,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193186Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "vsnLCo0u6Flv96IoGHPmSJCuqDIvT5R9X_nfKeRJeq1O-K_xTHdiT4zyA43ltcHcDf2u7ae4zpdQ27r4S1xYFi7EbNXGt_tWYtHppB86kmDF9zjMTQE4cHcUrGewiS8pUIh4TD2r0-5Y0xcm-V10BMJMJLMCiRJ3jp-_yf5XFoeRnDlaZjCt69P_rGTyyYSYdU0OPXHkR0vK86qtwRJRCC1tiCdiCLITwXVi7T-efJZs95wy5xOVFo_T8XNCNeqQTNGB6yrMKDOxIjkVJkJEkBXjqnmNKsMVsMt_KsIFy6H8f_iq7OWLKNcqS-pNT8CMTE_7BMS0owipXPOKPQ5MPxP0_audhrU229ntbXbYPUs81MlBVYS6R5BgyhnR_QjephvGF1zW0c-MhZsqReE3uBZhw9IZZv2Ey0e1fI_wA2keDzC-K3Z2VO9XGCQCNvimRFUQeSqKGnH5ATGuIMHwCLMsIWn2eHAZBz9cDZ7dHB00Z5q9szz7evdQ6niv2VGWmgib9K-ouqK57g1ky-z5TmheB1r-6pCmOEquQIeQ-jXz7BS68M6H7_la0YQGukSnaAKtTwXNqweG6HPFAs0vN2GdrUaRGCO7PBUIDwgKHZvAVHbshe1CYpUNjnEDXBH_-xKDUiGZADn0bcksPIdmM0WsYU9ttizEbcmKWQgP2JPoDuPmH9XJ2jiiWgxFkCB7-bFEvnbfBjhP2v4-gQNkzfNjf2nWayItg5sL7wUIocOQRxjsjxZuVwD3v_VyzhYeqL32AIVbj5Yg7r8jzj8sFWII8KwjiLgAvZc1q4D4YdHwB8CMnUSNXOXx0uvSCFpkfQSpBkgLDfISa_Qute-tQDVtdqk6cucVrKq5IB-mj-uCCSvQnWa9tWh0NKrczpX6Gjb8dHla_08KKkLQB2p7qNEZHIsN11s8YNyD9TKv9AtO7daxuufOcRjQBt1aUURTXB95lfXKdA4U8umUkGg0emmTNZWigcqqWzJT2GCrVY4TYT7Cdf43u5nrq9xwIbEtVttXRLxS0KIUHjmlY1rq1yhbKRx8-gHNBe4obmdA25n64WF4HJDHZ9kShgzxBO0aAyx7tDYZS4eqHba99xlgf_ML8ocwlt5onbBOH3ROvSFwYDgRanWtlBwHszEIxuJbBnyOtGzCUCMt5n05VfE_HaD7XaRi-6jAPuvKDOAIDSgg58Ryt2SDTtxqNpIT6BKZmtXEo55u480vxaA3SfERImcd74B-eEMO64uTG3eVuCMPipfnVCHBCx8r08PVMPCI0fu79PNuXeopjBv2Et03iLSyOolQDCmG-yj2E6FqMegYJuvlfBgORQRBMbUoNOXBU1MX2WZxTynxoPVoodHnG1AeeOU4Sb9x4AGgbX4JScFYFSWgF2uhlpvi824q7OzaEynyb9OX-IQBjPU6IwswvFC94kPrF7eUCqyxQ5YrpLxSWCLYHSmf_3yARQwsUrEgMA8umO-I0xZkM_SZmxkOa0esAGZ0Rhe3uJUSb-MusvNRpn93iyMjqdYOYAEYu-DLb-lqRZltndceVsgB8IaEgO77YN-9dwmECRXUsDaSY7Y5BdjGaSGdRFTSaL55SR0M3AmyEQB-6D9rHIUQBlgmlMHvGA2j02Fl0aHWwX1Rq_5fVFn6WHeDfgD4dJnV22xH0PDWpEwdUQpTdcaayYlvMpSizGwpZr-K-xEonv87JW5FOMJc-jImHxgvzAA4Lp-xj0vc-jHvTw1lrCMqBBIzyLdoBmI-lZrwCjEcnQiUBUtrkHS9v86Kc41FBqhwJPgWcERHW7NYo61aerc_ciJVmH2Tfaa0C6tS05cfpLBBsTZGFeeS8Bloi4LAGllz6x57kjHXdASPWvBy1ClcvtGVxaqnOXZTn0EKiXRxvBtiJCrPl3BXaSj-DmGiI8kjkURY"
+      },
+      "timing": {
+        "period": "night",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-agOyGZYX72dN",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T17:50:00",
+                "city": "VCP",
+                "time": "17:50"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T19:25:00",
+                "city": "BSB",
+                "time": "19:25"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "4548",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 412.89,
+        "baseFare": 340.95,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 340.95,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 340.95,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193264Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        },
+        {
+          "type": "despachar",
+          "quantity": 1,
+          "description": "1 bagagem despachada",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "nt0QYIEnLMPUxmc-ZgbrzKwXLlN_-W_2SIYXJB1A4ZvMDVB4xLjSSB-QOHEKEI8dv8K59cvFtfR39kmXycs97Xv8-Fe-O6X0Wyn3c6ldp4y1e3ZhIh2vwZWI7LyvxqcPiy9AJnMdEgY7vjteXaaREvYOJrplay9W5FDAFHvNjikDdSkVa5MzW6d1uxIvlxnMlRDCTTduWB-80PVf1DoXITeCRyUmd9P6phmm6UbTl1YnJPqAYmCqWYDR7zbBF010ijSlcwMkV6JWV6UFJWJ7kgFxilOCpSbizMz-sTG-txLQI1JA65ix2xstKYoJBW9BgrHEl5_D7kLJC8IFxfnXpaNkbFNbHKYApqjy-ekxBnBeQ4z7PDVFDidLiqQ4CTnNytQ5tiDJ6UrbmgigvCqIjVJ1F6K_nWDKdAtbCzNj1q4VfkkQ1OPpje3ODqYIM49JeIQWp7m27uf1bpSU78FkpFh3TgkeRZKlSq8wAxhX9f7gOcDKRQBfX_FkZ1MnmbzzTIiMV9YUu2eG-D1BIUK12w_vAh1js3yHMInw0XEooFXWqslKkNfPXVoRgZTSyjcNr7qxANotQqNmYaFo2CqPHCa6PTmhFwMOP5-LL8OYAYhOgJKAj54mOQsf7-Gth_oCyykGtx_Yv0tbcqVYqfeZaQmSoWLU6wsC8oGpfwfkXKa6xFAeYITJRv-5un5fwQIcIzUhqSxd4miIbjKcCfBxR0LRdFJf624DOf2km9wdlFXmrzuET-7-yq1QqPGX1VQ4rJaZlqaJlwC5nCircTIExBsmU15Ej6QYTtnVJxEdzZjLIEUQnQDrTW-ihmdkg87OSMavrmqHDaOyxJpTGQ-6OT06P7mwHXpELuHFOowEC77BtPMlLnki2NK9S10kfGzXAsFVi7Edo5IkzK-XldBI0ZWndFqk00pI31duwkuJCj44-DOk2Y6pP6MkltTCXjkOF_81M6b-W2M_69_tE0BjUL6cM53wZiwoKPsm39LQF80ddeS5GM1R3bjGRC8nZukGd_dqy7_Zzd3ElLDBhR8qoVOwdQE3nZYZI4LCNEHa4wqmoxcNIqQIe_USnrpdRYTIt1z_AMuDGyboxIX4J6XjzAEDZ7tDsUfVrNmEA0ot58XuhzHuo5MY9ynlv5YssYwler2VFkWHkwnKPQIUlxmlZN6cZXTsqqzFYBFlj772Gn2dAp0VTD1TAce_YrCfIhL9XwtYNDTu7kcsW91nl9pUbzfUL9FyfrxZshrmOikXtetPNJyrcNc9IGSvXbGLWa5ZanpbfUhS9keUhA6SOBGuxx0JmOmxuSs1c3hsrH_6FWvHgSvQHHysy_4WvYXywBeqM8dm11iu6NlV6YPbAM1ETvsvvFhf88N4BXJGZ3CZS_vhH97epFfA4vo5eE6cRhyb2paRXJNHfpZPRc6g2Ep0AN-iVgTOucCD4k9Fbu4ToBhfrh3NPTCao3jxfj0NovTdDgatAefmjcpCcY8WDogel_gYudGg_7VWZ_fjGgc_Rus2ft6rfMLpDqUQ-4owwdEM00KpKv7hmlEfk-tnJGYq8Qo0-Ta6iFC5mMWBDrdzYDp7gUoxC03Y_Gcm5GyZraHjiyJzsqQjU7TzuotbQI8XGe4eUlETTUaFJCxKnOn3AshUd7fQ-VACevB558w-bRFoP1JnGDZU_G-vgAI0CaSYwK1d_be7RfJnSss-YDRNdHIeA6hrxpcwAPKMV58A5Mr_LFH9xRYWyXtlgwUULvdOqn8b3OMVzN66YVTuU9vkO23nMB7-_7RoLUKf9ZCyPdmP7LN00XfF62CCKvi8rALxgSqDn3UCXEQqr5n5ZkaP04aQGc11UydXISDJ4pcY9hh4WJLwmnwFnWGTsRE495Fc6YYZwndEhMylsROFkevWGWdEEQZhFFYlhvUOC4QWO08xZz9u_D8AviMIFnJUltYewc-XcFdpKP4OYaIjySORRFg="
+      },
+      "timing": {
+        "period": "afternoon",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-tjMgXEjxMi18",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T23:00:00",
+                "city": "VCP",
+                "time": "23:00"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-31T00:35:00",
+                "city": "BSB",
+                "time": "00:35"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "4978",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 412.89,
+        "baseFare": 340.95,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 340.95,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 340.95,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.819336Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        },
+        {
+          "type": "despachar",
+          "quantity": 1,
+          "description": "1 bagagem despachada",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "nt0QYIEnLMPUxmc-ZgbrzKwXLlN_-W_2SIYXJB1A4ZuyMtewbIQz8jaSJUzSg7N0wkqnbF8NsgIdLIQ1k3u-qdL2NC4IOu1nuv26pSIUNCre569dgcSlac0WufT4Ff-RBzTJieUdHpHT-TyhnPYalRHz62MbeA81hzgiN3VJKY226016hWAmcY8IN8YUJcR8iogj2GU8Bys_uMPTyc1Q1jLA3sYAP17-b57QO9H8YEs65cEtyyl1XrgtUfn3AhByE6w5BBpJ704z9HoG2fgVQ0I9n54CsmA0L68XSvHZoOM6uwyl9cG_vWawLd4Um6Y5mhDCeTyfFz-9UBhMeLVqTzYVJNcLlpOZNlYqDHvsyxPi7gDDZX47WvLRxajQdxCJiImR1CYOMQxbS30Vw7x8dQedjHfL8mDbHHrkmH3nYwA0tfcitfpw0eLboViMmCvIoY-ybUWXY9AP9wmulYZu2bZ9zAd2HjRb1XwkTmVmar3Ugi59-k0IzGi3IlsSg5rPTM0P-_vEfz-LSef8Uw6AkELIkPNMmAkWqCoMCaiIBO2pQsoCcq67nXwGaADJONrZiFnQ2fs2BFCNQDoQWIpZJbZ7oDqU9-aOQKMYCQplBtFjiKFADr9r2FgRHmLAkoIejn-_HpnocpYAFqYv5nTFNLhE1USbmLNubw9k3ED4sNtWMh3UJFTPtPDAmqOY9-SNaaD7Dz0ojBPjS_ohUfQ-YNTDPbdxiGfX3jgRbk1WYy6TfdeSoOBIly6Lt6C93Uh_AO4ApnVD1i1VV9YZSTXH1a0QZsiOZIEjyPtNgx60_Bg9WoqbUBu1FYPiELb5iSFwlByYdxiI54R-9kgQPH6qGTppsJBtBxwhwVa_TAgrRlEfMJOijn8W5GA0w8cMcm9SkkCfzIhOOUWpKtePJGddZ2OMdrYsTYTsoEq6sGfEly-WsjidE61qFjYVxfWmxYMpjbX4hpIK5_l4Rt5iYa_QhYYMPACybyJUUEMrhfU9cR8qWaD0ghB-zAq7B-2UZ4s4WJs_yACwEkUKXBhHEiFB9oMlK_s_q-GnRdnQyH4XPMXkehDttrnLN-bJOeKyxaOJ-gGJOfNvuQ7vfTMl85ss-5SozgihO8NcSLPyFamGoTYwhrAYnRJ3tfteWBpaJO-6GJEqON-lURhD7CYjhcSVMgY0hmI5XqCIQz803hZ6boEn1f9_MM3wXIbcfVkhcjSrysB4cLX4Qs-jIQd9mEUBIdmOKD721hSrk8qUlr2C4-bIoN9OUwz583gc0vOksz6kv9lMdLpl0rbxuK2sOn3y4DzG9flIBuvvZW1ksu0lQoIyqHRBpnsIs6b9FeWhrGLw7a3f-6e96bWT8RXX8YFa_AOJqmBcbALXTzHV-FHEwtpH35EZsdZFEyXaSfFNCDZqyMNiHA15Shxzlgbinmb-9H8RLOK2pFC5iSjd5M7P_3-TSl7w_res9X29ZxaML0IEtr3RSMxbuSTRXyBGW9ZKSDH9mz57Kp4Q14i2BNsYwZa4fRLB5td9pBuzbKt0F3SxVeF6eln1CCA0xeB8ABtmbs-APFc0PPBAblkdCKHvMfw3eppTKdOL98WiAmwM8FMnb50v6m7A2XtI4adzZKH6KiV0EjfwsZ2yBuEnzYkERXOzKFgCDWzpKCVweO9G8ZVagCQfA4CsIq4Iond2NvfgjVqIkPymEtj_VHKJy-WCrWAOtANF3SE6cYOaaD6Kdm7n04hgM7hruyEEuILgnlNgwCJK3GtRHpx5gtpXvmfkJRR11BwSHB2UGAgdgew9uk7KfgA-MBPT4meXsyXKF4dpBiEHCjylfAtrAwzWhyOJd_Bl0E3a7INSEoJod7E6c3blwKLYvmitScnvV_fjznAoOhcA-WdCCOPWntvP2zvJDIRTaUweYNU4xe3UT7xEaYQacXtGPBOW1ZUhG-uVlc_h8Q=="
+      },
+      "timing": {
+        "period": "night",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-z_W_C8CZqXQi",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T22:10:00",
+                "city": "VCP",
+                "time": "22:10"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T23:45:00",
+                "city": "BSB",
+                "time": "23:45"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "6595",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 441.8,
+        "baseFare": 369.86,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 369.86,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 369.86,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193459Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        },
+        {
+          "type": "despachar",
+          "quantity": 1,
+          "description": "1 bagagem despachada",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "nt0QYIEnLMPUxmc-ZgbrzL-5wBK8dRItFEedWA2utbUcJb7MyPUCeMZ0XmE13IAg2W2hrsYIU4rc-_xzERdYGCm7SOHdCFBwZ1lMMOVh9L0ZOA3GUMf8veKyeyL8aUmwNlUk-vcji_VhzkSXwGCjzC7tTyBIFokuyKpsgWKuRdkxOjjjyrGYibebZp2N8ErA18_l7QgwzDEE3dUncmPyuvw_JQpp2rx-PljvmAPRd8hWAI-AZaR82OmHxY24cSLPe7GqQl6I6TdO9qjsZmpCjmDlfbgfsw7HbXV3RjjBRbgvFLqL7aeyR3t99TOGjR4ImG4gfXGfUqOwTtO13ITafT92goIJ6rCMzdSTIWM-1u-AIbvUN-UbI26plGrDVBltsuPvAKd-uyVyB6ZKlbNRHQcZ7UJb6r79w-dNEXf7ghjFZ7_QVs3dwIe_j0IYYNGdqvZnEWtel9gb_cdTFq0KnAAv6EqGTGFgLEqUo2ngthMGPvNrbmzSX3fwPe9s6_xPYWAJ1Yr0R4_UgmV6EuPvuTQms4n0CSbt_dAYEXy-6dI5XO5C5ph9Oyq6FZsEXEKxh0gSJQM0E2URexszrgCZHze05MBxSeAup8HoVg5BXcOxKn-rA1DOUJO5f5l8fvgsDE5tA5aCHh832wzt4sCCx5Q-ZWR9I98K3kRQnOPA5ZIX3Z9CDpUKG5drYZy3y60FxKnCRnZpH2_LLdlTrPSxGVgQirGIGnXDRcfEvZLBzdCxErw8VFNGVXZ9d_5uY6nENgyZHIn_rfg7xKnpyiFYUaUtKzJkL2Jrmxci48XoXspC37IOxGZ0qr5aKl5feCpyGUbTkLXEBT_oHeIEHur2QDm8qE2eJDZBuB6yxc9nGHxmbEnO6vlScaZJQwXFxjnCUC_28a-ufdEAN99pUIM-5M9SAbhtqqPyDJuSePSIgFmPAOKqUH-tULtN439ZuNKG347aZ6MBUrPkgqTUTMTAn5sieOVq9ikkgaXJjxfDXZSuLz7OMNTBiW64BM_PlOKd94Nju5wQs56uBbA-dAygGWKZJWxmJaM36G_GMg6-yXfHzrkgysTcxvCk8OlTPBlUVD7DP2cAqBn1I2sQ_at4VziQKEe_F86_BhHRIkBGNCgzkRtSmio2vIAd2OtGGG_U0kspsVRJmqS6xlNisXa8DaPlxRq1Gf7L1U0JfYJksV1I98eQM3B5_Pbuf2oaNMFllfe6Q6is4wdYi0e4exOuzvcm2fZUfDr1h0xg5kG6it5fhX6FQ3EMMt9aJVB6V1pPU88ecsaubVqPPp6iqJoFLv01VXNfxb5IkMtRl9E8hBzgjKIoIWchyBt_avsJbYx0ZQuJdNk4k9pQff8SqmTU-cc7lGlybZa6PCXflf0XPMWab1qW2PznGtILFwdmvipoDNXTBh9KBKCvAPdZpxvFpBtLDGsokDrZ35UH0blBx-64vFtLsPxfOcHQ67sYCBxC8YWwZeNRWraS1cOCpd6MPI9B-u1BKe5aMLIL9-fVnleqc6Wk7GM0Pnb0Tl9J5NEi9oPO9bv5ceGu0TqmBmCpZjAfcBh7lKXJ1bcJ8jyflcf7ukcnlP0F6UhRheZB3_IZPLiRlpcmsCEekFn8sVEnOthwPkDVZqvGIb51DeL22CHhnjK-s8w8H3oEZ6LDfLexHdc2MUn-BLzjiXLcuDwjhcFBZcND5fHBmoBWIbTCG99slKEmMGoGGRIjgChOzw6JnQMHf5mn-juzi8I1UbVW6bNGYprfoVvdCIa24yRr-OTkx1TEUY0CDxCP5tvuw__kA3400ch6zFI0LIrEYIfJc-TT-7yY0av9BhfJ5UUow27lkSx2rV6DiUGISABGwXrQJzViQqhpVSQZbStLkbTLo-rQPkLKxdDOIWKNSFFBLnl0eD_vCN5j9fYaAFCiIso5hYd5cMRqH7LBuIOZK1qU5wCXONreF_Nt91x7uFXlRDU="
+      },
+      "timing": {
+        "period": "night",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-YdClf3QYeWk6",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T06:00:00",
+                "city": "VCP",
+                "time": "06:00"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T07:35:00",
+                "city": "BSB",
+                "time": "07:35"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "2706",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 482.11,
+        "baseFare": 410.17,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 410.17,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 410.17,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193551Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "HmrHHRRKVZyOJtIB26Kfv4yfcOcISWSXRr9X4T2S4yd7BquA8_TN3rKU_9k2UHRNLAgtXn3bXU_JnYCEXc4RhPDUqPo3lvV0eemSnS_dgj-vSnMfPK5B8Y4Ueuh5Hs3jW3DpGBa2bhOue6d_VGKpdiMXl0PiaOIeMvlg-CVuUYz2knp8j5kBivhqmjbByinrLzgC2t6SPd2KN6secnnEIuxVynNfCUnmMKBKhJRL2w4WEGEGuNu3db6pBabpV-HjLUp2tQxYscGPdu_XhRK0JEXudxG2kjnmw90zIn4ozRWnKw5-uGK6c89uw_CxTyK7sPA8SSUMPMoPgbb48rWsrOAwQ2ZY3-WSLfYwLSzBsRD0S_xRWvnNhJKzUGXE2jJ1lxcyprQdJjH3RXKqQCbBZ9sKY3ReR1rt0NiykMZX0IlKN_yo2ktPSH9MRbXXpOkBQARHUktstsFqo4_f-FM3ioUbxXlwlC6FTM011fblqh2kQXOrfAVvBGNmcXgfYGe8ROiJRq0SaXWCVKlmt1edE--Fo-HZJv6cPF3g3eHxcBqGW5KEPQzr3wpxIRvafs-bKzer0QVAfJd61ZyHtYfpY6jn45w194LNKRb__7j3H4M7U3DRGJPUNHCMUCUxngpq1DeEgyMAn-7c86lkOL2z0wi2ZVOH9sZoshoF1ICXlcc-YKhatyw8q-w9UxeA5HlY86fSr3mL--OXcvJ0mrWrP0V5-JISZLENQtUeST0V3gp2WONolU2gPtVw4k9rtjhR8KA9pJOScxxIEpxkZWOm-1NN2ZzjmT79hZiLSH1ttPaLzS9_FtXkSPQnLd0GqnNX1Kj6vv-vixySccdOknNUPwG_JZOVjxoT-6OGJ3pAUmQslvtgiNjiLt5Fb94owXEEJnxN9rD_ENmkXAF0LgX_M0_3ST0qbqVYxZKb5Yvy_406xCgKNp0hb6b3tRhNTnhGbhhLlhCVLefzSG8C_Zljp8wKskOAZ0ppn-0EUg6IFIPJ2V-eTbxMwl0O7lGDaR2pW2sFLr-dzUJ9GEY6-k6BsdrMqjp3zF-NI23vuozakopBjQ00yFfRVn32peS8ucQCEVqRXms0O2atc-TdVrlZl32HWiX8bui92_gcvZ8ya_qCARxdjLKuMZnMCksQFT2tS4-ZZCXMuOgbfeYng7dihPhkK9MhUMwvzZm4nDwrJrsZaRIT5wx63jNH1Hue6FtLfc4UM9kfMd2NucmBY0gki-UPn9DBOs-A8jPtOIdeWJDiCsxCTkNVwriiTu5LOp_mwg-rxYQs3SSfRKjcD9Ns1ghR1tzjJAkZUr4iZtVj8vAX6IzYYWvq2YwraNe36oESs5WPxKeydurT-b1-r7k_vQ9i9rEFpx9TF2F3ABuxGHOUyiN0Fzqt6kv6lFrZw0GJnXTmAMYbs2Op33ViqpIfiHtBfrt25CTs8PN-KvwODxq4p_xgMdJRnNIdldPqY84hp48eTDB8Ytmuk0psPJUmBFrhsEUvkIFLyAp5lJZuQmz0i2lUR4RUWwbSHBc0G658vg8O-AnBNbMcirVHIhO5v8PEgMQB7fNpZuLZ1wEECyPf-vybyyAFXJr72gHSTd3my7VERj-9J3qvg2bMJNaihZDWkTaMQ0UjONZ2lxifpRlgQ5FSUWoC0NZV7hj8ovLIYq7p6sORGEo8RWhOOSeeO0Mq3o9eJDjkzi4IPL63DfmVdUalVcE7YJySnXcn6IA41EphdibLhReqA3CQuifJnr9OnBgVMvbCkuxl1x4MXdRL8S8qwWtW10XNX9i41IAtkdv5uahydSlgeYXR-s0T8bGKZOmnkQmunPMWgNEk0f1blN_xYooLCDKdAvu7LRP-YlTmr3E4F0gmHEGfKm-FB08YX3YYPlvmXYyTllZsUQI_jJkBb-JIPF_hijGNggg3-PcTVrWQZsm4j3N8E1SzdTD1BsC4LN5CMOjDtesoM_Rds4W9LdXGIe8cGb_pQZICmWur_3pvJhn7w5DXXt2Q8Q=="
+      },
+      "timing": {
+        "period": "morning",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-4Fc8GzOSZnFd",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T13:15:00",
+                "city": "VCP",
+                "time": "13:15"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T14:50:00",
+                "city": "BSB",
+                "time": "14:50"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "5007",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 536.84,
+        "baseFare": 464.9,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 464.9,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 464.9,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193649Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "StsqEDLbWfpHUvZvOsU1mBOb6WArcngfWgSiDoDMpO4wNbVwntDj7DUkarm9G4t8XWSLOYZewKcUMo9BurSclttR8TxHAmihiHTxS2qci9WPopNDvBtd8QBA4wkYj3HZrspEdUA-Eo2Qz1PDIkbaaK902kXKgLBxRjet0hGSr9wL5RoLJVLCzDQ1IGm9HMWumI1PPsdMHlmnTunO2qBjdA-6TRvsFJmr17YmWE5RzW3y_IL6T_pW-ReoL2GBEFglDg519HFhS9U5RcVB7Hq2nIKOxBznS7bkG1PS-wSTqLDmaIKQyZ2jTSTFZZIdcrMdNw6_Kg48ECsmdfMD2bnxtXxdkJJRfcMtGfaa1MTmaS7YFWiQs7EkfEyNmE61DNWzaM0IrSivPqn0FFYIJDTFOEGglUVcEiCzhiAU2OliVARgU1HIQW5QyPGD5l6UHQa_FHY3d_kRlxeLa9-c07vWz1u0z4TfKsPF2e7ytoaDA19n68Nas9wkJk4tIrgVKv-QgFqmX2_ArquZUzq8s54Izudl_5TQ1foJ2IMUb7OayU0XEc3c2Zgz2nZqgLe7KbuRJ8R0hFOdhskjMtXcHd5CUMx4qx8wGAgVKysGtyd-4EGqzgyTWWXG5APo9qvQHmY10cQXJ7TCD-japcIIvqGgmsLKTrzcAdZpYpwDTbBoZZ8Uybr9whhU_2s1BPt9OngfoOA0u6THkfxKWfbyD5ftxJGgUx9qUKFRpB3-oRKY5fVKn011GS1JivGyEoLDjHLRXXC1wOvPcpLQNaxwcD_t3Lp9fxAKXATSylZY2yphXiEqB65aZH2OZ2tvN4UIEigehlMm-JVJZEjQceKSirKCUncNMqwldUHqrIhdijNmzk11hcEytngQL5ozYMFGzIvPdVqZyWv-QvNV-asGJRGPxseEB5rj9sFD8cyab2Bc3jlPNJy1UTfTxjt3G0JGoy7weFy_S-UZ4sf-QByiQOF4-qzFn4nDo5sufux_K7P87TLzzRAOU6mcn28tl3AdwXF8nvQybYfldjgmi51yqmi1IsrYXqt9nSmRpKVKd-3lXlvjD4Iz3Pe5R7oe2jQlN_NqcvzxZPW83f4iwgknJ1wQlumxoDdoHstRAaPi0HPOfqUB9SWVvE7XC3pF0Gwwu9oNpghf-_V-eonyHhNJ0zvHPMC55rRti_x8qFOMptd8OiGMVCNRjBfQqzYI1cTPcFhH2VPnzrIqv-_mFa7oHRyLnW4tErQXojTe3tSEMJ2GU9rNWSCjsWQ9GOcIvzRgLBe7HW-8WswWs81tlAougMeBsnmOkyPOGBbMYz3jsn3v4hY1LuwTzSh2zeQS7vu13jvTL91cJQ5E6nVs11KWNlocqSTXhtVL67HIPu1UKk82SZJeGSMcUK7RLWXTRBA74uRIbY9cIu-dDQ45SYCDGhQmzPsWkPTn8_MCxydzzYbp2cex7KnH6OHuCDqd8-phPSITRVO8hGLU9wY6mPNd4Esd9O_isxAIrYe0go5jirfb4ZvUapq5o5j0xJrV05-6Q20Oq9LsZz4qrXBhK6kB7kFFjIw45k7_viCeX5ZjFBN0apU2NXlYd-TfkCJ8nbBYUzy7nEZSjxgFpXiU_tKqTfzxDsRojEWwfzx_bhOkN0u7H7tOrrFMEWRGIZStFJiMLAZkJb2cXIVEg2PwAL2S9c_7RbP__j_1YxT9AcVV5Jj5LTOKMbYS2BJBnVcqCaXIwX8cjvtzuaJ8VgSpRKdj1rcauk8MTvJCjizNbynKMcHKJZk58s7V4Hzv4x63ynUeykpd7cecM_XHU0Or7_j8gfJzZPidWzQRuVvOWHpOBv99BnFAFhTqREGdsMX3gKbhinmeW9jp27269ck24euwHbSgd8iSIM8TyYJhjyKLJIZDX4JUwaqxP8fMqy2mx2peFFUY0CsyDgvNufcV-QJevsIPWSP_-lHd_RWwEOcKz18dfL5vZ0Pcc8cTY4XLwk9J7UQT"
+      },
+      "timing": {
+        "period": "afternoon",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-xI4zTtq-D4w_",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T06:00:00",
+                "city": "VCP",
+                "time": "06:00"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T07:35:00",
+                "city": "BSB",
+                "time": "07:35"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "2706",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 566.26,
+        "baseFare": 494.32,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 71.94,
+            "description": ""
+          }
+        ],
+        "adultPrice": 494.32,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 494.32,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193735Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        },
+        {
+          "type": "despachar",
+          "quantity": 1,
+          "description": "1 bagagem despachada",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "N319ZJm2Hi-cxOpv7quw25UaIiCPXF3b3QZ1j8LDvIdHdCsqR2_sw7npdhHxUlA1Kl0P4y4YuSSkrvKv_2YgO_fpjIhGbo261WRlm2DqJB1FGgdJ3lxH8ckgsN2lYSg0neEcs8_o6FnYOvIe6jiIZuh6sU9-1tkf-KouYq0ia_W0EPGBMhI5GK8xgcpQmPs2hBfs64NpgwHJdv9DPrzYxswWstX5KG2a-gGFoRTVDB6xtvGlUojyl4IVHzlCifEz3YYW_bRqLnKPPROwAuDJVDslMMeTT2ImtVu5Bn2fBUa6JNErK2oadVfTZ0OZA1203SC421FruT3OFwrk3XPMgHcaQGfu824Z__QlFyXJZphvdL9-rzYndoIJ3wQASTVHTA5Xli7vJEDFs8WFIL5YIwlSpgFr886iTCi3y2z2Ysi_Z8aAUvR6tm38YvydvIloskArpr7ywSc_qrk-shFDixMmm0tNOFkD98Mo7NjtI6oGG819rlTbORNxWd0tDvyIMCENpjcNqB3QGFkL9JYIpSjfqJszEWFLKoR5W2lxR0WLL3MWdc6W6neoDBRFieK281rGKihw7kE5Lf2E6tGFezjhiqmkUjRmY_ZslBzfhUYq6OV0VFlJBpIU1CEbjZLquuj5z7yvx7_1IQSHw09y6BOUVFAASTpWwzibJ8MSeuH7lhRwo48YDgnfqoGmQZLmef1gpMVUiAd2uk12vMGLKvm-JaQaFHta-572gCQti6y6Svt_S6uKz4J_Wp9h55aFqUYSAlOjOqN1lfC9FkGNJgqKLdUmXIXIOb2KSl5hEjgylyOGgqssDzs-MUt0SdC_wguhEFlBjWf5er6uY4Ez3cqbNY4Lgo8l3RsF2Jx5wWzXwTvzj0K9ZJQz8M_h6W7rgioO7bLDufgXnNsGHA9yR2jwr4MM84LPQ5ncO8q4cO5yEZYSvg0dBbeIicTJWcyDjtyy0qGYdYJLt87-JVq1ljZQkZddAlyBrhS0xe5XQhDRWpUZO-e1PUydEPu5YcVWhjUPmp9CqzOCbDLgXnSwPCQtS6dIOPwgQmsgfFhu-FX39qUQvZPphUfNYdRROmuKfrw1PulmMT9vrHCr1sp-_tqtzjMqLU3Rk-0iKlWfoyVtH9KqtNqjESxq7KlADzGMtvm7StTXiwIuqHIv4Rff_R8zvVepY2Me8j04Nksyiw-Ho2lu-bW1l0ahIPzuCcDWqeXSvT5jB3UeAO2hYbGH34-7TEnoz2MsTFh1tL1QvNG3Gr_aAE2lDvC_IfTkxTmjnN42DGX5OX3JGsL-S3YxaDNIllqtBqRHNt51wm7hs4de6pbtcYv5HLCNZncmQeZdafBgSHMvS1QJpRDeuRvlKEO291Ba7AIJo5R5a2Lr9n5jjCGpEEfieWbZZTsJyImadddsRTmbn2flIv6AKdK7nwRmh-Qx7G4EVa59R8NjSucPywn7usigLXcgGcRJH8L6EboCZQrwb319KASH0E97CFkuy2Py83das4HWq9KbArAfslJLLLlDPGY3wxdbBwiNzqrXkI1aiOdoOrg5E-GD_Icci-yf_HnezRkj-xjDypn2yaUmz67_eQfMIidScsvCpV8_YD5bEPZXXoTyDnPyif1NrVpNYodtI5Pzkdr8fOx3GY97l76U5edEPCXH6NCDdhj3zXy-65A9kWIjjpJBljiJgVpM9hl8oMOZVBxdj1Lh3qk4-TomsIL8s4onRHOoapx3cWBpGWUZcNduAjQR9zEnnQpiflLJPr4Q0GdiYblj8C7iXdoKaQMekhGBqFkUdUGgCRNkF4siQRyeBF2pNF8aLkWdKs3Y9LrGqhq7-tqZW02kL9QFmi7wdZEoQYlCs6uyTjJBMNt8pANIwIgjpdTzNbumUZ04I6cWroXr2uxYZkdYDsE6DQHm7ftZYN8vYd6APJ6fAQUr5-VVjktythTBfbbx9YMaXBgpr_TS2bbOrwaPJAUm9wQ-31kU4iRupZheVkk-f4srsUI8LRR20g=="
+      },
+      "timing": {
+        "period": "morning",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-JTSHmOkcMNus",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T10:50:00",
+                "city": "VCP",
+                "time": "10:50"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T12:25:00",
+                "city": "BSB",
+                "time": "12:25"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "4745",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 630.21,
+        "baseFare": 552.97,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 77.24,
+            "description": ""
+          }
+        ],
+        "adultPrice": 552.97,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 552.97,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193845Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "qZFuGhbJYKwjc85oNAEMzNXaosflYLs14qwp8XQ4fZ9DIT2YGIZ7NkNYrVB43DXoTLX3RY41CFSTqO1EHCbpw3Sl1VHyn0HSAwBEuyDdBKBflbY_XLvpSIEpRl0M-L4QvjKeXrfl1pYCWbf9ooTs5j4j4V-15o2iINDCt2UxhOlFdyiFWtpQvKUgbCb9TqqpKCIEfVTVnALZg5FDSbHRH_iS-y6E-2R21IQTsToInKj2u5a1uBYCC4jFcePU483dhDSTKylX7lPtAz1eMTS6osSLJxsOJDWaw5Q7KwLGSGCKFXx6gVWTCJRtxI2N9aVyyazm75fJC88is0THfZLJd5G8DdqVD8g5mOFNnvTEwOwH2B3UpfbSXc35E3oiQogDtLwAOgD1zS-pvjEkRBcM6ST802YOwhvm7oF00PLRM7hewMoQgFofd7p_bJ5RQ9UFjsRv-9JO0TgQxgIhHRFqR5y9cCDr_vfmiKX_IhMTY8fwPVQjslMvGAwPhYCu7fBYXpyfyBbotAUvIL0w-kENmQFLr7P83YLfoxy0H7NavJhYMrJQ5jicKpbAY2IcaqFaassf87r151dJW73QXy8RuG9R-Siu_bGaeI_KafYA2yJ6tc9Le97ZyXg0t7yjoxZBmr30Y1OpG8JcmZ_yoaNZZ4LJqDARGpaVDkIJUYoaOXhHd0LenqhCcTq_zBEVgRs9kbCRA6sBL4jDzjF0vCc_OJV4HA7dWQrqJ0JIGj797Q6OLjPg8ZHkxjr2Gb_szGonM4bhafQiGdxUQrU3cxUue4JQf45yVuzjiuLLXyLBZ7Kq5JdG_kqdqLL9yywRKQs0NNoDIcNWSTrcpo5MWIjK7EZ0dLxoxnRiMMabtUqnLLIckAiNGb-kkefa2Ww3CBtMcPAu0vgTvMCRfHdw9ISBX4_YqpZKvKU3GEdjlbk8jfiAjJIX9LPj5fDNPwGHtu-c2_jDt1JUGAFT-sp7gwOokSLk6pA8kymdfewzLoirAwmB6sinsqKec7TY4Kp_nQgyeYAPyRIGhin4cEz491_96uvw3MYXXS4uviuoukK54c996RnEfaQW3r62WKqAeTuay4qEDMWpdCpxnCbn9qnae8RAXFWJaUYdyGOwqySbNYLasu4smdE3MfEPO25-63BTAGlDXp5_UuLJgxgjuEFYzYgHnl9rkhAuy3WO7f61F-KYBIwvH2DkPiAeTelfNKQnW-sRSdQEkYPn0_3nEHF7qTifU6uAWMHtHFZRU3TPmwUrDPxz_3t1JcepSinvRxq9XX4OzPsjy62yVUogtMOObDaVjW26_YPmLUsYY2Gz87bUgy0E8pCGlyCORiwVwywpwMRCK1Awwddx6NvEXECTkJxvDyI1pliabBvdUwl_1wclVTVj2VyPEHHVhMOLck5cPuV8RoV3GxYoLHL1zRN7kmvqcW-OsvO3sUwHld5HYie9SRHVRUwUixNRSQ2mAe7Hdw9snZL0VQx3wq26_037v3TR-Rh9vYmzfPjCbXRSxAEMIQw8pRkNxAcLfx1UFhc4QdvUX1O73kwp04WRYM8UX_SOnUkLKJKL7VsN4o3vYU0OybYtzxotLG58vNs30v3TKL0Mo0yXkZeCFN_acnzmdKMjb9KlbWywzCR9fkUPkovOzze7BD9WNFdqE5t_95poc-ajX3pznEcoqxJeKF7cQtW0o8UCS2UKSLfDsnLY1IQA2Db8gf7GA3Q2aleSFacUGCc62L8sTtdcw2nBjAEUQ0nLVuWAzQhDfC7CQddt46Mdg4GKTtXnyzAIW0NmG3r-Fg1we__2ehtS3Z3spL2WIcIXrmZhN1QFuo3PAAdA-uX0abv83i9emoG4w1c-V4T6bX-j43NV4iWoMvEeokH1ipCRYkI6lYzdJChVMU6PVkfdS-_Kxux5B6PuTPiU51fs__ebrvS0YEK28HWKTvqlbzUpUxyi08IYKDVScX28qZ0MPkJ8us5ENJvmQm7BTukek9GA60UGjXfOM9TjDgSdOg=="
+      },
+      "timing": {
+        "period": "morning",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-Z3EDqsn5tsJr",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T13:15:00",
+                "city": "VCP",
+                "time": "13:15"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T14:50:00",
+                "city": "BSB",
+                "time": "14:50"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "5007",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 642.23,
+        "baseFare": 563.9,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 78.33,
+            "description": ""
+          }
+        ],
+        "adultPrice": 563.9,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 563.9,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8193942Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        },
+        {
+          "type": "despachar",
+          "quantity": 1,
+          "description": "1 bagagem despachada",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "IIpn38mDRxiGFWWoSgghYlBn8ys4q4W5MPgNemThhegWJb4UjqfQVRy_JNkltom7X0344FJBHEDbrcpslnxamRaGhsEph9WT06oSrJMJz6R9EZm_hZ6p1_ab08HG1zCw4sjvEyIdPebARJIRL3zW8aLCZ0sIs_IFMxdUJpgpeCkXwi8M6Y4ZquuCj4-sHcUMgmaLckBk24O4I6IQ5eJQJ4eunKCd7KBe4Ez3YZqSJEvGjMmGwRUQLg097hFjt6zOqgPNtPhMZ59Ua4aGII8GJSRZzaU2CNUhyzTAcApoNSzFwMLUPXqgy26uBsBm7wU157sj35KzxUB7ABClExhXZS9mDq_IDT0D55dI0G4xFS6j-TGf7p6Wt3IKqBCy4pKgZBeBeL8IO4mwrUCJiTU18Uur3qpVmMupcz6MwGNu1IrqFcOJNLTTTm5Wv8WRzcfnl04lTwQGFHG06k0r7mwoHherLT6iaA83wxIAo24Wbd-I57ksCAb0LbmCvVTJl0ZtpVvkWvHpg1SlXmfsokOL-FgolcFZ-Bww-D5qpRVtu42svp4y6PnP8dHaXHwlA1T_VjaO3982Y-9SxhQxGK47advN6gGU4WJtg-J6dk1onA3UGgpZOYR9Ex6OVEkhSgPhwPgaHd_xGjpZva-6kR1klWVtDzPjvhdyzY-ytASoE6Ul7pK8xP-CxvS4bemsLA_cI1JS6dDfZGby3-g1s3qPmX7mrY2q_m4e9Q8F_GN5AnZbdmTQ8poB9JTN4RXnPmTtPwIykysO55WPxsC_8NSuKnC4hra-TDjE9k5TV6Tgkz_jXAmQJapt6D0a-cqpeuy4uEiEWz2ADXXtmC6sBkRKggp-TJUSfqUn3oRTaZy1pkiEJa7NfltMBWaxyJYs_A3Om8WlwBwP_7NJWdEFo_Uk_p0EC-duu6hiOPlKLYRkL26gpcSQRn1so5n1NXAP17lIDQvw40ZW89VbX3NoXrw0V9RzUqUvu-5QsEr-OKDINjDN3urym6yerYr9yWqywB51xrTlmUKRpHTaZS-qLeQKtsjw_X8O4FgiT36wplIc6n0i_rlT1NSysUXJjWdG81GRQYvY8TZUL0wKhVUaqaZ9RmYPlfk3yhe0KPqW6X8hcV0CYTocZo55lLNF6TXBYtk033cxGQUwN1p37a8rCH6Fl4BSn5fJqin_jhXUqTIuBy_Rt8siPycRY8ZXjjIhmkgvIj9249gXzbsVrihclJMeBUhh153n9Eu-vsH2dD5jmNFALfxZdzf3b8h2qPjiANwZmld5NQ-2qtVu_DYPUCi2c-5V1pKKJmV_z51yWjpTWvQIuuqFjNFmOp1pjEdyXJARJpuXL6vEATtZxUS9e3xDsrFKCnjlkPNzMTe-cAX-qQLKIVqjSKMe2FqvF8lB3AfQlilvGFANBbUJwo9rYdViouRp88_oMN24cPyDYuvWTUX9Fpl1uUdSjvJY0sYQIWcExOjFMYdwSt1X2Jyou1DaqTdT9n2qhb0PbgWRz9zsoRL2mpAZ9-8uRyOc-onMwIXU33EqjFSvjHzPl7FecJFoFHsEGbvpX71adaVBym95p7IF2u-_N5qqM4JVHOCGYzzD0oVlA10JIiwp77LaBzNsUWnhzebjBkHvY90kc5m1b_65ND1SjHNOcw4QRVtXisDPx9yv0R_nWpBhHJN47BgdP9X0q0sco36YBDovYd_lTbxVN3dLReP2-LlORlKyOzW1Jb2Qx00e4gEqTgl4IeCWEDwqLmyR91myMm1iV4n008MlLxSniNwN6yYA6lMEW9kP5bPhqg5tv8k76MQPCBHOcolSqk0-VeyrLfNMdDTICY-DXBtU96_ZMqDd1nCMXa_rAr1p8m7DcUzx03tqsK3csERt8BYc6c8e028-wgK_f0bF4vkbJwL43MlZ0OuPFCUu44vDMJRpjEm05nxVqP3uKhz5CXO8pOlXbqc14Vj0olBaXA9P91AiLbIdqi2t7Zq0zb2yRPfQ6bM4mznRWR1dlXsgjsQx6chvNnwZEuUfzqQ="
+      },
+      "timing": {
+        "period": "afternoon",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-DyrEs8pe_Dkg",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T08:00:00",
+                "city": "VCP",
+                "time": "08:00"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T09:35:00",
+                "city": "BSB",
+                "time": "09:35"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "4702",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 718.13,
+        "baseFare": 632.9,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 85.23,
+            "description": ""
+          }
+        ],
+        "adultPrice": 632.9,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 632.9,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8194044Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "StsqEDLbWfpHUvZvOsU1mO3DHERqSdq7XqpYvPkqig5E8ouoih2tAObRO4ue3EpmJqT2IeT3bM0cnDyjykObgqGf5IzhgGOIRwISga9s8Myv49_t570Pj76fzPAPUFoYbjNAMzS3A9Dv10EQNKbWPo85q4iFzgi3PU1cFzFBql5IIsnhKRZno9JVC81Y_9hqjLD3CTPWslyGSMCXX5KQNUXFOQf5pt9kZGoGExtP-LXnqfTpYQnlleW3eyHUKc3x7sCO9QXdjNcwE4YMYgDtq-es3nw9Wig4tWXbA33xqFaHVmv4J29Irawaxji5L0FvLihYCShXdrK9Kgek49k_-dLz58MTbcvPggBIbKYI-YROeUIWwH6OT2JBM3Vxk7hD8JS9OPdPbD4L7h7-y3GTr9tqCnt1wu31l_giyB8RsCzBRbeg6e_guzH9FXA-mPqpbGZwy9cG3E3OLw2Y8NVkAckKZ3yL5FlM5Qr3y-UQ6nT133DWMQ8F2Gy4P3xawROVbpb7xHExD33ejVqNzhBrr5yyKyaDGi-HeHXYoDCqPx8bcIzP_JGVQ6_9uLEFHmeYJosFYivWxT0Ci79-2EsxVwie347AqaiDxRkmiv8W_syj5C5EKtH0yWsXxoeickpXd3N58ddCwTLhHyfyvBTuN97K6aFrrF3WMCH-f76u4yakSTR5SXfFKvoqGDOnDR8LCxzceMmtSCSlgS3ZzE2cLat8wC6Sa7okbOa1M-R-6eMkl3rxEqRAYyVQpVRGaJhzytYjQMqv8qi-rbUF_AYhmNCU7jW12Z2sJK1V7s56A1mpPkTi2CjNmgiEJojW9jbYAv3KViPOJoLP6herXAwd5lxBZGRt_OuTNUaiX2H-1WnUSaRkF1r221-5aKOK3UJqNw4lSXmIdXH9x25-his_LpoqIwSmxHcv0NEpy9wwnzWroMKN6RJHNyvBAypTzQbt-VJ-kCYKxNGWvI02u918iTjUH1n52ftqJ2wKE7ZYaxIMxEQxE8UCMj1EQFUlzbEwpP0VW9YPeAnPRfXmbWi83nDWcPTzNwGilVsA_B-slQMuE0VgCyXjfM-r6KhkBvyKvjF96YD1l1v2pDb07_ZeWBsmtTXRS3wyvzvlDg-h7BlaiG5wpjaqnWt7122ZmXB_JVJ1H76AD824dbhvq5tc52tC95jLsuMbiFCfRE4lZrkt_l1A_R1YppJF5bD2EBA1heLwoTPaKVRMPCZtnG0nyQO0dkhsmihpzWlnANGGs4G3I6enz6gHjUOYW1OE-x9d8hW6UfDpAqQDiSdzR_z5SJ0qM6-PE99te-gwL6PXzOT9savQizelEPAK3VLYFwa13nEpYSvJOdJSGghQIf4f_WW1ijgQKryjppQgU73WQrhpbPBsIPJDIVx9kxM0A6WHFVfhbvifDgTGBbtGea6lxnypIQYWhpzcuOnaHpnld3u-JgmD6KyDhAavFF0dTsJ1aVRetxTenbLRq5kOvAjdJx2cZRWoluAevicvKwHN7uPU729ge_mRSoojPd_s5z3lb_Q2te0e4y0HZQKB8Vmy8QWxchkxdJgoEwQi05bvwVxwDfZDoReSSz-5u8EivyD-ZJc5NTktTVUdKuwQfm3PQbPkXc1U-7wu45ne4dLxdS5ViD_Es_9BS1fPNy4fhGPFkjQ9IiTdrw52kL0D4B66ANv911-c5I72dG2NgPsWSwb05gbeT4pd5ir9TiIsxNYMtZbw2P7eJL78mF-NAxQ_YSJzaZVWL5Y9umFxe6wjWpLQfXpnKTAxQDZsdMtB5hDMaXGUe0MxedHKma5G39D6OhIXe7LCZpQ82CN3YzGBNqdY8O7uuoTDhceO05uyM7uBHoAkpwnfXvsdvsv9bKQnPQtCu3MvLauERwgSbyvlrSeWbNnQNY6dLEJig8xADef7-nQAfzZsFcoUNnBNGQh15stFBn3iDl8sCNnsniWo-epMlDbajNJZmMIgMigq3_4FbWJYQkrs0aLr7ebivxbofs217wiT-1egBumB_ycUZ_I="
+      },
+      "timing": {
+        "period": "morning",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-hy889SzHARZW",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T10:50:00",
+                "city": "VCP",
+                "time": "10:50"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T12:25:00",
+                "city": "BSB",
+                "time": "12:25"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "4745",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 732.12,
+        "baseFare": 645.62,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 86.5,
+            "description": ""
+          }
+        ],
+        "adultPrice": 645.62,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 645.62,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8194132Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        },
+        {
+          "type": "despachar",
+          "quantity": 1,
+          "description": "1 bagagem despachada",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "IIpn38mDRxiGFWWoSgghYr0MMKCItl-_5ED6OS-VhTrBkHojnCt1Xo2rw7UpNrEfBtqY5Bmm-2ZJWP-DSDVelKeDRkNVtuBCLsKQGm_O8mhVtyLivcxhlKIpVRZvm5MCuAKBU3cH-iHFACWhM2fSR-BgYVFDTxhyAu0IVzinyxVSbfyibCsJdpp5M6a6pA63qKt8I6EaOCLI8Bi10JUhcxe9FBYwUThIXNhf96tTu1zDw14NBmAUWEP3CTbaMdrzY2rhtv1EFc7hTJSexj1E3nB_HYpzALOqbeDoT16-2LO6CpMl2Hk9GqDZUZzqxgO_Mh64JWCMAs2OpRDDBM1rtyiZkxUeCO6ODNssNj39HQLEdqWJ9wlGKq52bxRMRHBEGnEV-bosaNaw0Y_wNThphEyHjjAn3QrD5psHivjo_DbXM7hwekT5NiYdQA-J0IEAQu_YtHT5_iFty1q0CoNqe_jEsqjAscAr24ewsDbK1laZxIqRfM70yGK9ScNUlZE0LmVfuqfgIYkuYhb5iJjJkchNrtKtPy8nC0Sop5zPMhCGrJy74d74bk-GP3Y0ewK9H-_8ljcAkm60Mt_yIUKGcECtbNSgC8oYnX8-BPSltxDo6sRBgKDWfZgu7OiII38TR3pVU0icFMLg3HChfBQX6NPsIAsI7mhlXOhfSscWJm9AA5TrT-zSd6CZR0Hx0MJvSmjxKmlRcbUGbcmnNpRF73iyVCMuRHk5NCOeeqgW3dLqVZoVHersYeWbzQSFbmZTsyJkvTAcE_h3LJIDFm-g53LKAo_i1tyd-yiZBgjUhfLji3rM6z7aXMxFhdWCptR0BufchRvzvwgFBirWhLxf_khLwxR6cih9s_30klnst_OfMtVA-J6a2bkbf5YK6zCF_eV9wiTtMIvwjoeO_bvHhU-T62SygTEZbNIoGl_C4T6ip8o_eVQFIbOwr4CGQb6gfGBsFSJgqJhhnLXc5QJBQbWv2Ta-rl-NJ2w41dt8smEiF2oYsZ8z3_aJwhYONFOw_PF4aBcghs6bGCrU56torUOVk951ZOIQ6I1vSE0Hkb1y1dgsIx1qQ8_vzf3wdC5-LfWIwz3UPXdUwUFFCykvSQGDDeZX4cs4yrQ4HXchJPUSlB8Acsw9g9nvU4QO31kE4BrdOI0JACeQI8WS6e022X8DjyefDh-DgrlQ_oJ_uFZdX1B-Rz3gjm1Cd7mTJnmuJCtTcZZU4tpnh2CFYJDCSOppGEWYL3HQl1Ty3BBD1oyXjp_TVu22j3WUes41subqt-A4BSquyq7NqDL7tJh8QDz6p34pG0KosXpzNcyi3f728ab4vQ6C0MkVAcIaQX_sjR1NHsbkpxmQE6swqjOCmuJVWe6qLkvh7OG4NQ9vYO8BPnDr4NFId36OkSQ4PC4HdPAIiMxWOmHefnoA-PGwS307tudbEm3o082mlhJpRS_aZV7EdSd1q5aswrYoV92ofjP4Etrg0lAAnTHEa-4_8KHP6HUmb4o5-aDhiQjf4XdxxFbnzO8o4YK0H0CkSNWXuL-PRx8NGj9dWRKrQUZ9EwAHp5lJLXpA5Ie2ZYdnm-OJK06-H03lNZRrejjOZZ6yW7Kme3EP0P7Z1uMLnHLIltOXNgglILOZeyH63KtwYbdbCI-5RSeVWwhfBNCTmBygH1FF7rgCZ5s6QhW5eDq2vYVIweSXdmBjUrl3ZlP3XrV14flCk688UwkexHIOUaZeM-1h-RdqeB3zCuGwA_yz0JalwHFzunVsqH0ISKTM3XVLJqWXlcPSj3mjGTPt6nqBE1kPYvM9-s4ivUOVw2H2mVbVLQjRhNbBFRVz4jw-i_6hqWdk3d6peE2w2ADz93AIhG8BS3DjSB_rhmNDZXcgLMJmu_71BFOFXFgDknq0TtzVJddl5-qi3GZEr5K1bT5lllzJpLOwtOeYcqEXVD4TW0tkztn46t0nv80v_m5C9vYpky5wdjzoxdaLARvRiMrZF7i1ZXM5HprMfk39V6OSxjH_RDWSKUxi18IP1VuzPGk="
+      },
+      "timing": {
+        "period": "morning",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    },
+    {
+      "id": "azul-tfg7bSjeqzaY",
+      "source": "azul",
+      "itineraries": [
+        {
+          "type": "outbound",
+          "duration": 95,
+          "stops": 0,
+          "segments": [
+            {
+              "departure": {
+                "airport": "VCP",
+                "dateTime": "2026-03-30T08:00:00",
+                "city": "VCP",
+                "time": "08:00"
+              },
+              "arrival": {
+                "airport": "BSB",
+                "dateTime": "2026-03-30T09:35:00",
+                "city": "BSB",
+                "time": "09:35"
+              },
+              "marketingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "operatingCarrier": {
+                "code": "AD",
+                "name": "Azul"
+              },
+              "flightNumber": "4702",
+              "duration": 95
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "BRL",
+        "total": 838.03,
+        "baseFare": 741.9,
+        "taxes": [
+          {
+            "code": "BOARDING",
+            "amount": 96.13,
+            "description": ""
+          }
+        ],
+        "adultPrice": 741.9,
+        "childPrice": 100,
+        "infantPrice": 0,
+        "companyPrice": 741.9,
+        "savingsPercentage": 0,
+        "source": "azul"
+      },
+      "validatingCarrier": {
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "provider": {
+        "name": "azul",
+        "searchTimeSeconds": 4181.6354,
+        "lastUpdated": "2026-02-13T21:05:16.8194222Z"
+      },
+      "availability": {
+        "instantPurchase": false
+      },
+      "suppliers": [
+        {
+          "providerId": "azul",
+          "providerName": "azul",
+          "source": "azul",
+          "bookingUrl": "https://www.voeazul.com.br/"
+        }
+      ],
+      "baggageIncluded": [
+        {
+          "type": "mao",
+          "quantity": 1,
+          "description": "",
+          "isIncluded": true
+        },
+        {
+          "type": "despachar",
+          "quantity": 1,
+          "description": "1 bagagem despachada",
+          "isIncluded": true
+        }
+      ],
+      "fares": [],
+      "company": {
+        "companyId": 3,
+        "name": "Azul",
+        "iata": "AD"
+      },
+      "booking": {
+        "bookingUrl": "https://www.voeazul.com.br/",
+        "token": "IIpn38mDRxiGFWWoSgghYtWzYSlNM9IgDU_M25YcmfnYlYf5tVNRcWu3vDwiNmeWWS9SABQUoNCSwurfFLG1D8gpMBMYBRwzY0MZNJG_DGJddBMaPvPWdIoF4icweFPvlnBGFVJR-j3uEvDfKwNAbfexGAZ5OR8Xmq3oztSj5GN6wRq3O-gQ9EGLdAEvMLHXRIx7h2D4a5Meq60Ng43Rw45GWGTJCEmERfDLlgaxpdg7y2puWSnpfx8-Qo6SihquQDDNGh767nwNTII18XypucW6jdsw2_CatWlgABux_bPPjxShIccEJ3ccrcK3LVvdSa4ml-QawwBeg6IswRgKKgP5uQd3x0I7LCUmarqKpNprr319EVEEqhsIRYFK7WmrdSi8DZ_NAbE0hRJB9b0mPW-Jn39AUQu0t93JPvaGPoYXaGID6GnSGGZeZoW5hN80oi_YNniqQbh5qjGlNI1WzGFu_na4dR27TuFnPOhaUYdHtmY_zYFcO6QlUXmmwlO-TWNfU1XDJlUB0riAUzKxZvqjXllJQdKY1_thfzK9Usu7s1Co7QGw1sQJdYO7EPJUGUuPToeBRVPhzZWT8805utHa3WpnewSQ82C56OccbLekxkg17hRnX-KmW6J8ZCP1QfEKhX3C2nOKKOba_QWziKFSn6CP5pJHbxZaTxyvuqOE4L2eqyLeyorPnFbi-w75pLFeRsS6pULVJPPsoEK4hvtQ1iVLZTmLMqoutmFCUepDkbANI-c6kBv7_TDLdofmnYe8MiF20kfXk2A-yfOFkE--YWJaGT3PdUOrM4UgxQZmoZJ1XYggKl1Lt0gakUX7y-Qo3MqmAHaAcP8T8etTpBxtp2ELWZuLB7j_GSeclOhLZjzdSf_ThjLlqK3iZK_qJiwx2GI_hKWMmR6n03AHvZOSauifPYpw_T1uvKKPr2JeRslcBxo3T3G1bXStzFsIKUk33JDsRPmrsapIN13ydPbDuP1JWOxtpmwO6ZNkpX0EyD-BS2G5TLaEwUhQMOQRiti7-oxngfSkGL95tXGDS1P3MMVbAr4oixYc6ng1XkqGeL-wdXPniIRFcsvYZNFQCHv8ELh6eGDvQAEVmsZDLQb4qc2c6ZXs_DayDnVtY5Bup-b1QHJ-t68l4wQXv7hxrToJx-pKP5gVjkSbN-m01kIPftrR-yTLUtzTa_dRU6PXFHZddEKBX8NFz9MUa6hUbmbpKCXoBcloFrWaBjQCXpozAH_CJAg9e_rijqJAxZF_Gpr_rRMSRsm_vSHDu8jIOY1-uEFYPLBQwkpaOh8IoAO8ELmwHGzajNnOi8uzuvGBROi3XhVEtCYteFOwnyRPrSrnJDle_0l4kZR_sEvSomAAue7dWNdogc0LaJfqPJqE2QYCgj5bHCm_v8uBnVbDbOeJTPI6khm5GN4sX77Kik1n3B8BWrEBiqA3OwIL_uFqzUrmJrn-zw9IZjgRVxyragRW54Yob2vb4g6UxqIC7d_gegpTSwfBImKeGkPoqd_6xC8Ctk2O_RWxbvNUYqWKsTkZpXHx9Qo-ldNLuQwff18Vouh6P6lfRcfl-QtSobTytcOMxyNM2ZjY7_vyaG171vYYnuA36vxaTGTT2kYA_fMNdlM5v7pBpQpexFxYhSKs6EsvSERh6gEGlwEfokxuuPqYlRX38CU4jZCC0y5t-KobhNJqlk_yURuIOmZ2RG3_I_QKBLyWD1Raqi32zb4USufjljPHlgImtrIAVox0mqHz_HhLeMue6U8KKC8J1ze6lRZ-g3auntQQlj-bDb66u0MiXg8c56RtUXvLHjCwj-YL1knKVI22wQ0W_gqVkGgkJAF05Y-qlAtkYieuvWl6KJWbWVUs3RM5uF_Ncv8Q0zVK5Jt9AY3dWSiyVWiB6fgKen7c2_vGp8WlNrPf5iK_WChP40faNGdJYIK4TOOlz9kkVuslhUCltLo6MB9ofsfu-afW5e7bWnbfy62YauIWWMacrS1eEB_WvTnXbK_K0hrJ1dOqbK1mCSwA6NQkDn8="
+      },
+      "timing": {
+        "period": "morning",
+        "totalDuration": "01:35",
+        "totalMinutes": 95,
+        "connections": []
+      },
+      "amenities": [],
+      "conditions": {
+        "refundAllowed": false,
+        "changeAllowed": false
+      },
+      "originalCabin": "economy",
+      "originalBookingClass": "Y",
+      "passengerIdentities": []
+    }
+  ],
+  "summary": {
+    "totalFlights": 14,
+    "providers": {
+      "successful": [],
+      "failed": []
+    }
+  },
+  "tokens": {
+    "tokenConsultaIda": "8901_V2_02534df7fc1c4e7181f02d357c2ce23a",
+    "tokenExpiration": "2026-02-14T01:05:11.6927576Z"
+  }
+}

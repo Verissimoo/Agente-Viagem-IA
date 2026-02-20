@@ -1,4 +1,6 @@
+# flight_search_service.py
 from __future__ import annotations
+
 import os
 from datetime import timedelta
 
@@ -9,15 +11,9 @@ from kayak_client import search_flights as kayak_search
 from offer_parser import extract_offers as kayak_extract_offers
 from fx_rates import convert
 
-# Moblix
-from moblix_client import search_flights as moblix_search
-from moblix_offer_parser import extract_offers as moblix_extract_offers
-
 
 TARGET_CURRENCY = os.getenv("TARGET_CURRENCY", "BRL").upper()
 MAX_PAGES = int(os.getenv("KAYAK_MAX_PAGES", "2"))
-DEFAULT_SOURCE = os.getenv("FLIGHT_PRICING_SOURCE", "kayak").lower().strip()  # kayak|moblix
-MOBLIX_SEARCH_TYPE = os.getenv("MOBLIX_SEARCH_TYPE", "milhas").lower().strip()
 
 
 def daterange(start, end):
@@ -89,7 +85,6 @@ def _build_shortlist_with_airport_variety(all_offers: list[dict], top_n: int) ->
             return (o.get("out_leg_id"), o.get("in_leg_id"), o.get("out_departure_time"), o.get("in_departure_time"))
         return (o.get("leg_id"), o.get("departure_time"))
 
-    # pega o “best” já ordenado
     best = all_offers[0]
     selected.append(best)
     used_keys.add(offer_key(best))
@@ -125,97 +120,25 @@ def _build_shortlist_with_airport_variety(all_offers: list[dict], top_n: int) ->
 
 
 def _sort_key_kayak(o: dict):
-    # menor preço
     p = o.get("price")
     return (float(p) if p is not None else 10**18)
 
 
-def _sort_key_moblix(o: dict):
-    # menor milhas, depois menor taxa, depois menor total BRL (se existir)
-    miles = o.get("miles")
-    taxes = o.get("taxes_brl")
-    total = o.get("total_brl") if o.get("total_brl") is not None else o.get("price")
-
-    miles_key = float(miles) if isinstance(miles, (int, float)) else 10**18
-    taxes_key = float(taxes) if isinstance(taxes, (int, float)) else 10**18
-    total_key = float(total) if isinstance(total, (int, float)) else 10**18
-    return (miles_key, taxes_key, total_key)
-
-
-def search_best_in_range(parsed: dict, top_n: int = 8, pricing_source: str | None = None) -> dict:
+def search_best_in_range(parsed: dict, top_n: int = 8) -> dict:
+    """
+    Busca pagante via Kayak.
+    Mantém interface compatível com o app: recebe o parsed do nlp_parser.
+    """
     trip_type = parsed.get("trip_type", "oneway")
-    source = (pricing_source or DEFAULT_SOURCE).lower().strip()
 
     origin_iatas = resolve_place_to_iatas(parsed["origin_place"])
     dest_iatas = resolve_place_to_iatas(parsed["destination_place"])
 
-    all_offers = []
+    all_offers: list[dict] = []
     last_meta = {"pretty": None, "status": None, "searchStatus": None}
     fx_notes: list[str] = []
 
-    if source == "moblix":
-        # Moblix: suporta OW e RT via flightGroups (você já testou)
-        # Vamos chamar 1x por combinação de iata+data (sem paginação aqui)
-        if trip_type == "roundtrip":
-            if parsed["date_start"] != parsed["date_end"]:
-                raise ValueError("Para milhas (Moblix), por enquanto use data fixa de ida (sem flex).")
-            if not parsed.get("return_start") or not parsed.get("return_end"):
-                raise ValueError("Para ida e volta, informe a data da volta.")
-            if parsed["return_start"] != parsed["return_end"]:
-                raise ValueError("Para milhas (Moblix), por enquanto use data fixa de volta (sem flex).")
-
-        for dep_date in daterange(parsed["date_start"], parsed["date_end"]):
-            dep_str = dep_date.strftime("%Y-%m-%d")
-            ret_str = None
-            if trip_type == "roundtrip":
-                ret_str = parsed["return_start"].strftime("%Y-%m-%d")
-
-            for o in origin_iatas:
-                for d in dest_iatas:
-                    raw = moblix_search(
-                        origin=o,
-                        destination=d,
-                        departure_date=dep_str,
-                        return_date=ret_str,
-                        adults=parsed["adults"],
-                        search_type=MOBLIX_SEARCH_TYPE,
-                    )
-
-                    # meta simples
-                    last_meta = {"pretty": "complete", "status": "complete", "searchStatus": None}
-
-                    offers = moblix_extract_offers(raw)
-                    for off in offers:
-                        off["departure_date"] = dep_str
-                        off["return_date"] = ret_str
-                        off["origin"] = off.get("origin") or o
-                        off["destination"] = off.get("destination") or d
-                        off["page"] = 1
-                    all_offers.extend(offers)
-
-        # ordena por milhas
-        all_offers = [o for o in all_offers if isinstance(o, dict)]
-        all_offers.sort(key=_sort_key_moblix)
-
-        shortlist = _build_shortlist_with_airport_variety(all_offers, top_n=top_n)
-        best = shortlist[0] if shortlist else None
-
-        return {
-            "meta": last_meta,
-            "best": best,
-            "options": shortlist,
-            "debug": {
-                "offers_total": len(all_offers),
-                "offers_shortlist": len(shortlist),
-                "target_currency": TARGET_CURRENCY,
-                "trip_type": trip_type,
-                "pricing_source": "moblix",
-                "moblix_search_type": MOBLIX_SEARCH_TYPE,
-            },
-            "notes": fx_notes,
-        }
-
-    # ===== Kayak (fluxo atual) =====
+    # ===== ROUNDTRIP (datas fixas, igual seu padrão anterior) =====
     if trip_type == "roundtrip":
         if parsed["date_start"] != parsed["date_end"]:
             raise ValueError("Por enquanto, ida e volta (Kayak) funciona apenas com data fixa de ida (sem flex).")
@@ -231,6 +154,7 @@ def search_best_in_range(parsed: dict, top_n: int = 8, pricing_source: str | Non
 
         for o in origin_iatas:
             for d in dest_iatas:
+                # RT: você pode manter 1 página (mais rápido). Se quiser mais, troque min(...) por MAX_PAGES
                 for page in range(1, min(MAX_PAGES, 1) + 1):
                     raw = kayak_search(
                         origin=o,
@@ -262,6 +186,7 @@ def search_best_in_range(parsed: dict, top_n: int = 8, pricing_source: str | Non
                     if not offers:
                         break
 
+    # ===== ONEWAY (pode ter flex) =====
     else:
         for dep_date in daterange(parsed["date_start"], parsed["date_end"]):
             dep_str = dep_date.strftime("%Y-%m-%d")
@@ -319,6 +244,11 @@ def search_best_in_range(parsed: dict, top_n: int = 8, pricing_source: str | Non
         },
         "notes": fx_notes,
     }
+
+
+
+
+
 
 
 

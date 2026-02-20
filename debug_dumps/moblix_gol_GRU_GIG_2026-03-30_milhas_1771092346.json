@@ -1,0 +1,640 @@
+{
+  "requestId": "296f1971-7183-47cd-b354-1646d6c17cd3",
+  "flightGroups": [
+    {
+      "signature": "q6jDyI2MrTTleypb",
+      "humanSignature": "GRU-GIG-1374-G3-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 65,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T10:05:00",
+                  "city": "GRU",
+                  "time": "10:05"
+                },
+                "arrival": {
+                  "airport": "GIG",
+                  "dateTime": "2026-03-30T11:10:00",
+                  "city": "GIG",
+                  "time": "11:10"
+                },
+                "marketingCarrier": {
+                  "code": "G3",
+                  "name": "Gol"
+                },
+                "operatingCarrier": {
+                  "code": "G3",
+                  "name": "Gol"
+                },
+                "flightNumber": "1374",
+                "duration": 65
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "gol-B-66pZWpQJ_q",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 536.99,
+            "baseFare": 457.59,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 79.4,
+                "description": ""
+              }
+            ],
+            "adultPrice": 457.59,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 457.59,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLmGBMnyH6safaLKV0oMMIS_z52aEzrIYhHgY0t0z79hqKOmOyQBywd8owgQhRg1dxUopd7nDDpInPmJjQEYAgUtL2alR8XAEnbE7Qgr1urhDUUZsxBZZ37ZuLt2ZxcLcnqcmTXVqKYgSPZBQbGIYd5b3e-jvH7nzO8HW9yFcHK1u5ObNP6H44uPfKYlm9BooOgXP6edTo_yew8ug87kLUH7RND_42hIWD1uxmADbpbE_t8W-cewOsjhbZ2lQLMbHbiXoxRQ3Y6xBbGAo_Ck8PonKzhk6rRE9c_TXeAlRwG8Gi6mwK9tyJ-xhAIe90sAKeIIwx0WfKuSOrGuoOzlyfKrKPZuNmj_rnGHmf73Ib5hPYVHXgI9lDGRfv9tJAb-DuakZSbp7NJ4oUvkg0MUaJs_ghedbDVBJ7Ol_OsFVUR0BWiElrSi9PLOwJmLgMporv_rmI2p230LarHY2ZBdrah1iVvRCxfjqSOWp1R1sMuvV1Io2jRGO-yDV-fQBwbNjoSQv4D_Atp_XqtToycxiYtJcZ8G-1eAfWiJs3L7gjciec7amOLdLI_KLRBdVke9ZSrJkz_4mAKTaLO1l1zhflvmJbHybotmKvAJehfVHIMq4sLCMGLY4LM9mqYuXE4Qkwe2_Ld9-yfQrkvDXqOSpprvBzWFQY6oexWlKFzOpWuJsi1KIwCJhQWpvQd-pD5q9y9veHwzVrgWYYCkQCr3N_9QorNK7Bb1B3nAHpiSabE4-NM2hTjHMBcx1IYvyTuzRIRp-ajEXN4ZD4o5WC-uvJFf9q0d_OAI20YO7ZsvsE2LqlYhjCvCcqTzkvTT1Ax8WnM8Ppo7KMtzBQ2FZ3kLxImvOnOdb8hhr7iy5sGdwfagPqt9HroujYcU-Reah_Z0HO-y784eQdUaachE8nk7V21p50R6vjGzgMfbgzsCcfT0_fFVEgqj6Gin133f8WY7q51wY8U3QI7lFzVWMF9k6eLttyhD7o8kgwhLYqYdXuX49Wt5ikvFuXU4w2bJMYeQL8f9uMQFvIkigihTAff2lz1giqFfxBbF9mjrvUPiwlfjQ3-aEjRCYwogOdPM6TDDJEflu3vrUtnSOJIPc_PYmQtPaAocGgKK20Jwxq3XhugaEvHnFyoW_IK4ZyTesaQPLv94J1_TzTN7y3pl0JatWuNoybYyMzzunR4iJX60plxcLG36eSj3pI7na1APGqDZ4dmxhmA1FsGH_FjBu6tj49Rv0sdt83-W9Cl0ey-ttJveEzFIZuI2zuh0GYAVZEk4DqD06zehuEt2_409zRLMzkq-DXTVPDa051egY9Hgc3fw-B95RAH1B2HfYV6kWlLA_E_84y7B52FN0v8Z3aq4K0t8lEsfsINQ5bK2n-6hlj6u74AgaWy-WmvUhFDaxdNJLVNvTCIjcZR3qIwa_rRb0FemvsvvBUmM2gufrU_UM5dBi5M-DthjsLr4O0arECPHSVhsOrParQQZpOcZjhu7Sc4-vRGCSnGk41Xl272k_FWo1RmsPeaDclTPirXsc0cCYzqEWdXBO2BnO9vu_3OrT3emozO87GxsaQb-3fnq3c5ovxqSU-wN7BsNB_8WVAXaUEG9QARXs8zpHfHa-eHr8Vuox_xX-XwwfSwoDJ1EAQj-S2FbRSkBiVr7AQrpzD_Lyh88XAqOyJf7_i5BoZ6BR46c="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "gol-t02zjt1ynaBH",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 656.86,
+            "baseFare": 566.56,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 90.3,
+                "description": ""
+              }
+            ],
+            "adultPrice": 566.56,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 566.56,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLnwJGsXK0z5KsOKP-em0C3RI6ImxBx6tr2rI8ZyL_fL3z89rz0GfnnhGw37XlH_3KvV8cLTcKQmbQxrUtx2CbCaNslNmLuM8Gjav9HUzaJ0PTcNUnp6VnQUyaWk9K7REfSaBdv_qrlaHM5SaxVONOsbpubh2Z-AroNLVqcTXQ-5efTvj91ZfT11nUKecot9rj73OEzHW6iNZZwxyXxQeaT7eic4xK9s6jyIYlrAYwLuu__gQlZL4TBsMycpVh6vuE736VUigVRFfJyL5kcGts5TwueSN5m1la-x3y8UHzXvQvXmXfJSlcoeHD7ibFS1gCLe4anP7CV6rSUBg45Ay5hagijw9GUXQIDs45JjE0MB2DxPkqw-ddfoBY4DQtIb5Greaysn3I3xsNmKvmXrUhjnICsTbkX39iwPB1shon49w_PbII2Yx4Lk7iyo_USXBymZSvikvoqBKTPoh7EFnLJvop65M11dut38M9pFMH6fS8aNaCDdqmXoKU1yLZywWtYkITYOjS5qY8MH60_rt68HNWmtvhfGgU9Bt-hbuNWdrRxLfb10BHmF2x2LRRlC4A9qZ7ZDs4unu-Loc_vMDCiOIdX5QB09Lr9wbwv-3viQUR5fk-NZmbih3EVCgo6lLOHWZTF3sJVkA3066Jz412_XRX6VWKnhWfkwFwnSik4-JZeyy_AmintdWP75PeB_SfKOYEOekCb5K5TOsP6mRoNOdQmmOGULIdPsQzaKLpRNqgJLrP9r5noJmBiikqiOI1uj9qT89SsADnhoZuR2Cf_eRzsyB8DStd_8ZQ1bch4Kcke4Q6s8XOssd5l_Bdln-h7IW8StgEa8kPt7bQ1RUGkCQS3jOhqp_FEYUAIZKNPmDnf8XZL9-naOpTuBNn9YtJkY7ocePGpE5cMEV8EdkM7lQn7-82N2hEbksaK_Pde0CLNit-8C5nXq20cAaPAx9EOJHLX8KctCldBJvatkbGNkMzuBSD4lEGWtWu7X-khR4Zf97WmDmfLCz5GLcADX5xJKc117YTAKPqFc_ENgOOi_-k3z9zNSPwhxj1LkBhIABHLi11xeuShAaeYY9P1g7UX4ixlisR1UXrgUAkpQhzjI0Lo1UBd6X9tldRl2Oy1V9L9uzL4g_U8X6W8EMlhiHmVdYRRujJJAXFea3WUXcVAsFfFY-jLy7yBhnpepM478LB8sSd5yk6IdMs0JXhc36oyWgOMTKGJb7K6gZ4CyWzXHJH5jc889-g34u6H67jq_dJK67MEvxwpUPUkICt0Goaz2-u3bK27F_lD6L65yw0_RtUDuImfj-BzP4gGbS6HjMJ53PJkqO5s04nP1N6a51hOloxU4vJzy_-SOva92X2wxlAHXDaNUpy8h4f9_YAmtQsoU7-lYH_z7MqvFwc8tRuMBBHD3mrQ0stgjdgk0aR_g3RLlo12i_88MVF7zvvVN2GOlERNC6kUMVqAW6rUMpV1OdmUUFWvDp160cF8Pfky_R4_sHl-UkZV6uhdtKPr4h-BR1Cdf8RNPNhaBQSKnhryV-fdoRoqp9f31aAPjsHtnaXCB4FfTIFaUAx-UpFM_ipmkDZd7V40tE4ce3-id6rdqS9O7BfMkQl_v77docwCmctxU2UgcTmD7JvRlMnesqfqdNjiujrrEICqKMVNr51n7KGjJZqv7qNS5gN8lttUao9U3OLCdexJ_cmxNiNlXL"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "gol-o8j3GXqohlR7",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 755.83,
+            "baseFare": 656.54,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 99.29,
+                "description": ""
+              }
+            ],
+            "adultPrice": 656.54,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 656.54,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLqZtQq2FPyANSIkWryWTo-xjftTyBdZZw_UvuBfSfF2CrWdG-HGyAVxy2UlZ79689wFHefaUvCbRoQVRxshOWNhcbDbQHMiYnBFcM2iOTkuDjKS5tVJlPPk3yPUgoOWJFVhF_Q0KjJXlznxM0_z2Q6H1FxSLvuzPMJqDuJso2RsBCnjWBYtYsOaXAfHOpJbbRB2FiIzLoTgT3lVlQR69NHv78L-EKvkQ3ElN_XbWqzrpviIyII2bbn1cpaw-zJNn5YlcIvzFEGMcUGoS-aRFT2tRneYGr5gwcZiWSSsKiFtOcqAJ3SKsUfUb2kaalJnCVNPhsIld-jM6GlTJ2LmpLUOTlYdZOlkWinVJc7Fz_HEjbBGDOanwQxIc09oguShgJ6y8c-L_gr5U47h_yq0Ta2Se0huosFlKShADnQbTuzuQi9pTpNJu4pZ7mh__7ob9ST-Ogq-grHn3-3jzlfX6Lg7b-CoVYDi36ItVpaEMbhSGupLFIaPGUbJz0xxgCQxwxZMoxA5n8rRVjCY9CrAP_GeDvjly-0CCwoMDn5JYAQH2eqR0kGcAAZfb45rdzX9FNDsafxJ2I2G2R0asmpp11W734blKIrvqn8f_Q8KH9ex1PPsIEhPN5fjj3L0NQgWEeDMYKH9fhx1YbSkrhednO9_KaZrbV6tCvUgKaOWkWDU9UIBarmjuacpDnBvhJCfvARYrOGnZ3KPELy8GufRI-wO5TZDtKm6H8l2kD2PlHIsT6NRQtfp66HsLNdJbG2W2Zwx9TsMQ2CDV6jUcEb_oscvbraGxIcqXZtdDCGxVfkDjfVUjZv62CHanAhXWuUFCH_qUB0KVuN97oSLLOHQ_ARXSRN5Vpv7gZo3OC8fIZ656IaY7JcrKzek26RaJh-jyUllJEB6tNGp9lrkyHfcNibsRxhzru9TFvTWRQTxFxfk22mG0XK-QghAH9_Yv_30fxnYCsh15ZYNcOmgDNe5Odhi9bNzAsG7LjFIXF-IeXvyUx0Jy6chEYOc9mjvrWES51reYnoNedaiLtvayfumYXb6VJfoqopLAQPmX-NshBtp1VXDGztECSrnhsfMgPzXNOdhF6jmgBlQugT-K-eGJJLBBQRKDVI2XmSRrbI3OfzxAvLANvtiOObJmOl6Y-x96-17Dp1wiZEPYbgodoprjg3ffooVOkBSPfuIvQRJ4SpCF-3tBoJZvgGJWpch3f68P4Pggh9mpog54ixnJxR2R1d7xJ3mvFAXT48MB3iMeyEhiNkX_4x8gXpiORQ-_BUkmXL-V-6R77XyxicPPYf07z1Gmt52DkJfuHapDixD6XQe-HKobPzvtzI37hc5HP8j4LthsT6JejuKJu48P7J3jH9XX4fdmkIvdJGrDN2-pUsYa3xQJp0bXMhokqWTPM_S-NNWErCO383fAam799Gff4ETCtDtOXCpHQYvEtjcix3zL8Ym34KLgr17VsP3Ktpk52QeYWTCK4hm0xNQPik0Bx_FyvKL4QU9dgnBOVxWIUJGoesjwjJ_tvAZSJGq2-O1nh9mfW_EDG4Ws33zi3BR0EZhb9bbt-6xMjodve6KWwD8hrBPVsEJiEbpm1sSeznVw9pHdpRY6xQgYRGpQDlP4c6m-IuuLhtC3t4s1ClDNnlFbPtKYDzwc8SxssXuXQ2-VTc8XAqOyJf7_i5BoZ6BR46c="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-14T18:05:46.1107547Z"
+    },
+    {
+      "signature": "KNlcLHnH0RqjbBws",
+      "humanSignature": "GRU-GIG-1378-G3-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 70,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T18:55:00",
+                  "city": "GRU",
+                  "time": "18:55"
+                },
+                "arrival": {
+                  "airport": "GIG",
+                  "dateTime": "2026-03-30T20:05:00",
+                  "city": "GIG",
+                  "time": "20:05"
+                },
+                "marketingCarrier": {
+                  "code": "G3",
+                  "name": "Gol"
+                },
+                "operatingCarrier": {
+                  "code": "G3",
+                  "name": "Gol"
+                },
+                "flightNumber": "1378",
+                "duration": 70
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "gol-UV3gKxWg12Ny",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 536.99,
+            "baseFare": 457.59,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 79.4,
+                "description": ""
+              }
+            ],
+            "adultPrice": 457.59,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 457.59,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLp4n2sau2OaGwwQSifSEQEffLmoCCsU58giUlXuGXYR2dTCd1YL7Es12VnlTH59ZGZH8Tr6m4zCGWFFBZtc_385YOi7-uDKnz8z39WV0pndSGBvHYhj3s-K7Ib3Cguci_vag_7FaqugYfusvk0lrHA77Ovyc69eYN_7oEVdChXkHqYcNAX8vtCrGREohRhMI1BJJauchfVM_-tjjWx-8YAUzbc3Xv17dYRaVKX3gfa05EwB0AJSN2cisvYkLVbf7Mw3vYvM_cgjiPB0kLWZm2ZLZuxjUONWo3NxJKl16rAhVgM0xxnciW4quCPw2JcrCdQIQqVEcQD6L5dCtxGjoIahfBo2xqq8D8jG_ElrhfnbkQNyvKxstVm3g09F7RqQ6ZcmGONpmCWm9m9pery3wHIUNTH-NIfOHUeGf2jEqZAKF4JHHFPCTuVz9m9PY37r-NYHWOS8L-PkwzAJvXBMHUbvQa1-cXfyUFd21FTnUo_6Oh-P-PplYonrqrcAsTGFgZCXiU7tipFdoHfHL0iwe_Kt_2SHXA4U-fO3FsMr918gX3NihTxzMM39IaUGGiJjBAfSeF-XG-un5Ss763LUF4OKSYxG8pW52WCnLBIqTrldtVEcUsd4pVBwNPG0YcD9xjeLvsJ3qpQIDd0mZMnhQp91OtGMGyTD8nfPidq_KagULXniGiENF9dUGCp2cdWbFw1veQC6jEr7tHz5tJXIcuwbTMpaNLzHfHzWRRN0Tv-HEWaeLtvO7mZV5id0B2SBgfEM2qYDVNn24OWMUlWZET6Ju-fYA5DWXfrM26xmpV8wIXVJBBnVcKGmBoZWzbA8rT8YchW0ykawNyGhiSCheHwvt83UTG7KciwaFLa9wI229HMfEF7iRF8AQ8keqQh4zi_NDNM39qdc5ywEo04SSedQfCD_qdh_TTs7dS9j8PhhReIZCtLP9lKThN1kt4IBOEtOkLWupFRf2a6T8Xx-NUnpVynnDGvxNZw3JySEqMfO3Xa_xd5N1mKBhYq92WjSFDKRVWI2xcFsNTVh6Tukj9DvtMqVqamHBt_NO3nRNqqW1mMWden4PBhHJZshXCrAymPUD9dr17cIoGVt33AoEuvvM4khy3bnLdE5m8hABNZ5_eaj01aU92icZ7yO7I4CyzmCGPNacjOKnQXJacdN1hOflrO0Z4JZs1cXIhTgzHCbq8J-h3ggMS6K047lS9jVxbfV9gBluwXEcufEzCILGaurqcYr7jItJqsZcdRrUcO_LMvZnEBsKqwU-sgK2Tops4cXqUWp0ad5ptNActcbrUqikroOG7RfrMAWB22x-JCJbhiIYglwPw8kZd7fIzPVMEI1aVMpHSRp21v8Hvcbmt07AnP7xOM-YkCRk0Xjtz0C0aRP_chVlE_CYnSWEVM-cgn9-oB1doS2XB8r0zP1T6X3ZRFU0nWvYp9bmZbHcraYoXpHSzkKJ6I1b7br0tM3HAjbqkVI5DjcNULgEnUlSUz_Ie8YK2srCWvHIUHNr9AXWF75YXekeCZnrZ2x6kKWWAC5WotWE14xmmRY0dlwfrpR5uABGxewWMxytv2Kjb_1UFBSFi_AAiB6rLupSiWGz5ut-ZY0Rp2-x3ysKWDuO-DJMo9iZe5utFhKpjhkIRsF3UKGHFC94Gjt0sL--3Noacs8XAqOyJf7_i5BoZ6BR46c="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "gol-HqE0I7YU_r65",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 656.86,
+            "baseFare": 566.56,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 90.3,
+                "description": ""
+              }
+            ],
+            "adultPrice": 566.56,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 566.56,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLse9pR8hSWQdekSBPzQEnCoocmziXhG0HQbVPv5ecETJ-hqcvT-CR09Z9fSIt1QvfBXTIXVWlqMLeguH0Y7wBRxgq71yMlaCP_xPrRiu4lAA3-anm6YoMSM_fCowEfbPMg2gLb_aCvjXm9nMEJHZALOdmotJC2u3-1yUXyJ6650QczpKSblcvaP1nV4eywUCQkS9s53RDsbxU68VJmgkD3UbE19rWb3VbrHN9uWftOs_nXoHAzBV5eI0ySAR8wcYp399B9kzpk9NNYL8jNiCRBvRPZ04vDJzwJDr-7FB6_BY7Pe2l77Dl5k_bqO_EHIHXplbZjELCOPVWteH_DRYQ2UOr_p__Ax9vycoQAejzbR3nxGsuYvDynRMOZrgXkMBhwpy4vtOl6x0gdVr_u4xQPJxjn2aYPYqRLVc98PPF-ZQzoJKucdmvNCbQnNE78RLjAihmhQlzbMSsj5zjCuXJRif6JtvWxzQ5qVXIFMwCe-xzdmxW7W2AZVA1sXHN7zTg36SkPaV0SznsS5e7vnHfr5UJhCks73usb7hUCciV1dZhUKMf7tRKTSf0jkn3yV_jLzvrOzCF-hqhSta0EWha0kWxPjwlR2DKvZ9SmRbTxRG5X2vdKrZWmk2wjHw0FIDpviBmBOvTVnOp3qbcfQ8tmkP71V7BQ9wDxV1X3FRHD_MYjQMm8EZmslXn2hcA7n0QIghsmTw27szSDCMSuDY45TMey9CGTQCZcO7pfbk0ttss68dsYF0A5sHFGomuGw89Rc5t3sbE0LdgogaXmpn2FsHZ2B1kql2z9bYAmmyDRYxxWD5OHOf1FSNiJJWgvFvh-dnDvXOLV-dvJLF-4MScdmqn-DAJPM4dhR8qA4e59IoemuVhUEa1d6iDMoBIc35vTYpW6G_-a9oUDHLrzChGBWmNUEKxyZWzwYKdd64LNgFsnpNFqdifFWe4wjtmuFyPwy1KylWZFLCfROELzU-aSVaeslhWOW3LPmSSu8QmWVx03o2s8QPbewGLo1fuhuN-Oepe1j20HMo0v4JtU4hbY3qBx3klu93v5BrlbpiDfjeuIvv8RifwtJOWjDB1vHDMZh54nOotSfSz3ZNcpciCNanA-Q0rBy95VgQvh-aDnm0KDR1OvHNVb4cpztLMahhhhhVDr4g4h2Zpzrd00zSIBEPrVwiauFx1Uvv5ue13Ln6BRK-4Du68PPiG3w1WSto_xdHl-PkKohyfwlotApZBJI8omokVWjRgID3X_RnVc_AMIuiaZh0GYZ_bazxUAA9bm87-DgvPZYouWC8jdp22zlIzxcXxmHY5Y5B3FPSPYIEGotgvNv4aW1Y2wJ7xdS_d4dLuvuFWq3UWJqwVSSdT_LqWHhr_tG8Wq7Lx76sMJVH5rSmgL67BoD7SBOs3JtkzDAQSnrbh-t8gyAHxSiYXj2nCqsw9kg-JarjHRgbrzLPfkYOwGUtyX6l_vSvvb3EkTyZtPAr_v5P5rvZXppyvVaVgxdqgLHCJnCDkXAC-j8Q0ZbtcJA4VtM7LBb_Ulz12V4X9fB4-dVmzTTC4N1nGF-hqT3F-QulV_q4UECCNXtKi-INTiFSmqa_jmkiX96p89pP1jO0_HRrwkQnn40wXCx8rS_npm61kvpw9SetLD74k7Pok3DP68a3btTiBh4nojGxZLs4ugVdHECWPofAEmz63ZbbM6kWppQt8YBUrXoM"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "gol-l7D4u7BM7P63",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 755.83,
+            "baseFare": 656.54,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 99.29,
+                "description": ""
+              }
+            ],
+            "adultPrice": 656.54,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 656.54,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLlZuC8FkrISVRmuhsU3C-6z-sqBOJpNQVqMi3iIGSFJOYKOh5PGKgkK6neTw9HuGxirCxSr4ESNaqgUGKdVc4yK8dOrqOAFyf-RnMMi_bTa27dnXLCCJq19Y-28djdvgxylBxOBm55HWeSP5wkvCji_zqQ1JgXYLATgPZN6AxnkqKyko7gX6GCmYKIv92sIlA4eUXF2Ljk3V9l27nQVWHvpeBdDX-dvnzWg5JpCWHrL_EI2nuRqJhI-opqdsPHNy8iktFDqMq6uwwLoGbBh506kGJ7l_OPjH2DKnrMbyfvdlL2QkVnccx19fnBAZgH6G0tLSvfHo_5FwkMrDczArzqIchhNWzRGy8uYIHX2A948IblQAp0JCQ4BcCcl4LWix1sZF7wPIS_igJaTTPeUAyWKBRAaeNA7AQ_ag4s8A3bi4AcnkfhDUCylEIG5lAQnOBoHLgaI0wOcCL6phEmE6RhmjRtm61jclnoHowVCctKJWdoJEBzC5yGpyxPkme4NzOdm9z4CBARRJC6u5PywFDWNBLquJmIfejL6_jicJCyUrA3iDMkvq-NrC_HPahmepN6dz51Ty6Hi6kaTEXQAM8dNGyEjE7KnIyzoz09fzhE7b45BOiaR3--fHJArc4qHNvI9FGH55oMYMnerdOFFSlSxwrvXyT6csmAEzsmdECjz-WfT0na23pkEIDK0X_c5TpviCvZbNbhWom2DQ7s486ljBromw_CUhV3ZGVrplHkVowSOPXm-7lqZVjk8P7B3TSw9T8q2dMlU1-KURZ0RDcg7E3EeFUnISuqsnMBUavPDKRoxTpbYMQ1fS4P8inCIT7M7D9MPp69PRZIeQX7_Ub69GteBQ54V8qShZjbvq12D1fnbVbYdCiWyUdosT9Z2p8c2A9uMlLKi9r9noQibrUqyurB_7rZfQWxIpVpG5gItnyrQxDPQkxn9UR0fr58fznrJ3t8Vv0tEaZpyIbJdFWzQuHrAlFR9K3mW09zffmXRDIpea4laRNu1tr_QOQzW6hdJoIM3f1QrOj_zJgIctrW72lXfPqIcsvZzSKG6c6FstmWFR4thEOi0ibr1UAbtkJ0H_9g5sQvnqXTAFXW178iusihUGH3JRP1ZfBbvKs8HUWD20rzUZIns1SgPnJ9ZfXTRrQ-ht5oJAbwCj2VUnjFQzG7l2m5jfEUmB_R1eLBfSZ8NjAUPivzC-G6itsx5WTCqOfGiV22ln397ca9QdU-iv9JjxKh-_Hf-ItNkKpzKjto45mgEZ-ONbjh0pQ0sLVVHPmGLfwq93Hb1jDSZfvOYVNZJwZupvi1NhYOqPdod-0W459awNsIWSrQw4BAquky5-qgOBZlQdr2iNPNV_yniYnJDJLgA-RP0q4CerGGEt1kWiALGsKNTTyLgMBsSYdu2QinJvWfvCb_t5bHHkkZqYeBt0OTT2xxtWKi6xFFKvAJWL8RwvExtPYyiAN3VYdCDBXv3TJuoIas6mVLpFk9lt9rroMn6aMJu24hDiSK9WrgZFSjxMZ6NFhLt_W08U0Ppz7CSPC71bBWYgHmq5KqBi_5V0MqM1gq1gJyb1A4GiYq_nsHddvDKdwbCKed6oLK4Na-SdcQsDFfdM3j8nPRZ8Xw3KmnsneD8lUnJzWQVMa6bJw79b1ENYipiFdqHj5mVPKuQ4eHePeG5dOYmOHKM="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-14T18:05:46.1107636Z"
+    },
+    {
+      "signature": "k6oyXMmihgVx2fCv",
+      "humanSignature": "GRU-GIG-1380-G3-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 70,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T21:55:00",
+                  "city": "GRU",
+                  "time": "21:55"
+                },
+                "arrival": {
+                  "airport": "GIG",
+                  "dateTime": "2026-03-30T23:05:00",
+                  "city": "GIG",
+                  "time": "23:05"
+                },
+                "marketingCarrier": {
+                  "code": "G3",
+                  "name": "Gol"
+                },
+                "operatingCarrier": {
+                  "code": "G3",
+                  "name": "Gol"
+                },
+                "flightNumber": "1380",
+                "duration": 70
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "gol-Qc5CSOcaGZ1z",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 536.99,
+            "baseFare": 457.59,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 79.4,
+                "description": ""
+              }
+            ],
+            "adultPrice": 457.59,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 457.59,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLtMimR_uq3UW9aMZGnnQn_7Wg3GOkMFtqYL4MilgtkB6wI1zBVvdsGBt6EGyVrC-16QW8ewpvWvQ8ktnqE1Q2mMOjkUp-6nHWWMKDki-ih9Z14ki8lEOePmntD6dt3Fx5qdMoCY5FwnYj62KbdaB3WqdHiI7FhkFxFcd1TlicKrAiNqnWVwnnSRe4gzVW03S_mLmgQED33YFegYaa8pZiCuh1LvCQvs93Kgcj01PHP0GLnvrXiSFqNkThGlAvJYrcqggyDfBZneQFq0x58950pFz14YL1nSEKW_-Z9h7ZPN5DCHRHTR-zGEqiQj_Xg8A1iNSlGBAWvkeSfTOkihEFbfw02tuREJnLBcfZIo1nszaRAd9Ex76olf2rZA3gOPBg1SKV4mx4-35lmemfHWIo4aK3eC3ekqNrTOjT19Mo4s-ZQpmt3EfbWAY3edde2PPmFRb1nx6_TT0aBIt8Vnc_k1KfYcp2uC8fHUnEPBH1xP0aXr9XQu2gr7bBOF-HMDIThFWJt4WrMbGFQK5HLNPuKVRNxbW89J3VSZOqFdfXhJHgo1T6dHlKKenPuZYpwce44jpnlo2cjkTmdONIPJ5rHPdUf4Bx8RX7x32y5i0vQCfDxxFWIMOKwpL68lPtU04C8-nsZRymn8UmJfiNG3YgVaYbpmK6afqjDISYjDaRAd-EkKzt2Uzdmzwk_DYBLC2VajOW2-OS8YbupUCacVD7fmKeRYEs8uEpK1_cxTBZm9xyEkdTihqEyBxL936cbM6VT0XEjtYaI5rmNdP2QdotzSUmKMDUIgYvlvzH5klwA6L0mQQg_lX63V2GvEGdTfnrmZqthZL5jCwB1aPgcvl-mGG17hKptI3SrFvSxlSuIciIfKn-cwi9c0gNKNpt2FjeC-ww3eG77WGvpxOehMacYtRtL_NIh6NdlF1lWJtjuyypppyhu60yaoxnaqv8HJrq3Cp-6UkZPhsGO0wCVeu2qBHqUojtaEr8v6_ohjJOX-kbA6gBieRz5bN50ZKbyz1tXoudeKDrsxMzL1BQEv6fjJugvrSPJAO9oUY4RvFkaoN25CpkCCDZQ17QYtF6h1r0qOevej7xlsfCh5DHmq40D__IPMzOvJ-Ymg-VCKNlgwQkzJynAKwfrHXttB6OGpSAwuudq4MSwCC1BKOuhr_YPuUk6UuoMZa560dRS28Wnh8CdAiyzaw2M35x63FqBtk4YxrIYGpcm4705OBsewesAT54wOo7isYhkAgENXBnmr8lA3yWSBpkHSA7-P2qXd2VFD-9G_mZVaZacyxr8Ay65v-U1WcpcX_1tVlthfx2q49Nb9LMqR92ynZHORmLIbb2sUbiErgu6T_oYzioot0h6bK2lQMm66KtGa5NCP01x8IJFK14PWCq0g9rY1C2IX98l1I5hEq56heIbsUmiJ7szzrOiOPJuLZYVG6nCNPq0fFc18sIj0JM0pP-UyADBMkMfZ2T1iutwt1Nit03dhuhuY0sZ92pJzMmNYXy07c1B-gTjyI1hkJr_cFUyaWPc2fG_4DC4gJdMgIuyK3Swjm2s5QrxLex3GZ8Y7OHoqufsLL_DcyLkILbvy0OEs6JvQkUj2YKdhNKr5kjWvOhsfe4X_SB-ldxmj17EhdbJ26mzd9KUbUaHP8jXsl5B_o8Un4s88XAqOyJf7_i5BoZ6BR46c="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "gol-INyUNq-hmk8C",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 656.86,
+            "baseFare": 566.56,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 90.3,
+                "description": ""
+              }
+            ],
+            "adultPrice": 566.56,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 566.56,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLhyp8ZWBG9UPbI_sue9dQbrZ5tYRMWYkf-32PzsCnWQYFMXTIhxAoTrkaK2Lg_0RpOB88EyQOZgLy2OIWMXdAiO8SOp2woSMwpKa-jLVWCBpm_RO-l3hem9ZB_GD5WQPS470m1uZOVV2mm2O1cCJRsn-5Jlh6aYQoHvYXkvROToLFv5u26Bel6aMHBnx82793S0eZn9OtuJW_winfF71iQR_0oRvw6QQCx7FpjhNi4wSkV6b7mdVRGb0rWPpezK7XLQhaHNj8vzdp810yVY_HsyHIO_YMjmjCDwMhvUHHJDNFlIOXgZwQ2z6HuBnZAdZlFotd8XRN4jBfWJ1fSIVXQq6X3EHm2uhj_mhfviBdqOS1b2B_1_Zc2Fs8p7mF5Hc_T84mDu3jWlvh1-vLmc3SNaZ-4YSiWHqrOgul6dvR2tVjACy9xQ5f8UvT5ERgM8Gu6stfYsfT8jBXCeU3vWscMJchg9srd0gBlpV4Db2hvfPKeCHPmyuDQUPP8ITjCsfI6Po6ZKD78tcs5qnDzSlTW2CzkrmB3_TUFB8BJyYqhWDbMf69iqhZBvTe7XW7o1ZttMZgewWGbOX-ulN8gnXvvLT8UUZn6Ij7XGhQ8HrKjinSSAjrkJX_ibRqPd5nw51bjdFWYhkfFQtNofI00gd2E6_3mmcZQxqAQTSya1zP-j815ZZms5FvoL38JfVW80ZqmYHMQj7w0dR32nJNcIp8TvcCXphbZ4c34ab96IIV0IKHnDxKVxy5y4n_yqyU3Uj-ujb2mC7HZubOWdrpXSD_O9nsfSByfSLuJyNVznJU0TZLBxvIytXgHKyACft-xZsxt9qnVeSbaA9_LmsZhN0nyXiujHodQIzyy1o1EnbfQqSiD6ouI-18ivXq2rsPhG8UMBb9dcGL34FpacO4D_A1RDVkC7XltfexHYscJXBRaGWvxEGl3nn7DsyHOQV18MS_YQYNwsTgicQHz25n537VMhjTGolbOudC51aMrESbMy_Cm7K4tODULtW4F8EnS7usfRRvZzYUEIcyLq_4VwO4ejzEsLW308Y5VYxHHOMfIVX0dTjCvTiWcrDIVTAEprwy7UczbskrBYQBP86GcnpWS4qbfapecLfxsqMUD6BgoSPcOfiiKcO4KlxYwSX-pncQ0QCpcj6DGNwg9qDVPinrlHmI0_c8iNViS6y1_FJ9EOLef0CKCEj5LMFW0phBcts_bntc6ysDLHY4CDKmKnUu9h8DlLT69oTc58F97S80eifCcdDn_tnTRxYfOeal1ko6d_MncsgJP2THmpd-trjsEScrrBImmb0NzOLMcgpoQ3cKGu2M2157G8YPV1066f75op68AYaD4eGE92aXVRfIqRn0duIIg6ugDy_vZLsLy47zmF9_YefIBJZ5qmw-6AclUowF9MF6xDvPZtKvbxJ9wOXhikoauBz8qApVApHxGrK-kuOcLTZ7LlQcLKShXTdRd0rpEoLqu9HmZHfAtq1w-nmqCdtwuVxK7oIujK38wRafGbBJLBeCJItWI7uYmYbiN8AoEgAoIs-GTyqgkcu_8Vat_LnZuUbTY68uBz5xvLr7nSkdmzIgyG-0Mem8xveJVLL8UECxxfw_dH_9t5j7TBq3kAAp3QgA-L3j5xfNadA0_iYixLm8ICj-mrv02f6U9kOAOpj2I-J6zmHg8pGwvfPFwKjsiX-_4uQaGegUeOn"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "gol-N1wYgohAYTvZ",
+          "providerId": "gol",
+          "price": {
+            "currency": "BRL",
+            "total": 755.83,
+            "baseFare": 656.54,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 99.29,
+                "description": ""
+              }
+            ],
+            "adultPrice": 656.54,
+            "childPrice": 0,
+            "infantPrice": 0,
+            "companyPrice": 656.54,
+            "savingsPercentage": 0,
+            "source": "gol"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0",
+            "token": "F3obvpNgEZbgn4KWsZkbLj1MHNEFsURpLwTg9yQ095IiphokJ8i_BzbvyV9PpVi_541b0o-OYLhTvGJ2iXzL5sSm_p0eOYnHUwvd8JcawmQTJQaVFilKQ9xStWWqLn7HdGkJgYqxzpp8lWU_U6hguD4yKlwHgH-ZSc6iBn-0DF_-tu5g97vxqB8ZPCBU1okjpGvKjReluWw1PkGT_DhfdY20DC5eVeI5GJRwRTYv2b1trc4n6_ikRcMtDPvogTNcleZNdLpQuGXIC63RccRicO98NcT_uwTjwq6Xw1JhbePZNod2DC5i25BG01uF01JWfqXPvV196fb16svdIUvXofW2XdBCNoiGAXMHPwwX1wXf35TZxpZvhgQnW_jSLWy0VzG_iylXzIiyEQY-dhGl91LJJpMCsxvZ0Z0XUQTZ5BmbmoZZPusw4h_K3Jrb0zhTMVbtmCp9wS_XAqtm2dLdy5EZaUnvJ6hSNsSzOfJap0cgPQlUlM5b-DLQbINTD8zrapbeICoQi08IMsMo1J-4YzDrAhDaIwXL9hXQWISLGyzRueT3zMkniqH7B7wXROvc_uvQ_ZO-e7vTMDUfx6rzZwTndzrKFwRUC5TL7aoW9iToz9NX9EQocm2BhPH_QLKlQPVOHNTclkUcUJjH-2NlHU90pTYSj54iYVSJkL_Fx-VitRmnmuPKfqmEfQ1tdzlF7W2by3W8I8pXuFWTmVLUq7aQpzTeBNVeADsOCptVg-6ihvMHB5_9cEIB_NPcMm2JBr77YTzZ21SD2S_2JgGHf4EG_DFf3FBiaWBOh25qP8TJD9I2N5tTZABzoLPj45LhtykrdlId1S3W20g4a8yKgyEOAGW_SbvL77ZUGCZSaNSuEantWB5joRlHOTUiTO37Lyr_i39oddwQP8UcGkDpJjXeugnroHITMiLGxT5je22bmzIZUIK39IL5bgFVU0uEuhOJ5a-uECmg9TmxOa-yFdekwgE5bA4euhgSrkXg8HOoWw9WUYTMaXAOvwtYmMgMIUG0SNq9dvHy6kOoI4kkrge0tuzWHPSCrhULArN0hyQybHGQrGKybM3NOVjmyHBF-BCD6Kh2bsNnhiz31wJu6XVoCTbrXr5itDC3d96SMRbYaaYTPSkyznx1kCgQTqmkZQNAngrB19kaU4dPXNCfe5eyVtMz2EgKvkgN4_DzAr2dbCVH_k02c9M363faG_S4PAd9h9mtECbA_R8abyJZmwGU9NA-EZmDLasCEBw34A7UepNOHwkZWIaiW7FKuU47G4iQh3UmhRUk6fQuS7DpqZnZ7LF4cXUMfxOYIwoQIIvmd_YX5XVa8-FduLNTCWEhpF-_NKrCWSOtJ07OVU2TcmBfu9DQ_q_sCRX2FFIFiU40G-KSoWwHtF1aPU6CdI8mvTrmV1kjP7QkntC4eIIMJRICtvMm_HdH8Z9VCCh-7kf8tCUek4SmmuqoxA64002oFpF4eLL80fmU7Z5n2U-JLE1gpPTdXSfviYHp6AHxigrwhmBJGlj59st-eyRvc9XHVBcQKM5tNctd-904NQFRGSaty5QpIC6pNO-PBjoUplrrZ3JRYKQ2QHpADGGKwr_xVOZxpraKzkYdw-5RW-o00DY9OLjY-IVuiMgh60msXMbKBhDaDhKVFI81A3OgpxO_5LZHMa5lGKupWo602QwdMqj1Tc4sJ17En9ybE2I2Vcs="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "1 Mala pequena de até 12 kg, acomodada nos compartimentos superiores. Dimensões máximas: 35 cm de altura, 55 cm de largura e 25 cm de profundidade",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "gol",
+              "providerName": "gol",
+              "source": "gol",
+              "bookingUrl": "https://b2c.voegol.com.br/compra/busca-parceiros?pv=br&tipo=DF&de=GRU&para=GIG&ida=30-03-2026&ADT=0&CHD=0&INF=0"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-14T18:05:46.110774Z"
+    }
+  ],
+  "summary": {
+    "totalFlights": 3,
+    "providers": {
+      "successful": [],
+      "failed": []
+    }
+  },
+  "tokens": {
+    "tokenConsultaIda": "8901_V2_d692d99f6f6140b88749fc63fade50d9",
+    "tokenExpiration": "2026-02-14T22:05:45.4880683Z"
+  }
+}

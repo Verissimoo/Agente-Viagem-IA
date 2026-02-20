@@ -1,0 +1,3236 @@
+{
+  "requestId": "49d7e3c2-e41d-4213-bc4b-819671f5c253",
+  "flightGroups": [
+    {
+      "signature": "1fEl+kUwBwOJbS2v",
+      "humanSignature": "BSB-VCP-4397-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 100,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T13:05:00",
+                  "city": "BSB",
+                  "time": "13:05"
+                },
+                "arrival": {
+                  "airport": "VCP",
+                  "dateTime": "2026-03-30T14:45:00",
+                  "city": "VCP",
+                  "time": "14:45"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4397",
+                "duration": 100
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-KH4lA7fKdsFJ",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 309.61,
+            "baseFare": 236.74,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 236.74,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 236.74,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYg-SJLDd3J_FpZZKfrOQog_P1-bODWVAAce9feYqZuriaCbx_MrxgqM2xIgvkIo09jYLISk4P44zioLB4cuFeEcdJTBxI_EO7ou26SDnUcc5FZyC8yC6X5LPkgeQc7gx7lEMZwTmmu4tLCJn_k9VIoHbx0H5NDEVCYtQBJx0YRQcWQnS0AtYztRW6CsHjFT__JcCoyVKZgEIH-gicz8OE6DRPWw3I4J395NyCQzpvV2XOyIWQpEukeCE0KB6-fk6DBUvFb83E692lUPIOOkIbnTvcKf3tp0rfcrPMapxTjwuvM3xdvqf5wRLH2bx38wpbeT0jXNaAMTlahibsgtGKLarzlAVKMfPjDTAru5iRL6g6yk-B3_vp-RuNA8Vr05xijMhFa-E2vNpyWGZ-VYNFaydpC1fXGQwRqnNnZPRZ41X7gD4N-m3VytNDdT_oyPjzUtEHefqZnYrDHcxYazfRl5PMZOwdR1muaRQ8Uc6s56pGWv7RawuyBzM7SwU4QCs0kusu7cAFN72oY7aVYnvkp3EGXHi8Z6mFsmxrOZbQ_wuEv4vY9kYJ2xQNw-5VpxYksTr5wQRODd52YibB_t0MUHRIED8MF663oDz4-_k5uFlNhhjNcOdXW4LFPJbuUtNFb7qTROlQ-G7rVv2o-fk3TmYW8H_mfVPzKCr4xD4kiPO8Qe6P1uVvjB3ShpKYcS-3Cj-Y91Q9PVSE7lmb23OMJcPRs9Iciwiw4bFoDv5Ojk71vu9sbQqvWWc243y1pbRczA9Cg7w6tst-4NmrxwkQZjkn-2RxzN9BVUmVrRVibTwA8XvAJaoY-LidUQmSd0BLztBW6GsY0zlADOoriT5PDxHAb62B7yasE79k-7MRJlPxE4GZCxr_BgUFmKFtNuAgvayjtw_WPQ8abXFITXkHkLr7tdb6Q73Pq533oOxPSr9SRyiziAHhC5utDmp4XZfRMVj_kyUcJHdZvZUxstwVvZD-IIhP8dbZdnjlzMrz0J72hWUGWmi7z54pHD4oBzd4AOkR76I1tGrXlhq7tuCdn7bwP2QXJWv48X3AbdkpfKo6Qb5JsRcLX5o-jAW9z71qBghFp8xeUOjhDQ6toCaqmHR9YNJZC4kq_lD6LfR6wVmKniYp9ZjARfSzN18v24oETNe3RkV8D-wqZWW0Qu1ma9Cl_s5_1ZRyDbmO57j209rQA7tUeehSu3TFDZLte3zO8_AjC6P4-661X27ZwlNifHrX2_maJ_E4B5JlEfD9OLxXLGxiE1bnm5sdYf-duOWTZuSWaFAqLWoVBzYALILfx1nP3VDICbU9R41xH0MWITeChMIbOXwNgJoctJee25pQrms5jVhpyqq1KVKt6UI1aEVzNCJINxBLc13leguT_f80ezp38Pk3QDeCE_4lq6CqxUiJllrPdG-xaVJBEGbi1j_a2SolJfZjGMHSq4lAFgd1USNQLRfz_PxjNkU3Z28-JLl-1YUlRfvqkuRsb3Gq49qpGMaA--OWHnMv2UdJUsTclRCsVup1xqVOM4KNUCUrS6L5ezCHABxv3rn-ggvo_ybMuhnAQzOZ1NFcc2t_r2X3qZ7iCshqdOl0plTF36mtz0mj54OX-gKV7wXm2IHLBHqvNeyXYOJp8Gxvk9bkCZqJGQuU48dCFujNNUZ_TUq5Xa_bOrphESu-wL0_OZRvxPV0rjKkwQixjbg6_KShrqzpsKRPpopFtskkXs6D0DxIXUTQ1gzcaJqrmPGBdrLELFjew1lyK4f2pzCtoINsPVmp_UCv3yXr2GQyyZIrVTTE3M-SelACZo6aKXnEebdsOfk0EZC04q2esZDYeA5qMISTzsH1sxzWvNY6X6mU_5bTZTTqhJvpUYs-2YXgS2ay97Pl3BXaSj-DmGiI8kjkURY"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-2a6wn1SHN_Ea",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 413.82,
+            "baseFare": 340.95,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 340.95,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 340.95,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "nt0QYIEnLMPUxmc-ZgbrzJ7Ymd4u9hBlCdPtmFKiCVeatayI0AYvECBlr0aRj8yAUeV7_jKO28hMHCrZ6oHn0FyywZuZTY7HhuvXDtKFEgp0HrqhmoBas8YPa_5HmwdayKbl9jSFp4IX16Nj9frbdDhaBiCRtFzgPBVChZRAIp6rw_gx3j3BJKViTmVHLjinyUn-qyVaK7wl2fZKK0hf9HrV1YmTqtclOqs1-GuPimeBIcT7g9yxPa8RBUk4rk1rsIYJalqryFtiKHMCCYcebj9naNXvCNY4kbEJLi36xJr0f2-paAONdjfNAiUo-dJEsVPKXK4_5i9ktyRZrzY4ZiFOGFjV4CSpvnpSAmkEdAs0p3l9skdRST3Heitres7nCq3i3MSGZTqVLahcXCDXTtHzoxTMrWP2HRlwuN9UVovDyC4S7gOzILBE5huTnwxBDyTxvE91eYVsrAQkpsKn2nW7lGETKFWfohdfMJAIDXBZ89v-FR_e7WBV3SuMJNAibEmz7odJH7qWfR-LcaxPRKBm-lsALs-glkxSkF5htkFyagRPnGfP7AG9a3Vit4kAQ6iGHLh_dQX3Foo-SJPNaXR2dpr_y853Y4s8EeKE5FlJKARRbyoluYFMtvd5GLBJolfIa22czn4hj0Bcaun4RUKSId7h8aFoKyeD_g8A9j8VygIZDwutXo4Zcvfy64ufxXli_BWncFTCs_7qNl_GC3Ap4ESA6SCEnBgY3CjV4eByTfzhxypZYw0maU8rZprjlCfyHmEJJ3vlPtfL2Vvby2_3iDf_Pht9b6bXjK-AZt456jLYUQjeHVwHeJSiG8ZxCARpbWM6fT4acqLWPpqjGDwoE5jRADHXhpVf-_I8PVZ3yf9XidXPVT-IlvVK8_ybyX-VnBH_K2prek2rT38WNuECeg0TxR1GyVxpRdPvSbitwKn_WZVuXeugHF2rCrRgBC363llioB4DvlOs3j8eD92XuBm3SJUujowQCacc5VTDHQ7Pvk4HIeSNK--IOOtQFsHVVDHybMJpbg10t2EOKx-WMW3y-BtKUpsvO5HnuKfprh2R-DkkISjl6JT_tbZO28-rZOEOZ5W7Np7Aq9souFXFAYF1QSAwlCBSQNMdV86jTpEFGADc8oMawNwmKn6huNLIWuu-L2Or-kko1CTOwwSKYshalkXQ_b0LB6lS2sikGu8X5QHVup2V7GEj0rIY8plOn_o07EAwEKWGJ5TaYb3xm0PJC66AH313ADaPZJLWeAj5N--V2EYj7AJeLr_LVfQTUNL7DhXxg1GO2S4GeHk2Xf6g6AQKHY1PLY4cW5XTor_vxpQk__q0O5crc7MuSnxepjQO_SOsnaNSYVq4fzvm4kyIOm5h5LG5NtrHBP2hQ9k9Mr5ZGMpchvp3DbpGF9Iz_p5beumZ4iDIde6GD3R60OH4WlCFmaTVwwDW4k62LR_kOSx6ZC_zRTLtnoE9bP3bIkZTCgKrOUfewYMx8zL5aAsHG5QksiNgYhZLR5GfzepGKz7ZCkZTo8pvaQ0rd5HHBLkISJQUHJYa6kO8_46vUTchiZa6PRvCQJvlmGuaG6AuoWkmnblouzIM2IOa4mqMIMt7s_iARuK5Nt8x8LE59pwfl_HLfSSI2Nhgy1DY7GnC4k5-UIVTJqx1RbFYeWOAqob4IkHsVyUXg06Q0xpDweNk_MeHhezTzfBH3AXTPGDrlk8o2cYFJv_EWAX0S-sLPuydDh-ZmS3EfA6hsAMt4puDETuvzdB1LbRNjZVVub9ym8zMK_Q-xPLm-kgsyJoY8wZZL-SoygYpJZ4aSWEYKV7tdihyuW_hU9nw41HBxEuXa4lH3e4Zmcsh6uBhKdUoxC-_4NR-wxKWhO-fPYi-tVgfHmtIzPUrgk4y_ucCrSx0Zx1LuWzbtbyuyTtLMlYX4G1xraeiGDxi3EtC-w=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7531373Z"
+    },
+    {
+      "signature": "C4uRkNFxt/gQnTz2",
+      "humanSignature": "BSB-VCP-4696-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 100,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T15:30:00",
+                  "city": "BSB",
+                  "time": "15:30"
+                },
+                "arrival": {
+                  "airport": "VCP",
+                  "dateTime": "2026-03-30T17:10:00",
+                  "city": "VCP",
+                  "time": "17:10"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4696",
+                "duration": 100
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-bAcSmOPkkXnD",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 309.61,
+            "baseFare": 236.74,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 236.74,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 236.74,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYihEjvc__xe8QIShBi4en663DJ_kP2iZBpQRxYLrnRNM_BrtYCTfyFIOTicDQCzYh5Z5knOz-Aqo8UUv2UVLFpvrzvIi0u-vn1D6GbCkqLigs0kmDCnD16jjQAadg0JyzcvxRiMfkM9wG8_VsSoDO2ouVFbREY9TkKMhwDq6PhhYKZY_4TXJsAMxKWY41FPfHIawsKHsMShb8qbSIuqSCaK_4KSLVQFiS88FysMFP2f_CQbdqDhegkrXH_qielHHglkmF5zHw-O7ZR4e-OcuSHKCsUyX0P9Yag81LgiwoPn6t47VMZOHY6xVFqQpGBWIHr6bdHiLefeB73L6s0BX6k725ljk2SQ3kI9mC0WstFzzFu-nfO0lF4EmGOEXspZJ5KiLLOtd_h2bzAz2aWWZiv2pd38e3az5653MuFjQNw5RjpizhSq2Pyd6R9Iwk2m2_IibQRs6pbNh6OK_kS0zSGxgBr2oE55h_VzOzYSIYsFxwhjdBagHR-CXwHZb4FkHi2iq3KhdTygb94Xyu_R-R_iCSJi9mbLYG00bdj53RXTMh8LlKNuf--Bl7LFnUuGTj-xOAXmMMFxzaXStsuPCdUsjNl_aaR5nZDQtg1PT92xgrkzYy2A-hhxoJfG_y1rOjiQjAzWUvvGHBm5G3rnDMBoPF4Xq3ohQVd82nPz9DzTlkOvfyzt2Pk1rTmhqJS4T-7CY0egMBG3vgHlHXTprZ8zIIWWWaDR9aOpwEPL8eEpAPy1i0mQx_MT_MU_ac4O5Rki297KKnXbwOxOVkL3r-XXBBaIADgXDYUJq95jk1tmSs6pC0zExeR04-sD96igdOreVZDKXgWkt5vTg-dm-Num_ICLz34NjOr_yVhy2QxrCQPLEu7bFemGWbx6xRVZzbhpvLo_RTpp01n3BjfKDsa9x9yJttxSJwFcsU_Y1EvslgfQmg_IhEZW-KXsugC9JGbyHOvducwLQyLZGHQ-nAeQCrc1sPov3RpmTkRakF9VIAskTzmUjpvXi_g_dO263MUjlU-iNZMNQYSza1NMYhzC8IA5asHx9UO7op89DI9mW09JWl45Kczbh5WazXA8g16FzpuBdqQVH-8_xiQX7J7aMlZErI63aE7Vqo5pNW42hBZCtL3cQ2L8vtDCDi2SYrTdNOz4VfTM7tKLo0T_gZqmDPS7z2Cq-loM22CXiJLWDUCz3HlYzcwocc8z3m1SwoCBmYTQGjy5UD4VbfYWFeviCh69SsZC1L2icTfbL5trbm0_JqmCNZ37_gAdoNb1218NgcVNrwQAP_M0POqPYjbQNvmGXUdou_3Xdvllt3ha7moHh_okFXiguxKySCRSauYSIm6_UzpnxpT1PK-iXY6f0mapLA_rvTcEyVrW7RzKL8EAZi8rFb9VNvEtdPVlQcJsuy6Im6-oOfT0Rb9YkifKDT-1iOeSwjlwG9VTIsgoryPHVSlm0P8SDSHDCIcMAl_iakHJsi2vQ9JGUop3k9srR-kACANFG47XikUh11trEPV-YA0F8jY7IPUd3kKSA3x9XOd_Zvub1PwXG5UNbV7CmntD2UvOGkchaPMkiUzzlQdNc8xyu3PFn7UOnhvz-Z1bOvffcxnUA_CTBLZg1TZZvaXmTEGcTks4Y8RQEAiSmYdTtMIyVk-uU0WItcTdMCgAmO44-Hyr_k28f8Lw_W5q-Tschq9oWdsqu8YkImpVMKZtNDdX6_ydHOPsW0Xx5kYwz7RKsYgc2-71RXQqL5UrEiaWc1zRD0uoVV0B6tdOy3BHXdBIave1pW9pWeHnVqVcIUYi_eeDEfOM5bdr5Gd_aCwVL-syFpWb46d1ESrDEmkipCesoE6lmG1SWHA8sbo0ed4pbKpcg6qnhXYP3hAs="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-TnaRTDjVO95o",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 413.82,
+            "baseFare": 340.95,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 340.95,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 340.95,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "nt0QYIEnLMPUxmc-ZgbrzEZzI2YeTt1qfRNd2-gOwYkCJN-fZvTJbOVp8zQR2Yy6he-0Dj58ZS3mvmG4ZDYtcACdSgFkGUN1aTixQqe0wibz1BfyZ3Rfv9TZdgZJEiMvRgXpRsniKu673m0YlpAJUGpMK_5Vu9Etf-eKq6pgOw4QQh1o9Rb9y8_HG2no4-xFjMR-MsHiBUYNLJfFVVVwyiSot3KXk5Dk9cDwEUtFQKwxfjbNKQVrc0x2rXfEYchrbq_Ui35GDEBs4yyWZjfP0MhurhscFdFZSdgDHXvuqJwbhs73S30rSPuSF40mC3KKwNY07mk9U2LkYCBgZslDqJ_kJpt4T1gN_pSLPPwqVNrrhdZuKh4-xaOUVGiS1X475KPmX4LVUw6KrgXHA_7zhNcDSs8h9NzsqPUi0-yj2OcRS78jcPnHOGUXM_rthkhhRnI3rUHen9LxkHc_m8o32OFsNLD28CC6frukpR4ddULgsIIRZwlv6C7CsBc39JEnWS2jLXx103jGIJnm-c013kKG6ZkXhX8TSglFPhEV5Mbecx1e6XkliiMMFzMniufI8Qz21M-wKz6MUqNgGEsZpONlLAUJtzhfNT0bEVp5HLgzjXUTyIMVUgxLDNSm_ZoZBg4FaKvcQfw8_y-J4SLKA-zKN7DYuAj89mWU-c88HA7D-QzRJ43pXVUH_7zojXJg_s1z6Ij9cLta-E9VtkGPu-RtXcl4zKm3HTfDADNJ6Oqdb-aw089NOXVs8HWGg7SDQB0SCSmayUTUod3kCVCykZq7U1Q6VZZCCjckKkk5Ja5Un2NhVbEuOjJ-VeTGHInDpz5X-XIXOAdrXni2eGuvdPiF-BVyYmFbEiGXul3SKKAWOMcju-OJLmRLO6S69CDc2sGP3e2swp37SKI8HDatpGzCMODuqzyNjHCMbn2DmPzu_hnz1DtNpU-HSuG_bzFXySkJWd2V-d57uOaH_L26Nbki5Tak5padVIQoy5TxflkcEaew5dzycJXBRasdfK3J8ag9S--HTUnMQIYdzvbQqB2LpPADPJFuZ3eoDqgOnzxF7Y5h2Fc9kN275urNUVoKoyD-zTssTe3J-xq7M9k6XiqNxXFug2hpkKvyt7wIrxL-JIgO2JxOxAtLYsVNgEc_Pg8yZCIfTjSqtUeFMrb8AfMvP1nm6JwGoNzygu6puJSy4-k8okIKskdsS8egnBzaZrN3TLo6ZEX9v9NfUhhAdfyYyar5qBA5LjkmfhmW4UcZmNC2EwjD64r5jZ6HY-76GDdB2MVfpbcNLDaBO88H_z1raCC__ai8mzUV4SHRU6uz6GZMd0C_7Y9LgTUnh1WORvc0H5ZISpRknRv_CrAwy53mkYQMP4hvsaOvDRS4UVANPWdz9ftQEfmRpUryualDW-7-VQ2gvTvJ5F-UzVOjuU951Ti089aIgyqGZM07ZQg2mFJd_7C0r_sRyy51MGZIML4EhtrXAKEIaiSK7xYv-qYM1FdxtC5WqDegbJa-REyN0PpVug_wYbNYKvB_hm2XjDMdOQYdtZ9wVbaT36GUKrh3kLFotv2i18HHX2-3ZMsFWB9omqJqnj1NqWDPrSwxhZb3wNndMOvrIhyAQoQfl-bfHMVPnjikTyCSsJrXe4tRaAdLv7BfdGK3M_SY79mRsCpVO2-Yj6TySHzF7EeKfg3-0PP81bk0PHp_GMN92GTBDSPssg4DKNbm4BmDpGkkvNBqFQUTXPXVkZSMM3RB4HGRD2PmgxhkaD1X8Mh40v-JcnqGHD_DaXLjFPDRijgfWx8ikPDR8cJ9grYei4ig74JBuDJkZwrsCi5e2h5i-z1Kbh1GLbsYiw4C9iG2Op1cJPYRd4dRIUynC5APVLPpTiDXuBjH2_Tq9QUT-EssBxWTabKU7O7Q5y4NlADKI_adQ7tBGaJyVI87KEgwmnD-bM-XcFdpKP4OYaIjySORRFg="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7531441Z"
+    },
+    {
+      "signature": "1avR8Jw8fWeITdgq",
+      "humanSignature": "BSB-VCP-4525-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 100,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T20:15:00",
+                  "city": "BSB",
+                  "time": "20:15"
+                },
+                "arrival": {
+                  "airport": "VCP",
+                  "dateTime": "2026-03-30T21:55:00",
+                  "city": "VCP",
+                  "time": "21:55"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4525",
+                "duration": 100
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-AyIChaS4VrM9",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 309.61,
+            "baseFare": 236.74,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 236.74,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 236.74,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYnI_8bSsTsAMZsXkPm9zAJO5-bnX87nxrran644GAy-T37SyEWmtFYUipSVqCrBF6oLDf1kkAxi8vsCC52Sdu1oLcDhmtFXYfE-ppmnRPWBaCbH_Io697pq5gjxMAcSwIH216f15M7prwNGXNQGs1NIJ3439xz6MrgC3ixzYBOmtMBmPGVCsiVOpaoGgXnJ3B7aD6wnAfEzigYD4zQEZCP1ZvIJJjtw9TdPUQMb_UIwx90WoMymw2r0GExNgKYuHdUzO-4GltioHXsPFz6hnLdQmz-hcxa_T9ZloQ4kRh22cCKIB5pfvq1F3hDUisNlCR89Nrbij5wfx-BvR0yVOKnhfIpAwKpFhF9lLu99KvtJZFRCnD5PxiTcp_jXzUj6yDySUhmofX0klisYFN6nX08szw6MfmFd2sUhDEf-sZwHA9KHX3kCp34ZaQECVznHP0-AXZIygDYXRvL2ztSPMLQz5C4uX52ZGgWDXgFkYVmuvwcz7lf1D6tr6t8HJItUoA31ec2zEZvxWgU_7dagbuKyv8i_iCBhDTSJtxAwIF40FBLvvKO91ytYLMCfwd_O1NYdB54iFy-JM7qnHkecqmi4jDO4r5G6zEvOHRyMv3n2ahy0rSeGJD33r1HCPzgJUffJQH07AG39aqcUHCR8eNzoCaNBahGeUsqmdeU_6JGeu4k5lvLvVwJJX7ypXGm03DWz0_yn5VsNlrlVzy_DuURpY-GydfbHOvQWIrvc-l3XmCHnEHbicvhSETG_BYGjzpGHoV7bMPEYa4CfBFTbHDosD0HFuDyuwpzBNLvGTixLncCoS6X8U3Vz69c7rqhAJgYoQl28z_KO3KZI5mGVB-PWh4uRGVrtrhBG0PDzB_fBmmKyJRs3coFUMlViBPyzfeqgdV9vpEYzDWM-Os5uktirsFaav1gKWRCSnbwrQe3F7miSPFbEhYdEI8KvkofylwClTm9CV8XSYXctcJmusnRIGjF-lmlF2n2ohIP6KYvkubr0fVqL60AES-CdKDaUE12ktnF7NJbtWesL_lmZ4kMTeqZguBmZZkRQ5AA6Hs1ZKqClkg6pllCXjCKi2zEni4p2O0nRdyIH34eVg5OwQK9kLRKhqfHO9MqBhU_SoCfaaQY0KMK7srDJjDdAQQUt-y5k9tADpVyAzJFgCEp9IuZ5UgI0u8iIxp7IrCatssvsahP-pz42VPwJ2usPyefGaEp0f2WgifS5afH6iR736P5thigQ4fZ4kbV7wNbtI_DkNZGJtKtzL8aoij6n7cDmMsbf8otw90F8Zp79aBbDcoxGBNtxE_c0uJ6bEzjvdyXUi71Gjlb9CqnYZKBT_lEusCshcQjl-Xvux5JQS6AA7La1dtPikj-3i54CMXZvjD8Ph4k_P4ITZoWbydE1q3LGbKSD5PJbwkN-CiuS7RSL9Li853yhBguCxTEQ0v1vcPyzuc8UuhPZbmvlXW7LenDG1rbrOtbi0b0KbwftH_LOTRIP4wnL25yglUg71y5O5Af9syVwGIfsONNOPpj20eiHmVwQvs4ROl8V7_tJTMvoCzlAKwIxfgwQ6eWRtuZWi6LrN1owUbmXUEC5768LBd_giwkijsWWziUSW4X0x9Ff2d0O5fsIVclP3uX8vMXJj__om1Nyyoik-Y9OhI8jw8CC6885TycHnAcl2pmjeEB-Z0Wk1jQB00ejAjK3uazr_kMPFdVN59CPcekHbt9y5Aw0IuQpRbp8-BOxYs2x_2pxh_83LuG3LasWCHJWQATdtDKwcyj41ZI5myI2dcd5teotFcIqiEO5M5-R-4gAuBEXLdiUyhVXP69et8l3495ZisQ1YF9_TAcwVUWNodubrZ_9mmXlIuGqWvIvurEx2KFmjCpzPl3BXaSj-DmGiI8kjkURY"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-OFoOhLOmqPW_",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 413.82,
+            "baseFare": 340.95,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 340.95,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 340.95,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "nt0QYIEnLMPUxmc-ZgbrzDUQAwGouKAWy2WgQcd2rOryYfUCMGKzhlqP2CHzAghKVb-K6m0BERCwkc19vFRrDvX_n8UO8XsTg-Jg30N_TPwoWotjgVtTo-wi2QkwEsSzWJ8jWsumZTvNEw3M9rmZMepx2xBmzRqlGQE73gRxNL8fU-fWw567H12_CJXCpqyzjnZ5tW4aridc2QUjTvYY6e5NZELFJlQtVSgfvU9m-LB_4evLpSRgpXItclpj7EcMsNXvZmDpCqlkWLuvyudxDLqp4IDzxjd_fcCOKrLagCGhD6AefFDAZ6yW2ylGT8rErwQMkW0XQS7JNbKBungm7BrMRT4U-RgApTglLnpU7EQQu44-IxUuLkSkYyuoQvhglbDuVpDwJzP8rCMGbLX06DeW_csQSgCsP1N9R0a1ljOZNQnPAl3dxjpdWZyOnOwKaBe7oqJmw0Gu_v-pYgz3N6b59Gdthfxn3WYN14kMoCjFqPq6LNZPwjCd8uGPGT4SU_JJ_xzIsaK8FFE9IsfdeO_qF5pcuCGZD0xCUI3Lz-i7f0Z4K1uwcIR2FwmBxYWwry73-zOgY9aW_NQ28aDGQewj2JvhtJ0iK3VrZHyBmqgSGkWInBH4dnHM4WsZMNLlIz3Fqs9hVq4lgddUojbgNiLH1XrvLGuSsvwJTSTkEQKPWwtIDDP4TQ6itpeX1LppBIH8-ShUNXZW2gYaq1ypUCxvPxPWjAPJFR-dUnrYDxTykMs4vBo7h_3vYivUNC6Z1hIkNtFQtJ78JAwuuKyw0b5oHPNpU5Ehhcg1YlJP9aci1MXj1xoo1mm3I3wCQM08fNiBSzLokUGMxh89uIsMOjbLYf_bu5_ZNIvJIGCpn9yMyPzppyrpGWqjYhr1DPUAGAiyJovU7jQ0_mln8fos1RitRhmELuPbBvHjybWwj-8-lT6V1ihG9hourpc4d2KacmwWFO58kX0M91hnUpokNzgGAolu41oddnLMNwlQpkCDk_GWgmczv6-g3yLWNbTyTlcD2jQAFoK-1PkHNir9_663G_Tj2yoPYEqxgBJ6Nk3CUdp9nq9TVBgs2PtGJJT-n6XPkd-zyivw_t3sqSQnY27kgzdNpnK7HNxBge6vkpwVIAvT9CF_tP5up6LZ1AV_mPGB8bU-MOwr8EzjyYE4lJP8Duwolcd1fDSt_DxeToESQMzEGiTgWeD5_Lco5VNMVYYUkjaph63yd7gT2oY5mN0kBzu14SHC6ujG4OqSJelRrSM-Q8F0J0eUReg0n3zJD0YbPX_ZGpi4ygJ95LY11qJzsLPpP6-mEGIrn_f3GW1W6eONwToRN9EaLqxiRG8Qvl1Xk6imY6D1NFkTuGKD6CHH2gkuP1xl5mO2MwDum0gd4qY6qW4KpgH1VLMUBxeoUUb8C320ZnqT-36GYiCepCdvq7YBJTXbAE5ibzUOOiPJ2TOmKWPvf7NdUtkAeD71aEY6Eb1c94XZkOtGpcZXUuie0un4zZ27UwIcOTRq_2o_3yRfDFTq_CPpnvZYRlJczyvJdUvhV2SnvGJ3HlpV2hqJU1ktOG8nOcE8IYlgNINZijGvKAbZJwavQF9LLwqt_jrYGzhVQ7SSlkx68g3WEgMHLMUv1bHeUHPzkcs-chtDUhTk27yC14ka3c0n6o5tw50pdtldvLyVCF_8xyepom3BN13X1V4QwxKTlC80r0_tcA4lhOAVjj_i5oT4Tn6qk8v5tQc7ffFcg0lAFTAlJPQuxYx4GzMicXfj86f0Y04sSuIizXAzHYXs7mKIJGFUJPtaFrKLEBY4w2gXdRb73ETmoCeBCSAhMyhrb9mT7v3XlT2JIB0_6s9Sx3hxGmwNgluX1vqqsHinZzmT162TnttybibYM0O3nW5R2n8JZDhYR0oN1dVHsxQzaZ07vDddYf6T6gctzZLw4Bh-f77lOs-XcFdpKP4OYaIjySORRFg="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7531307Z"
+    },
+    {
+      "signature": "ApuItsCJrOaVP7Q8",
+      "humanSignature": "BSB-CGH-6417-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 105,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T20:05:00",
+                  "city": "BSB",
+                  "time": "20:05"
+                },
+                "arrival": {
+                  "airport": "CGH",
+                  "dateTime": "2026-03-30T21:50:00",
+                  "city": "CGH",
+                  "time": "21:50"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "6417",
+                "duration": 105
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-II1nzTNKXkYL",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 342.24,
+            "baseFare": 269.37,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 269.37,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 269.37,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYvcOYgywwFyDP08232jVE-R0ApBznbW2dG1p4ItIKHerPAkv9kWHuxOZApytAl44il_iZqyv4_VYSlNpOeKSFBk4QXllT1SPEDxf7Btq4rxGQjYz84NwwBvaHOHaHb071sKBIaX7zPgS53QdFoprGEyIuVlpip_dnvFyat4AyEyPoEY_RiHP9fEJb02E1te61mPiE8oAYrM79mUyqU9m6cEgdWDs1m6iWci1lNsuv1lXhcDooydaBIPlN_e4-ah6LtzcxaKk_zh_bea0zoaoXMfbqfmratv9_pri04ECA-4tzcHP7WaLUjfH32NTSHUr_MoGaVU2f96dqAGzcOZqg85q5W5Sj0hZj_4y9HbkKtjFm0kCh4p7Smryo3kX7fMH20pIYuJPHK81yt01by3zOdLQIqr4HTACex5U3ULUMYyOeaHunlBZAhei1mJm23hVbRVOKEhebg1MeblA1mseGE2XYKNboPvaVFihcHn8g9dp7LfO3nZk6L1Ax1zFLIpqQwRZ1QqdVxqhm8slOe6Kr2p0JdZY0kl348OJaGW7hHuj3vJuqBEhJjsYUXil31S9G1X1kQt-t7hwy9XKQUID-l5OKDgQ5GYczMRWSZB8IP2yKrhFzPjCxr4qXT4yvMx_yFjjAZuuullM_nWVci_NewwGY5qvlMehwfxfIZlMelO2wx042DMNLyjpmC5hf3lpTdR1tjO66Das2taZjJvQOeiC1nPSFX2HGa5QrYx_xoMew-SEUU-uX5Ctmdl1zql_fHDvHfI4IFqL_qFBlbmHizoCBWlTV3LGzD-_BnVfOjTGxhCAnKXCjkMo9MKcYnbBYfkCD6bL6imEwTh-V4x4R2UQLMIcNpHkxZfEPQEOak84bGeZYPAEXzEhiJuyVRxTthB4DqNcY8tNKMFQTKioqsr2cUx91npYABnvch29jPlMleHF3_M9pbAczdZlx4NeXMcugmzujt8LfQc6FqYjFIrtuUa1W4lzMupiQmrkPlkWQrA9unEBqoXx21KCcQpT-C-bY1qyqpJiRiRAeHID5xVIh5fXaeZeYCeUb3C8_dNB8FxZ96Q_DQucpi075FYJiL80vYNsCg2MCXti-WDw1Y4HS9QGrb2dZAjyYkGPQ8bL3gVEpanqpjbMiL9La0HmY-jpXQo4i3Jy8v-61bnoN6ta-nkZOaObCt82EQjSGVTvEdodwWy7aghOMNjzmYxeqs0HB6OYl01LKdF90ZvBom-DNYLBNES6M_VZ-keS8SwKjtnGHtUuRkUuJn4-pwEpN_OCkA4-nPQHYYd1MURqeMY2XVQBwdVVnqcvDXlW4nV-Lz3Wm25N9OjBVJcdPOrxAWgc7Boav_QvKYpsyTys5az0O-Xasfy_hjBovUCb7z3QdqpHXrxi8VFa3OuXH_oZ4CQf2XxJDHWJhcKk0OiCoCjJlb2gvUKCGq61B8nnBHj2WKkt5gjrQnaNR_E6TqJq0SdMEkdThf7w55V_rto6voBhShOPVuYGePt_pfttVscy55AxtX9Szuu4z9Wo1VddDymKT_avaxOz-rGjY8jMjaODuoN1b_icXHxWMWM-hXzb4C5XnXZ9hcYm3uEAx8-aRWd5Sey6PUXb43eRv12j_B1iSo3VTg1XZaKGisou-CHwCxSY3j4qZyBcmpCkLDjUscaoSQJUJp6noHHaakZ6TqnOzGME-O3-jWH9v238w0EvKBqA3SF67mOAr_fTaTw5JLxbfOZiNqHZgx0tEuMZmotmD-AaeNRtZZQD4Iqht_BPWbgcVq7JJPs0NRON_GkltvTTxbLejQ4hhpMqCcIsq3TZdsx6IJTRndiheX4QM7-g0JmRnozJBtrHQu6MLSjCZEBOtLW7Lud5g_zSC5-Tl-Y="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-Ew5SZK_eN7f2",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 446.45,
+            "baseFare": 373.58,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 373.58,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 373.58,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "nt0QYIEnLMPUxmc-ZgbrzP5WkaEP7huPAj54g8uGQwmpUY8mfqoe41-UGmH7NwYUSprPlYhKh5yI06q-0lqb2hBcGASJvRkJTGg0LEMGGIpxDQqipmN67AO-VKHyeYX_rWQJLYCCtc_dv4oSGCmp39-5rNdZryF1l1V7nfTrt8boBAmaJEFm7mpLwh-LRlt8MxMcFOPsG47IFq8jPXcK26HqXnKEfrRFV0qA_Ae_EunO-omWB_BcFShFYemJFnhM97LxmOxFAn4A3PDCq8IvHu0x-yV3hz5zdBZpDH40D2Rhot1-_1KS-JeYgWGNIUUrH5ewsG27DBq1orpaifsxwEDYdVLuM2N-tTf0gdudkX3D-Cykc87vfu14oFMPr0d2kmq6bJBMX1Q0tMOIB5tccawyGacKT3f5AtwwZzwXNn97wi6d1BJFzv2XZl7U7DTvk-XwZkqiK32im89JC4Bia83PcdF2J0nG7quqsg92TwhHWIzQM5fWn3WvToIPtoMDpkTuNFVgDvoGYULUZcw3n6H1V2mWK25RyNaW9C0oUaj1ZaAPzryo7cyyqhYFNROs6td9iT9ohUg4XPxoZD8ACkt0GhQX-m9vOC_1T2Wp5Ws2NgZB9WESpPaqS9XkN2bHnjR7HaWUhsG1ALDHJIWhFrizKKOmc1OOzSYgiSh_D7Wrx2Ogx9XK-3Fg6lF0quyjFV37nw0yEhZZxkf4VFzanLxLdK-oQcY-1XMd8DOeOx4Cj9r8h34bKMaYCUdfALmw75NusKjYf7Ib1apu7GdadB7DVnpiONQva_MNPFWELYwMs4Pq6hM7MMmL2E3aVosIbGPynujNVPHtliu5Ckkr8U3Wh3JivAZxoV8ZI5T2f9aOy8d4nGJYkKGzgu0Qxztf59SvT2UX-NekAfb-n5qY1wiokbw1wD0FSVNe8SdCGG91tE7jRfdaCLsBp6RG_ZYebk5s-1mIcTQrrPRgRhUqUQVrh9eMQbHQ6XTsop0rJ0OGZv5Wnczo9V-9Q0qYSX19h_AqRJH10kv-2ce7fcDfsgBJ4_X4hIVibUUeJQcScCchWVQZK9G0BXyIaUxqZ6rxd3gd9-1E_44oUuyUbPeWFk6-g6ASsnEDkMLJSUPBn0e2pSbdV6vVL4zQTGW9vCP3WXCH6Ho0ouBWmK9iWzc5HVIF6vQE79yMS9tUPEER5GCv4Vkeacz2wsXZuDjHEYz2P4KzLUL5sbRHiuh088uKV9xxHf0iiThprsIyoZ7GA91-r4ADp_P7hlnwkvhsgRAXWKhilOTBkxFr2dgwsEMmGLk6wW6eTuplyJW6Z_79Lr0Xnk4l1L0YpwIyiCvegEIBmwI8YJOR4WWpwBsFXh26W-Ir21iPWI6orsaTQERaKvcsZwr0Uucym_TCmtjbU6JQE2SVfLL_Sx0Fae9636EAM-ylR3JTMaUvFvQLGsJTNjReUNrWDQ1XL8a1jSlEr5HcPA0UPUqFNNzV00GDSgfd8VJlpFK7Kg3hDBPcF4O6Cl_9xA6X02PYg7kms4SMN70Ept4dYlTvXPUbqDNn0gNM373XLYDUWlUuv_PKWh76sGTMZvvk_Npoo1axf2jEVwRJmHYyyKVWE361zo6yd-lsqj2IZUt3u9zZeCwEAOhKxvqnyXlFhFGZ7EVwCdZL-3xsqR4KKjMMTXgasgF643ypBMesf7uXdiAytBLXyaHu3Hds1S9-o1ibdSZvquwPCBnLOcP46TbYrtAS8veAkEHATsw5w4WcbyCSWgWzUvDdlKXiiS5tXPw0rReVLT5W1V9pE9qvNMpoFI_2uP_6BqKPzNLOxS119oKz1-zhcDy1EnGuZQ8FshPQnthK_zj0fHQ1e_M6xi-b22_jGFjgwcfO8St7D7I3qta9vWElUDi6HuTytpCdP71uxtfZMIjWDtlZwAgxgPoxRjk8V76jx8fwdnBu7Ro_g1lgLMVIwSYpQ7I="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7531519Z"
+    },
+    {
+      "signature": "sGBVNAkSZTE8SH7g",
+      "humanSignature": "BSB-CGH-6005-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 105,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T16:25:00",
+                  "city": "BSB",
+                  "time": "16:25"
+                },
+                "arrival": {
+                  "airport": "CGH",
+                  "dateTime": "2026-03-30T18:10:00",
+                  "city": "CGH",
+                  "time": "18:10"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "6005",
+                "duration": 105
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-azHXMgwhbOQx",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 364.26,
+            "baseFare": 291.39,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 291.39,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 291.39,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYihEjvc__xe8QIShBi4en64kasheO19pqR91SFFyN10_onA8hMOSx77HsETQxYJWPuB0Ej1zoXqMbk_jvETG-tAiIEuHg0d7gJ4zavfiDXaW-ZDUGkHUbe3hczTdbZM8xtNQx_BTh1Xo5kn6-lvPXWdp64oZ3XkqqfN9PMilnOzlofTbdXukBwQaxuZ_djAGm-wKCNnbmOFAuLwlRbcnVj0yk5GUS254NBMNeP5RbwjTEGqLOVqKmiGxlf_M4pS7SFdE8VUZ7ilsSLmAnAhOThlYihBniYa4g6pWDXbGrt1PqEwSKWQF-Zq0dmh27Z6zCsYqduplrT8X-Rtm4X93chjPFfo7Oel-p_1UM9LR8MZ2MPW09aVH4o6-kW6vqXg9ZMvShWdqMDgfTkTvdORQ57X17I3zozKgpCQLBXZ8LxRehFcsHdF6ZMWpgiQi2Nt3IDTdahnnDPGKwJ2EtmKIvQLeYe3hT7G9Hv9rf2BnzE6V6Lo2tURipMW56WQKRAc8UI8wxZ7V3NkVRUzqdcMBozP09lOsyTUoj1AszUY-N8IC8tYZGyd67SdZu5PZ1v8pdDKu0EJ3HNOyE_D9DAjjyqgkO2SKFC5IqzbyibKbpfWKJroVM6HG2ECk7OnLfBGsXn3XSL5DUBep-41fGr5udXnjfE_EiIFyhrdhBAmPHIajFHwlzJ0YwfsR5phTxP-HgjQFYT30fqvZnTJf8rclfPK78e8OIJkwGDGiGw73o8735GDAKngcEpZQNIhuY7rfz8339xZFc7Brpj2BHz2np2Ta2I_9GXONVHIxmgMj1znfB0jT92MnJ8WZSEFQ7Sd0OuIXw1AS8wxLLP6WeNAslhrmNv2VbwwnJkoq4PuL96v4-NCrxRVCyc3S0WHTtifb-ZfQ5yScbVVEM0eG0dqq6f6_auhr0pXtU-IcD2aUFry8T6cNiAWlsosMqagXpGnX0yxpm3_I9JtOgwDKDJkhre_-D9_xJ6qXK7092jvOpOwrIlGTY4qkKJmcip0VD6oKr7YcGp5Qx0cjcx0dSaR64dtWCzJBjyns-Niv9DWT7yQKj6ciZTVFLT4pIVwR3oP-Ejygow8L0em8En7kGMPC6JUTI0OFQYKyGNZ_yWu46FdCKyGHtCno_W4VKnHY7P-XwNeOJM2pl5qBsQbVHfvXSbsYEaVhcUmtjB4B4qpOkvxyVJHgBckEucGw80AI6S7BBLqGyDnk0FWSkpYp-vM6VAYy96fyOlJ7_vmOCyP-xdKLaRMdy0kW98ey-UYCfdbOGrLTkS3mShcfevexIBhVzzc1LJ9-UW0APQy-13Xnm1dEBBxhn5h5A3Prxr7lkv_zD3XHxObJPGjjKrodsuqySPEAtMLyqwcK-gwiFKOtU_P1msTKVuYh-kNncfY2CkEaBgJPJ7-o_F0ZZakDcZVPvjqcpBYveCyIDB8HiWdgY1tkVtp4R4PMC6elj3Ha1aBx4tV3jvjY_Y0vFyERaWYDC2_feIp4lA73hG5IZiZCaIgYNBVoRUf1EWMux-JQJoEoG6P2_aSwTHZ8deMysv1FozRcNhqXVWqb7GwKqPGWs2gyX3AjM5xqbHk3pMR7h8233-c4pgFPqwAe54YwStCQQFBKb3stR8jbxIhTlCPfRgY48cK5qTHnx6eOvUhnvB5CWhONq4SVU9VYXBAKVoAwsMuMC3caiDJQf05MNPco68I-I0pSgxES-uMnDJIImOT8LCX1GX2R6bMNm2cGO6FZcA9aPOM3V0iSFcUJ3TXaXbfWd3fveF6-inJZaSAcDD2zyJaDkmznXYYMd8-81zxkch_G8S3Bm4ac13iUfGXTbWcDymJwFaYKhxVxM3FCAnk4JdjjEInvS1ksVM9FWQxWmBM="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-LmvNLF6LySjz",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 482.02,
+            "baseFare": 409.15,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 409.15,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 409.15,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "nt0QYIEnLMPUxmc-ZgbrzCUcjAzgBkixGE-GhURudxH1WhbbZ1Co1de4vdPbG-Zvoemc4GzkMDOV64QnAwLCrN2JImlPk56_mcKJqNfH4yDnteahcgF_iM9YsKQHo389ArfEOkIouWU9Qz0NTD2ykjU1aSuSYIx8HvqNqYX4Iq6TnXJ1CmZaSC8pezoUZaFloM1yM4nWdipGQRa3E-0UI0B__3Gazj3L8BUxOcwPzD5FQ-bjf01R43-HYJcz0RpOtr25xJtKqldoeVdQXNAZ41XGY-Ho9vAP_-O9IWSY375WI0lJStXMH7vHbUwgMV9-fSGEmlIIFNNlhTvPZ6qi_T6LI_IX23BB-pWjTkFxiIRWOpElWQhC5WOAeCcvojV_tXewBcJNvyL0rUQ7r38xKFDdOdpKYAc5X6itMhxF_aMECbQnaIISvyfohB5gN0kt8aKfR4LSnMRASTFohMVjuHAXivC3XQUCf3jvihdnCM6imnSIUpY3wjbEesiDgBzZ2Oax-8pu6QLHHvS2M4s9mLeSkRRQnX0D4fd1tNSmBGB7WFqcUHIeMCKCHfAl4HJjsQlljJDR-qsVrL0XtVRffu-l28LyC-zxR-_or7H-tnioBui2jIyb9Jd_m81OP03N1KfodfCZeXpMHu9PU0Vv33pgBhMYFbMKE6n570bT0RIAy4_ISmX9JcIh1brSza6JzEmouovb5UQMBllmAJnk5N9lGap2ZMCu7AWRNqQxj3CzGwvnJsgYVerz9I6x6L45KX3PYSEpnQQlQC_JvCmSjghE_ZoR2EnXd3XwSsF1AWabCwJ3S0lXr500sqBViaWumIyn567Id8QKCGlbEdVh7oV8XQhCPYiPZb1csP_SAke6yD7ZZS82mfuoX4-Bn4msFCf5abGFAZ3aetzyg2Lm_MvFInXJs8ZMWtIHM3p4XWkHeOOooqKMNxgK-rV5JfI8hJkx2R3aWDRpr8mk6GH9MXdoCt3OkQC6cLWv8QKGlGReD7z1eLSLKyixpu1ymcod4QwW7y38sKvB_zXhfUAMOqnaXPGjIxEJYp6RE_vKxf2pqShKlQKHulvKcbZbFHP4DLCGTyXNoiRQ88DdISVtHXFTSajKJC9Ze8YyMkWu0UC-Angu6DTmyoLhRQvqw_uIdriPDkj8qKU5wOpQJWyRSZXBriO-NKfgd22BpjQg0bmErj87hEDURnO3Hfu5QaswFr4hJSt5KWAELON7dIWOtTPC-XK59fNxq-XiyiikJ3Q9Cvo4mWvrsmQAUOOEX7ONt48tJQ1KojxVgysDu3mVIXxuin_T3m8sCGItKK_FTuqkq7MgF-KRRumX5HwgkW9E8n549Q9oGN4q7unEVf5dNez6fYudXfK1k8ISl41Z0jjAoiUAuVh_-EL3URQqkXvOpWbOMTEJ_EdLOAjIa0I5va1k2-OYzNwJQ8JYp4B4vcW9C-V2PvIVvD0F45lKSfEkWEH1ow3zDi6ETJ0zRHWlk0uCNlEwkcNa4hSKJ5zOMn3JxNsoT1e6yJjPm-ih6JWhbYs4aNTno2aUUx-KFayUp-CIf1wiUCIlXuiI3JFoLUzkdmxjNdW0newq7xfBlo9umAxBxmExZhdloMijs4wKXTB0uw7XZQuWfjVHcBygjBSjTvHgl1-1Hfb-V63jyHGPoMUD30BTsZfzINx8ffoPR8uhVaXPGUZnvokHj2pLQjjnZ1wkZ_cIcqljQGmM3KOx0QwYNR4vEdKTNYyfPHSGsukh2TB9GDtQ24zfzsEQB4SP3NKYnU7cOuMleQ1b_P-DtNrTZ-FZ_fnANagtoN4t3bCRQndF83nnYHVx5g7qA-glHRjGHT-7hE_fXZmKJD0QB8HCVpPsb0PPrI1MeQjxL7dVd4e-_oPeLf0wP5r_23OfG_INNfjFGMiRP9IobtQeWmeYdvwMyS8TfvQOZkRqbKj1Tc4sJ17En9ybE2I2Vcs="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7531604Z"
+    },
+    {
+      "signature": "epg6bfIs/EF7dRR+",
+      "humanSignature": "BSB-VCP-4048-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 100,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T08:15:00",
+                  "city": "BSB",
+                  "time": "08:15"
+                },
+                "arrival": {
+                  "airport": "VCP",
+                  "dateTime": "2026-03-30T09:55:00",
+                  "city": "VCP",
+                  "time": "09:55"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4048",
+                "duration": 100
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-EX-96PmH8DnN",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 537.77,
+            "baseFare": 464.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 464.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 464.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "xQFDO_Gpm3kWA5YFEtPMaOGEK-Ra5ZhC0bi-kOZbZKR1SECMZzdXywbe4GwhXDKNNBVeQLgmUi-Njh3OFGb7SoHxZwY9lBS49jaVoqy9NpCcgy8Wqu8BekZjV6dCv3M8uWpDieoLqCc_tbRIU9TDZOSKJhCps5YE1MPuoSdCcyjWD3t8DxiwHAkHWUCkuQ7vzPLQ1-gsI6nZC1LgQONzSoelWQvkvi4gwTnZtgrNEj7iOGr3kpYYRq1mL9RFmvVmUtwJEMWYH1J-LBx9BBqqaBSJrJeyKbAuyxjTbfJcaAqrlYElVW8YkMpxpKnqFv97_yVdFNCS5e4zmpuljrtDuKksUkWhbIahV0091ixI5KDSoOjC-R2q_MAbfjrZAhvK1wn2Pcm4QfI2MDBSNfeDp9eaHs1ZVXlkvXVd62Gasm2L8z6VpSz8umhH-Eq7FqBUbI_Zpxuaxwh3_2aKMZ3LQDor79kiHshNi1Eo3ypSxpPxLxKmZrN4oojt7teQLDnCq3WVzd0MzRTTOY5gELwnsUTHmGgoHgv40EyQBm0OfyefPTzu9VwjgkYJGlWFencVQUZ-fCeB1N_o7FkafsGHPjJOHNhZddCOYOsYpCp5yneXv2-wRE0opUzP0mZj0Ge-zugpUy4q_ygdZb441KePzsjlA70Dsv_f44rLCCn5hz4kizZ-Wo9JJE4M_4uzd3ifo79Qz1IvDuvZ_MXPovv5crryQ5aU7R10gpQjSadTRzU6yU2SC5UAiJNIA-OYxqUNhstWAZN4NwURZhOJxeRSuYBdLmpWk4YOoZfK9TcFYpDpr1tDwJ3p0ielnE5RnTR-OWCa4i8LsIHdvf-FoDBvYC95pyn3b-5-xyU_1hfBTciwcGMDm6AY6DuoSv7tJGPv8z1dRM541H0qnBdbcpBL56ZvLk56XhMYRQOebZGMMjmkrHRWoBO1UQwDaoeHUS7-OH2tU0KcGslLPFKYJAT9CRO0Wzfwfa3KgboUfkLAK68S6aEiwXzZUORgAC6yo2anx_spNF97X1QELdfrN8zS2CczcElonvctMYteDD8ypyWnWgRyUBESWD8hyAGBgKJKI-OY0OMqKgjZc8-glHT0BRImSctMwwK2BfxIw_bK3ccfhmIvxWz4Lqw0y9NPiBQXe_l92_l2I8rN1hkdBB4bU5cfysvdReEUyfJLs21i5ZfXJ0bsdeMx2qZDBuuJIYv5bboWqo9UwLRi9FxsqdQBFEUMT4znffBqY_KK8vBfqPlszcFoGjWEgTQIt-UcxPMHgTFz0U7KQhpcYLVFokyM0YR7sHCqEzIYN3I72L_wre8iLURxtoqY0_RvJ-uVexSZV-EN4H9KIZBq_9LiGfRf5jW7nubfTEq7pXjW3JSjAaRFO2UdLJWH7kw53r_Zd-__zG56sUDJJ0B6alb3pdUw6rfiHbQigpAnQwMGnorFww7D17E-nwbNSarxyvaigcRqqEAqnqGF_8HDyXmook7dobv4fhpInLLCs7ltVg3BdXpNXah5XERtomiS7S9SlIyTGAxTI-BzFN623apmyaDVTaHe79MGzXBdiWfEJxMySFEuziyrTVSK74rx1zGaWblcETEZMwsGp0sB92MXoyy3oFM9oET8PDGPgDXNe4vqbbeq4MFMk_RACWnqqgYFWvRwW6TY-RvI99TeUt5R2ume6PvZpBPS73mAzPlAv2BgWrZhC4V9Qi4Aj4WP9RB4DliUdykyQB4dooX4qd2t15epNAvi0lXKT5gMJAsTDj5BwSHi69hVriSnDZqpmXzIWV78me0Jks5Uih8L4boJcUdVQSIVVbFMYdkQ0849zSABpeipDGfVSW78qXUpQDxy72_1tP-gny-EcQ_mMOPgXXZsaZuMqW1n0CLFChAWG9f5otT6ctakJOk9pc4SWPrlkrl1DQaayUIKkeo4LeyTik94QHzgzfTN_g2IW1dN_3sGflzPjGi3urHwjUIoMvAMEezlz5dwV2ko_g5hoiPJI5FEWA=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-kv4K7u8BUkiY",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 643.16,
+            "baseFare": 563.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 79.26,
+                "description": ""
+              }
+            ],
+            "adultPrice": 563.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 563.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYufnnS6TGVLXI8QTe7lIvnvAbBVwr2xXd_TLTAF24Sg3WZiwn9YXOBdCRz-1YJPcelyJLvOTNSEHG7fHS_4HEQL5C-rIfLuejl-Gb_Lx_dbSbrnf7KtrJRqyT5VDBfMWiRwKa5ePH0ZAcHmhEHkxAQ5L5EB1419oAC9Tnhp2HsZ8P9HRY2wQaIKCOempN02erUK-CKDCJapOCqQGbMzaY6U8euoLO2AAS8_FrNcqWPRpmHNC1duhYJEP_Dv5gumdY2_78AVy-rWLL2xXiQo_NzGL7az-dORVMEal_2fwEk2X9yye35p51MzLr9Zg6_TaCfSnZTEsZR23HQQ6LmPXMjoWJa9tYV_-LSeKk-54sLYBl-uDvemt-G-hGcSbOQ37H5utvu4n21Q3pZ8-HSIcPuwEXwXIDz46LumCtDw7sUE_5euE_B2_LVu3LZaJHFABxtLVmYamyL3873ehrICu0zv5rusKwBqEzRWe1eit0JzFDZv19n0ylmXy2hYxEL3JTlLRrLWIwy6CZm84Uta-cTL0sRQpxHym5u1d1nrZNnoQG2cul8B4kpOSrdXnDyCkhH5IDH8WtfIGdWpivcQw1ZCtEAT1aqq__NVEOXIhYV_kecTZH_6dzajTHFxGYoyTZygukJvuwmZxliin82tQjmgEDMFZMZ-HjxtpyTeq_KWgvgYfdNk3gsurVZZjPaC62E_IA3fvkiGVE2i_CwSQgSEzagEYsu15uGlg3PEoElv1TmxTcUMFp2K6d8gwJeAt_WYyCnyqQXwlGuf_Ka0obw65cctxNvrbnmpLzeop1W5lre5UKX2Zx3JrnJ63yQVge1d9IH4_LLZzaP2Y3kqnck4YY3x84D3FPBHSk-0B7p0XQnAuQY_sn2NYjRN4Y0yM_en8cnxKuQrs3uOviES2b29E2Z2wyFEfmrNx3X8hFDPUIKL0D3HPChbKrQLteX2Zhe6ZGjP6hO4eLQNoE1OqaTc-7FBPci90F-Phhhmjevr0Pws4n5aFvvVfPJDX-TkAR4uMvJes9fSnaoJonoq7bKCuOUc3rP1jeoscW9ucs3WxLEAwQOGwTdahDjU9Rv5FW4NWr_ydQXGEIdAQ-cX6w51aRYzlLz17ifYqP7QUb-CyRQHlmep7wZ7Sl_bjAFACnJkr_9Yz5qnNovQ68CjaGgIbzEEtd-aoQnL8LDz8s5BIKs0Rgzrr5K6Q6OD8yMAG5VTG2Hj8qff-x0awxQhWpglPsBm6i_6Rth2OXOpnvqKHrdSMrb_05IxLhmpw1LT22xmAwGPqA75da_gpe9i_ryhQ4A5vXrQi3S6_bAdtgloPRGnpbcZ9XknlPDHCzCdvLaZimR_37gKgZLjjNLdPEaGPEhmnXLFdVCNuiRsaXx7l1KPWHptl_mvunwHx1P8Ur-i5TcYUTvwM19OO-G3KWr_lMu-6MFPnyA_wqX4Jj1Jc7f3dU5eMdJ7Fv6GUuf9MbhSApscqUFyO2UrttdEr4HXcNxqz_Rae0GvQsO55swohVSTREbXt7Dx3fTaR8SaVWsQjE6LyaBTPPvbR6gRWYJrVRLgl7pzKSax9tIkpIbcHDSJIJKH8re2L_X-275q9MutCfl2lWDa2OUERYJ7_-tTxP4pAb2DXnJsKkXmEJEZsVCDEJsiiZtbSv9lQR3zXpaBTwNJpneXBcgr6FEoK9a7ET4EVG7Odp5yUx9MP6N_y0cU8m5Vz_jyXfUd4QY1LXWOO0_ecIHLi5pvL7ecBsnbdH98izw8fuwnjBkgayBlr6q7fRKW-31fgACxAtyLdD90xmP01rWfkPeA6fg4JeQJz9IMH2s3kpfsePPhn8koHszyofpUhiuR2JOF-nOZHAe4O7kTQelVJ-DKKzNBVLgFrf4e0E-lkSfPUXtj-A5BeDQfkSToAyTy-bqey832Qgm4LQrAZXVFOIkUmilBnylECfrnA4_o9OvObZ193Hd6-5w6Mn2Ph6Fss4wJtUkXp_GWPj--q1-xODOiuqXJ9nULPl3BXaSj-DmGiI8kjkURY"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7532117Z"
+    },
+    {
+      "signature": "zIQNxkctpyhEi+/u",
+      "humanSignature": "BSB-VCP-4395-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 100,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T10:15:00",
+                  "city": "BSB",
+                  "time": "10:15"
+                },
+                "arrival": {
+                  "airport": "VCP",
+                  "dateTime": "2026-03-30T11:55:00",
+                  "city": "VCP",
+                  "time": "11:55"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4395",
+                "duration": 100
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-pQofDGN5AyXT",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 537.77,
+            "baseFare": 464.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 464.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 464.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "xQFDO_Gpm3kWA5YFEtPMaIhYLrGTao_qYZrbs1zoglD0PGTxloJBbDo7hnCP3ObJOJhz44Dq6G0bO7y9fuWAXUkFSIDRb1R2rlY6mew-T70j7UOptXGT3b_uo6HueGlVWfWdkRDyG4Ozmi_0zRoNiKm9RrpnmyeJwF97WFXWX9Mzcluxrji1frSpHGKhZsANCXlVmpLeWhl0utnjr1-aQWyhw1gyLOuzuruku9voM5Gdro5BAdcNDL0XXiCQ0CWKmUQmWxXxQZ1-84BmSEIVargeRugfwpnFrQ2LT1VCeNyfxgPrs1nqBJVA54mxwlCG9e3NehBIWDS97CSe8Vlfi_a7BOgcAt-qGfpmoVzl4-MWFqLTNCnx-DEyjJjBOLzQ520lyJkiukLf4QCNy02z516lsoxwlpnXB8SJ4BsRuJz5lvUv7CgC6OaqVJULrvhwsc5OYTHxJyT-qe5zXsTIq4GWR0ACs46YLV7mUMcYDetTCrJtqkNCJ0i3jkgmWZHIlvK0mu0dxmZ_Q-QMuCLD0FSMwZUFbGusehe4fhFAc3zvT2kbj0r0A-NDroTA1-LpodOBDip1A2PKFD_XooqKkoIw7aWTnhIOQv8qzANTflwyNhEkHrJmhQRBJz-fb9HlMS-SKXYHaaw5q8RYwQq3LYXiGSlEWpaNVhajQ34vPHHq-jXcWw4JKbJ88R_2HkbpjzjQbYE1UCiALWncpi0a7wKyvU3i3R-xs-mwC4lBU5VQBRu8mlSFqZ9Q1i_w6hozX_M4SrrwQ5furqPWIwVbTZHCm5N-GpfL1YOret2CDIIDzz3LQgdTQ-GEc0r9i6673FIZ8TxziCcoak-KiYda_cI8Llhf8dDA_y4sO4dJ81EzU0RMEfhm0OLJqdGZl0-AzA2LkvwfqwMkdfHQ4A1Y-BTZy_A0L8XCFN2cvcEPfhFDYa799cFuyKFolkZtf2T1nIgnNldd6lsAbOLGDHe8Sjpfe6gwkSEDQnDAIc_9tTSAb23c8WVbKyEZau3fz_VyLBp1-BC3UWRtuJR6sCCSEKzpZ3QvStu5y-cN-lmJQ8Gr-DPXEmVBwKti5kYrWRKxb5yZBsvyBnocnCmY2DSjAATjaQuMkhI9VT3wvpFaoSms_oC4SiIqOPeMNxoxAROyQKVcwllbUK7mLEsRIVLiFi62HaERJQigQiOEcCHQvZAojAqLC890hfYjFfGMAyRptg05XECHI6UZb7k-IdN1XONXuDRiyNbEEfNxDUs1u12UR3DOV5xqKgcJFeHY2leFegcusb6h4-WEKlct_RB9mP88atZP_KLTZgYs-xzUfrj1-aH94xhsOhkUVDoWYtTH9GzVsevFxB-81Uadu56Zmq4FrRB1urDcG3my2j1ZJUKaBn0-Asypibt-9ZNX1Gp9b5HQT8iHGhOZmCeHCZLi5WITKbxSO6V_oeCnPAvTHHg6xeujpfBREkIjRQgpEyrjQssDZ5X0QBbATKoXHAgjVjspGI0_WhYHqF2r8GBX7Jy3BFbz-BPE84HpLK4aaQxZcVLhvyQPDIgATFYGMka5zwStaGPo_CSDelzJHS6DbhNAUndBBZzmTt2FCKgjRPhsV63xtFVtKjI3WbV6gUSudebS5PnmzbbivGH3IgYy8bs0x2W7_x4nrTyhGNrJOnNnDYbDKMCYtf-_Eafeek2zeJ40bTqGt9dQmKCqBD5C2bIUZDg-HPM_FIQ4TBU-UweIm9TdlqakA10YwVcAJ14PCinXqGArT239t12oAtJPVFcZgzMsQpweAFf0IBJEZtCoola4wMeisVaMKUO5teSuiZj05Yb9Yy0-h4p0ighvqeqJv_aBSEolvIuaz4uaD1X_SjqNfJH1sNMBXXoCVn_Oc6NX-aAQZzHfxZHyR20eD2HHZ2SoaFzq4pKi48qxLeyrAxoh5907ac6NYXEgvuF1mD2NX1BlGh1mnu5lcjkZXGNsWDuwkPD08sks0ieRdlW2"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-1p0mjqWkbvNX",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 643.16,
+            "baseFare": 563.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 79.26,
+                "description": ""
+              }
+            ],
+            "adultPrice": 563.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 563.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYufnnS6TGVLXI8QTe7lIvnsp_l0IitN37qVcOS4UaWXXiZGKHoUfdQ-4kVruD5XAG2IeInkzI8s4XRUOs2PLQzf6SsCaOVxfy4UULwSKsTZvwDhjlzYFAws-bEOTlAqwTlB5uj-plft9GIsx4bXLAYI9fDRVWd7mTQV2Xn0DlLDAHfVk89m1YzE0zc-ouAfJ7D4fQwlzzCpT8kTH5JfCmNE6rv5VuqC1UT8PDfJn7lS3_dXIPhyxeghDDnSxF5cCryVWa89wwqXYZnlAYlVkayuUarB5wMsz5hiOIz2CI8oIRnccxz28nlUwOHMsw-vCdit8M3hv-yUZ0jv_rpplNpR4Eg0rrYdikLBHlWhdrG7Mw77f7pksxlDLXT4hyaUf5gulZvkS6nbmjudmWESt2yZIClQ7JfbhJpFk8hpT-VInucBl7BpgzKbeTfBUpMshGuuAFdAURycxeGew8z6_L3Yp6GQtu9ISKj1Pf0yNy0enQ6Kir_-eZjn0u2dbcwU0D3abKZHnWyzUwQPPAFHXTOfal5-qkWtvdMMteHCSfuSQpdeqTVJSnsBSwndLGPp5PLSDLCPM74oyMVByuIXSlsQejK_z02lSWI-jfxnGWXXB5JHx_xk6g-7wcDioQlMOslW6mOlVYRF3UpBxyNC6UGpBAVBZu8VPdDe6hP23vsje4yq0ayuUBKxcicAd8w5E7Cn_xXf5UEIM9CmJns9ZOM58gho5Te5cSmVNhSVlkUKfRhnYQTOnGxrJdlzWvqgRoQQLzlEGY3HkMHsteAMRNR8L33ElAv-JOxQSArKv1hKQ2SSUV_zGerpuh7DN51oBWHotU4zKz79Av0-b05Cxh5wpWYg_nXkXHaw8LV0tQ-MFAxqFHJWPreREDSStByc-3_WtsiE0RfVZUPUs9MOwf5_1qWaZ6Ioj4d8Nr-4VWdJXrCYp9SxLoNHUcXkGgdMHslQ3X3PZBqOQMiod-LhMchVZYxb0mKNdRznbU_keTRpxYjCMwQEkK7Y_FOusHeppfPQ-elArdynn2RRZVgMZDZk6VM5mU1evo30M3WMeLuiFRu3tRuLSjkogXUBov5pj9mTKug1IVmVoD2Ol95WVeTD39j4QKJlcRe22ltrqzUqSnGCMVJIAbImCNLYo5xYR2XpDhEvr-soR5bXfn2x7ny21tUJzsF5SZKQl4oW-IC8v-slQXmRpWINLDkU-82lj9BsTDrud8JGEzmfPpI0KhgLqBGJ2-vcurY7Q0FdwMJUYmZ6oCH9Ujghv7a0E5j-QbmUd0bmDcNrv8mB-wiV3GWHAW9vcuN3VxvUo2GHWj6ZamPrGnEYJUHP0-nDJ-6VNAiKFpUrp761ktVqCs2FVHvrP9PMuKCHr9yig9Y9EKNk4DeDmFDcCF_o_eJAXecA6BfduEcSCJeRff9pRbawZOJp7TaYEknqyBwAQDf6KYP_-TxzXtaKr2Bx-BYezX2wcfjmK-1Q_UHVFyjVcmN3m07HB2RE1hfcB9sv1L1fynhsua9d-QCaf2M2fa0XFiGqHzo6eNO-bCI3fj5WMxWkM2HvDXZwOIFCJ-HaQr0t3G2P1yVOrf35PlvKgRORYR1Myrs58DZyFbc9zPL1rsNHsDbrRRhO15a2XDnflYLhuK1QGvMEOiGVQTIWK0KATkb8eqYSkADbR2mwWJBMmEWLJHki6spIzWeMmlz04fa5IRYH6oGn_0zmvFDJRFae8hjDkhPtHXsz6jcqiZBeWq9tJZsvzx0yYl8waDUkaBY-v07TGpDm60kRy13VRymc-yNjZQtO9O5S1ysXJTLfvoKoe3mRMZaIhSGtEwIeZxjwEylaoArsA6ISf-7wejBoDNnNjuRRvAOzcUkpWLXvoPtYmzE4l-DxZUStjfhL4ZYRofgMmezCAIuVnzwxkLWTts99hcknK1jXuHAdGwaWMPSfdTtjszwxPaaSr74bkoWDUi3FOTm9uqUB0KUUbyXTAxQkSh-A4Skql-uImquh3-gzzw0w="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7532257Z"
+    },
+    {
+      "signature": "HiXZw/q1mrxOlJRJ",
+      "humanSignature": "BSB-VCP-5046-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 100,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T05:25:00",
+                  "city": "BSB",
+                  "time": "05:25"
+                },
+                "arrival": {
+                  "airport": "VCP",
+                  "dateTime": "2026-03-30T07:05:00",
+                  "city": "VCP",
+                  "time": "07:05"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "5046",
+                "duration": 100
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-THSrMZV3-1hA",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 537.77,
+            "baseFare": 464.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 464.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 464.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "xQFDO_Gpm3kWA5YFEtPMaKIgMW7jgQf9syeRpqwGuBEQ4VlE58aGmzzeLks9axZ9zIZHgywYMZQzS2pHY3MYbxsBahoe3zwlrsk_FBy8Qc4ipt_PvhyVREIc_IxxO46ixleqj10w7LUOO9L6fhgLUqJ-fGHx1P6BR_pAq5-i6N6fr-WTmMMXZZXU6Bqt4MFKvdwxdKoEpUzo6lAzUaYGg6-O1lZo1G8urpJt1fVdP5VfEEqjaAvr5COxEoUHcqBiL_MRm59uCgPSInVUHYGeMKx8bhxjdtuRO06-8uDhWwbjz9oKeaS4asA6bfr7L0FyAT484GJRWk9hnLPllfd9p1-KzjvlyYZh5m3Pu6Gbl_QgKONWNSgu7DxCf95DiHzX9dbgqhldwDO2L1QDEdn7iDrGypFHvyfE9ifzTIDumMZlTuqIsV5Z0SI6Xr5OySx_Wn9B6S9v6gE5YiaxIGcIPX6Ebs3db0pPTnXjNbkq5g9d__Nrl1rl3Jm8m2knqVQAvm6JbOQv9bfGPBS2xE-n5kiSiBGu_oYPo-LmrLDXnRfTZ5IfmSpO1Jxmn1BsELCou_AyyiYUdXPhLMo-D9NU_Adltfc_H3w0pq69B8717HlJDP6nTvZa8IAYBM2hxJ9ob71DSKQkClpltaUQ9OqwaijkqjDyFosViYDteox-OHlZLkbE66kRyh35uGQ4HdhWxtfHnmH6tH-_wdJQDMCu7QMcEIPP12X6GlpLVoMLdgHQ9Svg3OBm9rADN7ZXSwMkzmfGUPW4gyMGNL6r7LeF15i7_5Rtp9LMrJU11hXmbcnrzT1110p9m1VjACPlDCDazSC7ZOHAXn5nBUBIaTT14TshY6Xc99PfEq0XJ9IPo1a2QZ1aKOqf4Ax31KmgusD3A9KqFIjOyommx47c34mFgxtpvD02Iej-G3bTSYue-ZHu8Bkx9aX_h6ZzWhD5-2rLbJXdhQKt6oDJlYyjlC2mKTCpbpeYx-uSsI37aVxM_nO8JO1-oRMArR832cCONLB6zhf5W2Jm38PLytvb9s8tY0Erilee3FzteNtSSx0FiKkT38ktd2WF-dRizIiWh8MYqVLLTdG0YuwzS0PPMT8Q-S5fTovfwi-xJIhzmA_1XFnFPtSjvHQo7D3JXWbjpRl47AyJSgDdBBx39c4aoaSPJ-rvBn3xuGnBeef5adOKOSgmaIuS2G9HdUpYjbQJ9b138aP7c-Q6Bd2kdZWdZDH6OPyIq8Ys2l2CNp168Mc55ErYuIuesLTxUjtP608cOax1dbrfbcclU32-PfIpKcyyEzF0CX0CAPo6sDQJmSXW5NxpUGlovltLgJRLp4KV8JciYzk8cbwhJgV7x7gbRI1X6LTaXtt6yVHfNHO4-hUAwqop9UEp3gFiMnlNxzC1oxSfXUCJtpC5HkCeVdWT9-psHbDbk-ULFDz4MnIQee0uPdWycu8ja7Wm4Y3y1xK_gCjKHNkfoFjnE7oy-vwyF7OG_0MaiX_KUsRmpHh7UuKxMo3NRP6PlbAUktdoFQ2TWv9gam3K8jQWJ_Z2ORoNyL89E8Set5ZFT-HtZoS529AuSTGviZeBBqAp0RbswNmgbiZxE7zxQrkf1kUUG6CpkacqpAR9hV3_b7X8ZdS1Zje0pxn-L888QakiqaqhfMEhHCgDhipuSl5gkTwD2uU1bVhvU9DNV8RCXYsy_HtjVGFzQrn1vOMxVh4gj9psuMiWtvWBngzSq54olWD8n1N8E7qbJZ5orryDyhdXOI0C4ZCXoKSfLSyGQATgFeACA3l62GYV481Np6MhH7lQ4EM4DeBc6jRdAskN8pqsXaWN8C_1aOFQuO9ZadRoO1rmhojx9z6sdn4LMlCdaJ19ETUeVqv0VzQ43zJNldG6gJvKZsVMbU1rANKO5kQP2bmM9-zYEXzQAvlIv4L1mTjx1FivfQ6WQNP2YsdLDrZ7qbDhfLqFjbIaji-_70dQYdytqVjC85ml"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-03Kt8VGPGXJd",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 643.16,
+            "baseFare": 563.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 79.26,
+                "description": ""
+              }
+            ],
+            "adultPrice": 563.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 563.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYt0_hsFnA-YciJL9dYdKtK9zft7a7Q1v_SKzrYWAuBnCIySLK8MvL6q_sj06pmf_NbYpbxMcvuKlghh86bkrvnC9-6u3cWIu5Xt_Ytub4pV0r-YKy57SRMt_qfgloPG4fH0DalUTEk4nExn2XYBKhftevoPa_vNp5sqkpn1nVg-2r2OXH8ybMRZ12ZM7y24d_dpvfiwWVjL1xf29OvxyLuuZ8iInT-cc1Nmzk4o7kxELDjRROjrDVPQpNnLiGsOIJlZUp8VdXmEaHh8UiJqE4Oe6IuF3l2J12y07z-kbAMOcgxsd91lS6UrZuXULD4reA13mW-TUkZb52Mz1VFT7dYd6oZfsfRFr0FoATHmzDRi-KN7EdRA9MoUkTAeyrucwWQxOU9KFxTRWrG1KAHoAEMFyNuUpBuGC6Yw57unfL3aupWDhrqG2wUwB88BXwlgglq5BaTwXGFcDQVO2EVw0H3mR01iGj90gv-RCG0LiHQ206Za1AbGyPFWGbxbDtpPi0qwcf_wxymYFemJWtuwBo-46p4N7nqq_BTMJOpgKPgV1hc0E01pXIpmkWUfo9F0bsA5BKMvDGkOklezw3eOMF34IA0Hlx5HMIIlzM-flqwkt19y5qToKc2hUe0VX1f7RMVZQO-g_bwVOTmEOjbBfND-f2Nhta8d4lPTOQyivfHkKdqPg1xlUgKDjCRb7o2K9WJka3v5qalUMHYx0OmLPwkW9gKOssftvM-kIkS64g31dnT68Y800qkobHjk7T1wO3xqnxVuYz6n406fvNQTT4bB66qut5reAe0e4V1bogeHmLF7owhX3u7zZDGPGBPjobL7LFnTHlaVjKCMgLA3ikbUFctPL80_j-t3oU7crPm_JxGeSRjn7V_1Fb_p8h10TeEC7hewm17_bGiKlFoH-mPOMHFSDK8q-WLezmGREcAUCX4mt2uMzu6_cgUd0TjNZAJkaOloW9CLac7HynguHPyaFDUvuhMNw4-feWmifFSZf66yRnDRaXslAhu0dZG2WyFoRcjDvsgI-ajssjRnHxJ6pMYAyGqvTP1A-vtPrsVjK3KpS-vkM_MnaFqEaBn2jjj_Zc0tV4_1duCz7J0EUVWOjhNBNHhjsjPxU0YwVSkyoDzRhiwXbVGxRP2eWBegJKltCNNAmwUIyNSu8Vt03EZqpOC0vgA6MFmNhiRXgDS5a83rdt5N8pcO7S79PYF2hBe08X4hkHjOKtV3ZLBdHndHP7BgqrjrX4mhPXzcYY7x-A8c5r18x2xR7dD-aB1k4FTv8o6gupk97JTRIYzTSvNKeWrId59iZwJ3C0oY99vP3VUTsP_YlsoSSy54dIeUegQtgCW6FifezU2A8as95iWgSkseTKiP21FJCWHa2qAfU4SCXMLaLS9SPt0iZJ0HNrh2_YBgOuhkDnX1BQe-mMvW3SCx-QXbAefdcZvGkA8srFiylM417vYHNjm8E8i7QSQ06hKy45Id6q2L2rckpUCub-t_iaWAcoNL4aREckXC4PAhvp_WwBsPyo0ybwDK_Qmj-jNJOcybEuiF9_-mK4U8Sj1IP9bReSZS66BhoIhT3lXmEcdjZpnVmseaZTGj-UaYsZJdyR3DswHMquIbBm33YwA2a0IzeSdruD7Atwo-nSxjqenZwet45NvHNHm5bgkddJeyfGsOTBCUrywlTd4YuphEWFQFZtLUHm1yIVe2-wIvqwSxUSJ0tAXlJBi3X5Ib4N6GrNKcfy_aBAJWRWZz_J0YTG1qWrzVmi8FcHmDEuLZzZlZAVG0vJ_0hz0KqVXp--S0hiIO6ysCrE_68pKwE9MwCQkhqhKQZxgMH_Zae1cEYAdZH8R2rDfrFr7lzEU9aVE-Cu-w9CCarIR8D3ldiunkLNsFI8xQ40o22-9H5e8c0mDTDI9Wskz7O2CyOlyBnXKV10hsxDMAQ4MhmnhC0IDJoYlHeAbOz_V4NvjaKEGVkHh2YqqItqZ9q7EKpqZENxZR-m4dmOjb7sftPft4="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7532199Z"
+    },
+    {
+      "signature": "2Zw0UGe0+rQhfg/q",
+      "humanSignature": "BSB-VCP-6596-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 100,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T06:05:00",
+                  "city": "BSB",
+                  "time": "06:05"
+                },
+                "arrival": {
+                  "airport": "VCP",
+                  "dateTime": "2026-03-30T07:45:00",
+                  "city": "VCP",
+                  "time": "07:45"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "6596",
+                "duration": 100
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-qiw5-U-TyvAA",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 537.77,
+            "baseFare": 464.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 72.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 464.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 464.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "xQFDO_Gpm3kWA5YFEtPMaKIgMW7jgQf9syeRpqwGuBEPsv_Q2bS7G56tgcwuNBW0kwxfpkydMMdUtfW4074hGGrocqbpAD-yCVSZRDOeqoSsXpV5SGD-h-HQqhOUvZnvKFPwAV0gnhLf0ipRLn2qWVlA9-mOEIR9-rXnc74Mo79gsIxoqVKRO_RNxSs_6Fl9JyaDSghIM-fvuSxY3qGydibINELJ9uwiUbYwYzVu57zgcGKnlLVoKpKnFNfV7-8qGGfD1tUQnRRPFWUkl3oS9G85_WznPlwll1KK4Rf-64taItb0jtZpIGIfwUYlae2zzUjB5HxQklA4UKbAIiQ0LBS0abnp-Si4NB0m2csHLNjfWA61icMWMl1LLHYhBsv6Od3Ifhjm6p9kfm-av4Ybw5eyowHXQEh0YdltGyf0WNsIgSGOz998yv0yMizs40UxAFf-B1OUcyTN_f9v-bIG79rJPxEOUWYGhAfu7-sZcyAghfU4JSq7vnBG1WRay8-WT-L0R7LwrPi__Xu2YhY82OhDBunCgaK2UzXvfnc6SzDaKH4pJ3V_1knUHMfNO4BnpkaDFTAoKE6-xbR3iBPqu1gsR5WeGbW_KVTZUJx735cEDGldnotklcuOL2CcFCj_1iH6I39ET9xrwUJ-6N1Owr_zQAZ4jvYQKynxPHfMeR4El6WjnJRCv3EXzdQowi_IELtIcRawgqDMjJEV2LQY2FZkEKqULW2nfvMLASdutXwFE3uKfoiAAEkAWgYqna_7dDQ1364_B_iCQxfDL3Fx8msRIwdXb0b0hPD2jMZw5dtvrEZHRYDnJyfVThnnb46JX8NSrO-d7VBO7m4c-DTCZK9CGr2jYHfwNRvOL1XxsrKhnd6iy1HcZRNJotM36G9dOwaNDRTVnAPD6DmR0huznlAy1olMok7Y_RmGpEr8gXbyp_u1Zzfi5vi6CIyhBqVFJIY8C43B8GZJBC8bghLvH979PCytgefxwxjFjDGwOk_jk01aDu1hIzzqcCBnB-fHKIEfIzvuUdj9JAYhBWWAPUYQfGcvjpWftfARH_8sQXBcNnR79aOgjdT8odkexM64t72jOD5z1f7KPjqQT8-o_020bHpF_qA1Mvqu98TIXwomC9EYOfRRzxM8dTwC0uj-yimVfGN37y-QOjJbyDqx_gHCF_h1ZS4EctJVwYdblPhjCFumnhkbRBil48AnrvNO8z0_Ebq7Jcufs0_J3mmxaIng_NlsmDCp8p7LzRI0no-cpZ0e07PzzoZgN2XbgjtSKRjX6u7HoHuWSbaM1yD5oaajCT_x4NFNqzQ4pUOlE-pNS9mkCKmx9SgyLOzWWz3x4bwRdycsur7iNAvk-KgVGb30U2AkQrv8f4h6-9mTo4h2BpdTaTMqGVkTrTtGvsmlfzP-NrSiHHWxAYEO5iy-FoN-3fsfjVyv1YMURrGj_DgqfO2bNBucYwaJm-VTuRzATLhEBFxbZA2wYnENLq5LUd52jbn27UZXNtHYnoI8yzp-KCejWJXOxXTCXXh4DiapIjeLK7TXQrVBgXgo6sUS8cbnzS_wTUkVGZhX4cKliWi0IB32jqwkneOYHp3ZIFW9QuLn9KSjjPu0MenQe6lUm3Xbq2Dc8tRzcyHfHnUiTz1aShtYX05fByqAAa_h3U_QwVU6IDhRd22noFmgReaK4Gip5dMcay6UTjdgZ4eHeZujrcxC1Rm9jyy9XwYkAYG3ppyj1rL21qJvr6QQe0x3cuBgrys420kSwLjVn1brPbUPi_BM8QevHyVO63bAPFy1OHRr8aM3lg0dHSyUzG4TocbIFHcRwNxTBA1p289fpxN9xWTQ3h78Dm6y7LOtAs-xYyxwWvkjExa9e8QfHrMMm_CqzxyiUpo5IMYErevXeSj_Xb-puXHgYVAlio9PGfNx7vqKi0N_t0kipHzKIzDqEC8BM_rP9NXRuX-mTohaXFCGmA_I1vyOS8Toc4ExUb4Pz5dwV2ko_g5hoiPJI5FEWA=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-VRStQed6xHOO",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 643.16,
+            "baseFare": 563.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 79.26,
+                "description": ""
+              }
+            ],
+            "adultPrice": 563.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 563.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYnn8NWgh9P6x5bEX58HZv3i-ZAKlOcb1SkkrADZBjh8THarNEiy4g7PK7ErDE0vywl4I2SIaCSbQTLOqGH37j_YQP_tn6BygifEr9TzoyjNtKUeB4S7HJcak5_J0mYg3kbpeSR3rmG7e-hBpr8hMeejp49HTc1wuzt_eso8ajYfQYzdPHeu-SCEyyqbahh3c33sYPq7FneLG1Lf_RJOgwpCRbPrmVIDEyj0Z7NDYV1AaeIAGBiFfZdukI1rRBPUstlISk6C5iC3U8PjchFxStaQbGAY2TR_gkEpv5Rzc0X4zzd-3NuLhyJdkTFs3ZfwGkn6t2HNp66ZK2szzqEMpMJRUVYuydNoYon0lpJqokKhFgKTtK6fXqgZsdg5a9QptIsy-hoD8Ku3QV2vDi36OtQ_OMIty8fLWCnB-7U6AGts0bjvqrcQWZ7WvUvfESD8T7jQHbKU4DA4txo4sGWSRkCmrdD9qVJmCFjfGQzH-1_k-56nD4i-gOjekp4kX_QfaSYTeS_t4MK435bw8MiD-8TKjVgsoDPZj4xsopt5Fz-N4F9s3NglFpferemvuPBB-ReVaVVU_JjehvQNi4XBqnbM5FrPUjlcxMUxvmTbM8BopVh9f6f_52FXzsI1yKtubfRUFq_Vqs0FQ43RXlLcRdX3EuDfr2krg6ftf5zxx72zyMfybbBrtt10M230PSFPRo2JeaQcX8m_BkjPijs4ipuvCK3fqQ4Oj3A6uRn-elPLtDVoyAqiGqi31sbjJHOci2EViFyy7WwazgmOqoy5q7RiOhDq55Gwx17tBGmhZG0utIoo50VSsgcBGsGyh-1f0y0v29BzQRj4Qa8eIJ7fcwMuB8aZcupkMHKJFSgqCrmAYRct_uZc5E_l6GyPmcogOAxKIB_BavC_XEcizmuqI1vbkwNsbDdbZ3ylNA5pCaP_T9ijLgxsEuBuRY6p94Vsrv_S7ZcEto5cH2S43bESjOpsd99JqBgwY-MKdn6oK0VjMQfj7IBLh3rp0oDrfb3vIIt34qsyN3rXeB7nKA_qFmumrsQvRTuMeWVYRRwLAg4bTkzO8MJbpoi3ZfrzRPJiyRCc0a5xfyeasR0dGaTMEIIELv1PXtM-qrrdVaJS_5uug8A_t2eoNhGHbzQd2sJus-70y-XxoUkwEiL9Wxrn9RKuV4GJnk_gdmwlgEAkoJGvg3V9YtwWvIzKM-s_9IuIoN0DkdPt8e-az3AZMKLMg1PzjO3vShVvhprpjihDRf9YLRsiNS9DCGWJgOvf-Dx0eveud8wThmiI1lmR1izdPCiMbAF9F5UDrTqTr0LBpNVE_xJK4-PS_nX0zIPfOzazq2FCZJkQbAgjHl-W_Ztui-Qf3oxRZBx1gwMo6eMDdPaEnF5eRz5EKyFjLLEfw4_7Sl9L9I11t2_TDUtU65RcIbreKqN16JLm9d644Wb05FNSv9HmFqRL_pwl6dpa3EF4pmIJVPk4rQ95C5o_Rv5Ww0d_CpleVSWJfNTQV9cU1NOxJGBuN8ylvaGQIcsd23m7Y-3PYzN2-xSQru5XnE-fRr0ADJhirqu2Z0q5ryi5pfrHurKxAexk3ImclUG6qTT75y1hRk-KBVXk7kythFN1Z8w74isELjmcupQGS55PyKUAlBrobThBmPZxozVkekO-ZrGK8acPC8WcA0FwkS5y4jC9snNlhY6o_Ux_DNeSQKwkoaCqeIB563bP6G8hXtTIY6zUKUi-a2wpZjQIKcvzNpYP7MKNooWUJC4ucBbFKgl7oCro9iXjHVD0G4Y4sOMQTUUq2BEtSzZKkIzSDGS5_rQ7YC29Wl72mIkzidI7gQYApwvsavMUWgE4OH2ADmYulWm80pv4lc3ABtPt-5nFgOAG1a-UEXcgJ1HOa1ZWLNwmnpRtd5PkFbHYIXDQDwhuOQKz3eZKsD_Xgmfen1DEni41Hb1qiIigJk8dQ1DIdo6wLvgIBNBx1zfuZi6Tl60jzF4MTgXaXqoGv6qXHw2CfI_Y="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7532053Z"
+    },
+    {
+      "signature": "mCow8iIyDdeo41v3",
+      "humanSignature": "BSB-CGH-6010-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 105,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T05:45:00",
+                  "city": "BSB",
+                  "time": "05:45"
+                },
+                "arrival": {
+                  "airport": "CGH",
+                  "dateTime": "2026-03-30T07:30:00",
+                  "city": "CGH",
+                  "time": "07:30"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "6010",
+                "duration": 105
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-3iDOnGRZeU78",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 600.26,
+            "baseFare": 524.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 75.36,
+                "description": ""
+              }
+            ],
+            "adultPrice": 524.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 524.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "StsqEDLbWfpHUvZvOsU1mMa9ByIV_MyvCyCIFwl9FP6yyh49Hbhpw6edmnJ3tiy01hROcuD_4tFHFhu432o0xQT8AY5YR7t3pHjQ3L_DvVL41AiwTG6IZRo8p1Rg2CfeRuJvkJxvCiLiI-gdebV9tnft2OPbZ_OXFMDw9sEz32wXOFS18NYJJ0DTRRg_Zt9J3Gvqw7v_wsten9UZ4y6lV6rgzL9we-QL077FaekidL-zFA-qlDaySgCaL0OkRWqxvPMt4zm3x2ANwaoblpYe3NRGd_w_Clz3ORL1EKwARK0J5LfVsAcedYTfeHQ2aPXnfcz383okiTD-ZPt94DmOozOx_B7e8Uw8B4KMGmbWY8tc-vJ0vWSA0cxktWIKAL3lzWbmXJ6uvVqcDUWK_IEY-SZN_3liI0Uz0oH57tiIq3rrKXG63GK54wREXP3ejn0f_QyrZRbdXpkKhcprTSvqFzybjzvqsKqIarWyNnwKvzn8IDF0hrcylkciMHT3IprcqF-bHWLnz3YgfBScHHNjr2b2Zm0I3fZSTZNV-eZc0pFSQuNK9ilZVDF-MlXhsEZd9pDoUJ4P8w1wZ_dXsa3iTGtP2Nd18M4ltQkiupoAUoCAmPMjaxDVzrlAYMSBp9YQSxeGLH6VL3EB1TPWDsCC_XwUNPGivYpgB-bOX3aKQo4HHvL0VYe2hnnPca60yCgZKNn1WJBdT8Wx3wzP9fDzSIl0coh05YJoqd6kBCBUJuLqphWwt7TxqdfP-jQr-lvp14lcWj2SxqryFuWLkoRBSQP8ojnlWwymugUtLiSJVlTjMe_3NRj7FxkuUl-6c5aZ5Gp5ujwCkDxkd89sJzA1EW1x19s9thcrFwB5LtcEZ7CM6DSRNZ0kagK_iydwsWFS1yFSEa2x8ImYiGEfAW1WtyjdDHjNfQXh-RfCMmnwMGrPVbwGHpf_ptuw9-DGN_Nk9cQFFABBWMh58g9VV5gbXytOgys76phiT6Ben1SlhRjz82TWAsP2kjfj1jfNVfMntLI0ilSy2iL-IoKRwPAoD2cV2pcCXW9e2bk2AmJ6LL9AwajmuZsHFNIkTiM8wyYedkTUUSblBGYJwmbx6rVaVbSjoUNUpAzKRyuOTkile15yFQ5OxCtXsaTnQLLYGkyRf6j8fG_SIocKhRuX4fF2RgLaPG8BtWTNiYkjxtj57h3HGPWKbA2tTCBptBD5mbjOapz7RFwIDhrQQ7NqBJERxUwS3L96jT1DbZOGMn58K-tq5uUg4FNUfzpRLhKLGIhKL_DDtKWFrLt7c4O9yY4FTdbW9zZWkPAaNS4Wsg45Ab91A4ou4BPgp2foT4Je3muCwlq-FTu4in-dv-vZ3ES_yJmS6fqooqVuv_ARluuft2lmjrIc51UYDERcMS1WX4RAs2j4bJqgJUE_JVCGRQ7JtRbnebwktY0d-E-H_0xv7HqMWQbdAuHZWhvUt5AEWzc7ObT5JdGPhkLdYQhqI5Gv5YuE_6VwGAFptXMCGGRyCoR6ucXJS5h7DGlyahLzlIRUsJqVNFparndkYqvJvq_QofdeHo3_rf1QdhDE7q5Ncdhd_CFsGLRMyzKAOYEwOczE_q9NyC978LdPjScwZDFefepiMLSRUd2q53MEGf8PjfzazTUsgkUJRHSsPvcpkrjMjaYZUb7CSjl8I92GfkXi6gAvfUWc5l9WG5vc3QmtoiKJjav2HD43cMn2FAxjeJt_sK4EsyTGctWm3JPNchnx_VloREk7VSdH6TBZKwCf2vFH0d-oocHjWwUGEKRJUd_GtCmoqrJNn_ycKUAf3OOnNi99eexELAAwJ9OlLLtSgjk18iWDw3cogHU3fdcw8keO3ot5bs1ugEPTxXMJBF1-mxJ4ORfaKhUeDge2NPrKy-NwUGWervinEGk2J9Z7TxH0gfKkcSAcKRMJ9vw4dB0TFtESDBHUxmUqHxbQvsF5QoOy9OlNjwErpVx6GFjOkldK8Q7200CRkFDyfg-a-MoXnQ=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-B1t-cMoa-pMk",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 709.16,
+            "baseFare": 623.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 85.26,
+                "description": ""
+              }
+            ],
+            "adultPrice": 623.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 623.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYmUVFjcTRWyl7JMkOGpLR4m8VSN8088X4EJwmNkkh0Moh4LY0Lo4WHRZvF4UrA-o1tuBnOV51bEMx9p4OyEoIsFtGcp2Ky_DTUv7Xu9tIRdw-gNuQgYIByAWvNlN10zSbMZofkRwy0cPVl1GlzERMSzLyhYYuP2FjlVgTPTdR8GLE8lzfK-J929hN4WDhEvn4nGLH4ONGT_Jkmr_xycxk6lQTvaozyFjRx0Fwg88cU22o6WEwUT0s-oXJ2_Fa5ULqvjj-myV31B9z1ZTsAQXaHUXT8mZYWEHIsFv_C-XId1kQ2KCMQ9HFggXWdVI6tsOEwy_yVquteEligjXY11TuOe5fPgq_jMnOIFr8aNa5uqqeWMSBTJgZXBry7ekyJtRW5jAGQgyjULSUrC9X0bNVVR8qo9jFQLyYeANyZaPocvNocdzyrW_soQlXRM9_w75s6fbcutgeLiWinu3WyJvN-Ny6RI0nefsnlooTxsFR9BA_Y5mya7FxezPBDa9s8LTrvWJF6DkvSNQGR9mNG9Y_cDy7rrBqZLNFp1OCY2AiO-tlY6qbOYu0BQ7HjDm1ifU_U_r1zTgURIoRodIZuWweSqc_G8VCRZzKrlpxkQLwUFKi3uWs2CpFx97AFLN81NnNnTlsYRezts0RL5kr9d7hJiVHI05vzZwBoIvQuIAT3v5yeDtrkbOUQXbW5HLsOdBXED9e4EoS2bxK6igKYnOCZ4LFlPIvGXpGdUVt9joGN_bwrmfuSI7eZfdEdPEPRRPWukgrs8hj9rzPQXzLz6RqebebpPStrr09wusy4QVK778UWqZGOjlyK3FLsjIq0xZu_dVYLjsSscnI4bfrgfDDbwHhNPPnXllMUAH9XlU6fvDmnXBvyhuXFjhQ6qi3fg9U0eJa_pX-fJTVnMLwmWBk_zQsFtJKekCiE-v1Y-8yoBPoRpcpT_7sJhmr3FtyuaJR8dSzPEshxJrF4I20cYwFGRKbHEKrnrUZcYf0fGgTSXE_ZH2LKCSwTlVRyfoq9yjTBltQK7lNK1vO04hB9VFANo16RK3rGo2UTJW4o3a_lgqodcRfUsxeKHz68PM34J3hV64I4EjHa7xSmBoH--M07KLKjcp_FaI5xi29ONedscVkqcoLFwsHqDXEuOgCgbUthlalFLw0c8ygoZlUBq41hs6MJuiz9CfiBIywo0zsp5wvIfZqcvAPEJ2Kmn2M_Mfiz4ukZfZK4l7Zq_8520HSkx9gSqHfzCLM_VEJBgDkDkEKtomjBGC0DDoYp9zEYF6QNhHnMNEfQF8VsErf6Ty8g8e6DMvichE6H__93rb33Jnv7QV7l1kVoExJYVDVThxB7KTN2Q7u9CZWVHQzX9gS7k3yadhsKLRDsf7v4KPp5GCvL8yqkJpQQ6CaqKeLPbwnbknBpSxn9TnkrheRZcJG-jpJZiRu1AIf-Hxi5JLnphoEXiA5OU6CRulUzyBVb9krTLn3VzIrMZHYFjwAsn8CPhyu5aTCx0Pj9Jawwu6pjczITtvWnen_LsR9AwGwb-c2_crbJk8c-7jr2UA2DCvrzzRXJAyNR-JzAeb-IguzZ53L_i9hygYuVem1B74Zedg4tvx4NHZ7u5cjUU2FBDMBDDmUOwML8ggTKVbnOyqHjq3aXMCJNQ-1mjLD5R9jGzD4-kIKQS8RU8apjcjndylr3ryVazRWtnDck_VFURdmKD_WmhH_RwVQTq7sfxG5cYlDTME1g3TSuHX4GFqJ4nJTLADlMff01UVvKQ_i8eVtH3m25CF2LLALzKzwjyLlHjV8QOYsYxrk6GBmMOH-kquIv9HEPJxF_MnTUi-wfX47BsE6NHFboM_5494wG8wQNyWLakClE38De4VBoeK5BBfr6vUMQSm8xBLTqpuy2TqCggIkL9ZFRAiWs69T7bhhTY8MAN61KvIx4V46HVsVUzvrpfetUxN9TGNn17f20ZEXMzn3mBJ7vDAQudoO7kXB7GWIaj1Tc4sJ17En9ybE2I2Vcs="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7532467Z"
+    },
+    {
+      "signature": "XhxYj6PGuhCf+kmO",
+      "humanSignature": "BSB-CGH-6001-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 105,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T09:40:00",
+                  "city": "BSB",
+                  "time": "09:40"
+                },
+                "arrival": {
+                  "airport": "CGH",
+                  "dateTime": "2026-03-30T11:25:00",
+                  "city": "CGH",
+                  "time": "11:25"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "6001",
+                "duration": 105
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-uZ4GxYg18EDc",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 686.06,
+            "baseFare": 602.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 83.16,
+                "description": ""
+              }
+            ],
+            "adultPrice": 602.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 602.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "StsqEDLbWfpHUvZvOsU1mGF_ZmBKLLbiNCsvPjaYtstX3U6V_qw697zS7jABY5xk-o4cfCMGQPFfKa_n8Xm2wF6cCtuaj3lT-cYnXvZxJGktKSpKE4xRF5i8MDM5v1wioIHkuzFDgNBfHqGVHMRG514fnxUUX1ukMbwWN2khUx2dp8gw8PY3-C4voUDZcZYNzGYlcIykj_vZx3iz-Bisi0v645t4ql8ByYC_0uv71iBIGLqDpCOV9AkhRiUuKd3IvPK3uvoJfA_zHFOJ6mDdXE9m1jRgFj2_5g_hiTbGCtlDAHa3ueIlM_gqW5WKVtXPy-XxaGF5ExQy-eWI9j-H0KhRl6tEgQS-UgfXSXcqQOyfM5kXS6rJ50uUltceOe8W3rd1mWU54bdjYlHgXr-BfQMYe5AES072JEvHBBHQNgkzFCb4dj9iRS8CtznKn7YL58w01Pw3GjLzTOGPf1SCGYxAN5-t5OZOY0R7nJ1ky8TGhYVGRN1GE598uwlo6F3YLm2dwYfSpVR-05EeIefI63jWYw6gy1cXozJZBUuSziAKEl0mxu62vKKeefuul01SNw13WACpLFkLUsiz9iW6r8KxsKcDXnyz-H40ym9JNzhz7rlyY8Tng9CgTmFqI1SmH9kudagJtuOGMH0SoWhZO5Bnn0MaoRxQd5tPWFPCiaIs26q5gEEBfyFfjo5of_I_9O-uZ4WxtlhhDoytcfZDyxZCTVPhNM702iCTBgnFQuok5ZGVOuNHQopqz9Zw8CERxGsfjUWH7msHA2w9OGCxS-tgQYaJWYXp7QlUvNpDgaCY_qS8ZQeKV7dmfDWNCSwTtKBYlelRwVBdR061UmI4WYJPZrZ1wpQdrAQXZ1UOaxRDxFj3wj46LGcVhgQfZ10mwGq82Qzc2xUEsDqeRCxCj9rbsWQ-KA10syAp69jyoh5tUycgdC8UFaUvpcN3nBedDt4vNTOVz-siRAAFKAL_CiZ6jnyBP9MZtA64yyYbbEP6xoZpAui3n4IBMl7-4S9QZEB-ZiiwY6wN7gYXROHCbFgrWNKMaWMLtqijGVsZY7b3sDPLnpNmoh4-hDxFFRRMKNNTTr3NNb15jvEtu3LjujY2NILT3DDPu2WOznHobt8q8US_VR3qoO3Avw56SP2OvG6IDFptnfbX5ptLqwBeMGThKJOLHuYgHBIjftv8yVJ2D6Hv-A8yPjtayeMSwFoosJdcS8RVeuYnwzE9q_mr3D8LR5OnJdRvKO4rSF0dQNd0pY9jRUPZpU_UnO_1Ypekap_8-HseQR2u3GkEQD40pL8eOKCom1mHYiFr9gBXcQYSit5is5BWhKq_1ls_vJIpOkSRdZxbdn4MfqA93aAVl8rblucSPZCa_7_D8wvelU9_X4VNinyRhzmmOJ3_JoW20GhM4Ky5jf5Gv2bNlt61fUZqeGpcKIZRFAYcaTCYrBH8mE-kNqp9tWMx91gD80B3VyPRM1QEHDRJryla39Kv7CHDINTAUXVWo90wAnpFtDu6OTiQXB8c49b7OZv8pDDwyig0wrkSczRK9XkX5saXCsjQ9ZlulZGk1quqDEMeK93Xf5d6WsV0CJSTU_PtQyCnMN0Vj6W_cK6oN0IdETIyJ_CAG7bD1vvgTex3oNsK6t8UQi5ZP1ofwwFenRU31ALFirXWSysqLahgJV1AVRLGDD4BZskGdcXkfWBB58a2QbLnW-sO9EvS7ohPwKMSB--MVLCufujSd9Tcul4kp2A3Co3cvj0iAxXX2xncB0k_9fvKSbMI3NedgehzN2SVUmN5u3akvtK0kDCqxKJIapUW9msLCCB12kmQl6xTTUEBk4c082UiLqpWJ_5Syvzf_caIAALtjpECefcWc-ZCgfh1-4kz-La1_3UGlycRImA8SdWo9KQljeVOe9JYB_3yhppBRWV8zNYY6kTi0KJoUdL7GIjaxM4-SItKfPfErRpHgus_MJzXBLBaGdy-5uG30_gFv6D7vjcAefBL8kJWCk3zTeTVvB88AWYjbXxCCIEOA1s="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-TSwkvN7Q3sBe",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 794.96,
+            "baseFare": 701.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 93.06,
+                "description": ""
+              }
+            ],
+            "adultPrice": 701.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 701.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYr-7KWPFazqsNxv4xN42r4B00wE06bXlbvomCavu2atNIdfq48bzi4hgM6lnVBX9p9Qt2kiT9NKJC-Z-qbawKN08ixldxtIEMhar6VPzFSbFjbRvKIudIMPWnUwXGxx3GNSGV1ixOuKj12sX3mXVkImS9ItG0aedT8A4QRZNMAJ3vHVhGemf0FpMZdZeKU4IgNOzqq8qMEQcvSTJmbNKJiodPolOUxSx767JaBepE_Hvr77hypCCsUi-zFtgIF7kRNdIpX5foFduPUD9ZFmqcLG-b7zSBQEG_DWUIvX2YlbIQOyq9jf5xbqBl7ZiTh2KyGdQsQVvDqGjVidaMGabzxbngfRRGE-_m8GvtEO_istoPjrkvEHX15HSuCBoinoEIBRFk11fpxAxM41b1uyWVgAcNWnnMUhLk_gNii2OM9GcS-_3Q77Zv9sH7pUN3aKXre8UXctcdt7scip2Pc2kDnD5q8cLI_RcxMxJLpe01BKlRmEttgFpwGauBl3JFmNXfIXrIE36K1R_1THodVw50haYtTrNAP_dCi_VpmcfuZw8QdHK-n7lQEJerODtx9Xa_3BUcnTqiQregEwOEG-hYL_sQmyUXoHcjBiYcnA2K6sDfYEeQ-e9CTAtQTV2GdMBtQobLCCUiKdjXdutN1XkHNaja7yqRwG1o2O5ysM6vXUmNlaZdv4zhkO5ZIO5s0V_T6WmWA-22wUS6uTgapfq0GGqNxbygQFV1Py5vyCcbxprrF216sK3u7xS2TQ3SjKX2iwJEi0QZHQ3na5Q-pHTPgFVxOZJHif0K8Kef38-s8mQHX34Wbs_4WCCIxzhyVADkfe6AohcSSZAa40tzr8w0SOFgoqmwyQFwlv2c5qrYWFtDbRK-CmC1o5KIqtjA4wh4zRzYU820ta8W8-WeQIe6RBatEvQXxGT0McHmy_iBF0V4uXxO3UIZtBTOZo2jQTwENcCbCdifeF6MZxMq4iwFXt5_cElkPqR5b62WuhC3eOlludB8OgfwA8ZvJLbBnu2dEfGPdJ040UjQGVy-JOn0zCkTluIGIaRdH5R8vA6ZA8MYLsDlJGptjzQxCC1jmWbWNVgCWraKX6cCmSUX-yBCtl2AVCJMiKg6TfqJ_1gSG1I-m88z2QKKEaBUn-OnHTSdTP6SAYrtlnpHoz4DCQY3b9Q58IsamhXhW-nvac2udpfcQp7wTxYvANQNcYGvSW24r0N761j8cIhtY4bSQTjkwIAdMV5jqtK8YPKm_--GCQU1lwQZCh9iespPuKfFVPAHfBFH5neuJ04UrquUHoJyxCb1GGamqfccXqnTCqvROGMvt0WJ2W3piYee0P3QYAu6lt8RiGoNuj7GUKfBFNyusZK7MY4rdpZzhrKvQSRIt8W6xTUvWGcbFk0FVJrcjyhJp9sCiH8iTejv3PN3Vnjz6_IfVz3Ah902lxCRQ2c0iED7sU7QmUTKjlTC1XxOez2YhZYB9-W_GwBWVVotug_JoGbVPlvHViJJPpRlse835qy15QHkCbDhzeOOBO4WSqOvp6QsoISPBiELuxyri5KViHaywfywtRfpVj4NvRK1_NN0EnfCnYVzN_Yes6P7QSEMC0E6QVl1Ibr-RK6_Jv26OnNUK9LyS-VP2-WUZ4HRcvmN59R4XhaMb6AAeeJp9-r_Rdgp6MruzU_kn2coeGQp7kHo3sGz38NA0Q1O2nEmjs0QqlNRK3_CvYW6uoTv-aV3hzgXAyglSyopYfAs9RgIYRi9d-dJumYg2cn8ayf3T204RPdJcgRM6HbGiIElyBjXG-oT8isP3GZbC1SupW4FWF1rNRoqmhODf7AoDTsB4wjxHa_A9lcThZeaqUXVqKOzGMvJGryKdtK0YlPO6KZWDCPSPJcspM0xTYEWeZAXUaXK8kuTuyEpRWnqvy6iZRtNTjOihbqMjyYge7FBpXLagr3rAKr9dR11qsfj7kiGZS80VfSU-jC8rDoCKevrIEqU_qQ2quiAkXEkChr01T2qIk="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7532609Z"
+    },
+    {
+      "signature": "Fkb5bZBYCKl+Hi3Y",
+      "humanSignature": "BSB-CGH-6012-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 105,
+            "stops": 0,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T11:35:00",
+                  "city": "BSB",
+                  "time": "11:35"
+                },
+                "arrival": {
+                  "airport": "CGH",
+                  "dateTime": "2026-03-30T13:20:00",
+                  "city": "CGH",
+                  "time": "13:20"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "6012",
+                "duration": 105
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-QFBtHUJrouD6",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 686.06,
+            "baseFare": 602.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 83.16,
+                "description": ""
+              }
+            ],
+            "adultPrice": 602.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 602.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "StsqEDLbWfpHUvZvOsU1mH6_0u4hN7JPtgiwHRtuFLNoHqrkYyLgUwmUP0xy3g55jO3uw3Zgsm7cTH449sQ9q0lR6IbS1QzMWjV0WQ-FpdBSCOHdcPFAZg51zKid-VspGPRI65AbkmuARTrdXWyeLFw2DCFq6oLfNuYrOLvDhiZzBU7TxXzGFIrFfQmntYEHShBae647t_VRqiuT7QUb9FHrrd4pGopVD07ZDPaCQ-7VHUfrptKWKu2BBcyjoLzmchGBwiWWaFNxyZwp_6um9UYs_u8GoXCifgtTFf-VA0Q43uPzCZ5PgabQWKkBvstsEbaBfgiBaTnVQsA1eKzvyjz-1L1-9NxxwJVY5Zx3AJ22E0H9U4eAsNm8xN41RO60SeQ8QjxgH7yTjBsA7xx5xZWHhZgn89GstdE51qr6PEHx6kis6o7PaT51wOxTF-bLlQ7Marx7Grrjg2-Ope24pKrX_7zziEjGbhg0adF2yxaHsQzHQSpZD804zT0Nu6VPa7ibhArN6IHHpiwzKLlybdgpXe-Mohi1rdQTDsAn9twmBYJmftcg7BxKMtZ0xKWSAlTfPSFvPO0o_RL22_eNX16qzgyHRQah6fpoWmlGpnG66cSZD5Lb2mY_T5tkafQygCWuoQ2LL5QQFFWZbMyBMhQzGxOdciLaFhtIwIfci2wWiGZkTgVPfhOkulRhotVxe9kX9BzhtAWRTIiMXFt4kEdJRKeIDCFwpbv5Ns0qKx49HqxqVky02UblPXLWFF872sduCT7Eo_kei-zefd-SDO64cSRplED8uXQ83U40dJ3_xoc9jJQskscR519LzN3-7RWaidJFqPGEh_BMimo6zFC3ikbtjA7iWbwxW4Ad41XdFPPFTDRzeYs786rCsCsi8Adzskd3djZ2kGD-vphtXU67QF9C_RdwEcJMRz1uypJBFFebT6OV1KZvF4s4iFJJVUTL80jNztjY95gctP-euyMLHbW3gpe5f74NxqdCkXvccs4YJPgVABNVgSzw8ngpl6VTWFBoehUpFWm_HiaQKg7Bm9CZ7afAFsBosUU0qEpYYT-3Mfon6M-2G3zuINBcAvP3v6ST-nwFDRqIBZ2xSbTi5gaRkwXvgwrdb4wK5kWbV-Fo3F3zkYuT80glGXF1pzkSHzYSUWopSu67O0LduKZ34czcfvASAPiuXu3PF6OR5bz_eFrG7akOxZxTw3EoNFf-n0RwDsMe7hJWhJKnfXSROmnT29GY5amS_iNc0qbilll42b7OIBRybrYj7qJMksBbflHeBIHuXRUJ01o77cn-_5uISECHd2RnUUjJqvfJtkEscghaW9tMZyT5kruRtcBwEd9Mt-2aq42BssS5Ipc9MpZfKifs2uRH_a3wMnrVhcmJWQLfjupNf-fBHCF0Eoi0BNnpnQINiuVHsea2lnt6Pu3Ri36EPbUugHRmRF6mHa5sPQqpw-_MLBQMlFoTfloqDp9Dt3Urv93rD_TUzockHjLlTm9hbmD1OHlrwkZeFnOCCC5fsIweIX8NziJ1MOX-4IXMekLZ7pr-MzrUUR3ZGdQBCn4h1jfMEzNmxVM3g1VCLSqObOeAaR6e9hLU8hl_tpwVWmcfEExU-OpYX3eNzBR48pe4ilSTPphL5lq8qdV39QLIiSEKUJU-foYnXjK9Cv0Pvc9FiuWKoQdpg2foAFziTSsMLEsf6w6V1En-fYob-gMrwDapidrvw5SwKI3ld6ZDb9Wfc2poFNZRclZZxmCGEsVe6QQOMukVX_hIySRlZI9gbyFShGxNyASbPthqJ4nCMfI73EH5jX_lTk8NWOCdF9Z6Xf-bzY1Q7sWwJcA8oPWFohNL3dTs1fCdv_G45D-i8gHeMjNwq6Os9wuYnZ_2JEQ9lghvjD01XcKQh4bFDW6mxUdkLY4XTf9R9dAMWOPCKlGV6clGC6mk3-LgJDitX0dNO0bTiNQNQutBwnOm6_km5r29B0NHAi_Cwq3mO832BlA48nYvwTURfuS80nWNScrTe_t70vEiid4="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-R_sY7DEfZApm",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 794.96,
+            "baseFare": 701.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 93.06,
+                "description": ""
+              }
+            ],
+            "adultPrice": 701.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 701.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "IIpn38mDRxiGFWWoSgghYr-7KWPFazqsNxv4xN42r4DhOm6t3hxB6izq23ihfpkOZpCzJT7koeeJgWoGW4_BlXKPGIljRa0IjAikAtRh1127P8p1Pnp1cr5W5jieLehN92tKZuXoR47INsdnQI3RrBYamo2BZHvgkbnrJg2mzpLX8s9HZF2wVn25-uB-Odx-6wOPTmTxtn5xTG06vLJvSa2UChsbxb-dPtrdafDDpXPhGHJTeh6iqOk0phwr44JSIJUc57bDF3sYEallJXU0hFhQt8OApjduU4n6iAIbXBCvaBXb0FoY_kaGNCrjDki-KRufC70W0VHYptgvI-BI7qp6qBp-UXUcJATTic9smoxnB-51DNf6xwZOV-fPXJlLNf2fkFqW6FlGUsDuxo9RDuKMaE1b1H4QjfdzovoYT1oSY3hcXcP2q_jmYiRWS-m8_mrkZt69Bi_SK8a7nkmuLON19-DmEW9Dx22GN-yhLENDHh34kRzUm840NrwU6mF2SG8-Zu_idhYNAczfaRgWp4A5BOdytCoAXIwUv81G7X3CNd90m4UFQogM6bENZ4XMuHXCOot2Y5gF7p0APQy7k8jSJqegMIfIvoZs3zRJyCIobimMQOLjflt-J4aasi-6RfxWklfP5-ytMSdsf5c9N6TMqnPSGpfPRY_qZFBOT2xeCNqEvB07AE_gmb_o1jLh0SIS7oi-A3Xos4vTfCZY8mMQRdvENl_iTdqw60SvxUNoqyxXe8K7iqfdeXHRATcCp9SUWfQbGNmmpLS5at8RV1ui5DzALi6eux0L0XkG0uDnqvGNuA7-X9_NDqECxZtg9KuKFyjgK4-Fv34bQGLoukOR8Js4j6aH8PXxAACfw3Ln1hynmal0aD6Kem5qLLY4PRC2kY4XWfj0STPRJj2mM1jOE_bsieS2JEyugrM7e_AraSW8Uhx9JpXtsPUllqIeHYdBETQM0UiKh3Pzrs0DvS3R4pQxzx2DhEmF-13O7zDGwYH1Nn6dqpoJSoooKCHc9B0D-9UKh4CXKXp0MryhFheuMYcMUqC00PXr0pbMCKo6_VWP3obKqeLIkNEW227-pKPyRMZuOdiMjl4z0F5hBYzafADyDlMTRyyTvMUlKkbM-rT3mi4oaDd2RC37sTDrvzMJvbDYV5irgXbNyvBdIFlw0KpzxhYwwoGOnNAULjtCJSYBCkW-KTsHPwdRjkzVyuFMwGwbUJ7w8DxKh_AxxVTdbiLjO8fROJp5iYE4MFpkxoKwjtlopyYlGFxnbJXCfM8oJNEsXq0-e_9jPc0Lse9GDkaYmFEMBzB4xRgkSnz40hUsKxi7LSVRs4jaYX28kXorfPewi8CJsf8KT_okbGMPER0HxjxVYhT30f1bZvCX9HnxX4l3EMQLL_rZPnhzK4FsGCq81giqU1ZF0YhHqcs1a6lkwwl7O-H0cK5iGT-jonaBFbDuLTyqdtA_HWjJ-IyCsiiNtYMK1jzx3ekcu-R28AwU4fpk_e-3tpy0VUj8l4aZEo0tpuOSImg8TnToBrToEBGD1aqopKFcxDRpNNKt4c9a5224y8yB1-9YzUROoKP9xVOsFKIEnNqSRXb35ippelaCJrGX1Cg9ZdolP7XzSS-XsTgXzs8OLY41pkN9fLDlOpOCHhF5gSxV5cerHX9Li19GZFoM-AhfLL2MJ_BdnQNSyEVWg9k8_upPaUgLKsjEg65Fu9oWqgQwmJ-MYHZDA8qeJt_YBArEWkGYZ-O555coAYrskmZ1o756yBV2M67g-0Umc0v_sIsBYubhzGycC374GiDfJ8vnLvUYYEY8zp509GcLl4Ia3hVl-R-1ueCNXY9u7i2q3JXXzGYkWUga4ToxPl9KvavUHLI8vZtEfTKJ9zsJHHKCb4tYK8UW3v-Hn-VJvFrBOBNY2zvBcsQon27pyAAULA1yO-RnWMAky-0Bc-EdchRks43UwekWWKH8iNzYqq2h6k1bYU5DrQ8xCj_BWPW2dUAHHhkC1kEBgFwyRSuAUxSuHPz4e_c="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7532543Z"
+    },
+    {
+      "signature": "cBRZ+0Brvm9o7dn7",
+      "humanSignature": "BSB-CNF-4521-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 220,
+            "stops": 1,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T19:25:00",
+                  "city": "BSB",
+                  "time": "19:25"
+                },
+                "arrival": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T20:45:00",
+                  "city": "CNF",
+                  "time": "20:45"
+                },
+                "waitTime": "01h00m",
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4521",
+                "duration": 80
+              },
+              {
+                "departure": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T21:45:00",
+                  "city": "CNF",
+                  "time": "21:45"
+                },
+                "arrival": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T23:05:00",
+                  "city": "GRU",
+                  "time": "23:05"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4212",
+                "duration": 80
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul--Nk8f7FMUsxR",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 857.47,
+            "baseFare": 758.73,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 98.74,
+                "description": ""
+              }
+            ],
+            "adultPrice": 758.73,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 758.73,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "PmHAQclYpGq_OYmKzT3RycFn6S8tE9n_9q51D8p-lnMEnBgpyI6O811iFsv43S52yyPejROGP3EP7sNTzPpV0cCSFFRs-coNcc6MTZtFpDIyWZJBk9vyGZOOnxR2v_cudxpRwRW2wYBPX_crR8UYW6pfoCzWEaZAgw0hlNVWVsdIwSd9tioI6vy8KLHcVNRMH2lDSGzlQygx8TFrKuSRBa0WtasH4WLUF26p7wGqDAIH8mL4Du7BfZAbC_SDpT3N8hioN_RbUwjxiJCzkEMly1EisCw9wPjdus0RC2mWUcsxQz7xaknYFRIEGSHsQ7XsOqfoL-DKKprRyXMwUxP7PIMJzJWTa_H_1V8zpux-7haz2q9_k8prS6Q2pEjBGjt9gJBiPE5B3ePmPQIlV356Ib7XdxgOvuDrHeKOTAa-XWsk7Vu0qgGwYu2BvJ0cghxmfqmScqTOmW9bpdT37_u3IN9iUs4cOwLePnviJGEV5mXM64h6l_rkZN2sPkSQfxq4gREaql0WcwoJRkUAfZaaBB9Z2Gz9Jhx_sHnyQBxpn7dFjlBaxGWn2LjEWouKK579HxZuGO38aHjp0kudyjD42wzNE0GcIHYl_Kte-b2wdPkIcTkdf8EwMAdmASB34J-uuTSGuxqfpLd4HhEK82EMjDfhVRCrS1vdP9nnBUI5Syx6mVy7vG2xJCV2kxovUL3BC93vFD77FoUs53HNLEGYTdQ71Rg6xCoQ2JsNp034xDEvgLqcSJzaCehFKDHfZBef_9HE_qrERQ5KUJr0gMY8VYv9iQytoAyIvQSZdXSpGLkNZsg3rdI8t0BBk9ae0D0sbcbBpMuRanrkKYxrWeHfUUQ-Y-4zdD_d-IQjaF3xCf27TEcAWw6-dvVQoiqMy8tHs5a-GRax7dPkgV43b61fc9M4pi1FLEyBRC_GLdybLq5Gr8_WjccV-8ZX5JvH3ZkDx6gnIJd8jVVBXtZjI8_6reuy5-f_sClB9PyH4eY4ah8bzo4pRt29TeHWSMY3IQW7RhVXJz8dL6vERHVH8jYOpW8OX8bh_QiyubPQcikuVNjecBAvOMadD4YsPw_w-xhnn7mEY7vssIHmsWeaDTx-c21dKe-tRIn3SYaLc0oP8zML2vXiCsSmaRWsJrRoRmZmsGbyi9ti3TIGk8q8Hf35z8BOSZAacsnQ1h1aLnD8Tr9YFuYTiguF195G_oX7886WUJm8VfO-k9zF_cLUfaIZVYWoY2V01wRWitpJt8FOT2VRAzt6upMdP4V9WAmwaX8Zj34MtOj6Tn8TjfigZABznqErDxAtdhTk_BVkkwP7MJmtQrWooK2IQ9i5OhAgpmupGvLiGdxmvIPGiQPBj4pkkfjhhcGw4JX31y-pIMthg67an2z_NVaBeQfxoEfLjpioMRcc6M7Lms7KyjNAm9qQKop4F7Rt5zdvvjpkPNd8fdHUcPJCDL-AKP1MCgipwzdHjfVWaN4s9rFxGOX6fXTfr_7NCnVUPC407e-REVHcE7SMA7WoVTOEbo86NUil928qm4XkbHLBSBz21_RqUwD9FX3uZW2LQ6qsK3Zi0XqA_HwkZrXFjgeMHk37FUnn9JDjwXEAwLZsp_tJ4bzacWKNEBxdvWC00a8LXYfMW9ZgXgiFNGg3Jpp5q9muynHq8UiCwSge1vkaf614K7af1k4DAvSMzmXcaXgXrJeGZBU_zyyZ6SH66cyxV1_-4hDZbLXTalq1xano1rK55F9Q8uthuy8MWVIlc-zh55e31ewow7dhdHE4drh6ahXYmaUJtC5I_fzmCZAjKRBFJz0huvEmFBjmNwvSxBmxOFxmA9X_-BojQwHUqDpm7OBsPiU-btL6m1M6OP2ynB5TAsEgpI3ByrkaKlkKBgrjmR2snNR0uKpm8ylX_QJh3XlSL0zdYrKomlyFtJflelhGkCC44LRmhd6SyOMQfdVXgRehPoYw94jrleRpJuXLZnQtLntk-QbfkPQ6QPfDF7PxQijXImHuR7oKyS6D2RDF8387ieJ677lpTF7RBy3AVdEBrtM7OiyX9CJ8KWEMYx5aFejzFR8MLMpm9GQpeZ1a9JHDVwSDzdFdLidrG4yfAmMe3PELQrhNrvHbaNdEdW-jRGcSWvlNPKjgo2lHFGvGDoNpvXRk42_Qcl8NEQ89O8usju0Ej8k795IWYrgUf-UN78hzLL8omcG9pwp_k8CLFKp2OiWA3NEc-CqcM7GqGCNTkp0ie_hlY4wLS40pd4IHb1pE7CbNlZlrq_96byYZ-8OQ117dkPE="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-kO3pI6XNVSkT",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1061.26,
+            "baseFare": 943.99,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 117.27,
+                "description": ""
+              }
+            ],
+            "adultPrice": 943.99,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 943.99,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "uJ_7R2jIaWOKNxTxrsO7pzNVwRId2hSlVupEBOHx5h1f7ChicS0HigCPb3L0LpdHyplG_F65Q9ZrrlIP8Hj5l2962beK7kj1TeqFyk0vr_SQhpeJ7jsRBvMrNYj5S7bTKMs4Var03jeCq9tLT4xboLHt6xZI5kEHpGbSlS41fQzjCXLj4O4DXNRvxjmAkGVc_1RzBBgmfaJDm-S8uSdvHEM1CTCrHX_k1fgs3rX-nT9M2swkqnSqh8CAXPvHN6bizirDA_fbMrtd2lSCMXaT2wJuxDrHxirIynZoEB70pPiw4hDS43CCIHpEw2TbrZftMwICD20ISACtaiDnn81AKPmg-9Fn8M_3QwpBMlfVRx9WmlcbQ-nXZ-D1k1ikpvyHzxD5IzRIc8taAGrFvTeuhO7As3UIbXTrlAhHe_OQ_QNEYW6jewXAJPIP7OmezFjrCqNTITC3rKYAprGR8F3w0PkGi9VvftUIhwS8mbtSfKb79Ti-aAnTqURJmiDAkJpl_sJVpv0PY7LC6_UuXO811EOFBBU6FGdrLyfK5uUbYTpsTYTl9RqyZRfJVMyNPd2Atk20EwyQHt-_2_Y4D9WH3stXoHyPYVaSre2Rn17Z8ZI4U6hnaD5PzzGNAC8U8gYW6iKrTe2L0ivsddrSbqnHj-eIKr78sTtTSwvy9dUOPeVPTvMNWnRRMQc58pD4UbFWfkiuBe9LDFH3_KAd7eGqhuZ-H46KdHm6O-3rOICJaPID8YGyGZHUZCk_J34VdLoNZFmvNuH7PWDSg1LKQHv_lZUL0W7j-leBAmu-nK01FRfSda1R73jfjgX5bhJC3r8CPjTF4p-b4ndiMKnDA4T7DuxFJDLpMQsga2oA_JYpl-Cjbz_RHqdzuRr8KT6wJtXs0WJtZcfhTcZZxDJMyBFvocmIOUPmtlTo_uiALm1W3Qup-hbLFshbE8mLrHx3XHxPGy60-ieT1PwOV85oVgaOH3eHjEVyGn7T_-VO1D0j21yn5z8OrS0F_KkXrbL7rn2KmmD2PVvgq0OkuvObymaZ16iWlyW0JS4QCP3mapry9nslALS4rA2gfuz9fo-E-bQ2zroaTR_hQ5gWrSyspTjr5dyHrRS6EI1NoAMHOgN2bRUTQNLwFoRy6dTdu1V8Q-65GRghKDZjWbLwHosfth-Xb8jgffuYEpyq0Apfnw-zQdQo4mQl1RE7c7AoLvibGZn6y-ZzPNbNv3fF2GwD4frOFEbW982lovi8YbGpshRmzMoUZTs3E1Ts2iDgyIS0qgIyzl5eO_njG-ZpxIIaaDJ_BwLnuuvwK2YBGLXipxjiQ9Y94rkQyU9wJsrDBAYq_yazqm6HSOKZ9PKO3Z4FznKKuHtrz4cRAyyCkLOd9vDM9kQ6JXNSBrwHzfFNBk5pmM3zUfk1E1kvtkzO5mC5hxqb_jObADNmUJwXIocxqSNYmL0sNRGOm01e3bUbo44jzQOn8e3Yp-1UhSc13M68L0EUE3AGx2V0aP7Nre8nD9MkBOtrw94Gsvu36ax6zGyXbCb21btHxhH6YUS176wMZ3mvFGdkKpf05sNS9vZ4pVjMKPNVL6udmxk7bkDZZnNAZHWFxdbH1KA2QF6b0ZNCEvYRjNu26el6E2UFwlJ_jvRSFCxddgiBbzRQObksZ9Lt_oLeQOC0f9jzf6vWdYZUf5Q4wsUUn0bCvacYKXqSMwdZKm4h6z6Z_qL9S4nU-5xbwWH4miATHYvUWQctZrlC0yG1P5CiSVp6R1yUsOZBVSz2qMdN4IFmhguMUlS4Yd2737tb7Wk7GizV2QQEvZ1wAnOm8bWRl0rph1qrXcdPa92s6lwMqlS3rBtZ6xBg9xe7Rin_bFwDy5etabINp7LpLa7x8dmFdxZZNMZ7QkLlUA8H_6W-mBQKbpSsF8kiBM3JIulsT0fU73CI7HKqtcz9528CwmrEz_NlOHe3L8CiDWkW2XPiOdmdKT1O9Pw_IPqR1ytXb7-BGurLq2Yi6yfbYqJiUhfqroXpYStdOipCKYh3xH1o1GhkExIsZUc_nYwnybnGjGSCSddV9T-xZgAwC0ct55hXTsp0CA3eKWCbziqbo76bFhuNF9jkYRZUpxdzB_Vya_Nh5tVXU22xSp_VyWR-Y13Qjs0YWdpNmmhGM_c5KyLGP4te_Eg5ZZtyu-piGCWpg9cPpzUGCUis0ssRkSSXHJlrq_96byYZ-8OQ117dkPE="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.753313Z"
+    },
+    {
+      "signature": "MU4gPWc9tWTR50q3",
+      "humanSignature": "BSB-CNF-4721-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 495,
+            "stops": 1,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T14:50:00",
+                  "city": "BSB",
+                  "time": "14:50"
+                },
+                "arrival": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T16:10:00",
+                  "city": "CNF",
+                  "time": "16:10"
+                },
+                "waitTime": "05h35m",
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4721",
+                "duration": 80
+              },
+              {
+                "departure": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T21:45:00",
+                  "city": "CNF",
+                  "time": "21:45"
+                },
+                "arrival": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T23:05:00",
+                  "city": "GRU",
+                  "time": "23:05"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4212",
+                "duration": 80
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-o_VMm20Frxws",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 896.98,
+            "baseFare": 794.65,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 102.33,
+                "description": ""
+              }
+            ],
+            "adultPrice": 794.65,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 794.65,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "PmHAQclYpGq_OYmKzT3RydPJ1eTTP-ue4jQDvsKnu6uFkP6gAFIoErr797WxMlrzlJlbMsMUYNVjxKbTKOF_XN3auh83YtkTl8J_9ZWP8h-poMCx3P7r7-zReA3dJ9ls1YUHoMWGl7LU3PlJsxl67MkOO5skLDGGf2cdSv5r2R7TVdJxRjDrTCt6MR6UKXB760jLLAbe4xELhDyHfaD8TChNeyqLq_YcXH0b6ueaklA55flGCerrfFVFib1dYsE4HmZhPwyOhnjB0cL8YRuGAme1XhSwkbG_EX70aC76z4dye93TddADw3vEuLRVkAK3C2Ki8_1y9n4oqq35BXFuTeAIpjbcfbFzKQcl29J_XMQ282UXCud5EpK2FG8r3rRdOp1XY63cJDgAu-XRJ0t0MtDpa7blNHvunSE4sc_l3JviTTZ__Ra7sFA7wTHt1Yu753Bs8MUkZCd8aWC09Ckd6AI8-FXdHhxKjdpGQXFAnNfx6XWpKOOZOUdNB0kAH_ircYRc5S9tAaEary2HVXPifRa9jgPrnG1SztSU8ahFrb_X7GPnbb_aVN2czw7gKNnFKLf88SYaKbRkurEtRpQv6NyB3H2q9t-cvShqB7m8k5jcuBh2SH0FjdV_zYgVNd0H_zQlFY-5ddVRpG61R9DB2mhXly9e0_MX3QCKW4F0bpeqfYlWcv51RsodgFLmf_Jp4s6CKSS62hsUmXWi_ct5xOPKjlVvBMIoTPG4Xb3UxGzdvJQoXqYhgAPRygkrjpyslXEOL5X1vHbd0GwTLP8m2LzCddW7Quh2wlbZd_8SFhCw8sjkU0KZR87tsO27_9g65Oqbp92Tt5gp8lVrYPWfU4PhjvB_s9B4CcqtYZq9Mo49kEAQKTypvjMuagusGNGNXQgfkIo3IJ2FzLVPBwMMMDDoaiwt6u1SL0F3_xjJEhZXnLHWxg0wlXMLxm_QJt3Tn18wFGvs42HzVF4AWHb551kJA1MDS_LX70sXwDgYGkrF7wjp8VrLVWlR_CVcfnnF5Lv88ZlqW_FYkv2hvG0pFF6B1yQ1XnoITD5hiwVtPmuaE_WamfMxWGlemLVhhdvseOZNr6qlLXx_6D3uOW3ga4THpLT68q6FvAp5YmJpo-aXnMXbNikM-Sqyy_ifUFOi5JDy1adqMbunLJNT81JS33CRXlc-24h54SVs1jXLN5g1Toag2CgFFuvflujuktCFyxYudEIbPSh5nvLJXZULqfPy7OqfqI4mZ-iQWOA6fl5JiV28MkuvG5UcxZO7ecMK5T2qB_ugWtzC-K_mq9H8fq_CJv4SZpQ3F3pqa1afE2jVIZg0HgvcAfcqCF1YLKVa5P51IwDuZLzDl9z3innxxpvHNvMPpwRAV9j00chMtIUU8icIV5aFg8XJ_Vln2EJ3FbMSj67891Pb92J6FB5tWINDJhrc6NLoDAi3NqFPnpEJg1OjE5LFDohGOVB35j5KD-jPa3aUF7Z0IjqiyfuSxWH_vubBe5qlxb_W86nqhYPMz1VIe3nI4cUJIeTvahMX004pUQtqDlyEsk3laR1Qjoorru_gDuKlw-9ma66szko0Ke47mi1hbz8-cuYX5LxzRBZ-ZsZIqrA_OltK7TXASoNVAyiEUOt2hXOaUBf6m9L4DZSjJ-fmJfzMeHn8syrOctsFlKC6DCJNHb3x0oXsJSEzfb5v7SprodPYBI0QdSknaTcTn-Croj3XB_FoPX0Qeyh-06yCjWMQ7h3XdllkLxBLyYUtNgHuI8RgLtl5_03hjIVxq742E8x3Gg1SPL-wzD2t4RV8vLErZJMQ45WZpuQ6cZz_5S2fy-4OjkhDs_2qPZgUyw41--fI7lZebawctWmPvneLfODM3433AOI7VgJvDsjVOz3Zugt8M7FsrqZ0QL6VB1lp2HutKJtUDMBtEyGXUzvOA3jCyXRNzjMWRMzzqNcVl4SPYFTYL2XqkP5Q242hkHWCqYnNZa7B28k6QUpRZYtEGf5p1n9Whb49s0XixsXsYLbjLHS-jq6lSKGWlVY7TpcXxzySC78EGzGc9WHUtyC7_oNDyhaV8sneqnXaMHL9t7EO6mJZhTcFSz58QcIHGjSnhB3UMwQwkUQ5KIYanXkEG-LWz9IurwpgMZiP16TlynPHXOEZc-6rxDZ53NWMsEjwa95S9_oqdU8M8a7e8yZhffIuB8kL-Xy1uNce8EMNSpPg2_pM-k8Fw0AgIFsJHRNy8O-4srcvPgg8BlBXvJW10P1bsppOrckNbc-XcFdpKP4OYaIjySORRFg="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-cCkMjEnC_Uc9",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1111.89,
+            "baseFare": 990.02,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 121.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 990.02,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 990.02,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "XyoY7He17EUAy1xErD-P9gOIKDS9klfMLGoyqoFvG7LtvXCqxVNIiMG-5leRz_b92YUMvMME3dVpX3zxdK4ueayc8gnaS8slRYwF4vO0Em7IUvdFQdOX9_KNCMPVlHgdK5-Jw8ofAEEF096p2HUoAuZYWXxekdhIPEtnp6vYn1KzqBj8sCLfzfHNfQHG-dKBkQjCBbRzQbSTC0pr_SOvOV1L1XgBOfsQ_TPF0Pa8fROelt7HJvEaRaXOGwhKKsO7xET37lyh5bgsdi6gc32b5pu8776R_deBRfFbIcfpx0NE0UOAWILHPz2AD8VSD1qh8DU8deSsMENWajB8pFreknjHw85BP-MZMilkU2LfONj0lIRkbGfsNXn__9MgdcjJZTafj8bAgxJsBo5v2isJRxjNDJnxoHNOovoTWiQ2dk3bySjLeoy0W-vOAtD2wCXHbauHbxNqvuXk5KlEQefZtTh21l3QHlvBC25HE7GJKYBNNd2SGdTnZ3NHCtgcnE6rkqmAlkNyo-iMI8g1_vwHKpG2ueNCJZ9HAVCQW7Mm2WPo-KrGde4FCXwpXELd_mS-A2I56RkK7rCJpwr90uYJWCYR6IT5fDgBF_E-993_CfL0v6o7Szz8l2vvzdPbL0Gkm45vosCbVDpL-dRfIHvbxOi_VHx3kqaiyENr1b1JpqvoY_ELGc0y4ZXeotbMDJ8MxF4GR3_t_0vCykI3n2pmjXwQRupN5j5c97dRpGtvo1i7FrZMDboxJENdEwMmdrTzwxyelZHzwGie0xVhYikFp4p3Fy315fIW6AWkS3XkVNVNqZtwURv_JAhRKzr71mUDHA6ZfVFBHOHbx3zADkCy8IcrPqPlYhiSbZRaNHlJWx5Cpt3uLju44FApZBugwlqBjAjn14uRCqodjGiXWcSq3hGxKWxrcj2JN35mfFr7Fkgr7r9tH7-TS-sQjv19lhVPFh9ZzL_yNSAyZPwSV7uuqTPuxTT4XBPIUGpmLq974CKelBvsvNRy5X_hwpdMWoo-QBf0f2iLU6yi4wRhhaZLvlWZGSPqwYB_nCt4VQ1qe0W07EwA_cwaVYC-747KLj2o1OojXCKwBfLKZ234FQuH1c647ce93hZO_pPHqBb5DWau8mv536Vd6iE1gizZ5fd9xDLjRvzLB0sjzXnigeBs1ev3auJQ4Oz2xIB7UMT4XbBwF62s9amOHP2o9LWeHom4bnoqA_IYDQRAnWWf0pIRvzQGXVHQZYkk_hkAKB48xM_aABuyYYW9928Qgkeqm3eVWR664_eBgdpIpZszirW3qVVxyVmJr3G5hXHdgvfsuhrylDr13rlLVjgFW3Ov7fklerhi7Vbj5eJx6ZOp6KiCeTFG00HF_muVxHfQtuaj_zToDjmmcaVH4MemLYCH1KC5OjY9kpDEeI6l_0_PM8mlZVx1JQ_TSh7Qb2t2vVyX9ztBJAJvYBVYAwbBkNSom1Pwbfwt4KRlIttx50ZW-qEv3Ei9iHmUYp063MB1ViwUqVBafz_lfRSs9-qWdkOzpVcAuir6-RBkc1UaEaV5_fEZPa07MplEEgFlxF_DNRaq_nmE-Hd10STz-srxRj0DWc5HjqxJzXK7r7tUW4YoY7sjvy7VFXUYYaschzQtOItuR9ustvarkiuiYaGVeZg34s-q4m386vZCENLlDcst4Zvi-TNc6igljaOHwq30PDzpfPwrDFf-05hEWsqM3UgQhCqV64TV7o_3NdjPW0OpmjYnluvCysqRWy7a34RB4XjIjDLG_STcam_8IVf_rs25W6EZYzAGkouN-X1DnpIvLD5luy7vZ4rJjolEkxgMQlcNDTpJj4j7LVObqjhWL2CLIPLMuB4hcrZVNRbGCLIjDzOis0-TJv1bC02CThHeZHlJrpFLh788I8TZ5IfD1JXu_eONIBsXYwSI933wTYpk31YKOJZCWbqrCF9wL8rVFxnYJFFfeI6Cv_JDXsLOWd81rInIIk8Rrsv7FA86V4HGG51p7d48hveJM3jysigZTGqKYAMYUcasRCUFd5_ZBaFLcPOPvH8NdoOBqN2myg3YwOzPiRVRcs5ahn0Z-NuMpfaePgg6AH7NtGya1HooJ5o5tbrqPJ4gszYlg5CVMrLej-gwNgVX9cvkM-6bwUjTrCuRPE_B6XqRFjV7bisgOLVMOzPiUHRh9gCDlxQeLrOysQ2NNw=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7533291Z"
+    },
+    {
+      "signature": "kIKp+8HlKVz3AF7v",
+      "humanSignature": "BSB-CNF-4721-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 235,
+            "stops": 1,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T14:50:00",
+                  "city": "BSB",
+                  "time": "14:50"
+                },
+                "arrival": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T16:10:00",
+                  "city": "CNF",
+                  "time": "16:10"
+                },
+                "waitTime": "01h15m",
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4721",
+                "duration": 80
+              },
+              {
+                "departure": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T17:25:00",
+                  "city": "CNF",
+                  "time": "17:25"
+                },
+                "arrival": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T18:45:00",
+                  "city": "GRU",
+                  "time": "18:45"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "2724",
+                "duration": 80
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-NeKmdw90w-dI",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 896.98,
+            "baseFare": 794.65,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 102.33,
+                "description": ""
+              }
+            ],
+            "adultPrice": 794.65,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 794.65,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "PmHAQclYpGq_OYmKzT3RyWgK7AI6WtOLaleJGl2DOe6EKZ8pJYCfxhyheB4lEEKcqeFn0ahGXfrB09CNMzOoOpgLhoEOrsY2xDAAUIT0lPXHIsKPaEDNtYI_kA3ugoAFpBzfQfpuqVgtnLtlOJRMVMqJf2vpCnIfD7bWakA232GLffujx1iLnPO15xg7WepdikH2_kIrjDY9EN9ex_Zs7PDituNLb_2eeV9fJtqIWvoPrTFawBFPfej2wU0TZAZaKdSpPnA0NrILdB7bRC2U3o0180UqSEV7D-rxTb-UYp9hr5auxLnsJqFcoH0XziHVeowOIyVggyNBO9H-L4V3GcmIM_8DGe01OzMVrkprD0prYy3BgfaP8WRO2m-xXmRvdTK_Wtu0xlgzE-jS4Z9UDUurgHOEvYUrrvR5VOwwezgyE2LoiS0ao3LGocgkHe2lXQBuMCrR1XTaOxizuttCDx2QOb-VEt2D0LzGFnYuKo1Z38Y1BvHWR5ATcROoy0av_pBRhmuBpfaW4VTp7h_wJkbbjvCnKxBF1uSWW8DoWdY2wB3GQbKd7pLIlImwEwmmzJ43Xoq1K5Lg_v0dVFux6LpxyDH5Czuf4f3eRhI_b3pnZJDGaUCnrNOjpduESP8uLOXSu9dW00SSn4RzPtzQibSvfvh6XAQBvqjO3hK5KSDhU7sBvBGeUeygUmeBGbSSlxDUlq9KYJmHQqbMTwaNXEKtIu1rQTruYDLHZXLrKLcmwUe9DwSl3VpLnGfQtFaXvTeaFQEkaSSnbKcFwnCDVCUtktK-6Z7bUPqOrSoIj_z0QqAAONBFinOlLPb1Qbm07Wlh-q9DKagHCbdkpMHcWwTM6JkF9U3iDmXiIFRJmHNEFClphIPDP8g3wlb_xSVy44lhspfGWRbcfpkSGgcYAc5tFGqIOg1aVv80SqqTKhlCR399xbmCEC5WBXOoYU3oEtiIFQB0kFlHefuu8pPyXPnemR3YvHH8H95D53OEo-cQqUwxoXiEoSrz1XVHz5A9svEXUI-ywTvtrCcH_TJymaHNuIB2zAKmw4lvitzyBMGajirqONVVLRgYqpDWAX0nAR-T_h4Lz13S-02FXV-e6dzav55RrnlKARlWYhrE-1SZHtRbuc4w4p93umgdeFjjGHWXJywOydYb09ZdOHdYckqPwbXbkuV7jQQL9ClVJZIwuGnMQvcdx91y49VMj5jZ4dzkIRTpG8UoPhBSRKjz8ZKvU8h7bN13dthagu2ylYcsuHmKZ6cfS7ShDjRufxvVT1_HITmIHNE-OjLZ8UBi88FSntBdwYvMcQtQ87fpOQlbIjZSMwxCNWoclfKZpNoSSreLLhcYEeA1_vY6eKoPDJjU-3XyRrDdnGPWZzll7n4UwGli3TMttCjoOOdn0lmuX6gsCs6lF77czelQrsKdNmrwm5X9I3whrq7Au0-f0EprVUbXnUn3O-KxScHZWO3uYItTDLKXWiTQCO6_Hu7b2Mwnch7enIaeCqF2SgNCxaHG9NLjlOnW2UJ1dQuxpQuuDaUmnDxtsKhUzKhXbWckLrWwPimYj9LpCsqqYq43yHUmhfwuEcJ_TxzY6LVLPP0HO8jgqebJKHUZnUKVmW8hwFzPoZj2IeFabIEz_w2jyodfKKPbyyo9Wo1MvBRE6jegC6e78XIwTJVyt-QF7PmezX7koelv_XIj_NbY4h73QSmGmNpiszBEn6zoIK2IFrXk_j_teHE895PZ-2G3hvE7Ae7h3bY_0k0i7AaqvcB90rgAqvX4KtvIcvyVuxY42qYDXJ4yXal-2E2Qkcf5P-It6B27Tz4_uegXHgst1zMruRtufB_ine2KOfl85WlAUzGpG4txyxlY6dYgq3TogWNKFux-V_Gmr3-eP58OEtHUgenoHrUi0qolSRkGK4zhwo3UbvXFRifymadBl_HnQQBhBsf17cXvQuq_-0qi59laI63C6KpHpRsDwN0gn3ceBy_GfeUpxwYLva_2Ue9rpayYbjkj-Z-FoUUxPLukvFarptvSc4qIw9uq3IKdeZf68IXeIQQ_JiNuYwJZCSYchDzCoDF66Qzhg0luoohKCf2h8-TqmHZMijt14EzsBUjOeRNSk6x9RO9RHjAp4HmPNGRtJcs1YvELuJD5sZLtY_R2wkQORN8m8FtwCkdrv5Fo2Dq5QW1FWsFsaVfTl03dVI3iObo06xrV-iMosz-8u2HMxWT1J3YFBsenysEERL9dDznJ_FORHgGCvBft7fzg67vXsM-XcFdpKP4OYaIjySORRFg="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-6ble4pbdEvpB",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1111.89,
+            "baseFare": 990.02,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 121.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 990.02,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 990.02,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "XyoY7He17EUAy1xErD-P9pTLzRYBxAdrgRk6HUodGvFj7VCqs7w3mEaSGBLrbLtio75S5I8qMfmOePAeJ0U1JV22ywDMcxlfmQ7i_15eQ9SzeFp9-6-iMjBIOHGZHsLJC2j-DVyYMZ5wn_Ythw37Xb790YRKh11Ma9LU4y5HlkwMSvXzDva1qaDaLZVz3ViqW4rh0Te91VUUAzbgGjubPhtVaZs5oj1CfyvMu5IqZa30qUtn-oPQw3rgl0GX-Zo_UgDSkcHfPAptNi0ZWBziC-zo_aPFIU75PtvjIlBAjoGxEEGAuw-JYB3JOugLZDVHT_NbPBJTieIO6QiHz8pkBCttpnYhq2Q48sMtVOsSbwSDWUh-Fb8LrWw29jUvRKgLtJf33n_0_4j0TfIX6hqww1E-R-KHDFo5QVvrluIzLRGV6qGu7a-aTWj-7Wa4ewUYWtKMTq3SQLREhTxW23OfdS6Q2n4yHlbt2BRJmSsnoTBXVBKOyA6e2MJcQsYvJ34ugqCb5bFUe_i6kQBOZHcbBn-ZwiCV7uAJlOif4JQPI3RV_eCERIroREZBp6KelkDYzTVOCJf5115AoBNO-1grf63g8cnjRKzd58WQbc9D53Sjlh4-UNVhNyF8vM9DXVw6QnT2Gxhu7Em5U2CUQPdij39mfBNwPzuPbQZF3HGpQzlxZ_OgVsoM-kCTfI3A1i1lFbm0nGXNkx1S34w8uLKZZVp_Flqjp3WNug2VLXSY-s9LVoHmwRR6KHo00eOQjF0OqhMvDKdDPuQqRFVgLSmuigcA-4hnc6S3T3-JU3Rvy4IUbQTB6YocS_767mjKevC9FV6jPGkC4Lf85dwyW1LMQl1JKJSaitsshpx_YjAH3ptjR6orEU0YqmIuhzk6N91Gw3pevE-JjGL2KBbVW5uCRHYOHJTcHhRCDf6s9raD8VThSTQ9AM_GBT-qzeqcJ_EGyQYYL8jmvEjc1wixUsupIswSCaPvdzKfca0xwpRaKV3SB1rZeb-i040hzShFgLUniSK5s_-sMDSHwF8YjYiGny_FBZMq-IAUUV135_M9YtKKilPBOKVLH50tD9lrmQjIueN3784oa33w97DuBRC26HQR9Y5dnPqwtc265rHEbq7xHNSoie22d5kvOlVzudA3OuGDqg6z8eh6oGEP9tWvkiXGpRkcsT4N4hqdlQUyvTR87bMCB40ufXnlv4uQNxFPulybCbKhs00GPKWEp1H_sy9bq--4KgrDglcHB5Nvo-eshdNRN7xFouD6OtN72oo8B20wiz9R2oYsldqq-zWbmv6NgwppVmExxh5QhR-ErPYgBJuWWfW4KcJgHvEsQLwYhVO85ybrQftcnbFXoK-4I6bj1W4qUwlwvkEBqdNdXQ2Xa6mkTd0TbjZbGNZB46TaEz9lseEWF8JVHfBjH0URCq-ktBN9mQzcNaRSqlXeLR1MmF6OSz85hU8kP3SVU67hHEnWIKbdjvkuhaKPl7FsZQ2pYvsJJRNKb1Xli2Y22QUea5J6kRDc11GlC622YeDeYLotvlDwA6XEE6ILPQHmApKncVy3-_CCXqew97JEUBd71Ar1VA2IslWNLePi_ZutvySNvgWoo-fWfAyjjgxXf0yRBK4A30ByDbojIDE0TDD_o12QKyNE54z92qfMGX9VU5yOwIPOU-ElB4s6CllLW2G03Nn6kglrxgHptgOdbbvtW-wpA8Ylr7YARE_bBL0W1Z9Vkgq_tG8p8IDyPitWXnAKsI3h0JPEsew9QwjGPbJfoNFB0ogBInCYXsaSrWJUelwPucdjAeEBiLa49Wrh22ulro4dlP6_aP2kzRn3fWKW5tH8iq59Q2hHZ_sT81DmMSW18y1__Qlj-huKL02UyOV0zpOkgTsLavhrllR9IGeCaZrhkbK-uKURm7iUgPA2yFJ5A-NBEuex7NIiniA2SyklvDpAC1KSvLIpqj9_ho-hlsrnh4Yb-XE7YW5MgRc-FBQWkjx2nzktm5aukytuYIpdZb0PI77X-5Re0vEXIg2QWI52AFjdW-kT-8Fvkzgm-jQ0nS-psY1EfPPCSxsgMc4l9xyKd7oQvZWGi8EIgtPHVyuiHqc7RoYzW9EXLru-e4lQAN7ri6sA7hctqUwdI4ICdjcoYIRpf8SjTNeYPUGQOdAoYvPyRd7sTkT97CuCoTU_cyvaeZdmiJ2bKA0MBA=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7533365Z"
+    },
+    {
+      "signature": "bb0C3w+IjYWpnmqP",
+      "humanSignature": "BSB-CNF-4721-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 310,
+            "stops": 1,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T14:50:00",
+                  "city": "BSB",
+                  "time": "14:50"
+                },
+                "arrival": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T16:10:00",
+                  "city": "CNF",
+                  "time": "16:10"
+                },
+                "waitTime": "02h35m",
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4721",
+                "duration": 80
+              },
+              {
+                "departure": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T18:45:00",
+                  "city": "CNF",
+                  "time": "18:45"
+                },
+                "arrival": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T20:00:00",
+                  "city": "GRU",
+                  "time": "20:00"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "2880",
+                "duration": 75
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-6FjeXz_09O7p",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 896.98,
+            "baseFare": 794.65,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 102.33,
+                "description": ""
+              }
+            ],
+            "adultPrice": 794.65,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 794.65,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "PmHAQclYpGq_OYmKzT3RydPJ1eTTP-ue4jQDvsKnu6sq6qwXN7rzgbH87PXmb1_ZbochCvoOYm-f-67KRYF-Qs_DrmcqkbPTm_A2wbkIT6OxIDfC54Ob3XV7Kx6dHNuNYm4uptkp5IWQMlpu1GK1U9wWeK7YgymimwG40zAbtrXBD2K7pMZdbl9yQttFUbrcDJ_MjY7NR98oyBuXqIkRowwxioS0h78XpyfjjjP9b5rA2isx1I3jjMLsG8twlDEc_anICERJNNs_UXuJKJuUDLkVP_NFozxcKNg2V8rs3IRen-9frAU9_9kbxhQd9bTYIb2gwudDSgRIfQ94VUIg40MqqvCIfpRTkq_4shLayyAdYYbdYtq88xbchZ7Qpkf6ADxweoZigqFQZnxsm9KBQP9zm7I8ibprm7wjX-ZkxqMqN2q8RetwOTsnl057BK04OQg_PuHIGijGj9eMy-6LVHb6zhSjDVxh3t4OZ3iTzb53VpD9ZxFYJQGwPu4pjk2OItxOwkJ88QfZOwoFhK0wxzZga4ZQquP9opFE3Hf9oN4w9KQLPVBlj7IwIK68nP7T7CIp7sciioX-XL4fkJH8sPvNU7XihseuEJ_lAXYEHhevrABo0zYIHjGEl_JW0qp8bmWN_Cii08c-u0XKBBQjH7xGTsCJfVIhPhISCSshEVVFLa3qqaj9OSd2c7KLvdBIlsVIaxd6XLIPguNQ09yI9N2a2-3NF9gZx9lqZ3QpaR4O1MehYsm-D6DYEF_uIacK6Y_vsi8m3w51kcAD3otyjRAodgTdPVfFsWtgPbKXblLgFHPNki58JmYiFsfqsOlhta9s-W5H6W8rxcNpGnENxXcIcEkes4ibtAjo0A9AGpVIkmFjpjoZoFiHjbI21Eoef7ecBwodDOjot41RPKY5BhiYs57ESJnSRLRHaRuESmxlCT4A9FnxR1UeAf8nhKGqgSi5WUyG0kf34CDKzqSfl7Tvk7yJtKkwC21_-SOrInweNT3UArULwKSauMo9NnCRAwolo1z5imxJ6kEgQHNjH253MjBPqdk0hhAkKmMI2-NhQUqB8bkxSe7bxsxDTsSlmhBFlKID_OPK7iaA9MJvYVdGwvMtUSKNxo8JfFO389O8Yqp5do8KgPCM4vQSdMBWVj0ZTb7Y-JUJ--I412zDQ43BL7iAN86a6IWZpEh4ydewuWRxMIMgXERZemfML1_bH2hp_De3lsqijV0LMqyiOOeCKDmOPQh_glPvxnGmL-GMnMEBmsT2EF6krgDadhQzACEku46MFZrqFgaJJUpk6EIVnK5SV2gtEdE-mi77-IH7va0tw5bFXoetlQUXb4pHumS42hcqX25hCFiA2Y2XhlFLllBW7qqlt7XShFzt626NIhhWVN8QoQtwOP8Hob4FEUtVvBXsWiWz4ASXmGyQOlzAkL553REkOjRQ57cGOicJ1HsxvuM-XIeRQ7qLURsLt4-Yn0O_7VJ0cATulllKfKc7-vnI6O_-f7NasD1fZ4ucgbbSY38rPhvTl0ByxZzYLJvJYqBRpPWd_fTZc-zQhPdA32m_zVKTSfEI0QSAaEQ2Xqr62Eko28B1wVv9IgriAFDGrAiSkhyUFj7Zomj8PKf0WPDgB-2MTvDnWbg4G42X7papfEG5DM7l3okGa-_DXsUdDGvCtbZb-BLA_sYLFu5jjYTK_rftwIa-yGI3ENYLQ1H4rr5WUarr57pBaCRqXK8e83PUadakQq0OCLdIt87tgs3KLo-L6SVnz2ZCLzsEQqoGL-hhiS1Fj-eQC9v3UQvnBi3x1O2nwLYDL9zZ_u3uzDMX1_IGJUaAri14QKdGc_2Ct_Tecf1xXSVZM3E0zBP_zesgVVUucdomQU_zfuCcQu_WPeyhBd6i__3rTewcf4YTPGwQTh8TVY-QH6qlT-oKy7X49yjxN1VSRaAc6QJegp3_jM8BLRjoV8pZWv0rZEN2Cv-srbrEcnNh55c4r2KbxIjKpoTGFVy3Tj_phvvMYK-BcO0bO9JC99pSVQBi4R2y-EY4PfWUkptVyl6Y68myBWH8ZfjMX3I5BktJA0gULxXZFMrbRTUA5cQpnj7PWceBhdFU8pnQAv99CLf2l-B7t9jx-WF4v53yGSqFxQpbefiDCyONxzzMaW_hv5G-ezf1DJu79rAa6DG5CCcGmoNWQ4HJp_rI4X2RcXo0aSZa4oyIYLr17Xjstr9Z9vdrtl_GwUMcYodgyZOEW0FWNRcPfKHcgSoOTjyNrndpyw=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-ikSuUa9Fhnnl",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1111.89,
+            "baseFare": 990.02,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 121.87,
+                "description": ""
+              }
+            ],
+            "adultPrice": 990.02,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 990.02,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "uJ_7R2jIaWOKNxTxrsO7p_mhG1-jaSV5UBArtbuJuRy6pKZzEWVNpaIvKUV8zA0pr14SwSccXc3B22q1Cf8oFPCP2vvqBrZh6VOwPixiw7pxOL_Nj17Q5d7KkGIfpR_cbVQv-lVYY8NS9jPXik2S8ocqNFOOzuBiazWI-RG4KivNeK6rLjVV9Yai2FbqSfJQpqIc0a3Hh1vZE1NyDbHBn_-opVIkMousvLk6f16fO9G_SG7g7KaLo8CvYk6w_Cod2SSa_fsvAirG3NB0rVfD--mGliafY79RtPt3lmX5cD0a4HmW70jE9OfCb0C9SDszgGqhyHNgJbXnp54mJh1JjH26mZVuhrVi1id2P7Gl9WirPy1cT4s2jNXTSyJUgObNxQqpFHP-ET1s_o3AaYIcCJihPn8h6IduqpPl78FVwLs5k6GG1eywuAszU4SIoMNFFYMQ8o9rXt0VCiR0urrVh-r8-HxW5E77dqsS44LB-j5krPGtbL8lh65lw67mJtqmB-o_-3iYJj7jvgDzOyDslgDbs4FrMmijmkZVGFKgg0bcUdFs77xf6TJkPWn33eDn40dD1DUNz_FPwzMCKPsBWGoGZEmX3Jh04FhjAiBE1w7nsNez92ULV8x9dvBIQMMZQdr5ss43Uj9QLWpBPBfCs4-F0viBtJF5GtQUasLHHSIEtS3rqmCxPrL7Fe75sgCGKNIEZtXIQxMli3payn2IPkzTZx5bvE7WWOX6FnvzKVOflNNHAkJh6hd2u0C04AlZloiiVW7-Xa6_G6YSaoMkvXdqgdPmAclFFijhGTVrasLpN5n9e0C8TUZtDBi9jXeuJJ-XeDQw01f1QhxjLU82Rdkud3wmR2JhG2J_GLj2pGO2Cn3lqZOgJjZzpGy9X1IQVgtzsx7X4KF9gf_Y4sVKzRUdEchHd5F5Wed7oBMfC2RhyKB_-tXIRuFLePRc3F1uKDrXeCZDWdfNw6MsJx7XyLMzY9HYQJZMuyeWjfVM72DNLinP6Mvzfe7pNtbLSxdfItmsPGYwVKSfMyeckuTwkqVUl_UAvhG4DE9GvWikcv99TbmRgNJMZa8m_hESxXPma380-rVlYMUmioqV0JESng3Po6V3DTZKQlWTls8wFggOe9knYHnSSy7RBNxVF6HzaTloc0O5SQ1e0ao8zJsZe5LZcmEI0UxE7nYrAT1puRRc4Q0Q35VmDiswRMVxxxRAxdVo2UInS9XqHfMD2eCJdqQxyswSTNqQwoANMo_uJYJOBM6eT_HQ7nTSqpi_Cujrgl_yX6czfzNXBkj0n0riUhMtFIWwss2SSiQc7OYIbtKS-yl0rLtm-Rmnw00PTh1CEDcw9TuUhB2EimYEXYA-ce_hJgjJnq2fvPVEBnqgsBEMANU1BixweLkdTKCtC1_KFYg-Pb0-lJ8AgOLmmZX-Xy_RNxjFCVi79UIFhadjnpXM-6XMlvSEhupBYChbXuhVLo_o1N5DkZktgjDuyTJaFbl0KUyzLPgYmcM8yCt1NTA9CBjlruO8phOB2TeyCZ2pPQWJ9SzjV4kcTBictjYznUKgxM_9kfF9gbRx9vrAOxdnamR1nxnASgonx4FcpSBNVfldTnhFIirseRf07n4TER9NxxkP7s17R_ZOb63inEoRwu9AO18boObFGpHpPSRKp_bjTh82HV_5gb_5jBcYEeoNuB2ARWe898OKZ-jDQT6a4lWlGhZImZ538FGN5SIwXo3kh4W3m3g_2jKi7OfR3ATWbUB3uzWDGrq8zECpD5ZkSaDNWekmXJWcfwb4e4YJOIRkXZSjZBLinnp9bvL_1wokq194yz45HjeM_tjIECyEl9QfzCc3In9pfFDuXS6KOo6YFcy7D0glQei98S5Faz9a9pbmhxdLrdIrrlNWKYH2Uuu-deas7vG0yL4aMiS3I37zrHmOGQNho5oiLkZCr6-NniOaOyEwceKiynOwbbJVK3TdxUaKz_o-Dbdow9DY2Jq-8OR4QW41GQGKGzWILSm485CU6Zbwh6tUaL5rXhcrlKsckO6hQrzXecwLq3rahFcAB_6qv3yKvc6U9iP30a6zR1bFnFqDoSEablLhiafBxDm2ZQP311aH8mz7PawXfzHbOAFm2Yhp-E3wAFTFQXRPfp09pweC1I2uxafI1mdSsMxxCzT4q_TfaJsHh1TGz5dwV2ko_g5hoiPJI5FEWA=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7533204Z"
+    },
+    {
+      "signature": "6RTDT/K7Ly0HPOfB",
+      "humanSignature": "BSB-CNF-5068-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 570,
+            "stops": 1,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T10:30:00",
+                  "city": "BSB",
+                  "time": "10:30"
+                },
+                "arrival": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T11:45:00",
+                  "city": "CNF",
+                  "time": "11:45"
+                },
+                "waitTime": "07h00m",
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "5068",
+                "duration": 75
+              },
+              {
+                "departure": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T18:45:00",
+                  "city": "CNF",
+                  "time": "18:45"
+                },
+                "arrival": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T20:00:00",
+                  "city": "GRU",
+                  "time": "20:00"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "2880",
+                "duration": 75
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-bzInBa7EwAcp",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1132.66,
+            "baseFare": 1008.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 123.76,
+                "description": ""
+              }
+            ],
+            "adultPrice": 1008.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 1008.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "PmHAQclYpGq_OYmKzT3RyQCYZQQGk-gJhMCdjlobexH4usT2yxx2olYQjC8i8PNavzABkOLAFJTjxzgSsZXg5AuKdRrRHHi8sRg13Y0JOUMiLVSf-xFLxl3wpXFZ_OnJHaKarX1_hLFJI3jwW5ZDENDNOK1wzq0hiv7Qtx6vm8_hXQNT_DyeZU1IFvYhB7auqO982TYV3EeyBwS0z-zKpz0epTEtRxiQxrBN_1SuqvY943u5rolYxA82aOh38rs-IrqLm5HpYusO06XqsyCZTkufpD9e3vykJ13qXVIIFVK6TiN37BvufyCViSPUTGgW_OjRt6hz45u7B0irpbuSq0wJZxxtLiE6u50lpQwmZ1OjkJ2Ium71t1XwM4i3fHL04ElQ9_2SrUR81crS5IuRb9KIAhmSt8KpoNo3IqgYwFz0upBboSIE7tG47sFiipHOncThjlDq2VVX2pi1cBmRJ_6WVSoBpYPlGMO8sMED4XagoH9j9muyrP-w9T9h5tEFes0nFVqnWAi5U6HfOtQV3_ORZFyCI12zUTF5e7YdDxw6o7nEtc4QYPLKLZQI3Tal-wjMNva_iqOKwDBsGEsHc2kWg8iLq8HVyy4SD7rH3U2ATvCDpJ4SJ_FeZMsyjCwjJ1FS6yIHei5hwri2dzU4nDqyTKNP219CpzNNncIqNeZfcG_QH-CIBuGYfmq6ayxg5xQoV1bD2DTZptPi_eHqRqja-8FhEKSTrro3PXnvHqCk0mSX-JLE-vB92tARqUvf4QsebCHexMYq4YmSLAhY985v-2WhMAcVkJZI9hkhMMzKXD4_JZ0FMrInMGlJzjDjS79DZDgOmCxfKY6IlKGig2bA80q2mjZBZopS9_I3SKAKJlvYejZ5RvjLVUHY0nUD1oEO1kYRVsGRjcmwB2v2SiQBzyE3JlBo7pAKSsGtGZMUOAogKeERJ8uU1-G8Hx3g5ZNLjkJfXG_dbQnjAHSUTm3vL2joezlOj3H_FY0XiMvm3VnWomFWt6-2lGz3oSmdVHqhinjyJuqL7uIHG-GGjyXesmKWfNLARnmguaxcZTu-QhqzA5dPlJmUGVuElyV-0BmSZt5P1-gjtnVzeLoYZEBels8lwrdfu-AfgtNQIOBtrUu5rluNbQEH0B0QQhG2EhhHpz_ALo65evMdt6WacWktHhj7J7VJRqS3dGbp8Y6sxLQza9n3yVYB1LUVvVOmDh8eAZyr7wBXKtQXO_hOUAOlOfZ6XgVoIvIULT5GyOPTyxX7zgCLxTQM_w2HPHCMEJKtJF7AJWxvBmb8duIghcXcKw3-NBTAQYUg18CTM6HNCVq3JpZNOc4HldGFyHzVfZr1QaIU2HlhHPA_huv6zdbeX_pBqt7SlQQuiLIVi-lvsc-SKn32DWB-LtRppQ9xDW0jn6vj0fJHmUqtB_X88C1sxayoI_dw8TXV-S5xT-ZAvFo8MUuWWq4Sjf6MzEif6ctQnMa3M4SHNpP5cr_nBhU4MI8MXayzGKa0zfDGnsw9AKwtrdGZzEnQ6dwBBfrieY6lIWeexlyxqDAdNv0RBNAUpJJJAHBooSraeBWfz51mz3zGtSwSmJOM7dTut4zGnHMtfly5VuLkjp8Hb5ar5njtdClTU4-GOub5IrYy2H7OdRObXEX7qQErC18ps9B0cXWjoQ21A7tJljkevG7Ls-f1KIQlkojEhnLbW_bfH2Tcs-Kd-10B1XjOpsPV1P71mw3NJoE9YG1n_vCuVaqYk6VoWh9WtlJXXyPzzHzfSRJBwN3bB84oLcghgLGAgrvlTA_fe3oYH0s1h7WIEZ06IqW8Enq8MI1m7nIasRIGnxPaI8ZrVJozrRxrfLfLitvzgacOWqw1fTSXRQyFWbYYEyC6RIvT4ToXowZz6uiB2-GsIyTpVo-xAyoaENmXJ9Sc9IPUSFlOfqTMsdhza6lgEzZthBkvz_K7Y3mtQ2NpWMYPxaTiTvkfiCTwoooI_IK12j-y32Piq8YVRIKyA-_HTDLLcQ3DLVIzP-H_Lsgp5vb7i0CC8KpF5De0fQQmf49xCJPqB5QTGSr61tkuX67XeYfiAiOs2MYMI0Oz0cy7WgOoAygs5abVKGPx9WIzwYUtlM7v-uuGLUn2wAucbXrt9-qhxaIU7p0OH_2Fk1oPRRGOmPx_jj4LMkoeimQXnUzoVF6GcT2g3wQp1zBYEHlFXq_qxGf9a0dfQEDiiaKXU1IpM-H8YHvowWuc9cnZlPhOx1owm6wbVPWaG8CCsqUB1R0cjDQsc0LJSzEYfUIqcJw2UVwcFRNpDlS8GaMhPbnZxev_aPdXFvnZE966abprmc-XcFdpKP4OYaIjySORRFg="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-jvuXgbTAmYlP",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1308.66,
+            "baseFare": 1168.9,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 139.76,
+                "description": ""
+              }
+            ],
+            "adultPrice": 1168.9,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 1168.9,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "uJ_7R2jIaWOKNxTxrsO7pzFOtp90SbMELfKPtxnoIHljvtBJPJ1G2TIT5KH-h_eifyuOeT69htyWfAwe7j7Mtzwq0XcfGK6t7Q-EC7cb-O6HuHrP63sz6rwPE1tVpthTjJ6goLcH1aXnDj5RrzA6LIle4n4W4vNDp8wDeZsNVdlJyu5loaWMp7UtK1s7JaVjJswjuYDd_p0tEJdm3V8MT-iC4WxxtVATs1glrO70Qxf--F4-Kmm2c9bN-xzf6USEv5IoAhjJRWXa72iHkGR3l5SxWfC3xm3_YWDSq1xMOD23JxJiNJtwAPhKZlnRefNaUBf9IJr_ikIcsqzOPErhzr1Z0Vlm8GeosQf5L2ogsnWvHe04UKCcbBbSZKsLcnqFBWrYdERqnb92uIEr26FJxlh_QGKWDolw-Kj7u931bunWQ1xiVLSoA1vyN-Uz00Jzb2RJx85hfu9GWF_2nB-pCF7CP6cl0JmF31w88xJ-9V09Jsl8TrK4VkonQ4B96Pyk34EFkHrmu_04iKzDWHg6eI7CyQAzADsz77AfPyJuD5X2lp3LC_XIE7TitcMPxncquaDmRs6aEFF6lK2ZQdN3pTeuVLjiBqIdX7RNbZwvkvMWWlTuLwin-FjB7DQcXHAigcz4iV2dhr5pdmZ1sNdnF7kcBLkA-y4vyVStJC0J_wb9YCSa55s-Nvlf1NgFFvKMCEDx2NgS4ruVm3G_zEv-pwlI6NZpQjSgPp_8tL9NDXgCeFgSirxW4r8GmpbJu-wRJ3nJ0RWn1vZ1VqzR5hnDhp6JuuaBhVso9eyr6QfdfiAKQ8ILmhIJwxxMEuuOLeVQZKdrec0ktEoeyAWpKwRjAGAyKSfsjThpnwX8XaNXA-Yp29Vv3ziA-x8lELi6D6Dz85GHh0eiZ9GmfK502etgcj-nw7zlEdlPTWwe4PgzeH9fBz2-N7tL7-76zz_5m6-6jhVUMwUBmIUO6bLRzZ6GKns1FLSMKoCXdD_AlLBb6bpG9fA8ZznRqOr7VhvrSosOwNmaX49IDvc-UTQ49oo5qAaQEL1V70to0DgsQqx9f4Bxxr1Iq33vVhlTTMX1pYLUKiWusJ_dfVmjhOEN-_P23koMzAi4RnA34XAOAxYbm5uoIuQDssHPeDvofGnGAIDrwKs3v7PfLRPv2fdfFDdDVt9vfO28emS9LEzLcoXfSRtXqsGQNQUhWQaq6emMWnZCSbgdbJc4pNTH6RrCQF0nl_vyr1GguSJhO9zi7PPtcGcSHD7llZRqySfdzQ3U-gWh3toC3Sz6g0-mct6_S7SqFzOWjXBYgTRag320nlMl5MmWgCI3bfdxKs_gIbx3MxVQl6S5mGw0TKa4x9b86zd-6T8guDTWXQZQG2QvKzi73h1GpBXYh80P3fX6w9wH0aDEPE4c8G8uso9bQjt4g3Umt0EBvjH4E_N1xKRXCYv7xUcCaVYPJNvkXrIjXlnWo6syiIiF1eS-8gwIN7g70uPPJ-eyQU6LkZmSpexFhe5L9cH469GO5O2pDRTj4y63pEckd8wrQBIJlSXzQQINoXDWxP1S77kNNz219oD2DYpJvhxIuz6OaAUq9C9tOvXe-fieafOH33u3doopDFHANwgl4CReU9WIx1K5UTvoBFWDi627XZ_NpXRheTvO6H1gHrYKt6DvMsOpmV63eNU9a0IEWgB7W4sBE6XGirLu-xBXkx5tIZbicL-qklmu6vywWC3At-jQywaxdShoCrDbuwu62qMwQGYC4hhNNTXAr24nSgGoB5UyNkRDWNVpmulhMLGKIvHSe9IKTZP5tO_38Ej9vQ8Qkjz7SDmx8P5xMcSsvZ83UZjJkd8-wCoO0TiY9uISCpPHDQYUMAKDtA34PPiI8MYWD6qvZ6gzJhq7zJkcPQGmsXzOOP9ybUEPsAWLgTgKFcTSvExfztFs5D09ovlQcf7JjiCX3nckK1gEzGrunALuOkh61BTHhJ1cDPRSoJQMLZB2HhWBiEvl6DxODOjY7aK0JR_6PpmRErwrlB0tWTLbsWRGv-rGbE6ZB8qdnmB1NXBWjS4nGsUgY1aWveKjgWLwUxVce0NuPNXgXPSloYIRW6bgiohuWqgVkiO9KXZseyhEvhKL68vNsrBxq9i555t1Cyky7CDrPaBtVIJnAsQRzzfXdssQfkKxG2kIL7gBSrPLJbgi_sMzCaZ9ip-7pvlYwF2nSVA93jb11ZbAByCxXhZyZtNfLneT-p3oaEqe6lJNEpGi5mcIkARTpXmc0s-XcFdpKP4OYaIjySORRFg="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7533793Z"
+    },
+    {
+      "signature": "QVxV72LnGgKLUCIU",
+      "humanSignature": "BSB-CNF-5068-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 495,
+            "stops": 1,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T10:30:00",
+                  "city": "BSB",
+                  "time": "10:30"
+                },
+                "arrival": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T11:45:00",
+                  "city": "CNF",
+                  "time": "11:45"
+                },
+                "waitTime": "05h40m",
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "5068",
+                "duration": 75
+              },
+              {
+                "departure": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T17:25:00",
+                  "city": "CNF",
+                  "time": "17:25"
+                },
+                "arrival": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T18:45:00",
+                  "city": "GRU",
+                  "time": "18:45"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "2724",
+                "duration": 80
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-7Q2E13ZsyhKw",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1182.66,
+            "baseFare": 1054.35,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 128.31,
+                "description": ""
+              }
+            ],
+            "adultPrice": 1054.35,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 1054.35,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "PmHAQclYpGq_OYmKzT3RyTp9rlTvzxzG50u9xxXMgStEIt81bG-lgOkYyCVd3lIIDTVhU_r3V420yPsmPxX1ogE3m6koL8VJXqSu3OaijywvVAjo6M1UVICBHBJ5iKjIl-iRMeDjyU3FC9LpkgDdOlDg831SWTssCsN66a1KQDF3ZFQO_L_XX5CanCa8e34P6ZxVll7dt9069JWMgOcdmYq0MC_ud9bsFkmZoq-CcjEIrUSJKlhrtQrN-hNJptQY5zEnbpJMmkpGQ7XPtOzITUH9dbzlhLo4ZlvAFGNxwlMZJidObpGkC4ayNT8COh4QCFXXl5pfkmqE6x94o_fzZWHL_r_SBEy9qlK3ZMXVJ0xpIzM8h1uZraDCPKfH7_8U3SED6CLTf3qH_5NT4Sz8DAWJLC8a34zpr9uJByAbiunUoHIhhXkG6hTqFYo_qF_SVbT1F0OPZ8nlhSVXho8WbrSTP_rtnF66pK1dw16blMRYGvdRNbo8d7I7hVm9u-KqCbRFwihpk96MsNamqhIOYxFKrL1Gv7k3oE1qwoY24hEEZLtFf9LOR_Z5HvhnUrN2DZJIJmoFRlfVM7-wzm3FP3FPX71BxylO_N3MKnumw-RakmnfR_LExXh2EnWBRjlQQTswiZDpnyrT73qUhuHY-fm1_kT85QJ4mIcyVUGDTlF2medekghyqULjLei-pKc0wtMTR0V6NCXLnuFxBJq4lY2eW0yqPUwIevxcaR4-L0XvIPPQfL1goAnJ7ERoOE4bzQ8iqDUXE1SkHlaiPUKs7_rmuUPTsIRdhFZ_GF56sMapWZRP-rdMqFgY_GxgF2AiJmHv5U2ARjuckWhXvdZlJbxCJ1ps-BY9h71sRGcn5zju_jMwQEUTitCFYiv5pJ6uX4rPt9NXqBn6tei20s8Hq0jdw4gWyQCXTR4dBg2lwGmvFIL8HJsKAp8zp7xRJY9QCinbxPHe9--GzDVypBsHoSAX6Wu2to6TKA1DgIdxmtspPhVwEK-CXSaletO9LWCEL70EC5yAvS5pgbc3SQcypp9roO7AGkv6FW1TVx87QjwLy2eVRGs_EiKUr7jxFAyFSJtlKi5dnnOSl-baWKxYdX4IMffxHaR2a0IjZGiwPeYk8TKqVSGgSMJsPb1_GIDT3lAZcMQg5HytPobXY7Yyx-J-gB9azu_hp_mkrQx-fGRDiVjweYfOi1EWr3rd61H9IUIfGCx_rEY-X7Py6rg3R0hTMxYNSNF8JOukclwIq2aQZO08tKcO1XhsvJcKCDaFYKrQirujibwdKbxc0AJwNIanja5z29k8cH1ltDswBFW5lkKNj4oXcvTc5AD2O2_9Sx6mkiKs4XUdmwBdHxANPmTg9qmT43cs_w9aOz_HmDDczt1QtHI1jlpivToRckppgK2utPz2GZvlAYHGe74m3xlyX-STAJNKcLJENGVtxVfHZyxSo1MAOxpdQkx2Wa1DGHdG0cIPTGEAA0ov0wMMWXqA6EdzI3cr5yXAjZcBmgg3vd8mZ9zKKeCO_WRwlw82ue7aR-irqpIg2_SSwYVyGpaANuJ3-uS3Laia3LYi1mEDlYg3G9VCjkJrq0OS4LhMrd3MehHRlTNnAp8YHcZE9CreYKw_A9YdTSIhEocirQXPxV8RHiqC5waflcmyzY0aCoAFgXI53nToUFTMGaUsqb126QhgUKQwBScKWbm4dq4TNzNyURUvvX4j8DE5S-dOOp6g1Dh2NCvT9gao1Cy0NEnf8g6vnhC_dVs1Sc5lIkYWgvo_5qFvfce-cyRvIUp0-EtcgWaSPMztWdDdLBtP-J0_SdpqdEaC6b3SJ6a6LIVOfsteuTMkcU7lKTofuarqhNMbBtol7RTSQgYLjxGXYGA-OyRdPz7uERbIic60Mp1j3xm71Jpy4IqdwhuBQNuNQ-Cb2u-9X-M8XrBqUvij6L6SPVf8lUAT9EgUi9f9Wkzaxe0eRDqeNQ-9IaZhJX0RsWZ82nhmRP86XQcILCCnJKq8n-CKznvkgOLwjsXV1jClTFxJZd4h3eiO1dlkvk80g27thhnpp7gj1O7QaorJazQCQ-W1QvLzAL3XsdnY-4OgZVfZA8t2AQ4ZXnr29Ng5e1AaGy-2s_Zhafw8JUkILIlG4XkWFTtwQUsqlEtZliTLFrJISZoEwN1HzyxjvSorqmPri_uL9WtSxydzpaF-YQUkBjeYrZPgqQ4PwjsJwSyfJ4JfnoWSo41_NiODU1Dks7FW8jtoop3S7t_sXRlK9r3KmlJZWOGLT0ekr1lh3MC9uT2hYlDyF_N5iNHsabFy5JTHuO5tgDeo2Vh5SiN7Cs-XcFdpKP4OYaIjySORRFg="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-5kvRXUY0m4ic",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1367.46,
+            "baseFare": 1222.35,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 145.11,
+                "description": ""
+              }
+            ],
+            "adultPrice": 1222.35,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 1222.35,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "uJ_7R2jIaWOKNxTxrsO7p6nT40S4lBxjok0cjLYp30gUn4pCv6gW4-ZI3CRT3BqjotRYooMEY527r7zwqEtHAB8YnUI8YbKnXpk1RZ3zwseO0fNukhZlARMttbQyL0aHb2A2soEbG_VNJSirsSoC6pGNzZWO1SE_tX0L57-KteMr2mpLDfzQf6QPG1xrPUrh5NDM1qP014QDx8gH4IljH9lWTB8i-DxRENmkFfKWQhmm_-bIGbtpmtTuL7-TGvFozeueJG23RuDRxcchPv70_RXuy_yaovGtOfgCGdwSKsBUdWXNYQWHNQ9m8D6I1nl3yC5x1jE0qnJbrSZelQdA21qyyN9LKLS3ubJuE8Nd4RtEwA5rfkG-RDanw0eXHEgbyY2KS7Uva0yPc4M5d3-9ivA2ClAAX4xCF2P880IvlIeBTIvgDyIfLub0MDysveSyaVEcFMadKQu94d8T4JJxzvUDTJ_E9jb8V1z3MN3f8A1deAvcyz-_aT3aE9sfBK8jIlcaO6YDTQrP-KALv8KUra2QMPMH7MoNtSPYscxxpJ6DZEn64BfVaa5_pKvBut5ejfIwz-DHHt26iBAbgIka8qqsdEZ4-TtF8eHBKqpD2U5P-_5o8giK6mzIAUqi7iotXsMosiWq97G1RyDvSuOMzdRZWVybAF_R608VEcnZLZ7VT01TKBaL8rCyV-xRidnCijD21ZfZDWXDAFkaPfrJiuzlpQkwURFrAtz6WhO2bbzQxKRTb9QGKoJX1SRY7q9FoQeGyzPvPZfeVyFhgjRXwanlmwQpRbTsz-euQC2nHLtuaj6RRglEqw4g1Zqsar4ifHIKoHkrw1J9FMPsCAce6-s9IgcLW5xALaHr4zY8lDzz790L4ykyJMo69qf078hBvBmPL4NRofoiRO3rHX5e29qPbuEaQnsx1OYHF_JD0l3YB75TmMcbhiuAmtAKTgri-ZuOHytE9yhmjYDeU_HEVMI53H9aoDTUqWMo0jYQ0a5L0qx6hK6DQI8lnpASsjemeOi57Aovv04D70tmeCBO-9-Sb_qAJ_2vyesc9CPSXpNlzTDuzP9YQ7hLuiLsuhKwxn_5x07teKL1X6kKgu5VtVrZVaHnNd_eIuhbZ-MTR2QiiGlqQ1sReF80N3SiFh4y5n8z_5i--CroDVLidRhQED4dPfbOiete4_zW4woDxUa7_HDY1cSMR-vlKEdbjDqARYMU7P4C7HuN9IpaOSJpmroeO7Lt5qDGlCXDydIBekn3Jld07Y_2M4_pG13gvMdMA2ZbOxDGV6bWY5fsg5JKcD43Tz-JkwCSMUncuI0As86U5UMTRodUoMzbRSUv1CLXclMpnF_EW5QJt9koJRgnokbEOFWvq-MIhaV_swA_D36mXHlmDaZV9K1z76CVjZojVwweE6o9v_DPB2FRo6q31ogE4rttrUzSRMG3aD6FA3iMSzlApfJW0XxexwZL4oM9zUXBjTIEy0PW9_BMY8hirJmiDAz32pPI6yN3eY-QTMZTVdqyrfbUrR5IZOVSdI2J2WDdf_chWUruFR4OK2pqQw3P2E-59s01T7peCDarr6s7OjmwYfhxPGF_Pk1IkrVb-vqdQCW7BfduXLfow49uxfbcAw9jNSSZ9zqzBU7Got-KCF58gmRYQdIEGeXWYlTe8gAu-rpVBA96UolM1PNMvhVw6rKDcRehM-Xodgw0xiBsKOidpVolTVUpTjMkUI9fdh5PgfjHrlSy2Pbeke852dWcqvPdOD0Zb9BewfeQtx6Dc5x_kUDnUeiNsTccOM3B1luIJe0sdCFRDeSpqfyHEgo7P5nxaQkHHYJvazT6dl5io-57DW9JhyINPO1vCzelCvBycTuMNtxGajb3vbIX5pEjpZMIBtjQaTLJxRLR5woTT5MaHZo0huoQAwpcP_Ugon36dZILcpDLj5un_TYrh9EJo22iDy0CzTeNztkBHzM6l6Ed8tXUGD4vKr9nIoLlQ2y2VQfbDEkJgOvquGpAnDd-vvywsGcbOaftfVC1MktNXM6FQn3hEKBsPN5ZhlbUO838ptNOslXlUnZN-cruK1IMXFr6NN6vZK3Bpi74xiYld8FLT8aJ-16ut63hBuSteSw4PohydgMLARUstUIi2Hr25lOCBG6jyFFrCNxYnfDE68J86mwnHnoVcsvl7NE67TkG7BkKlJBW_bLCWTAF1mF4EAsM1OXyH1OrlDsocgUiRdSRGjSToGiTSUoTWaghAkmyiyr_4S01Bsp-0BPQ4g=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7533843Z"
+    },
+    {
+      "signature": "38+mhG44XQVyyaMr",
+      "humanSignature": "BSB-CNF-2604-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 460,
+            "stops": 1,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T05:35:00",
+                  "city": "BSB",
+                  "time": "05:35"
+                },
+                "arrival": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T06:55:00",
+                  "city": "CNF",
+                  "time": "06:55"
+                },
+                "waitTime": "05h05m",
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "2604",
+                "duration": 80
+              },
+              {
+                "departure": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T12:00:00",
+                  "city": "CNF",
+                  "time": "12:00"
+                },
+                "arrival": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T13:15:00",
+                  "city": "GRU",
+                  "time": "13:15"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "4236",
+                "duration": 75
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-CICeMaYWR2c1",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1252.64,
+            "baseFare": 1117.97,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 134.67,
+                "description": ""
+              }
+            ],
+            "adultPrice": 1117.97,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 1117.97,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "PmHAQclYpGq_OYmKzT3RyecEVauUi_iKq9cJ7QhZJSJ6ZIxVh2DKM2tROXW89sVQijhiaPqb-XJEKkJKN6Da0SrxKIBTODUAgkAVXxTg6zPKwBv5jSnxf_k3bSKyB3TIaiwWppTIUW6i-CpNmxOSVJvg5hV09lsVi4yNzgTIE8U5JLOwBnA9YR1roRN_A1H-jfe8OThBltS8Yo7Z3ijmOKS84MJvl6tnpdmD3nXcdgrELMCLZ8av5E1oBnahpSS9A4ZmzleCfVcCCd-ArdouV8OOP4DmKzWimbNn35Z8wJncsRWk1Bprq1w-NlpC3hZ7LQwMThjyr-nWO383gX6qgRISw3lg4qaEodt2jeGolbFAu316oQcatmoZNjxPCpJYDxrCBdHH-UOGB90ew4kcnxTgFPKS2TsS30Wqqxpe7-jMymxYpJEdWiGJSPr3GQTS1XwK2v1UZIcoGql7LUhBCMLSEcV-RLTqk3v5Ms7K9pcSePWe5F-wcsZ-E7mNvnbXSLRHA-rSDYadCEgapUl_GEW9wpKONUxhPIYYzv-VmYeCGsyzhHuhdbYYSfsPnVOiXOWeDfjm_l7Ny0WCjoVGqNNzC4q3tHX17ZAIc-aYfOxojI-MY4bexYhb5O7Ivg04GTwatVMXVpgfQYa-4iDV68lj4x2Hnp1Kw8Ng1Nc5GE6ylNbgldj8nYv0iSGf7cVeN1MU6MlcdZhNnKK2K3vysrMR2NwSfWmQ36z9nF33yKNMfknZwUlvW1oSvhLH4fKoc27cngu07U0S0EubU7wUiYeIk1uTaILZ9huZxInwUpwr7BC_LMP45DxoPTfOUv8K10T2eGnR_CeWJZwocqSt3laNWR_NbBml3YN62UHsee_U-R4kChRzBCB_8O5MA2nZ1x4IOzA3QpqGwMo9AMUsB-qlJmCUcgjVDnT1wIyeHa8JMTecSmCuoxfEYmAC4MucyokuI46GHq67Gfo-IRLhc3-7VqfNkZPpE8DFW-mx2Uc2DosI5eyUvUejioqcTJXhAPsJIsAjc-sQwjfaA7cNlQhGj0R_RBUfmODdd2l5DS9lApophw7U7tz_99M1CcWSgdVdbC4qvQVSAIK-sQi4aaoP_NGMEje3ZmZ1PsQ5ZsziPb6hPE_AwN-uEz7_7XM6FVKzRDaZVCjPKFJzD3Q__P4NNNoWYBAGq__I3ZjcSVo46MdKXs_G6aPNelRqEE2SJ8ACddYqezb9tCSEN9VbVuiPBEejZATbDJuerqJU_afItBaWNNRj3Ane-o0-yySC1lb3CLxKXUSWM4bM_GgtzcheBS9M3hsBIo-hrP3KRlX8egOz1QgpX8TMmcQ5001XVYYnF-PNV4C-S3FbUc5KRh2P4UBoqYVbNSfaAK6rzq3MmEcCLcM8b6_BzQPQmyy4tfDnmPbYAX7f_RGleNmjqf7jfTyXKnEfAnJwR2Y4mzxxM0l2h7-TITfUXvZHz6Xqvg4KYd62p8xJh11x0XdckI5C5XwTZIPbK9IK-Z1XX4UTiEGmD6wqUCYw2YuC5fKWOPITXxdf20uWFgNqyw38u4xa9lgMYh8AI8kUCk0UZc5tGtDYaFRyGm7FTCUOw6loBNly3yohkmULiL6pkKmfVvyhfgFxVL64FVHts29U2xcoJR1PdNGEyE1gZx-96bVHnyc7pMSRd6LFUcwKbt8ORhZGJq8-n-0KGB_tVZeIt6ET7DINE3Y5MgIexN8jDid7wGRtsxktmQmNQKlmI8WS_Xs1-L1S_RkroqA1IEwRIheDsV2wd6tiE1_44qfqCUHXx4YAOATe6pOBxkLYJA5r_DG59aup3V7vmsam5U-j-SNLHQWjkc52vLSkvKWapJGg3uIecJCT5XbVYqnaIcCORO3I29dX8tpIesNLdA-OgmkfTzcEhNK7WIUlFpxCAxaYpqJ_l8GYzKsIsm7KvNV2K6_yCQ52upFr1g_9p4dnHEM_Dz9eANO-DEAuZcWvPPFytXA5tKdzRvtnUA_pYAtp8jkRsJccgb2D32BFAW7AtwkfDJqi17G3-CMP5ryzvCTb2MaABojyrubwUCExlnvKiOmJx08CHub-foQ-ryfgiP2sCkinXl6E_wuUTjEbjyjbLBfU1-D56Rvh_V3_uD_b4a9dRe2H595b4l2gPVAWKx21Yf3vi4Cmsnz1oBXF8I4oni26Pdv5M24IDTNt-qBm9Z_aWvXa-tB3EsbC2s3REaEds5HoZad3Qg_9nzsGRF9JZn-8JcFvufp41WA8jE_6lZoLfuqSKVzI7R0UbzuipH0JsgRys6AiinD1fpmA1L6w6f8CvunCbRT0-jnblO0h_6j1Tc4sJ17En9ybE2I2Vcs="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-iEaRbUvWtmv_",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1449.76,
+            "baseFare": 1297.17,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 152.59,
+                "description": ""
+              }
+            ],
+            "adultPrice": 1297.17,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 1297.17,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "uJ_7R2jIaWOKNxTxrsO7p01zk-BBoI11VS2Mvcjix_469s9vaSCuwrom83WJV-r7UT1Az6Rdw-41kFWegJnjElvrFQsu4f1s2mGIug9uoXwQPUGQb87g-BdYs7ss9BfOdg6kBtgeXDIr_ELaji8eA6q8ASheB6Q6AHSFWW6G_j5wbZMbqAhPPOiC1d9otU0K_GZs8OCmF0UuAlgdszIIfmMh6UbTl06vJI1ZDXXDfWd-kHRiyMW_NUVCjLMO5x7X27cbNdTuw2CAeMRPTBbK_xGGBUQYhezDVu6PvbUE4ygpdQ3AIa50_AD4Y3fvfnA8yGAEPsEOlHOCUFa6wK92bp8AYCASqSoN6p-4Qe0gOtPniXXgh-DEWPgQ9IxDx73ZgH3Wu3m-CiuweIE-nBJw-wYTEEtqnxgw548iiGih1R06554BOi1Ya334HHeyYr4eI25DViugu5GDWM27IPwtBQUwH79jWOl3cSXV3FHFCk8RyQgc4Z8tnzxpC6wBA0FuIQNXhgHKGhx1CWD_lirksn_5HnsU82XUnWXJcl_6Sg7rUn0gMghl6eYEOCgRNEQ1GCwMDsKMBRD1M8bh0aYQa8J5-FcSVWvSwTeoZuIs-Hx4Db8aFiEyeIM0Ykfy_jaB1hdFiasXqLSpvzTRXoTw8i4jUNJ5YRja7Hk4UcfEc22WRWcwWyKBI_HdS2vbEQI6YTpMJaO4QB7FaNlYTgALzZiS89AycJOBzQDcrjN6RZVSo_LkzyqsJlqv_N5DbeMmN8lmyosrb8DQi9AJnavlyEKej5MsNknU1j1BeKO3vwp-WD-cToX_ifpwO_zKF2LWBX4s9H7ASM5Hp7H_b7M5sczN7MM5Shd1OJuNa7mjuG1Kf7UvM64Jbz1oSO_LsZwCZRIrYgS0dGiUZPmfq6A3O7yJ08HdDrXD_sAwrD8M3L67mFn8Qx77i6ehVi-SVb-7Y0DmmOAbE1Tec_d3J0Ku8qLkXZO37sJ66d68elG77LoufeSNSSgYW_9kO2QB_XDhoOy8RgrzJAG7SRBv8GB7kHyiCxeisvadxqRHmrWj8QKg18kBx-yhHChQ7pRpvGxgizMwyxbKxEpD13iWhkGosuwg04zmC2zzxq5qvr2cs3qMBHCLexqCwU1mrpKXgr00xS5-rk6KS3ZlXsQlKsl0o8Zf8gMS5gv56AJ4bf0I52M91mrjG27BXsE0p7mUGSAR26QXMlk2xeBcvg9--WKFWvSyPrhd31Q3LXzHgL-xLNNIzPZQNX2ooamf4l8IuOw2izLm8K3klNoNGa8ms9YqkVd6fAbAESMDHkX5IQs72PN2dZUYSw8rgtjaAxYxaCQtMKBkQclVkGnuOVy28SSI0Fbrdbz2aRpAzUqENqGkpXKhvEX8zGbLPXtX8LNdIV19IZVK3c7YFphK4UzExCeqThriQQHDGqvl1dCrcKYVQZLN86JC3OAR5r2n22aPQ5OT08yDNyuBgQGtnpEHbwJhigJYwhDkshWDD9PCs3Tab7bRmzQq4tCFKtDHsdVA4oFXSWPSIIsM42TmWO_bVrxmV4pZjvfkY8Nhk5tkMaddcfnGuOye_UbQ3UUfKN3C6UFUxG9FD3BLnALqqvBSLPbf9Pw4WNQgViM3vIUU3fAw9MJMdAA2y3OJQs_GfEbBLWHau0HFafyyHJK6kq8vouqQ7A5W_RDkNTySnWzQEyRpBca9A4Nv8KJeTZKcV363Xkkp5-_4kF_kIdBwGO8FbFKsGVtIHgJ57QB42yzf8l-sdqLpHKIJ4w1DZLq8uF8M3nJLhQ6qLRMe6Q2rKzvYGQgFfn8x7JCWuHJvlp-jux9MEICcXRX3b9zM8Ei1YsDga2ECR-L4cb768YOdx4HC2PU8MvQHlxkzNbKKwqgcouKYemv85PxMCXy7OOWdSfSzHSo-cF5DUZqpjln4iBg0LhB9J-qaO1xUtUxRjVjYlZymtENKU-8ZKNCXYLhNnmYa7WtvlFgcMBQBI_t-qlxcU8HMx-yidqHA7rpeXB8TxjvfbI71n-8L6gpLoxyIH_s5JobqJcjVlFlJx7Rvhye3j4HuU-yzsKGH-IOqSRfQHtTfC-1-xL2o_IiV1YbqAB3-sfcYiPZnKwsj7mQV9OTAxiAi-f3pzB0ICm9lPG11vkU8NAJuV8rG0yv5F338ZFrEfQxNHCVjTAWNjkMromxJc7DpsE98NieNqnq9A0oAUXz6gigXLzOpXHeSmVJiVzWit0C_"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7533899Z"
+    },
+    {
+      "signature": "0uYkcB5cJeXS1IYa",
+      "humanSignature": "BSB-CNF-2604-AD-20260330",
+      "flightInfo": {
+        "isRoundTrip": false,
+        "itineraries": [
+          {
+            "type": "outbound",
+            "duration": 225,
+            "stops": 1,
+            "segments": [
+              {
+                "departure": {
+                  "airport": "BSB",
+                  "dateTime": "2026-03-30T05:35:00",
+                  "city": "BSB",
+                  "time": "05:35"
+                },
+                "arrival": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T06:55:00",
+                  "city": "CNF",
+                  "time": "06:55"
+                },
+                "waitTime": "01h10m",
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "2604",
+                "duration": 80
+              },
+              {
+                "departure": {
+                  "airport": "CNF",
+                  "dateTime": "2026-03-30T08:05:00",
+                  "city": "CNF",
+                  "time": "08:05"
+                },
+                "arrival": {
+                  "airport": "GRU",
+                  "dateTime": "2026-03-30T09:20:00",
+                  "city": "GRU",
+                  "time": "09:20"
+                },
+                "marketingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "operatingCarrier": {
+                  "code": "AD",
+                  "name": "Azul"
+                },
+                "flightNumber": "2814",
+                "duration": 75
+              }
+            ]
+          }
+        ]
+      },
+      "offers": [
+        {
+          "id": "azul-WEzNQHJ3eX-W",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1723.9,
+            "baseFare": 1546.39,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 177.51,
+                "description": ""
+              }
+            ],
+            "adultPrice": 1546.39,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 1546.39,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "PmHAQclYpGq_OYmKzT3RycZ99BgAmq6CNKKJDQFmtf-lLx5nLNhkbCcthXD3WZr1m6k1tAKc5E6rY3wL_LaCenyD7sRD0oKhGZ68NBebcH-1VdmIYO-jZ19_knHl1fVvTzX_2P2ptLJ9_Z4IK6C6PhdRsRPNQZW1XwtXAmsdB8S9R-502NvDrm3YVBf2eOb4TpeDNKLXfq0EVbR_FocOTXovb3IfUOZNyHsBOnLqNnjoDlxYUG8M4oDbM_a0Hy-k5GmCcJ2i9CBsqc3KH_Szw-1UKDCAQh7bFDnz5U4YsD9Box1c2V2Q-DzIsjBx6lezs9-xpSAy5dY8VarVKIsOJvUh6C2dpRw3Brne5FdNTi9Hr7lttfGTa13uTFkajpx1HO_Jmgf13H79-3bhBINkH4Lq4nweCEEre4l0B6YSJw0D9qojDMXUEsguusWqTIIhKh5WnhiT4-Mg5l4Zo4mqnKTizVRtWX998_HExJc7W5anPwJ9NJzIPRuKJhtTuMber9jpX4BPE-AyVZtCdQrJ9yssS-d9XP_RJ5_nKOxjCWxYWi92ParceWQ1QYk4_ak6rmi6hsbS7wu1PUcjUvwak3jKdtjMIxVUBpJTYlAtBk8ZXqExRt682qPv_tASUMyJnxuVPZgKBt-u74oYGAnXPdGC9q8oB87UK1AAcIB8vdry_kCvlm-bzNm0mUnU-qQe8fml9thmPYiMAYxE0_d5g0ZlA-DIPFTtVFcqUo-84Fs20VEYw_Zj3W8uezUSEAM7yMtW1VL6NtiWWrfCkIIZJqLkW36gThkzusM-Gl5m5EPPXhfy2xnMzrZ5MHjg7Umb8ZtvSiz8TIlIKM7SD0DCYy3qgigHIRdXgcgh7-OCe3AjwmbG1478_q3CpvuMpWAfagpnXqV6IrE78bzuYWdQ8C1NvJEI--oefVuS0mlFUNKTicTmOTIgMTovuy0hjyifLchl4aVMMhGBFv04aOX5Qt1gVJbiMXW0ZAWUCThlyJ5SBK6aycLbAPN6vPc_TbJNjNkLN-vfZyA0So-BDvOmbza4A2HaZZhpIPMCz8W263SYhWKy9ENQMD84eaF1f8ZXtVRoItlrpxWXi2ZOglg4yAqsSFhNO7nM8_Fn5i2uC36_h4UzWS5Ed6m8ar-aLSoDfpovt7Bk6PRK3MhG9r9hQYI1naAyAPK1ddsBXNLj-fYZqD_MbmdLQJO87QmX1AyGibdsfFUcjPSiOyk35zQ-oaw6nBpobxFaZk_E4fRsDlKYa7qJR1IkfG37DCI7N9JZlgLkdB9U-HHDQJkrrq50WsrCHm4dyjLfZCtXV18WI7WJgEYvgPf7YF3ErZB9UvHk5EcGaeWsrUy4gudXHyzVg6uqCCJ3KIOTwnuqb9o3jZzhsoLRwCyn7fjdRY7sHApqwQwSlx0s43D4QVvhmd-DIGUbKfXt6KtFuBPui8N3iAlw3aVaUSEV9T0jxBT3-QCOCgpNmxq7wRtXmWIdRxbCFTi7M_2niYVU-ptHn9JeAstWiMZFWu9bcki-W2HFC358d1c7GN-AC9h7EAVm00yu3uZcL2-1--KQ6tV11pkVCPBhCjeWFUdxoEmTgVwqYxw3pj0thpvQm71kVxpf2bf_9U8ZCquLRgMVDwiwitq53qr0v9N9BvnQOKAt0fNMSrpx0AyE-vw2RG76XpDq0j9Ib4jhh4a3kjA04jdM3IwwmpY5ihMTDRC3kMvuvcXdGqhilBTXq7KCxMIImQPpwbX5pwgdYaRLQgzVP_GOOneHvx2rDZsSbsoCa-OZeiB8GgRL7qtgR68AKJv0B5NHhGC20qQhykfwwk0WWMl-Q_WDvASrpB1rUWyUa2kUeBWy0IB5NAy_b8zWPp_ByAaFy_O9UtyzXtbx-KfiXEH15KO4cuMPYgg0BEdjsOclZ2dHxNojBIs8g6Qc_DTz4XNvfSlGHJT-DUsP83r1WClxfF7mUEdXz0opRcgqmzgoBD21jS7Ru5AmYgJd1AZlOMGJP5n_diIxW-0_jGXTf0Gml2NnrSwXa_rkRrExB9G7XTXBGO0gvM5w0EEJpIr1nwD7EbeIN7q1OEflong27gifWx3HZ4Mxp6FXZarJr4oxU6Gthj1mSbC0hLn_MH-lrw-1H6MLN1xE3qdCYrzxtL0-VdaSmgH2P5O4_XRmMvUMS6bnewzQDwZU_-_YC1YGtp-TXdgskDE7cOZuFovv0HDdH3OQ744ij6id6Za2-eTUDNMo_Hgnpy_nSJhlVtAva4lcfxULuzclvkPN-oHxG4ov_hpJTSHmVy3Xp6eqeJzrBpq0_U7SWd6YUZJXTKi_yJtvkvvZqg=="
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": true,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        },
+        {
+          "id": "azul-t6wKSKFPbyTO",
+          "providerId": "azul",
+          "price": {
+            "currency": "BRL",
+            "total": 1917.5,
+            "baseFare": 1722.39,
+            "taxes": [
+              {
+                "code": "BOARDING",
+                "amount": 195.11,
+                "description": ""
+              }
+            ],
+            "adultPrice": 1722.39,
+            "childPrice": 100,
+            "infantPrice": 0,
+            "companyPrice": 1722.39,
+            "savingsPercentage": 0,
+            "source": "azul"
+          },
+          "availability": {
+            "instantPurchase": false
+          },
+          "booking": {
+            "bookingUrl": "https://www.voeazul.com.br/",
+            "token": "uJ_7R2jIaWOKNxTxrsO7pwbhpIPewjtSAP6-SrOdt67r482c0t8SUzNOfYynriuO_GS3Su9oMTRW2_DgGrGmpNWBHozju_bnP3BCihAisk6wI0UKEtkLSZwQAV_6jH2ppVfh16kCaCaKOPuIocZ5cBrIlSetc8Qr5B5QuqMA7Mckp0V3SijUr54aAopund_gM4W07E-HhSjWFIR_7EF8a-IB8k7ZgGl24cdG-zDkTBYztlpbNtA4BIp0hcV2sOdUWkDs0GmlqzbeYcHk-ApNGrRM0YhlqtDmIOf3HYlM3c7eTZ7UeYgpuJf9kaPBHP4G6YCMx12YOOR1vg-Sgr97vhaog_zcKwl_ogidbpwVnR2UD9-Shca2e7RyM1mVQvMipB97fSI2MJUZaZ2WzC11Jn6QxDvGU6--7AmVWEEaaFEhi2k--t3K4qBp2DsMT8K1Q8pTxwtFtzY8UQLnnhHMpDICUl4JDDYIXm7h6-LFeLrH3qHA3-DHQnOxB2DY5dG4hhVJaxPqyvH--rCDiKxdTb-xWitOx0DBJ7beEd5YzgUn_jq_Ajy59ZVWarRMCSwn3UKc-3-Eb75XifwU0PeirHO6t88FuCP8oGpSKq19RICZkvL6PZiUp81TjfSPnHughjPH8fHqAiJQ-A01EzjTlPfYCnKJiU7wH7dcVyNa4MFsNvF8U0thpSPYk6SEdYDe7BZDbcQ750oXCY7UmvV1YJojWBLy30fNsHR4zJfIrH6BLu0qFSNWzurEyiJN9q30Plo2DWR_kUtaUaf6XGcyCBRyGwkuQz7dtq8E02rjaF5XkSjKDFFfHpY1Gcnx5kJLSYFASW17D-veQOlGcAWjC3ZmhLM-x-Honl2_EUAmq0KZlOMoGm9UbFT2jWro-FEZ2_AjMQX5psVwt5rscyyyHRvC6ytjE5WE_BbL0dqSqebk-gsmOAqGA1pMtAb5BHD-_fkIHdxgqrfJ1oOkj7cwHJ2UigkB3rhxWgjYoHJ4egI28Fx8QJjShmkLJmIWjOHtvXa5auJjzep5-tJo2t1108Rq9mrEYCIUqQSABN5hlWjnQjDib2RfNiSZL56F4yMNS9HoI6bz2PxitYNgRiwtjKZWWYz5ZJozYnzwj7SjseMXCNuetvSY0Y-xFTsQB6C6Kthdjt1UO860nzBDdofHRNnnRZ5yyXL6GbN7DY32V9UkyoRrdirxtAFIQN0_4KEsSEwvuhZVLJ5HP79OO3VoKG0OX9bRWhTHu1LpKchGR3quRlr5DNtYW_1E17RY0zIcWnEQvcCzD0y5IQahmEhb2WnmLmtKEmpkD8B1bSPNAadwqIzpxrb8YUp_j1WposQ48bu8t89khcuBrU4MD7EtGFpWK91QXulv6oFHv3W8RnOCKe4JFKgmt-AymFqTSJ8M4C_Jv1G-lEkaeALgXWImyy3YOyZfMIsis2E6dg8fSqZWIIdrZrwT89mRPK62hszFNRiyAmlQHgCuG7xMMdaP7Xx71vb8S3_eJDRYshd3dv5rk50YAiLXUUY_tblEC6gLeu3tKnMtH21rRJ_A7ZuS-PtTpGsDPX4oSFnb5ZcuEiF_l6gKt6A3WxyJKIUUGKsxlSyeJD3j7T-5R0aZAYVhnXMDbwkSs0_12K2mJrxfto05Z6qqZNovbZF11rGu3S9ml35ijehZUWUOGBDsA1CJ4VhVSIjSJIL9gTz-nGIk-yEEE-PWAvxRDbjefIgaa4uBzf3_Rtie5S4evnMQNtcNFTnu0lL_bFaLc-IeLoTbDdU6vvHBxypINwKTJbfrK-ZDszoO7d96u291GCTsKHgW2zZpVb9taxWOIK6JUkT0qyomlCPCRqiqpp3VtwGFuiswwFU8Pr_wTJ3EaDn9zBak0oq4XMG2vEtjAROF62tpGXD4g4hFVsIS03mBBq6s8VeiZ0m4DOT1PFs7qtgqcjtHJec5dIBi6zxSx9v7u-qpKgclm3i_kO7Z_0bGD3Dj9sCa0gc0XT-XL3mYjHZY2ilrTuDR4alKUEz8Q18OdREXMpxUXAZLS6d_6qoGnyWfK5QEco_uK79AUkg-DZ-NZGk9PHqL3TXWsPCFZYFm4zkROEXtjE4ciZ3m7B46mLxpDO5PQAPQawqe-voeMK3O_eqh4WsXWspzLjUSE_jlRZ6MnHLyLK50fXT8GGUg-Ud9x8VWLEOLYywtaM3zoAMRTWLtyS32gkPcdA6SA6cF9VHaayWrtg5GijkGZjKaeQEMPg1M"
+          },
+          "baggageIncluded": [
+            {
+              "type": "mao",
+              "quantity": 1,
+              "description": "",
+              "isIncluded": true
+            },
+            {
+              "type": "despachar",
+              "quantity": 1,
+              "description": "1 bagagem despachada",
+              "isIncluded": true
+            }
+          ],
+          "amenities": [],
+          "cabin": "economy",
+          "bookingClass": "Y",
+          "searchType": "pagante",
+          "isBestOffer": false,
+          "suppliers": [
+            {
+              "providerId": "azul",
+              "providerName": "azul",
+              "source": "azul",
+              "bookingUrl": "https://www.voeazul.com.br/"
+            }
+          ],
+          "passengerIdentities": []
+        }
+      ],
+      "lastUpdated": "2026-02-13T20:57:34.7534002Z"
+    }
+  ],
+  "summary": {
+    "totalFlights": 20,
+    "providers": {
+      "successful": [],
+      "failed": []
+    }
+  },
+  "tokens": {
+    "tokenConsultaIda": "8901_V2_754406ed1fe14a289c74706a17f92bd2",
+    "tokenExpiration": "2026-02-14T00:57:28.5654826Z"
+  }
+}
