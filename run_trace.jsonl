@@ -1,0 +1,12 @@
+{"request_id": "5909dee1", "stage": "prompt_parser", "status": "start", "timestamp": "2026-02-26T22:22:27.125519", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "prompt_parser", "status": "end", "timestamp": "2026-02-26T22:22:27.125519", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "adapters_fetch", "status": "start", "timestamp": "2026-02-26T22:22:27.125519", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "kayak", "status": "start", "timestamp": "2026-02-26T22:22:27.125519", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "kayak", "status": "end", "timestamp": "2026-02-26T22:22:27.131229", "latency_ms": 5.71, "offers_count": 2, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "moblix", "status": "start", "timestamp": "2026-02-26T22:22:27.131229", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "moblix", "status": "end", "timestamp": "2026-02-26T22:22:27.131229", "latency_ms": 0.0, "offers_count": 1, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "adapters_fetch", "status": "end", "timestamp": "2026-02-26T22:22:27.131229", "latency_ms": 5.71, "offers_count": null, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "ranking", "status": "start", "timestamp": "2026-02-26T22:22:27.131229", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "ranking", "status": "end", "timestamp": "2026-02-26T22:22:27.131229", "latency_ms": 0.0, "offers_count": 3, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "formatting", "status": "start", "timestamp": "2026-02-26T22:22:27.131229", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "5909dee1", "stage": "formatting", "status": "end", "timestamp": "2026-02-26T22:22:27.131229", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}

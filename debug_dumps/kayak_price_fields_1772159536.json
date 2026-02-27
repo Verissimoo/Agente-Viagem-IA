@@ -1,0 +1,1582 @@
+[
+  {
+    "id": "GRULIS1774738800000TP881",
+    "bookingOptions": [
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$518",
+          "price": 518
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$518",
+            "price": 518
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$518",
+            "price": 518
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$518",
+            "price": 518
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$519",
+          "price": 519
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$519",
+            "price": 519
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$519",
+            "price": 519
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$519",
+            "price": 519
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$584",
+          "price": 584
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$584",
+            "price": 584
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$584",
+            "price": 584
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$584",
+            "price": 584
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$650",
+          "price": 650
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$650",
+            "price": 650
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$650",
+            "price": 650
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$650",
+            "price": 650
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$698",
+          "price": 698
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$698",
+            "price": 698
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$698",
+            "price": 698
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$698",
+            "price": 698
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$2,677",
+          "price": 2677
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,677",
+            "price": 2677
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 2,
+            "secondBag": {
+              "displayPrice": {
+                "currency": "USD",
+                "localizedPrice": "$0",
+                "price": 0
+              },
+              "status": "INCLUDED"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 70lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "checkedBagLineItemCount": 2,
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,677",
+            "price": 2677
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,677",
+            "price": 2677
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "GRULIS1774738800000TP941774796400000TP19292",
+    "bookingOptions": [
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$585",
+          "price": 585
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$594",
+          "price": 594
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$660",
+          "price": 660
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$726",
+          "price": 726
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$774",
+          "price": 774
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$940",
+          "price": 940
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$940",
+            "price": 940
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$940",
+            "price": 940
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$940",
+            "price": 940
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$1,925",
+          "price": 1925
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 2,
+            "secondBag": {
+              "displayPrice": {
+                "currency": "USD",
+                "localizedPrice": "$0",
+                "price": 0
+              },
+              "status": "INCLUDED"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 70lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "checkedBagLineItemCount": 2,
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$2,141",
+          "price": 2141
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 2,
+            "secondBag": {
+              "displayPrice": {
+                "currency": "USD",
+                "localizedPrice": "$0",
+                "price": 0
+              },
+              "status": "INCLUDED"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 70lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "checkedBagLineItemCount": 2,
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "GRULIS1774738800000TP941774818000000TP19332",
+    "bookingOptions": [
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$585",
+          "price": 585
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$594",
+          "price": 594
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$660",
+          "price": 660
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$726",
+          "price": 726
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$774",
+          "price": 774
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$1,925",
+          "price": 1925
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 2,
+            "secondBag": {
+              "displayPrice": {
+                "currency": "USD",
+                "localizedPrice": "$0",
+                "price": 0
+              },
+              "status": "INCLUDED"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 70lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "checkedBagLineItemCount": 2,
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$2,141",
+          "price": 2141
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 2,
+            "secondBag": {
+              "displayPrice": {
+                "currency": "USD",
+                "localizedPrice": "$0",
+                "price": 0
+              },
+              "status": "INCLUDED"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 70lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "checkedBagLineItemCount": 2,
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "GRULIS1774738800000TP941774821600000TP19352",
+    "bookingOptions": [
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$585",
+          "price": 585
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$585",
+            "price": 585
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$594",
+          "price": 594
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "numSelected": 0,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "UNKNOWN"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Unknown",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$594",
+            "price": 594
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$660",
+          "price": 660
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$660",
+            "price": 660
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$726",
+          "price": 726
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$726",
+            "price": 726
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$774",
+          "price": 774
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 1,
+            "secondBag": {
+              "status": "UNKNOWN"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 50lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$774",
+            "price": 774
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$1,925",
+          "price": 1925
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 2,
+            "secondBag": {
+              "displayPrice": {
+                "currency": "USD",
+                "localizedPrice": "$0",
+                "price": 0
+              },
+              "status": "INCLUDED"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 70lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "checkedBagLineItemCount": 2,
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$1,925",
+            "price": 1925
+          }
+        }
+      },
+      {
+        "currency": "USD",
+        "displayPrice": {
+          "currency": "USD",
+          "localizedPrice": "$2,141",
+          "price": 2141
+        },
+        "fees": {
+          "basePrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          },
+          "carryOnBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 0,
+            "status": "INCLUDED"
+          },
+          "carryOnDisplay": "Included",
+          "checkedBagData": {
+            "displayPrice": {
+              "currency": "USD",
+              "localizedPrice": "$0",
+              "price": 0
+            },
+            "numSelected": 2,
+            "secondBag": {
+              "displayPrice": {
+                "currency": "USD",
+                "localizedPrice": "$0",
+                "price": 0
+              },
+              "status": "INCLUDED"
+            },
+            "status": "INCLUDED"
+          },
+          "checkedBagDisclosures": [
+            {
+              "disclosures": [
+                "Up to 70lbs per bag",
+                "Up to 62in total"
+              ]
+            }
+          ],
+          "checkedBagDisplay": "Included",
+          "checkedBagLineItemCount": 2,
+          "rawPrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          },
+          "totalPrice": {
+            "currency": "USD",
+            "localizedPrice": "$2,141",
+            "price": 2141
+          }
+        }
+      }
+    ]
+  }
+]

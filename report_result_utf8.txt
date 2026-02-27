@@ -1,0 +1,5 @@
+﻿[MoblixLatamAdapter] Falhou: 1 validation error for UnifiedOffer
+layover_out
+  Field required [type=missing, input_value={'source': <SourceType.MO...=true&sort=RECOMMENDED'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+Nenhuma oferta encontrada pelas fontes.

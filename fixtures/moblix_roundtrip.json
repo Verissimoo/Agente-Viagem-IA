@@ -1,0 +1,64 @@
+{
+    "flightGroups": [
+        {
+            "signature": "mock_sig_1",
+            "flightInfo": {
+                "itineraries": [
+                    {
+                        "type": "outbound",
+                        "stops": 0,
+                        "duration": 180,
+                        "segments": [
+                            {
+                                "departure": {
+                                    "airport": "GRU",
+                                    "dateTime": "2025-05-01T08:00:00",
+                                    "time": "08:00"
+                                },
+                                "arrival": {
+                                    "airport": "FOR",
+                                    "time": "11:00"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "type": "inbound",
+                        "stops": 0,
+                        "duration": 180,
+                        "segments": [
+                            {
+                                "departure": {
+                                    "airport": "FOR",
+                                    "dateTime": "2025-05-10T20:00:00",
+                                    "time": "20:00"
+                                },
+                                "arrival": {
+                                    "airport": "GRU",
+                                    "time": "23:00"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "offers": [
+                {
+                    "price": {
+                        "pointsInfo": {
+                            "totalPoints": 20000
+                        },
+                        "taxes": [
+                            {
+                                "amount": 80.0
+                            }
+                        ]
+                    },
+                    "booking": {
+                        "bookingUrl": "http://example.com/book"
+                    }
+                }
+            ]
+        }
+    ]
+}

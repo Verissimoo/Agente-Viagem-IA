@@ -1,0 +1,168 @@
+﻿python : test_full_pipe
+line_offline (__main__.
+TestOfflinePipeline.tes
+t_full_pipeline_offline
+) ... ERROR
+No linha:1 caractere:1
++ python -m pcd.tests.t
+est_offline_pipeline 
+-v > test_out.txt 
+2>&1; Get ...
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (test_full_pip   
+ el...line) ... ERR    
+OR:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+test_kayak_oneway_loadi
+ng (__main__.TestOfflin
+ePipeline.test_kayak_on
+eway_loading) ... ERROR
+test_moblix_roundtrip_l
+oading (__main__.TestOf
+flinePipeline.test_mobl
+ix_roundtrip_loading) 
+... ok
+
+=======================
+=======================
+=======================
+=
+ERROR: test_full_pipeli
+ne_offline (__main__.Te
+stOfflinePipeline.test_
+full_pipeline_offline)
+-----------------------
+-----------------------
+-----------------------
+-
+Traceback (most recent 
+call last):
+  File "C:\projeto-ia\A
+gente-cotacao_kayak\pcd
+\tests\test_offline_pip
+eline.py", line 59, in 
+test_full_pipeline_offl
+ine
+    offers_k = ka.searc
+h(self.base_request_ow,
+ use_fixtures=True)
+               ^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^
+  File "C:\projeto-ia\A
+gente-cotacao_kayak\pcd
+\adapters\kayak_adapter
+.py", line 85, in 
+search
+    uo = UnifiedOffer(
+         ^^^^^^^^^^^^^
+  File 
+"C:\Users\Felipe Veriss
+imo\AppData\Local\Progr
+ams\Python\Python312\Li
+b\site-packages\pydanti
+c\main.py", line 253, 
+in __init__
+    validated_self = se
+lf.__pydantic_validator
+__.validate_python(data
+, self_instance=self)
+                     ^^
+^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic
+_core.ValidationError: 
+1 validation error for 
+UnifiedOffer
+layover_out
+  Field required 
+[type=missing, 
+input_value={'source': 
+<SourceType.KA... 
+1000.0, 'deeplink': 
+''}, input_type=dict]
+    For further 
+information visit https
+://errors.pydantic.dev/
+2.11/v/missing
+
+=======================
+=======================
+=======================
+=
+ERROR: test_kayak_onewa
+y_loading (__main__.Tes
+tOfflinePipeline.test_k
+ayak_oneway_loading)
+-----------------------
+-----------------------
+-----------------------
+-
+Traceback (most recent 
+call last):
+  File "C:\projeto-ia\A
+gente-cotacao_kayak\pcd
+\tests\test_offline_pip
+eline.py", line 38, in 
+test_kayak_oneway_loadi
+ng
+    offers = adapter.se
+arch(self.base_request_
+ow, use_fixtures=True)
+             ^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\projeto-ia\A
+gente-cotacao_kayak\pcd
+\adapters\kayak_adapter
+.py", line 85, in 
+search
+    uo = UnifiedOffer(
+         ^^^^^^^^^^^^^
+  File 
+"C:\Users\Felipe Veriss
+imo\AppData\Local\Progr
+ams\Python\Python312\Li
+b\site-packages\pydanti
+c\main.py", line 253, 
+in __init__
+    validated_self = se
+lf.__pydantic_validator
+__.validate_python(data
+, self_instance=self)
+                     ^^
+^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic
+_core.ValidationError: 
+1 validation error for 
+UnifiedOffer
+layover_out
+  Field required 
+[type=missing, 
+input_value={'source': 
+<SourceType.KA... 
+1000.0, 'deeplink': 
+''}, input_type=dict]
+    For further 
+information visit https
+://errors.pydantic.dev/
+2.11/v/missing
+
+-----------------------
+-----------------------
+-----------------------
+-
+Ran 3 tests in 0.002s
+
+FAILED (errors=2)

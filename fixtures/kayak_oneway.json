@@ -1,0 +1,82 @@
+{
+    "data": {
+        "airlines": {
+            "LA": {
+                "name": "LATAM"
+            }
+        },
+        "segments": {
+            "seg1": {
+                "airline": "LA",
+                "departure": "2025-05-01T10:00:00",
+                "arrival": "2025-05-01T12:00:00",
+                "origin": "GRU",
+                "destination": "BSB"
+            },
+            "seg2": {
+                "airline": "LA",
+                "departure": "2025-05-01T14:00:00",
+                "arrival": "2025-05-01T18:00:00",
+                "origin": "BSB",
+                "destination": "MIA"
+            }
+        },
+        "legs": {
+            "leg_direct": {
+                "id": "leg_direct",
+                "segments": [
+                    "seg1"
+                ],
+                "duration": 120
+            },
+            "leg_conn": {
+                "id": "leg_conn",
+                "segments": [
+                    "seg1",
+                    "seg2"
+                ],
+                "duration": 480
+            }
+        },
+        "results": [
+            {
+                "type": "core",
+                "legs": [
+                    {
+                        "id": "leg_direct"
+                    }
+                ],
+                "bookingOptions": [
+                    {
+                        "fees": {
+                            "totalPrice": {
+                                "price": 1000.0,
+                                "currency": "BRL"
+                            }
+                        },
+                        "providerName": "LATAM"
+                    }
+                ]
+            },
+            {
+                "type": "core",
+                "legs": [
+                    {
+                        "id": "leg_conn"
+                    }
+                ],
+                "bookingOptions": [
+                    {
+                        "fees": {
+                            "totalPrice": {
+                                "price": 1200.0,
+                                "currency": "BRL"
+                            }
+                        },
+                        "providerName": "LATAM"
+                    }
+                ]
+            }
+        ]
+    }
+}

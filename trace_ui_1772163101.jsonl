@@ -1,0 +1,12 @@
+{"request_id": "97a08430", "stage": "parse", "status": "start", "ts": "2026-02-27T00:31:41.446962", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "parse", "status": "end", "ts": "2026-02-27T00:31:41.446962", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "kayak_search", "status": "start", "ts": "2026-02-27T00:31:41.446962", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "kayak_search", "status": "end", "ts": "2026-02-27T00:31:41.447978", "latency_ms": 1.02, "offers_count": 2, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "moblix_search", "status": "start", "ts": "2026-02-27T00:31:41.447978", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "moblix_search", "status": "end", "ts": "2026-02-27T00:31:41.449491", "latency_ms": 1.51, "offers_count": 1, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "layover_classify", "status": "start", "ts": "2026-02-27T00:31:41.449491", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "layover_classify", "status": "end", "ts": "2026-02-27T00:31:41.449491", "latency_ms": 0.0, "offers_count": 3, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "score_rank", "status": "start", "ts": "2026-02-27T00:31:41.449491", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "score_rank", "status": "end", "ts": "2026-02-27T00:31:41.449491", "latency_ms": 0.0, "offers_count": 3, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "format_report", "status": "start", "ts": "2026-02-27T00:31:41.449491", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "97a08430", "stage": "format_report", "status": "end", "ts": "2026-02-27T00:31:41.450506", "latency_ms": 1.01, "offers_count": null, "message": "", "error": null}

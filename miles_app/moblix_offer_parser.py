@@ -26,6 +26,21 @@ def _get_points_total(offer: Dict[str, Any]) -> Optional[int]:
         return None
 
 
+def _get_points_split(offer: Dict[str, Any]) -> Tuple[Optional[int], Optional[int]]:
+    price = offer.get("price") or {}
+    pi = price.get("pointsInfo") or {}
+    
+    out_v = pi.get("outboundPoints")
+    in_v = pi.get("inboundPoints")
+    
+    def _to_int(v):
+        if v is None: return None
+        try: return int(float(v))
+        except: return None
+
+    return _to_int(out_v), _to_int(in_v)
+
+
 def _get_booking_url(offer: Dict[str, Any]) -> str:
     booking = offer.get("booking") or {}
     url = booking.get("bookingUrl") or ""
@@ -177,6 +192,9 @@ def extract_latam_miles_rows(raw: Dict[str, Any], trip_type: str) -> List[Dict[s
         price = (best_offer.get("price") or {}) if isinstance(best_offer, dict) else {}
         taxes = _sum_taxes(price)
         link = _get_booking_url(best_offer) if isinstance(best_offer, dict) else ""
+        
+        # Split points
+        miles_out, miles_in = _get_points_split(best_offer) if isinstance(best_offer, dict) else (None, None)
 
         group_id = g.get("signature") or g.get("humanSignature") or ""
 
@@ -188,6 +206,11 @@ def extract_latam_miles_rows(raw: Dict[str, Any], trip_type: str) -> List[Dict[s
             "Bagagem": bag_miles if bag_miles is not None else "—",
             "GroupId": group_id,
             "Link": link,
+            # Novos campos para leg split
+            "outbound_total": price.get("outboundTotal"),
+            "inbound_total": price.get("inboundTotal"),
+            "miles_out": miles_out,
+            "miles_in": miles_in,
         }
 
         fi = g.get("flightInfo") or {}

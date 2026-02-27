@@ -1,0 +1,10 @@
+﻿{"request_id": "5ae1db8d", "stage": "adapters_fetch", "status": "start", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": null, "message": "Fetching data from all adapters", "error": null}
+{"request_id": "5ae1db8d", "stage": "kayak", "status": "start", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": null, "message": "Calling kayak source", "error": null}
+{"request_id": "5ae1db8d", "stage": "kayak", "status": "end", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": 2, "message": "Calling kayak source", "error": null}
+{"request_id": "5ae1db8d", "stage": "moblix", "status": "start", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": null, "message": "Calling moblix source", "error": null}
+{"request_id": "5ae1db8d", "stage": "moblix", "status": "end", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": 1, "message": "Calling moblix source", "error": null}
+{"request_id": "5ae1db8d", "stage": "adapters_fetch", "status": "end", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": null, "message": "Fetching data from all adapters", "error": null}
+{"request_id": "5ae1db8d", "stage": "ranking", "status": "start", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": null, "message": "Ranking and scoring offers", "error": null}
+{"request_id": "5ae1db8d", "stage": "ranking", "status": "end", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": 3, "message": "Ranking and scoring offers", "error": null}
+{"request_id": "5ae1db8d", "stage": "formatting", "status": "start", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": null, "message": "Building UI report", "error": null}
+{"request_id": "5ae1db8d", "stage": "formatting", "status": "end", "timestamp": "2026-02-26T22:03:09.657022", "latency_ms": 0.0, "offers_count": null, "message": "Building UI report", "error": null}

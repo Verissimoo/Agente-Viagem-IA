@@ -1,0 +1,34 @@
+parse_task:
+  description: >
+    Interpretar o prompt "{prompt}" e criar um SearchRequest estruturado.
+  expected_output: >
+    Um objeto SearchRequest (JSON string ou dicionário) pronto para as buscas.
+  agent: search_parser
+
+search_task:
+  description: >
+    Executar buscas em paralelo no Kayak (dinheiro) e Moblix (milhas) usando as ferramentas disponíveis.
+  expected_output: >
+    Uma lista consolidada de UnifiedOffer.
+  agent: kayak_searcher
+
+classify_task:
+  description: >
+    Analisar a lista de ofertas e classificar corretamente o tipo de escala (layover).
+  expected_output: >
+    Lista de UnifiedOffer com o campo layover_out preenchido.
+  agent: layover_classifier
+
+rank_task:
+  description: >
+    Executar o ranking de todas as ofertas coletadas. Identificar a melhor geral, melhor em milhas e melhor em dinheiro.
+  expected_output: >
+    Resultado do ranking contendo top_n=[], best_overall, best_miles, best_money e justificativas.
+  agent: ranking_expert
+
+report_task:
+  description: >
+    Formatar o resultado final no padrão PipelineResult e gerar os dados para a tabela da UI.
+  expected_output: >
+    Um objeto PipelineResult completo.
+  agent: report_standardizer
