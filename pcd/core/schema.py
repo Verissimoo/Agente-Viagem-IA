@@ -40,7 +40,8 @@ class SearchRequest(BaseModel):
     
     direct_only: bool = False
     
-    flex_days: Optional[int] = Field(None, description="Dias extras permitidos caso flex")
+    flex_days: int = Field(0, description="Dias extras permitidos caso flex")
+    flex_return: bool = Field(False, description="Se True, aplica flexibilidade também na volta")
     currency: str = Field("BRL", description="Moeda padrão da busca")
     
     debug_dump_moblix: bool = False
@@ -145,6 +146,13 @@ class PipelineResult(BaseModel):
     money_offers: List[UnifiedOffer] = []
     miles_offers: List[UnifiedOffer] = []
     
+    # Flex Date results
+    best_depart_date: Optional[date] = None
+    best_depart_date_equivalent_brl: Optional[float] = None
+    best_depart_date_source: Optional[str] = None
+    date_best_map: dict[str, float] = {}
+    offers_by_depart_date: dict[str, int] = {}
+    
     justification: List[str] = []
     table_rows: List[dict] = []
     trace_path: Optional[str] = None
@@ -161,5 +169,7 @@ class ParsedIntent(BaseModel):
     adults: int = 1
     cabin: CabinClass = CabinClass.ECONOMY
     direct_only: bool = False
+    flex_days: Optional[int] = None
+    flex_return: Optional[bool] = None
     confidence: float = 0.0
     notes: Optional[str] = None

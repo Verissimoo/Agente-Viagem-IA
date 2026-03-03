@@ -1,0 +1,61 @@
+﻿--- Testando clean_text_ptbr ---
+Original: Quero uma passagem de BrasÝlia para Lisboa
+Cleaned : brasÝlia para lisboa
+
+Original: Gostaria de um voo de SP para Miami
+Cleaned : de sp para miami
+
+Original: Preciso de uma cotaþÒo de BSB para LIS
+Cleaned : cotaþÒo de bsb para lis
+
+Original: Uma passagem de Natal para Londres
+Cleaned : natal para londres
+
+Original: BrasÝlia para Lisboa
+Cleaned : brasÝlia para lisboa
+
+--- Testando IATA Resolver ---
+Input: BrasÝlia     | Key: BRASILIA        | Res: ['BSB']
+Input: SÒo Paulo    | Key: SAO PAULO       | Res: ['CGH', 'GRU', 'VCP']
+Input: Natal        | Key: NATAL           | Res: ['NAT']
+Input: Londres      | Key: LONDRES         | Res: ['LHR', 'LGW', 'STN', 'LCY', 'SEN', 'LTN']
+Input: Bogotß       | Key: BOGOTA          | Res: ['BOG']
+Input: MedellÝn     | Key: MEDELLIN        | Res: ['MDE']
+Input: Toquio       | Key: TOQUIO          | Res: ['NRT', 'HND']
+Input: Tokyo        | Key: TOKYO           | Res: ['NRT', 'HND']
+Input: NYC          | Key: NYC             | Res: ['NYC']
+Input: GRU          | Key: GRU             | Res: ['GRU']
+
+--- Testando intent_parser_regex (Refinado) ---
+Texto: Quero uma passagem de BrasÝlia para Lisboa dia 20/06/2026
+  Origem : BrasÝlia (BSB)
+  Destino: Lisboa (LIS)
+  Flex   : None | Volta Flex: None
+  Confid.: 0.85 | Notas: ExtraÝdo via REGEX (Fallback - Refinado)
+Texto: BrasÝlia para Lisboa 20/06/2026
+  Origem : BrasÝlia (BSB)
+  Destino: Lisboa 20/06/2026 (None)
+  Flex   : None | Volta Flex: None
+  Confid.: 0.6 | Notas: ExtraÝdo via REGEX (Fallback - Refinado)
+Texto: Quero um voo de BSB para LIS dia 20/06/2026
+  Origem : Bsb (BSB)
+  Destino: Lis (LIS)
+  Flex   : None | Volta Flex: None
+  Confid.: 0.85 | Notas: ExtraÝdo via REGEX (Fallback - Refinado)
+Texto: Gostaria de um voo de SP para Miami com 3 dias de flexibilidade
+  Origem : Sp (CGH)
+  Destino: Miami com 3 dias de flexibilidade (None)
+  Flex   : 3 | Volta Flex: None
+  Confid.: 0.6 | Notas: ExtraÝdo via REGEX (Fallback - Refinado)
+Texto: Bogotß para MedellÝn com volta flexivel
+  Origem : Bogotß (BOG)
+  Destino: MedellÝn com (None)
+  Flex   : None | Volta Flex: True
+  Confid.: 0.6 | Notas: ExtraÝdo via REGEX (Fallback - Refinado)
+Texto: Sao Paulo -> Lisboa flex 3 dias
+  Origem : Sao paulo (CGH)
+  Destino: Lisboa (LIS)
+  Flex   : 3 | Volta Flex: None
+  Confid.: 0.85 | Notas: ExtraÝdo via REGEX (Fallback - Refinado)
+
+--- VerificaþÒo Anti-IATA Falso ---

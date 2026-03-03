@@ -10,6 +10,162 @@ from pcd.core.config import config
 from pcd.core.schema import SourceType, TripType, CabinClass
 from pcd.nlp.intent_parser import parse_intent_ptbr
 
+def format_duration(min_total: int) -> str:
+    """Formata minutos para XhYm"""
+    if not min_total: return "0m"
+    h = min_total // 60
+    m = min_total % 60
+    if h > 0:
+        return f"{h}h{m:02d}m"
+    return f"{m}m"
+
+def build_table_rows_miles(offers):
+    """Transforma UnifiedOffer em linhas para a tabela de MILHAS"""
+    rows = []
+    for i, o in enumerate(offers):
+        # Linha IDA
+        row_ida = {
+            "ID": i + 1,
+            "Fonte": "Milhas",
+            "Data": o.outbound.segments[0].departure_dt.strftime("%d/%m/%Y"),
+            "Trecho": "IDA",
+            "Origem": o.outbound.segments[0].origin,
+            "Destino": o.outbound.segments[-1].destination,
+            "Milhas": f"{ (o.miles_out if o.miles_out is not None else o.miles):,}",
+            "Taxas": f"R$ { (o.taxes_brl_out if o.taxes_brl_out is not None else o.taxes_brl):.2f}",
+            "Equivalente BRL": f"R$ {o.equivalent_brl:.2f}",
+            "Cia(s)": "LA", # Forçado conforme pedido
+            "Saída": o.outbound.segments[0].departure_dt.strftime("%H:%M"),
+            "Chegada": o.outbound.segments[-1].arrival_dt.strftime("%H:%M"),
+            "Duração": format_duration(o.outbound.duration_min),
+            "Escalas": f"{o.stops_out}"
+        }
+        rows.append(row_ida)
+        
+        # Linha VOLTA (se Roundtrip)
+        if o.trip_type == TripType.ROUNDTRIP and o.inbound:
+            row_volta = {
+                "ID": i + 1,
+                "Fonte": "Milhas",
+                "Data": o.inbound.segments[0].departure_dt.strftime("%d/%m/%Y"),
+                "Trecho": "VOLTA",
+                "Origem": o.inbound.segments[0].origin,
+                "Destino": o.inbound.segments[-1].destination,
+                "Milhas": f"{ (o.miles_in if o.miles_in is not None else o.miles):,}",
+                "Taxas": f"R$ { (o.taxes_brl_in if o.taxes_brl_in is not None else o.taxes_brl):.2f}",
+                "Equivalente BRL": f"R$ {o.equivalent_brl:.2f}",
+                "Cia(s)": "LA",
+                "Saída": o.inbound.segments[0].departure_dt.strftime("%H:%M"),
+                "Chegada": o.inbound.segments[-1].arrival_dt.strftime("%H:%M"),
+                "Duração": format_duration(o.inbound.duration_min),
+                "Escalas": f"{o.stops_in}"
+            }
+            rows.append(row_volta)
+    return rows
+
+def build_table_rows_money(offers):
+    """Transforma UnifiedOffer em linhas para a tabela de DINHEIRO"""
+    rows = []
+    for i, o in enumerate(offers):
+        # Linha IDA
+        row_ida = {
+            "ID": i + 1,
+            "Fonte": "Dinheiro",
+            "Data": o.outbound.segments[0].departure_dt.strftime("%d/%m/%Y"),
+            "Trecho": "IDA",
+            "Origem": o.outbound.segments[0].origin,
+            "Destino": o.outbound.segments[-1].destination,
+            "Moeda": o.price_currency or "BRL",
+            "Preço": f"{ (o.price_brl_out if o.price_brl_out is not None else o.price_amount):.2f}",
+            "Equivalente BRL": f"R$ {o.equivalent_brl:.2f}",
+            "Cia(s)": ", ".join(list(set([s.carrier for s in o.outbound.segments]))),
+            "Saída": o.outbound.segments[0].departure_dt.strftime("%H:%M"),
+            "Chegada": o.outbound.segments[-1].arrival_dt.strftime("%H:%M"),
+            "Duração": format_duration(o.outbound.duration_min),
+            "Escalas": f"{o.stops_out}"
+        }
+        rows.append(row_ida)
+        
+        # Linha VOLTA (se Roundtrip)
+        if o.trip_type == TripType.ROUNDTRIP and o.inbound:
+            row_volta = {
+                "ID": i + 1,
+                "Fonte": "Dinheiro",
+                "Data": o.inbound.segments[0].departure_dt.strftime("%d/%m/%Y"),
+                "Trecho": "VOLTA",
+                "Origem": o.inbound.segments[0].origin,
+                "Destino": o.inbound.segments[-1].destination,
+                "Moeda": o.price_currency or "BRL",
+                "Preço": f"{ (o.price_brl_in if o.price_brl_in is not None else o.price_amount):.2f}",
+                "Equivalente BRL": f"R$ {o.equivalent_brl:.2f}",
+                "Cia(s)": ", ".join(list(set([s.carrier for s in o.inbound.segments]))),
+                "Saída": o.outbound.segments[0].departure_dt.strftime("%H:%M"),
+                "Chegada": o.outbound.segments[-1].arrival_dt.strftime("%H:%M"),
+                "Duração": format_duration(o.inbound.duration_min),
+                "Escalas": f"{o.stops_in}"
+            }
+            rows.append(row_volta)
+    return rows
+
+def render_table_and_details(offers, key_suffix, res_context=None):
+    if not offers:
+        st.warning("Nenhuma oferta nesta categoria.")
+        return
+
+    if key_suffix == "miles":
+        rows_data = build_table_rows_miles(offers)
+    else:
+        rows_data = build_table_rows_money(offers)
+        
+    df = pd.DataFrame(rows_data)
+    st.dataframe(df.drop(columns=["ID"]), use_container_width=True, hide_index=True)
+
+    st.write("---")
+    unique_ids = sorted(list(set(df["ID"])))
+    sel_id = st.selectbox(f"📋 Ver detalhes do voo (ID)", unique_ids, key=f"sel_{key_suffix}")
+    offer = offers[int(sel_id) - 1]
+    
+    def render_timeline(itinerary, label):
+        st.subheader(f"{label}: {itinerary.segments[0].origin} → {itinerary.segments[-1].destination}")
+        c1, c2, c3 = st.columns(3)
+        with c1: st.write(f"🕒 **Saída:** {itinerary.segments[0].departure_dt.strftime('%H:%M')}")
+        with c2: st.write(f"🛬 **Chegada:** {itinerary.segments[-1].arrival_dt.strftime('%H:%M')}")
+        with c3: st.write(f"⏱️ **Total:** {format_duration(itinerary.duration_min)}")
+        
+        st.write("")
+        for i, seg in enumerate(itinerary.segments):
+            with st.container(border=True):
+                col_time, col_info = st.columns([1, 4])
+                with col_time:
+                    st.write(f"**{seg.departure_dt.strftime('%H:%M')}**")
+                    st.caption(seg.origin)
+                    st.write("↓")
+                    st.write(f"**{seg.arrival_dt.strftime('%H:%M')}**")
+                    st.caption(seg.destination)
+                with col_info:
+                    st.write(f"✈️ **Voo {seg.carrier} {seg.flight_number or ''}**")
+                    st.caption(f"Duração: {format_duration(int((seg.arrival_dt - seg.departure_dt).total_seconds() // 60))}")
+            
+            if i < len(itinerary.segments) - 1:
+                next_seg = itinerary.segments[i+1]
+                layover_min = (next_seg.departure_dt - seg.arrival_dt).total_seconds() // 60
+                st.markdown(f"""
+                <div style="background-color: #f0f2f6; padding: 10px; border-radius: 5px; margin: 5px 0; text-align: center; border-left: 5px solid #ff4b4b;">
+                    🛑 <b>Escala em {seg.destination}</b> • {format_duration(int(layover_min))}
+                </div>
+                """, unsafe_allow_html=True)
+
+    st.markdown("### ✈️ Itinerário Detalhado")
+    c_det1, c_det2 = st.columns(2)
+    with c_det1: render_timeline(offer.outbound, "🛫 Ida")
+    with c_det2: 
+        if offer.inbound: render_timeline(offer.inbound, "🛬 Volta")
+        else: st.info("Voo só de ida.")
+    
+    if offer.deeplink:
+        st.write("")
+        st.link_button("✈️ Abrir no site", offer.deeplink, use_container_width=True)
+
 def source_is(offer, name: str) -> bool:
     """Verifica se a fonte da oferta corresponde ao nome (string ou enum)"""
     if not offer or not hasattr(offer, "source"):
@@ -34,6 +190,8 @@ if "date_start_input" not in st.session_state: st.session_state["date_start_inpu
 if "date_return_input" not in st.session_state: st.session_state["date_return_input"] = date.today() + pd.Timedelta(days=14)
 if "is_roundtrip_input" not in st.session_state: st.session_state["is_roundtrip_input"] = True
 if "direct_only_input" not in st.session_state: st.session_state["direct_only_input"] = False
+if "flex_days_input" not in st.session_state: st.session_state["flex_days_input"] = 0
+if "flex_return_input" not in st.session_state: st.session_state["flex_return_input"] = False
 if "parsed_intent" not in st.session_state: st.session_state["parsed_intent"] = None
 
 # Sidebar - Settings
@@ -59,6 +217,23 @@ with st.sidebar:
     
     st.session_state["direct_only_input"] = st.checkbox("🚫 Somente voos diretos (0 escalas)", value=st.session_state["direct_only_input"])
     
+    st.divider()
+    st.subheader("📅 Flexibilidade de Datas")
+    flex_days = st.slider("Flexibilidade (± dias)", 0, 3, st.session_state["flex_days_input"], help="Expande a busca para N dias antes e depois da data de ida.")
+    st.session_state["flex_days_input"] = flex_days
+    if flex_days > 0:
+        st.info(f"💡 Isso aumentará o número de buscas: {2*flex_days+1} por fonte")
+        
+    if st.session_state["is_roundtrip_input"]:
+        flex_return = st.checkbox("Flexibilizar volta também (avançado)", value=st.session_state["flex_return_input"], help="Aplica flexibilidade na volta. Máximo ±2 dias.")
+        st.session_state["flex_return_input"] = flex_return
+        if flex_return:
+            if flex_days > 2:
+                st.warning("⚠️ Com volta flexível, o limite é ±2 dias. Ajustando...")
+                st.session_state["flex_days_input"] = 2
+            st.warning("💸 Aviso: Isso gera muitas combinações e pode ter custo elevado de chamadas.")
+    
+    st.divider()
     top_n = st.slider("Top N Ofertas", 1, 10, 5)
     
     st.divider()
@@ -109,6 +284,8 @@ with c2_btn_parse:
                 if intent.date_return: st.session_state["date_return_input"] = intent.date_return
                 st.session_state["is_roundtrip_input"] = (intent.trip_type == TripType.ROUNDTRIP)
                 st.session_state["direct_only_input"] = intent.direct_only
+                if getattr(intent, "flex_days", None) is not None: st.session_state["flex_days_input"] = intent.flex_days
+                if getattr(intent, "flex_return", None) is not None: st.session_state["flex_return_input"] = intent.flex_return
                 
                 st.success("Interpretado com sucesso!")
                 time.sleep(1)
@@ -125,7 +302,7 @@ if st.session_state["parsed_intent"]:
         col2.write(f"**Destino:** {intent.destination_city} ({intent.destination_iata})")
         col3.write(f"**Ida:** {intent.date_start}")
         col4.write(f"**Volta:** {intent.date_return if intent.date_return else 'N/A'}")
-        st.write(f"**Tipo:** {intent.trip_type.value} | **Direto:** {'Sim' if intent.direct_only else 'Não'} | **Adultos:** {intent.adults}")
+        st.write(f"**Tipo:** {intent.trip_type.value} | **Direto:** {'Sim' if intent.direct_only else 'Não'} | **Adultos:** {intent.adults} | **Flex:** {getattr(intent, 'flex_days', 0) if getattr(intent, 'flex_days', None) else 0} dias {'(Volta Flex)' if getattr(intent, 'flex_return', False) else ''}")
         st.caption(f"*Nota:* {intent.notes}")
 
 st.divider()
@@ -245,7 +422,9 @@ if search_btn:
                     origin=origin_final,
                     destination=dest_final,
                     debug_dump_kayak=debug_dump,
-                    debug_dump_moblix=debug_dump_moblix
+                    debug_dump_moblix=debug_dump_moblix,
+                    flex_days=st.session_state["flex_days_input"],
+                    flex_return=st.session_state.get("flex_return_input", False)
                 )
                 st.session_state["pipeline_result"] = res
                 st.session_state["search_id"] = int(time.time())
@@ -298,6 +477,25 @@ if "pipeline_result" in st.session_state:
         if params.get("debug_dump"):
             debug_data["dump_status"] = "Files saved to debug_dumps/"
 
+        # Detalhes do Intento Interpretado
+        if st.session_state.get("parsed_intent"):
+            pi = st.session_state["parsed_intent"]
+            from miles_app.iata_resolver import resolve_city_to_iatas, normalize_city_key
+            
+            st.markdown("---")
+            st.markdown("**🔍 Detalhes da Interpretação (NLP)**")
+            c_dbg1, c_dbg2 = st.columns(2)
+            with c_dbg1:
+                st.write(f"**Cidade Origem:** {pi.origin_city}")
+                st.write(f"**Key Normalizada:** `{normalize_city_key(pi.origin_city)}`" if pi.origin_city else "-")
+                st.write(f"**IATAs Resolvidos:** `{resolve_city_to_iatas(pi.origin_city)}`" if pi.origin_city else "-")
+            with c_dbg2:
+                st.write(f"**Cidade Destino:** {pi.destination_city}")
+                st.write(f"**Key Normalizada:** `{normalize_city_key(pi.destination_city)}`" if pi.destination_city else "-")
+                st.write(f"**IATAs Resolvidos:** `{resolve_city_to_iatas(pi.destination_city)}`" if pi.destination_city else "-")
+            
+            st.write(f"**Flex IDA:** `{getattr(pi, 'flex_days', None)}` | **Flex Volta:** `{getattr(pi, 'flex_return', None)}`")
+
         st.json(debug_data)
 
     if res.best_overall:
@@ -307,6 +505,29 @@ if "pipeline_result" in st.session_state:
         ])
         
         with tab_top:
+            if res.best_depart_date:
+                st.subheader("📅 Melhor dia para viajar")
+                c_best1, c_best2 = st.columns([1, 2])
+                with c_best1:
+                    st.metric("Data sugerida", res.best_depart_date.strftime("%d/%m/%Y"))
+                with c_best2:
+                    st.metric("Menor valor encontrado", f"R$ {res.best_depart_date_equivalent_brl:.2f}", 
+                              help=f"Fonte: {res.best_depart_date_source.upper()}")
+                
+                # Mini ranking de dias
+                if res.date_best_map:
+                    with st.expander("📊 Ranking de preços por dia", expanded=False):
+                        sorted_days = sorted(res.date_best_map.items(), key=lambda x: x[1])
+                        day_rows = []
+                        for d_str, val in sorted_days[:3]:
+                            day_rows.append({
+                                "Data": date.fromisoformat(d_str).strftime("%d/%m/%Y"),
+                                "Menor Valor": f"R$ {val:.2f}",
+                                "Ofertas": res.offers_by_depart_date.get(d_str, 0)
+                            })
+                        st.table(pd.DataFrame(day_rows))
+                st.divider()
+
             st.subheader("🏆 Melhores Opções Encontradas")
             c1, c2, c3 = st.columns(3)
             is_rt = params.get("trip_type") == "roundtrip"
@@ -429,126 +650,13 @@ if "pipeline_result" in st.session_state:
                         st.caption(f"Base: {bmo.price_currency} {p_amount:.2f}")
                     
                     st.caption(f"Fonte: {bmo.source.value.upper()}")
-                else:
-                    st.write("Sem resultados em dinheiro.")
             
             st.divider()
             st.subheader("💡 Por que escolher?")
             for j in res.justification:
                 st.markdown(f"- {j}")
 
-        def flatten_offers_for_table(offers):
-            """Transforma UnifiedOffer em linhas para a tabela, gerando 2 linhas se for Roundtrip"""
-            rows = []
-            for i, o in enumerate(offers):
-                # Determinar Cias
-                cias_out = list(set([s.carrier for s in o.outbound.segments]))
-                cias_in = list(set([s.carrier for s in o.inbound.segments])) if o.inbound else []
-                
-                # Linha IDA
-                row_ida = {
-                    "ID": i + 1,
-                    "Fonte": o.source.value.upper(),
-                    "Tipo": o.trip_type.value.upper(),
-                    "Trecho": "IDA",
-                    "Origem": o.outbound.segments[0].origin,
-                    "Destino": o.outbound.segments[-1].destination,
-                }
-                
-                # Preços IDA
-                if source_is(o, "kayak"):
-                    row_ida["Moeda"] = o.price_currency or "BRL"
-                    # Se tiver split, usa split. Senão usa total.
-                    p_ida = o.price_brl_out if o.price_brl_out is not None else o.price_amount
-                    row_ida["Preço"] = f"{p_ida:.2f}" if p_ida else "-"
-                else:
-                    # Milhas
-                    m_ida = o.miles_out if o.miles_out is not None else o.miles
-                    row_ida["Milhas"] = f"{m_ida:,}" if m_ida is not None else "-"
-                    
-                    # Taxas
-                    t_ida = o.taxes_brl_out if o.taxes_brl_out is not None else o.taxes_brl
-                    row_ida["Taxas"] = f"R$ {t_ida:.2f}" if t_ida is not None else "-"
-                
-                row_ida["Equivalente BRL"] = f"R$ {o.equivalent_brl:.2f}"
-                row_ida["Cia(s)"] = ", ".join(cias_out)
-                row_ida["Data"] = o.outbound.segments[0].departure_dt.strftime("%d/%m/%Y")
-                row_ida["Saída"] = o.outbound.segments[0].departure_dt.strftime("%H:%M")
-                row_ida["Chegada"] = o.outbound.segments[-1].arrival_dt.strftime("%H:%M")
-                row_ida["Duração"] = f"{o.outbound.duration_min} min"
-                row_ida["Escalas"] = f"{o.stops_out}"
-                row_ida["Link"] = o.deeplink
-                rows.append(row_ida)
-                
-                # Linha VOLTA (se Roundtrip)
-                if o.trip_type == TripType.ROUNDTRIP and o.inbound:
-                    row_volta = {
-                        "ID": i + 1,
-                        "Fonte": o.source.value.upper(),
-                        "Tipo": o.trip_type.value.upper(),
-                        "Trecho": "VOLTA",
-                        "Origem": o.inbound.segments[0].origin,
-                        "Destino": o.inbound.segments[-1].destination,
-                        "Equivalente BRL": f"R$ {o.equivalent_brl:.2f}",
-                    }
-                    if source_is(o, "kayak"):
-                        row_volta["Moeda"] = o.price_currency or "BRL"
-                        p_volta = o.price_brl_in if o.price_brl_in is not None else o.price_amount
-                        row_volta["Preço"] = f"{p_volta:.2f}" if p_volta else "-"
-                    else:
-                        m_volta = o.miles_in if o.miles_in is not None else o.miles
-                        row_volta["Milhas"] = f"{m_volta:,}" if m_volta is not None else "-"
-                            
-                        t_volta = o.taxes_brl_in if o.taxes_brl_in is not None else o.taxes_brl
-                        row_volta["Taxas"] = f"R$ {t_volta:.2f}" if t_volta is not None else "-"
-                    
-                    row_volta["Cia(s)"] = ", ".join(cias_in)
-                    row_volta["Data"] = o.inbound.segments[0].departure_dt.strftime("%d/%m/%Y")
-                    row_volta["Saída"] = o.inbound.segments[0].departure_dt.strftime("%H:%M")
-                    row_volta["Chegada"] = o.inbound.segments[-1].arrival_dt.strftime("%H:%M")
-                    row_volta["Duração"] = f"{o.inbound.duration_min} min"
-                    row_volta["Escalas"] = f"{o.stops_in}"
-                    row_volta["Link"] = o.deeplink
-                    rows.append(row_volta)
-            return rows
-
-        def render_table_and_details(offers, key_suffix):
-            if not offers:
-                st.warning("Nenhuma oferta nesta categoria.")
-                return
-
-            rows_data = flatten_offers_for_table(offers)
-            df = pd.DataFrame(rows_data)
-            
-            # Formatação visual
-            st.dataframe(df.drop(columns=["ID"]), use_container_width=True, hide_index=True)
-
-            # Detalhes abaixo
-            st.write("---")
-            sel_id = st.selectbox(f"📋 Ver detalhes do voo (ID)", df["ID"], key=f"sel_{key_suffix}")
-            offer = offers[int(sel_id) - 1]
-            
-            def render_segments(it, label):
-                st.markdown(f"**{label}**")
-                seg_data = []
-                for s in it.segments:
-                    seg_data.append({
-                        "Cia": s.carrier,
-                        "Voo": s.flight_number or "-",
-                        "De": s.origin,
-                        "Para": s.destination,
-                        "Saída": s.departure_dt.strftime("%d/%m %H:%M"),
-                        "Chegada": s.arrival_dt.strftime("%H:%M")
-                    })
-                st.table(pd.DataFrame(seg_data))
-
-            c_det1, c_det2 = st.columns(2)
-            with c_det1: render_segments(offer.outbound, "🛫 Ida")
-            with c_det2: 
-                if offer.inbound: render_segments(offer.inbound, "🛬 Volta")
-                else: st.write("Voo só de ida.")
-            
-            st.markdown(f"[🔗 Abrir no Site]({offer.deeplink})")
+            st.divider()
 
         with tab_money:
             render_table_and_details(res.money_offers, "money")

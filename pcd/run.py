@@ -41,6 +41,7 @@ def simple_prompt_parser(prompt: str) -> SearchRequest:
     )
 
 from pcd.core.schema import SearchRequest, TripType, CabinClass, PipelineResult
+from pcd.core.flex_dates import build_date_plan, compute_best_day
 
 def run_pipeline(
     prompt: str, 
@@ -53,7 +54,9 @@ def run_pipeline(
     origin: Optional[str] = None,
     destination: Optional[str] = None,
     debug_dump_kayak: bool = False,
-    debug_dump_moblix: bool = False
+    debug_dump_moblix: bool = False,
+    flex_days: int = 0,
+    flex_return: bool = False
 ) -> PipelineResult:
     request_id = str(uuid.uuid4())[:8]
     tracer = PipelineTracer(request_id)
@@ -82,30 +85,45 @@ def run_pipeline(
                 request.trip_type = TripType.ROUNDTRIP
             
             request.direct_only = direct_only
+            request.flex_days = flex_days
+            request.flex_return = flex_return
 
-        # 2. Stage: kayak_search
+        # 2. Stage: date_planning
         all_offers = []
-        with tracer.track_stage("kayak_search") as info:
-            try:
-                offers = KayakAdapter().search(request, use_fixtures=use_fixtures, debug_dump=debug_dump_kayak)
-                all_offers.extend(offers)
-                info["offers_count"] = len(offers)
-            except (OfflineModeError, Exception) as e:
-                print(f"[!] Kayak failed: {e}")
+        with tracer.track_stage("date_planning") as info:
+            search_plan = build_date_plan(request)
+            info["plan_size"] = len(search_plan)
 
-        # 3. Stage: moblix_search
-        with tracer.track_stage("moblix_search") as info:
-            try:
-                offers = MoblixLatamAdapter().search(request, use_fixtures=use_fixtures, debug_dump=debug_dump_moblix)
-                all_offers.extend(offers)
-                info["offers_count"] = len(offers)
-            except (OfflineModeError, Exception) as e:
-                print(f"[!] Moblix failed: {e}")
+        # Loop through each request in the plan
+        for i, req_i in enumerate(search_plan):
+            date_trace_id = f"_{req_i.date_start.isoformat()}"
+            if req_i.return_start:
+                date_trace_id += f"_ret_{req_i.return_start.isoformat()}"
+
+            # 3. Stage: kayak_search
+            with tracer.track_stage(f"kayak_search{date_trace_id}") as info:
+                try:
+                    offers = KayakAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_kayak)
+                    all_offers.extend(offers)
+                    info["offers_count"] = len(offers)
+                    info["date"] = req_i.date_start.isoformat()
+                except (OfflineModeError, Exception) as e:
+                    print(f"[!] Kayak failed for {req_i.date_start}: {e}")
+
+            # 4. Stage: moblix_search
+            with tracer.track_stage(f"moblix_search{date_trace_id}") as info:
+                try:
+                    offers = MoblixLatamAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_moblix)
+                    all_offers.extend(offers)
+                    info["offers_count"] = len(offers)
+                    info["date"] = req_i.date_start.isoformat()
+                except (OfflineModeError, Exception) as e:
+                    print(f"[!] Moblix failed for {req_i.date_start}: {e}")
 
         if not all_offers:
             return result
 
-        # 4. Stage: layover_classify
+        # 5. Stage: layover_classify
         with tracer.track_stage("layover_classify") as info:
             all_offers = classify_many(all_offers)
             
@@ -125,7 +143,7 @@ def run_pipeline(
             result.justification = ["Nenhum voo direto encontrado; desative o filtro para ver conexões."]
             return result
 
-        # 5. Stage: score_rank
+        # 6. Stage: score_rank
         with tracer.track_stage("score_rank") as info:
             ranked_offers, best_overall, justifications = rank_offers(all_offers, top_n=top_n)
             
@@ -143,10 +161,18 @@ def run_pipeline(
             if miles_list:
                 result.best_miles = min(miles_list, key=lambda x: x.equivalent_brl)
                 
+            # Flex Optimizer
+            best_date, best_val, best_source, date_map, counts_map = compute_best_day(all_offers)
+            result.best_depart_date = best_date
+            result.best_depart_date_equivalent_brl = best_val
+            result.best_depart_date_source = best_source
+            result.date_best_map = date_map
+            result.offers_by_depart_date = counts_map
+
             result.justification = justifications
             info["offers_count"] = len(ranked_offers)
 
-        # 6. Stage: format_report
+        # 7. Stage: format_report
         with tracer.track_stage("format_report"):
             report_json, report_text = build_ui_report(ranked_offers, best_overall, justifications)
             result.table_rows = report_json
