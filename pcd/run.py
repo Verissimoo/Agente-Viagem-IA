@@ -56,7 +56,9 @@ def run_pipeline(
     debug_dump_kayak: bool = False,
     debug_dump_moblix: bool = False,
     flex_days: int = 0,
-    flex_return: bool = False
+    flex_return: bool = False,
+    flex_mode: str = "none",
+    date_end: Optional[date] = None
 ) -> PipelineResult:
     request_id = str(uuid.uuid4())[:8]
     tracer = PipelineTracer(request_id)
@@ -78,7 +80,9 @@ def run_pipeline(
             
             if date_start:
                 request.date_start = date_start
-                request.date_end = date_start
+                # No modo range, o date_end vem explicitamente, senão é igual ao start
+                request.date_end = date_end if (flex_mode == "range" and date_end) else date_start
+            
             if date_return:
                 request.return_start = date_return
                 request.return_end = date_return
@@ -87,6 +91,7 @@ def run_pipeline(
             request.direct_only = direct_only
             request.flex_days = flex_days
             request.flex_return = flex_return
+            request.flex_mode = flex_mode
 
         # 2. Stage: date_planning
         all_offers = []
@@ -126,27 +131,34 @@ def run_pipeline(
         # 5. Stage: layover_classify
         with tracer.track_stage("layover_classify") as info:
             all_offers = classify_many(all_offers)
-            
-            # Filtro de voos diretos se solicitado
-            if request.direct_only:
-                filtered = []
-                for o in all_offers:
-                    direct_out = (o.stops_out == 0)
-                    direct_in = (o.trip_type == TripType.ONEWAY or o.stops_in == 0)
-                    if direct_out and direct_in:
-                        filtered.append(o)
-                all_offers = filtered
-                
             info["offers_count"] = len(all_offers)
 
         if not all_offers:
-            result.justification = ["Nenhum voo direto encontrado; desative o filtro para ver conexões."]
             return result
 
         # 6. Stage: score_rank
         with tracer.track_stage("score_rank") as info:
+            # 6.1 Ranking base (todas as ofertas)
             ranked_offers, best_overall, justifications = rank_offers(all_offers, top_n=top_n)
             
+            # 6.2 Preferência de Voo Direto no Best Overall
+            if request.direct_only:
+                direct_offers = []
+                for o in all_offers:
+                    is_direct_out = (o.stops_out == 0)
+                    is_direct_in = (o.trip_type == TripType.ONEWAY or o.stops_in == 0)
+                    if is_direct_out and is_direct_in:
+                        direct_offers.append(o)
+                
+                if direct_offers:
+                    # Ranquear apenas os diretos para achar o melhor direto
+                    _, best_direct, _ = rank_offers(direct_offers, top_n=1)
+                    if best_direct:
+                        best_overall = best_direct
+                        justifications = ["⭐ Voo Direto Priorizado: " + j for j in justifications[:1]] + justifications[1:]
+                else:
+                    justifications.append("⚠️ Nenhum voo direto encontrado; mostrando melhor com conexões.")
+
             # Categorizar e achar melhores específicos
             money_list = [o for o in all_offers if o.price_brl is not None]
             miles_list = [o for o in all_offers if o.miles is not None]

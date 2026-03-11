@@ -1,0 +1,14 @@
+{"request_id": "bdaf5893", "stage": "parse", "status": "start", "ts": "2026-03-09T13:14:40.209259", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "parse", "status": "end", "ts": "2026-03-09T13:14:40.209259", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "date_planning", "status": "start", "ts": "2026-03-09T13:14:40.209259", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "date_planning", "status": "end", "ts": "2026-03-09T13:14:40.209259", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "kayak_search_2026-05-20", "status": "start", "ts": "2026-03-09T13:14:40.209259", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "kayak_search_2026-05-20", "status": "end", "ts": "2026-03-09T13:14:44.323723", "latency_ms": 4114.46, "offers_count": 15, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "moblix_search_2026-05-20", "status": "start", "ts": "2026-03-09T13:14:44.325236", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "moblix_search_2026-05-20", "status": "end", "ts": "2026-03-09T13:15:15.565667", "latency_ms": 31240.43, "offers_count": 34, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "layover_classify", "status": "start", "ts": "2026-03-09T13:15:15.565667", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "layover_classify", "status": "end", "ts": "2026-03-09T13:15:15.565667", "latency_ms": 0.0, "offers_count": 49, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "score_rank", "status": "start", "ts": "2026-03-09T13:15:15.565667", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "score_rank", "status": "end", "ts": "2026-03-09T13:15:15.566665", "latency_ms": 1.0, "offers_count": 5, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "format_report", "status": "start", "ts": "2026-03-09T13:15:15.566665", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "bdaf5893", "stage": "format_report", "status": "end", "ts": "2026-03-09T13:15:15.566665", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}

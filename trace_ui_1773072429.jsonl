@@ -1,0 +1,14 @@
+{"request_id": "ab42a4ba", "stage": "parse", "status": "start", "ts": "2026-03-09T13:07:09.204475", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "parse", "status": "end", "ts": "2026-03-09T13:07:09.204475", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "date_planning", "status": "start", "ts": "2026-03-09T13:07:09.204475", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "date_planning", "status": "end", "ts": "2026-03-09T13:07:09.204475", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "kayak_search_2026-05-20", "status": "start", "ts": "2026-03-09T13:07:09.204475", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "kayak_search_2026-05-20", "status": "end", "ts": "2026-03-09T13:07:15.001175", "latency_ms": 5796.7, "offers_count": 15, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "moblix_search_2026-05-20", "status": "start", "ts": "2026-03-09T13:07:15.001175", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "moblix_search_2026-05-20", "status": "end", "ts": "2026-03-09T13:07:41.927056", "latency_ms": 26925.88, "offers_count": 0, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "layover_classify", "status": "start", "ts": "2026-03-09T13:07:41.927056", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "layover_classify", "status": "end", "ts": "2026-03-09T13:07:41.928056", "latency_ms": 1.0, "offers_count": 15, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "score_rank", "status": "start", "ts": "2026-03-09T13:07:41.928056", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "score_rank", "status": "end", "ts": "2026-03-09T13:07:41.928056", "latency_ms": 0.0, "offers_count": 5, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "format_report", "status": "start", "ts": "2026-03-09T13:07:41.928056", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "ab42a4ba", "stage": "format_report", "status": "end", "ts": "2026-03-09T13:07:41.928056", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}

@@ -1,0 +1,15 @@
+{
+  "requestId": "df85b48a-d3c9-4824-857c-78723eb0dbd5",
+  "flightGroups": [],
+  "summary": {
+    "totalFlights": 0,
+    "providers": {
+      "successful": [],
+      "failed": []
+    }
+  },
+  "tokens": {
+    "tokenConsultaIda": "8901_V2_891b14eec4ae4167a1628d550be8a550",
+    "tokenExpiration": "2026-03-09T20:13:13.6874675Z"
+  }
+}

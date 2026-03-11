@@ -9,6 +9,7 @@ from pcd.run import run_pipeline
 from pcd.core.config import config
 from pcd.core.schema import SourceType, TripType, CabinClass
 from pcd.nlp.intent_parser import parse_intent_ptbr
+from pcd.core.flex_dates import compute_search_dates
 
 def format_duration(min_total: int) -> str:
     """Formata minutos para XhYm"""
@@ -191,6 +192,11 @@ if "date_return_input" not in st.session_state: st.session_state["date_return_in
 if "is_roundtrip_input" not in st.session_state: st.session_state["is_roundtrip_input"] = True
 if "direct_only_input" not in st.session_state: st.session_state["direct_only_input"] = False
 if "flex_days_input" not in st.session_state: st.session_state["flex_days_input"] = 0
+if "flex_mode_input" not in st.session_state: st.session_state["flex_mode_input"] = "none"
+if "depart_date_from_input" not in st.session_state: st.session_state["depart_date_from_input"] = date.today() + pd.Timedelta(days=7)
+if "depart_date_to_input" not in st.session_state: st.session_state["depart_date_to_input"] = date.today() + pd.Timedelta(days=14)
+if "flex_range_start" not in st.session_state: st.session_state["flex_range_start"] = st.session_state["depart_date_from_input"]
+if "flex_range_end" not in st.session_state: st.session_state["flex_range_end"] = st.session_state["depart_date_to_input"]
 if "flex_return_input" not in st.session_state: st.session_state["flex_return_input"] = False
 if "parsed_intent" not in st.session_state: st.session_state["parsed_intent"] = None
 
@@ -215,24 +221,70 @@ with st.sidebar:
         with col_dump2:
             debug_dump_moblix = st.toggle("💎 Dump Moblix", value=False)
     
-    st.session_state["direct_only_input"] = st.checkbox("🚫 Somente voos diretos (0 escalas)", value=st.session_state["direct_only_input"])
+    st.session_state["direct_only_input"] = st.checkbox("🚫 Somente voos diretos (Preferência no Top)", value=st.session_state["direct_only_input"])
     
     st.divider()
     st.subheader("📅 Flexibilidade de Datas")
-    flex_days = st.slider("Flexibilidade (± dias)", 0, 3, st.session_state["flex_days_input"], help="Expande a busca para N dias antes e depois da data de ida.")
-    st.session_state["flex_days_input"] = flex_days
-    if flex_days > 0:
-        st.info(f"💡 Isso aumentará o número de buscas: {2*flex_days+1} por fonte")
+    flex_mode = st.selectbox("Modo de Flexibilidade", ["none", "plusminus", "range"], 
+                             index=["none", "plusminus", "range"].index(st.session_state.get("flex_mode_input", "none")))
+    st.session_state["flex_mode_input"] = flex_mode
+
+    if flex_mode == "plusminus":
+        flex_days = st.slider("Flexibilidade (± dias)", 0, 3, st.session_state["flex_days_input"], help="Expande a busca para N dias antes e depois da data de ida.")
+        st.session_state["flex_days_input"] = flex_days
+        if flex_days > 0:
+            st.info(f"💡 Isso aumentará o número de buscas: {2*flex_days+1} por fonte")
+    elif flex_mode == "range":
+        col_f1, col_f2 = st.columns(2)
+        with col_f1:
+            st.session_state["flex_range_start"] = st.date_input("Início do intervalo", value=st.session_state["flex_range_start"], key="range_start_widget")
+            st.session_state["depart_date_from_input"] = st.session_state["flex_range_start"]
+        with col_f2:
+            st.session_state["flex_range_end"] = st.date_input("Fim do intervalo", value=st.session_state["flex_range_end"], key="range_end_widget")
+            st.session_state["depart_date_to_input"] = st.session_state["flex_range_end"]
         
+        # Guardrail / Swap automático
+        if st.session_state["flex_range_end"] < st.session_state["flex_range_start"]:
+            st.session_state["flex_range_start"], st.session_state["flex_range_end"] = st.session_state["flex_range_end"], st.session_state["flex_range_start"]
+            st.session_state["depart_date_from_input"] = st.session_state["flex_range_start"]
+            st.session_state["depart_date_to_input"] = st.session_state["flex_range_end"]
+
+        diff_days = (st.session_state["flex_range_end"] - st.session_state["flex_range_start"]).days + 1
+        if diff_days > 15:
+            st.warning(f"⚠️ Intervalo de {diff_days} dias é muito grande. O sistema limitará aos primeiros 15 dias.")
+        else:
+            st.info(f"💡 Buscando em {diff_days} datas diferentes.")
+            
     if st.session_state["is_roundtrip_input"]:
         flex_return = st.checkbox("Flexibilizar volta também (avançado)", value=st.session_state["flex_return_input"], help="Aplica flexibilidade na volta. Máximo ±2 dias.")
         st.session_state["flex_return_input"] = flex_return
         if flex_return:
-            if flex_days > 2:
+            if flex_mode == "plusminus" and st.session_state["flex_days_input"] > 2:
                 st.warning("⚠️ Com volta flexível, o limite é ±2 dias. Ajustando...")
                 st.session_state["flex_days_input"] = 2
             st.warning("💸 Aviso: Isso gera muitas combinações e pode ter custo elevado de chamadas.")
     
+    # Preview do Plano de Datas (Novo)
+    st.divider()
+    search_dates = compute_search_dates(
+        mode=st.session_state["flex_mode_input"],
+        base_date=st.session_state["date_start_input"],
+        flex_days=st.session_state["flex_days_input"],
+        range_start=st.session_state["depart_date_from_input"],
+        range_end=st.session_state["depart_date_to_input"]
+    )
+    
+    with st.expander(f"📅 Datas que serão pesquisadas ({len(search_dates)})", expanded=True):
+        if len(search_dates) > 1:
+            st.info(", ".join([d.strftime("%d/%m") for d in search_dates]))
+        else:
+            st.write(f"Data única: {search_dates[0].strftime('%d/%m/%Y')}")
+        
+        if st.session_state["flex_mode_input"] == "range":
+            st.caption("🚀 No modo range, a data de ida manual é ignorada.")
+    
+    st.session_state["current_search_dates"] = search_dates # Salvar para ranking posterior
+
     st.divider()
     top_n = st.slider("Top N Ofertas", 1, 10, 5)
     
@@ -284,7 +336,20 @@ with c2_btn_parse:
                 if intent.date_return: st.session_state["date_return_input"] = intent.date_return
                 st.session_state["is_roundtrip_input"] = (intent.trip_type == TripType.ROUNDTRIP)
                 st.session_state["direct_only_input"] = intent.direct_only
-                if getattr(intent, "flex_days", None) is not None: st.session_state["flex_days_input"] = intent.flex_days
+                
+                # Flexibilidade Auto-fill
+                if getattr(intent, "flex_mode", "none") != "none":
+                    st.session_state["flex_mode_input"] = intent.flex_mode
+                    if intent.flex_mode == "plusminus":
+                        st.session_state["flex_days_input"] = intent.flex_days or 0
+                    elif intent.flex_mode == "range":
+                        if intent.depart_date_from: 
+                            st.session_state["depart_date_from_input"] = intent.depart_date_from
+                            st.session_state["flex_range_start"] = intent.depart_date_from
+                        if intent.depart_date_to: 
+                            st.session_state["depart_date_to_input"] = intent.depart_date_to
+                            st.session_state["flex_range_end"] = intent.depart_date_to
+
                 if getattr(intent, "flex_return", None) is not None: st.session_state["flex_return_input"] = intent.flex_return
                 
                 st.success("Interpretado com sucesso!")
@@ -300,12 +365,22 @@ if st.session_state["parsed_intent"]:
         col1, col2, col3, col4 = st.columns(4)
         col1.write(f"**Origem:** {intent.origin_city} ({intent.origin_iata})")
         col2.write(f"**Destino:** {intent.destination_city} ({intent.destination_iata})")
+        
+        # Flex info no preview
+        flex_desc = "Não"
+        if intent.flex_mode == "plusminus":
+            flex_desc = f"±{intent.flex_days} dias"
+        elif intent.flex_mode == "range":
+            flex_desc = f"{intent.depart_date_from.strftime('%d/%m')} a {intent.depart_date_to.strftime('%d/%m')}"
+            
         col3.write(f"**Ida:** {intent.date_start}")
         col4.write(f"**Volta:** {intent.date_return if intent.date_return else 'N/A'}")
-        st.write(f"**Tipo:** {intent.trip_type.value} | **Direto:** {'Sim' if intent.direct_only else 'Não'} | **Adultos:** {intent.adults} | **Flex:** {getattr(intent, 'flex_days', 0) if getattr(intent, 'flex_days', None) else 0} dias {'(Volta Flex)' if getattr(intent, 'flex_return', False) else ''}")
+        st.write(f"**Tipo:** {intent.trip_type.value} | **Direto:** {'Sim' if intent.direct_only else 'Não'} | **Adultos:** {intent.adults} | **Flex:** {flex_desc} {'(Volta Flex)' if getattr(intent, 'flex_return', False) else ''}")
         st.caption(f"*Nota:* {intent.notes}")
 
 st.divider()
+date_start = None
+date_end = None
 
 c2_origin, c3_dest, c4_type = st.columns([1, 1, 1])
 with c2_origin:
@@ -323,8 +398,20 @@ with c4_type:
 c_dates = st.columns(2)
 with c_dates[0]:
     if not use_fixtures:
-        date_start = st.date_input("Data Ida", value=st.session_state["date_start_input"])
-        st.session_state["date_start_input"] = date_start
+        # Se modo for range, o input de data de ida fica visualmente desabilitado/informativo
+        is_range = (st.session_state.get("flex_mode_input") == "range")
+        if is_range:
+            date_start = st.session_state["flex_range_start"]
+            date_end = st.session_state["flex_range_end"]
+            st.session_state["date_start_input"] = date_start
+            st.date_input("Data Ida (Fixada pelo Início do Range)", 
+                         value=date_start, 
+                         disabled=True,
+                         key="date_start_disabled_widget")
+        else:
+            date_start = st.date_input("Data Ida", value=st.session_state["date_start_input"])
+            st.session_state["date_start_input"] = date_start
+            date_end = date_start
     else:
         st.write("📅 *Usando data Mock*")
         date_start = None
@@ -355,24 +442,29 @@ if st.session_state["parsed_intent"]:
             date_start_final = intent.date_start
             date_return_final = intent.date_return
             is_rt_final = (intent.trip_type == TripType.ROUNDTRIP)
+            # No modo range, garantir que date_end_final seja o fim do intervalo
+            date_end_final = intent.depart_date_to if intent.flex_mode == "range" else date_start_final
         else:
             origin_final = origin_input
             dest_final = dest_input
-            date_start_final = date_start
+            date_start_final = date_start or st.session_state["date_start_input"]
             date_return_final = date_return
             is_rt_final = is_roundtrip
+            date_end_final = date_end or date_start_final
     else:
         origin_final = origin_input
         dest_final = dest_input
-        date_start_final = date_start
+        date_start_final = date_start or st.session_state["date_start_input"]
         date_return_final = date_return
         is_rt_final = is_roundtrip
+        date_end_final = date_end or date_start_final
 else:
     origin_final = origin_input
     dest_final = dest_input
-    date_start_final = date_start
+    date_start_final = date_start or st.session_state["date_start_input"]
     date_return_final = date_return
     is_rt_final = is_roundtrip
+    date_end_final = date_end or date_start_final
 
 def validate_env():
     missing = []
@@ -387,6 +479,11 @@ if search_btn:
     missing_keys = [] if use_fixtures else validate_env()
     date_error = False
     if not use_fixtures:
+        # Garantir ordem correta se for range
+        if st.session_state.get("flex_mode_input") == "range":
+            if date_end_final < date_start_final:
+                date_start_final, date_end_final = date_end_final, date_start_final
+        
         if is_rt_final and date_return_final and date_start_final and date_return_final <= date_start_final:
             st.error("A data de volta deve ser posterior à data de ida.")
             date_error = True
@@ -424,7 +521,9 @@ if search_btn:
                     debug_dump_kayak=debug_dump,
                     debug_dump_moblix=debug_dump_moblix,
                     flex_days=st.session_state["flex_days_input"],
-                    flex_return=st.session_state.get("flex_return_input", False)
+                    flex_return=st.session_state.get("flex_return_input", False),
+                    flex_mode=st.session_state["flex_mode_input"],
+                    date_end=st.session_state["depart_date_to_input"] if st.session_state["flex_mode_input"] == "range" else None
                 )
                 st.session_state["pipeline_result"] = res
                 st.session_state["search_id"] = int(time.time())
@@ -454,6 +553,7 @@ if "pipeline_result" in st.session_state:
         debug_data = {
             "request_signature": f"{params.get('origin')}|{params.get('destination')}|{params.get('date_start')}|{params.get('trip_type')}|{params.get('mode')}",
             "flags": params,
+            "searched_dates": [d.isoformat() for d in st.session_state.get("current_search_dates", [])],
             "counts": {
                 "money_results": len(res.money_offers),
                 "miles_results": len(res.miles_offers),
@@ -477,7 +577,17 @@ if "pipeline_result" in st.session_state:
         if params.get("debug_dump"):
             debug_data["dump_status"] = "Files saved to debug_dumps/"
 
-        # Detalhes do Intento Interpretado
+        # Detalhes do Intento / Plano de Datas
+        if st.session_state.get("current_search_dates"):
+            st.markdown("---")
+            st.markdown("**📅 Prova do Plano de Datas**")
+            st.write(f"**Modo:** `{st.session_state['flex_mode_input']}`")
+            st.write(f"**Datas Pesquisadas ({len(st.session_state['current_search_dates'])}):**")
+            st.write(", ".join([d.strftime("%d/%m") for d in st.session_state["current_search_dates"]]))
+            
+            # Detalhes por fonte (Kayak/Moblix por data) se disponível no trace
+            st.info("💡 Contagem de ofertas por data disponível no ranking acima.")
+
         if st.session_state.get("parsed_intent"):
             pi = st.session_state["parsed_intent"]
             from miles_app.iata_resolver import resolve_city_to_iatas, normalize_city_key
@@ -514,18 +624,23 @@ if "pipeline_result" in st.session_state:
                     st.metric("Menor valor encontrado", f"R$ {res.best_depart_date_equivalent_brl:.2f}", 
                               help=f"Fonte: {res.best_depart_date_source.upper()}")
                 
-                # Mini ranking de dias
-                if res.date_best_map:
-                    with st.expander("📊 Ranking de preços por dia", expanded=False):
-                        sorted_days = sorted(res.date_best_map.items(), key=lambda x: x[1])
-                        day_rows = []
-                        for d_str, val in sorted_days[:3]:
-                            day_rows.append({
-                                "Data": date.fromisoformat(d_str).strftime("%d/%m/%Y"),
-                                "Menor Valor": f"R$ {val:.2f}",
-                                "Ofertas": res.offers_by_depart_date.get(d_str, 0)
-                            })
-                        st.table(pd.DataFrame(day_rows))
+                # Mini ranking de dias (Corrigido para mostrar todas as pesquisadas)
+                st.subheader("📊 Ranking de preços por dia")
+                search_dates = st.session_state.get("current_search_dates", [])
+                
+                day_rows = []
+                for d in search_dates:
+                    d_iso = d.isoformat()
+                    val = res.date_best_map.get(d_iso)
+                    offers_count = res.offers_by_depart_date.get(d_iso, 0)
+                    
+                    day_rows.append({
+                        "Data": d.strftime("%d/%m/%Y"),
+                        "Menor Valor": f"R$ {val:.2f}" if val else "—",
+                        "Ofertas": offers_count
+                    })
+                
+                st.table(pd.DataFrame(day_rows))
                 st.divider()
 
             st.subheader("🏆 Melhores Opções Encontradas")

@@ -134,35 +134,90 @@ def parse_intent_regex(text: str) -> ParsedIntent:
             extracted = True
             break
     
-    # 4. Outros
-    if "direto" in text_lower or "sem escala" in text_lower:
+    # 4. Voo Direto
+    direct_patterns = [
+        r"voo\s+direto", r"\bdireto\b", r"sem\s+escala", r"sem\s+escalas",
+        r"sem\s+conexão", r"sem\s+conexões", r"não\s+quero\s+conecta", r"nao\s+quero\s+conecta"
+    ]
+    if any(re.search(p, text_lower) for p in direct_patterns):
         intent.direct_only = True
         
+    # 5. Cabine
     if "executiva" in text_lower or "business" in text_lower:
         intent.cabin = CabinClass.BUSINESS
     elif "primeira" in text_lower or "first" in text_lower:
         intent.cabin = CabinClass.FIRST
         
-    # Detectar flexibilidade
+    # 6. Flexibilidade
+    # 6.1 Datas Próximas (±3 dias)
+    flex_prox_patterns = [
+        r"datas?\s+próximas?", r"datas?\s+proximas?", r"dias?\s+próximas?", r"dias?\s+proximas?",
+        r"se\s+tiver\s+o\s+melhor\s+preço", r"melhor\s+preço\s+em\s+datas\s+próximas"
+    ]
+    if any(re.search(p, text_lower) for p in flex_prox_patterns):
+        intent.flex_mode = "plusminus"
+        intent.flex_days = 3
+    
+    # 6.2 Flexibilidade por ±N dias (padrão antigo melhorado)
     flex_match = re.search(r"(?:flex(?:ível)?|±|mais\s+ou\s+menos)\s*(\d+)\s*dia", text_lower) or \
                  re.search(r"(\d+)\s*dia(?:s)?\s*(?:de\s*)?flex", text_lower)
     if flex_match:
+        intent.flex_mode = "plusminus"
         intent.flex_days = int(flex_match.group(1))
+
+    # 6.3 Intervalo Explícito (Range)
+    # Ex: "do dia 5 ao dia 15", "entre 05/03 e 15/03", "de 10/10 a 20/10"
+    range_pattern = r"(?:do\s+dia\s+|entre\s+|de\s+)(\d{1,2}(?:[/-]\d{1,2}(?:[/-]\d{2,4})?)?)\s+(?:ao\s+dia\s+|a\s+|e\s+)(\d{1,2}(?:[/-]\d{1,2}(?:[/-]\d{2,4})?)?)"
+    range_match = re.search(range_pattern, text_lower)
+    if range_match:
+        from_str = range_match.group(1)
+        to_str = range_match.group(2)
         
-    # Detectar volta flexível
+        # Helper para converter string parcial de data em date object
+        def parse_partial_date(s: str, base_ref: Optional[date] = None) -> Optional[date]:
+            # Se for apenas o dia
+            if s.isdigit():
+                day = int(s)
+                ref = base_ref or intent.date_start or date.today()
+                try: return date(ref.year, ref.month, day)
+                except: return None
+            # Se for DD/MM ou DD/MM/YYYY
+            m = re.match(r"(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?", s)
+            if m:
+                d, month, y = m.groups()
+                d, month = int(d), int(month)
+                if y:
+                    y = int(y)
+                    if y < 100: y += 2000
+                else:
+                    ref = base_ref or intent.date_start or date.today()
+                    y = ref.year
+                try: return date(y, month, d)
+                except: return None
+            return None
+
+        dt_from = parse_partial_date(from_str)
+        dt_to = parse_partial_date(to_str, base_ref=dt_from)
+        
+        if dt_from and dt_to:
+            intent.flex_mode = "range"
+            intent.depart_date_from = dt_from
+            intent.depart_date_to = dt_to
+
+    # 7. Volta Flexível
     if "volta flex" in text_lower or "retorno flex" in text_lower:
         intent.flex_return = True
         
-    # Detectar adultos
+    # 8. Adultos
     adult_match = re.search(r"(\d+)\s*(?:adulto|pessoa|passageiro)", text_lower)
     if adult_match:
         intent.adults = int(adult_match.group(1))
         
     if not extracted:
         intent.confidence = 0.2
-        intent.notes = "Extraído via REGEX (Fallback - Baixa Confiança)"
+        intent.notes = "Extraído via REGEx (Fallback - Baixa Confiança)"
     else:
-        intent.notes = "Extraído via REGEX (Fallback - Refinado)"
+        intent.notes = "Extraído via REGEx (Fallback - Refinado)"
     
     return intent
 
@@ -186,11 +241,19 @@ def parse_intent_ptbr(text: str, use_llm: bool = False) -> ParsedIntent:
             - adults (número inteiro)
             - cabin ("economy", "business" ou "first")
             - direct_only (booleano)
-            - flex_days (número inteiro de flexibilidade na IDA, ex: "±3 dias" -> 3)
+            - flex_mode ("none", "plusminus" ou "range")
+            - flex_days (número inteiro de flexibilidade na IDA se flex_mode="plusminus", ex: "±3 dias" -> 3)
+            - depart_date_from (YYYY-MM-DD se flex_mode="range")
+            - depart_date_to (YYYY-MM-DD se flex_mode="range")
             - flex_return (booleano, True se mencionar "volta flexível" ou similar)
 
             Texto do Usuário: "{text_for_llm}"
             Data de Hoje: {date.today().isoformat()}
+
+            REGRAS PARA FLEXIBILIDADE:
+            1. Se o usuário pedir "datas próximas", "±3 dias" ou similar, use flex_mode="plusminus" e flex_days=3 (ou o número dito).
+            2. Se o usuário der um intervalo (ex: "do dia 5 ao 15", "entre 10/10 e 20/10"), use flex_mode="range" e preencha depart_date_from/to.
+            3. Caso contrário, use flex_mode="none".
 
             IMPORTANTE: Se a cidade tiver múltiplos aeroportos (ex: São Paulo), tente sugerir o código da cidade ou o principal. 
             Se não tiver certeza da IATA, foque no nome da cidade.
@@ -199,7 +262,7 @@ def parse_intent_ptbr(text: str, use_llm: bool = False) -> ParsedIntent:
             """
             
             response = completion(
-                model=GROQ_MODEL,
+                model=os.getenv("GROQ_MODEL", "groq/llama-3.3-70b-versatile"), # Use env ou default
                 messages=[{"role": "user", "content": prompt}],
                 response_format={"type": "json_object"}
             )
@@ -208,10 +271,12 @@ def parse_intent_ptbr(text: str, use_llm: bool = False) -> ParsedIntent:
             data = json.loads(content)
             
             # Converter datas de string para objects
-            if data.get("date_start") and isinstance(data["date_start"], str):
-                data["date_start"] = date.fromisoformat(data["date_start"])
-            if data.get("date_return") and isinstance(data["date_return"], str):
-                data["date_return"] = date.fromisoformat(data["date_return"])
+            for field in ["date_start", "date_return", "depart_date_from", "depart_date_to"]:
+                if data.get(field) and isinstance(data[field], str):
+                    try:
+                        data[field] = date.fromisoformat(data[field])
+                    except:
+                        data[field] = None
             
             # Mapear Cabin
             if data.get("cabin"):
@@ -228,13 +293,11 @@ def parse_intent_ptbr(text: str, use_llm: bool = False) -> ParsedIntent:
             # Especial: Se IATA não veio do LLM, tenta resolver pelo nome da cidade
             if not data.get("origin_iata") and data.get("origin_city"):
                 codes = resolve_city_to_iatas(data["origin_city"])
-                # Filtrar stopwords
                 codes = [c for c in codes if c.upper() not in IATA_STOPWORDS]
                 if codes: data["origin_iata"] = codes[0]
             
             if not data.get("destination_iata") and data.get("destination_city"):
                 codes = resolve_city_to_iatas(data["destination_city"])
-                # Filtrar stopwords
                 codes = [c for c in codes if c.upper() not in IATA_STOPWORDS]
                 if codes: data["destination_iata"] = codes[0]
 

@@ -40,7 +40,8 @@ class SearchRequest(BaseModel):
     
     direct_only: bool = False
     
-    flex_days: int = Field(0, description="Dias extras permitidos caso flex")
+    flex_days: int = Field(0, description="Dias extras permitidos caso flex (plusminus)")
+    flex_mode: str = Field("none", description="Modo de flexibilidade: none, plusminus, range")
     flex_return: bool = Field(False, description="Se True, aplica flexibilidade também na volta")
     currency: str = Field("BRL", description="Moeda padrão da busca")
     
@@ -169,7 +170,14 @@ class ParsedIntent(BaseModel):
     adults: int = 1
     cabin: CabinClass = CabinClass.ECONOMY
     direct_only: bool = False
-    flex_days: Optional[int] = None
+    
+    # Novos campos de flexibilidade
+    flex_mode: str = "none" # "none", "plusminus", "range"
+    flex_days: Optional[int] = None # Para plusminus
+    depart_date_from: Optional[date] = None # Para range
+    depart_date_to: Optional[date] = None # Para range
+    
     flex_return: Optional[bool] = None
     confidence: float = 0.0
     notes: Optional[str] = None
+
