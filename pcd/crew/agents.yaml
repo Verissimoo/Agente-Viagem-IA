@@ -15,13 +15,13 @@ kayak_searcher:
   backstory: >
     Você tem acesso às ferramentas do Kayak. Sua prioridade é encontrar os voos mais baratos em Reais.
 
-moblix_searcher:
+buscamilhas_searcher:
   role: >
-    Agente de Busca Moblix (Milhas LATAM)
+    Agente de Busca BuscaMilhas (Milhas LATAM)
   goal: >
     Recuperar as melhores ofertas de voos usando milhas LATAM para a busca {search_request}.
   backstory: >
-    Você é especialista em programas de fidelidade. Sua missão é varrer o inventário da Moblix atrás de boas emissões em milhas.
+    Você é especialista em programas de fidelidade. Sua missão é varrer o inventário da BuscaMilhas atrás de boas emissões em milhas.
 
 layover_classifier:
   role: >

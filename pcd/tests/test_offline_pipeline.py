@@ -3,7 +3,7 @@ import os
 from datetime import date, timedelta
 from pcd.core.schema import SearchRequest, TripType, CabinClass
 from pcd.adapters.kayak_adapter import KayakAdapter
-from pcd.adapters.moblix_adapter import MoblixLatamAdapter
+from pcd.adapters.buscamilhas_adapter import BuscaMilhasLatamAdapter
 from pcd.core.ranking import rank_offers
 
 class TestOfflinePipeline(unittest.TestCase):
@@ -43,8 +43,8 @@ class TestOfflinePipeline(unittest.TestCase):
         self.assertEqual(direct.outbound.stops, 0)
         self.assertEqual(conn.outbound.stops, 1)
 
-    def test_moblix_roundtrip_loading(self):
-        adapter = MoblixLatamAdapter()
+    def test_buscamilhas_roundtrip_loading(self):
+        adapter = BuscaMilhasLatamAdapter()
         offers = adapter.search(self.base_request_rt, use_fixtures=True)
         self.assertEqual(len(offers), 1)
         self.assertEqual(offers[0].miles, 20000)
@@ -54,7 +54,7 @@ class TestOfflinePipeline(unittest.TestCase):
 
     def test_full_pipeline_offline(self):
         ka = KayakAdapter()
-        ma = MoblixLatamAdapter()
+        ma = BuscaMilhasLatamAdapter()
         
         offers_k = ka.search(self.base_request_ow, use_fixtures=True)
         offers_m = ma.search(self.base_request_ow, use_fixtures=True)
@@ -67,8 +67,8 @@ class TestOfflinePipeline(unittest.TestCase):
         self.assertIsNotNone(best)
         self.assertGreater(best.equivalent_brl, 0)
         
-        # Moblix miles 20000 * 0.0285 + 80 = 570 + 80 = 650 (winnings against kayak 1000/1200)
-        self.assertEqual(best.miles, 20000)
+        # BuscaMilhas miles 10000 * 0.0285 + 40 = 285 + 40 = 325.0 (winnings against kayak 1000/1200)
+        self.assertEqual(best.miles, 10000)
         self.assertGreaterEqual(len(justification), 2)
 
 if __name__ == "__main__":

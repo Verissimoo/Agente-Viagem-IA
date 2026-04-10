@@ -60,7 +60,7 @@ oferta_dinheiro = UnifiedOffer(
 print(format_offer(oferta_dinheiro))
 
 
-print("\n=== EXEMPLO 2: MOBLIX LATAM EM MILHAS (ROUNDTRIP) ===")
+print("\n=== EXEMPLO 2: BUSCAMILHAS LATAM EM MILHAS (ROUNDTRIP) ===")
 # IDA (Com conexão)
 seg_ida1 = Segment(
     origin="GRU",
@@ -90,7 +90,7 @@ itin_volta = Itinerary(segments=[seg_volta], duration_min=510)
 
 
 oferta_milhas = UnifiedOffer(
-    source=SourceType.MOBLIX_LATAM,
+    source=SourceType.BUSCAMILHAS_LATAM,
     airline="LATAM Airlines",
     trip_type=TripType.ROUNDTRIP,
     outbound=itin_ida,

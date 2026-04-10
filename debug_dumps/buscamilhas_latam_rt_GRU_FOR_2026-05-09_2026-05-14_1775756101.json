@@ -1,0 +1,44 @@
+{
+  "Token": "LATAM|GRU-FOR-09/05/2026-14/05/2026|1|0|0|economica|714f9400-f764-4ec4-ae40-9f036e138a30",
+  "Busca": {
+    "Companhias": [
+      "LATAM"
+    ],
+    "TipoBusca": 0,
+    "TipoViagem": 1,
+    "Trechos": [
+      {
+        "Origem": "GRU",
+        "Destino": "FOR",
+        "DataIda": "09/05/2026",
+        "DataVolta": "14/05/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 0,
+    "Hash": "LATAM|GRU-FOR-09/05/2026-14/05/2026|1|0|0|economica|714f9400-f764-4ec4-ae40-9f036e138a30",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": true,
+    "Sucesso": false,
+    "Alerta": [
+      "STATUS_CODE_ERROR_9000"
+    ]
+  },
+  "Trechos": null,
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}

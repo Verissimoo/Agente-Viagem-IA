@@ -5,7 +5,7 @@ from typing import List
 from pcd.core.schema import SearchRequest, TripType, CabinClass
 
 from pcd.adapters.kayak_adapter import KayakAdapter
-from pcd.adapters.moblix_adapter import MoblixLatamAdapter
+from pcd.adapters.buscamilhas_adapter import BuscaMilhasLatamAdapter
 
 def run_demo(use_fixtures: bool):
     print(f"Iniciando demo_adapters.py (use_fixtures={use_fixtures})")
@@ -24,7 +24,7 @@ def run_demo(use_fixtures: bool):
         baggage_checked=False
     )
     
-    adapters = [KayakAdapter(), MoblixLatamAdapter()]
+    adapters = [KayakAdapter(), BuscaMilhasLatamAdapter()]
     
     for adapter in adapters:
         name = adapter.__class__.__name__

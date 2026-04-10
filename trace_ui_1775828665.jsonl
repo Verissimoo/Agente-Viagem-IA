@@ -1,0 +1,12 @@
+{"request_id": "324db3fd", "stage": "parse", "status": "start", "ts": "2026-04-10T10:44:25.063572", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "parse", "status": "end", "ts": "2026-04-10T10:44:25.065080", "latency_ms": 1.51, "offers_count": null, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "date_planning", "status": "start", "ts": "2026-04-10T10:44:25.065080", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "date_planning", "status": "end", "ts": "2026-04-10T10:44:25.065080", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "kayak_search_2026-05-25_ret_2026-06-05", "status": "start", "ts": "2026-04-10T10:44:25.065080", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "kayak_search_2026-05-25_ret_2026-06-05", "status": "end", "ts": "2026-04-10T10:44:32.178033", "latency_ms": 7112.95, "offers_count": 0, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "buscamilhas_search_latam_2026-05-25_ret_2026-06-05", "status": "start", "ts": "2026-04-10T10:44:32.178033", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "buscamilhas_search_latam_2026-05-25_ret_2026-06-05", "status": "end", "ts": "2026-04-10T10:44:35.904620", "latency_ms": 3726.59, "offers_count": 0, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "buscamilhas_search_gol_2026-05-25_ret_2026-06-05", "status": "start", "ts": "2026-04-10T10:44:35.904620", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "buscamilhas_search_gol_2026-05-25_ret_2026-06-05", "status": "end", "ts": "2026-04-10T10:44:42.253716", "latency_ms": 6349.1, "offers_count": 0, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "buscamilhas_search_azul_2026-05-25_ret_2026-06-05", "status": "start", "ts": "2026-04-10T10:44:42.253716", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "324db3fd", "stage": "buscamilhas_search_azul_2026-05-25_ret_2026-06-05", "status": "end", "ts": "2026-04-10T10:44:55.517078", "latency_ms": 13263.36, "offers_count": 0, "message": "", "error": null}

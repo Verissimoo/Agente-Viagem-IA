@@ -31,7 +31,7 @@ class FlightSearchCrew:
         
         parser_agent = Agent(config=agents_config['search_parser'])
         kayak_agent = Agent(config=agents_config['kayak_searcher'])
-        moblix_agent = Agent(config=agents_config['moblix_searcher'])
+        buscamilhas_agent = Agent(config=agents_config['buscamilhas_searcher'])
         classifier_agent = Agent(config=agents_config['layover_classifier'])
         ranker_agent = Agent(config=agents_config['ranking_expert'])
         reporter_agent = Agent(config=agents_config['report_standardizer'])
@@ -41,7 +41,7 @@ class FlightSearchCrew:
         
         # Simulação de fluxo CrewAI mantendo a fidelidade dos dados:
         crew = Crew(
-            agents=[parser_agent, kayak_agent, moblix_agent, classifier_agent, ranker_agent, reporter_agent],
+            agents=[parser_agent, kayak_agent, buscamilhas_agent, classifier_agent, ranker_agent, reporter_agent],
             tasks=[
                 Task(config=tasks_config['parse_task'], agent=parser_agent),
                 Task(config=tasks_config['search_task'], agent=kayak_agent),

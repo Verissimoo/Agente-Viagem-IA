@@ -1,0 +1,1419 @@
+{
+  "Token": "AZUL|GRU-FOR-09/05/2026-14/05/2026|1|0|0|economica|04dbc5cf-2047-4e81-924e-120513b98153",
+  "Busca": {
+    "Companhias": [
+      "AZUL"
+    ],
+    "TipoBusca": 0,
+    "TipoViagem": 1,
+    "Trechos": [
+      {
+        "Origem": "GRU",
+        "Destino": "FOR",
+        "DataIda": "09/05/2026",
+        "DataVolta": "14/05/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": false,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 0,
+    "Hash": "AZUL|GRU-FOR-09/05/2026-14/05/2026|1|0|0|economica|04dbc5cf-2047-4e81-924e-120513b98153",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": false,
+    "Sucesso": true,
+    "Alerta": []
+  },
+  "Trechos": {
+    "FORGRU": {
+      "Origem": "FOR",
+      "Destino": "GRU",
+      "Data": "14/05/2026",
+      "Internacional": 0,
+      "Voos": [
+        {
+          "Companhia": "AZUL",
+          "Sentido": "volta",
+          "Origem": "FOR",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 84000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 84000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 56.88,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GRU",
+          "Embarque": "14/05/2026 03:10",
+          "Desembarque": "14/05/2026 09:10",
+          "Duracao": "06:00",
+          "Valor": [],
+          "NumeroVoo": "AD2933",
+          "Conexoes": [
+            {
+              "Embarque": "03:10",
+              "Desembarque": "05:55",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 03:10",
+              "DesembarqueCompleto": "14/05/2026 05:55",
+              "NumeroVoo": "AD2933",
+              "Origem": "FOR",
+              "Destino": "CNF",
+              "Duracao": "02:45",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "07:50",
+              "Desembarque": "09:10",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 07:50",
+              "DesembarqueCompleto": "14/05/2026 09:10",
+              "NumeroVoo": "AD2814",
+              "Origem": "CNF",
+              "Destino": "GRU",
+              "Duracao": "01:20",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyODE0QUQyOTMz"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "volta",
+          "Origem": "FOR",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 76000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 76000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 56.88,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GRU",
+          "Embarque": "14/05/2026 03:10",
+          "Desembarque": "14/05/2026 13:15",
+          "Duracao": "10:05",
+          "Valor": [],
+          "NumeroVoo": "AD2933",
+          "Conexoes": [
+            {
+              "Embarque": "03:10",
+              "Desembarque": "05:55",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 03:10",
+              "DesembarqueCompleto": "14/05/2026 05:55",
+              "NumeroVoo": "AD2933",
+              "Origem": "FOR",
+              "Destino": "CNF",
+              "Duracao": "02:45",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "12:00",
+              "Desembarque": "13:15",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 12:00",
+              "DesembarqueCompleto": "14/05/2026 13:15",
+              "NumeroVoo": "AD4236",
+              "Origem": "CNF",
+              "Destino": "GRU",
+              "Duracao": "01:15",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyOTMzQUQ0MjM2"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "volta",
+          "Origem": "FOR",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 98000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 98000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 56.88,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GRU",
+          "Embarque": "14/05/2026 11:25",
+          "Desembarque": "14/05/2026 18:45",
+          "Duracao": "07:20",
+          "Valor": [],
+          "NumeroVoo": "AD2553",
+          "Conexoes": [
+            {
+              "Embarque": "11:25",
+              "Desembarque": "14:15",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 11:25",
+              "DesembarqueCompleto": "14/05/2026 14:15",
+              "NumeroVoo": "AD2553",
+              "Origem": "FOR",
+              "Destino": "CNF",
+              "Duracao": "02:50",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "17:25",
+              "Desembarque": "18:45",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 17:25",
+              "DesembarqueCompleto": "14/05/2026 18:45",
+              "NumeroVoo": "AD2724",
+              "Origem": "CNF",
+              "Destino": "GRU",
+              "Duracao": "01:20",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyNTUzQUQyNzI0"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "volta",
+          "Origem": "FOR",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 94000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 94000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 56.88,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GRU",
+          "Embarque": "14/05/2026 11:25",
+          "Desembarque": "14/05/2026 19:55",
+          "Duracao": "08:30",
+          "Valor": [],
+          "NumeroVoo": "AD2553",
+          "Conexoes": [
+            {
+              "Embarque": "11:25",
+              "Desembarque": "14:15",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 11:25",
+              "DesembarqueCompleto": "14/05/2026 14:15",
+              "NumeroVoo": "AD2553",
+              "Origem": "FOR",
+              "Destino": "CNF",
+              "Duracao": "02:50",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "18:40",
+              "Desembarque": "19:55",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 18:40",
+              "DesembarqueCompleto": "14/05/2026 19:55",
+              "NumeroVoo": "AD2880",
+              "Origem": "CNF",
+              "Destino": "GRU",
+              "Duracao": "01:15",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyNTUzQUQyODgw"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "volta",
+          "Origem": "FOR",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 94000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 94000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 56.88,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GRU",
+          "Embarque": "14/05/2026 11:25",
+          "Desembarque": "14/05/2026 23:05",
+          "Duracao": "11:40",
+          "Valor": [],
+          "NumeroVoo": "AD2553",
+          "Conexoes": [
+            {
+              "Embarque": "11:25",
+              "Desembarque": "14:15",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 11:25",
+              "DesembarqueCompleto": "14/05/2026 14:15",
+              "NumeroVoo": "AD2553",
+              "Origem": "FOR",
+              "Destino": "CNF",
+              "Duracao": "02:50",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "21:45",
+              "Desembarque": "23:05",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 21:45",
+              "DesembarqueCompleto": "14/05/2026 23:05",
+              "NumeroVoo": "AD4212",
+              "Origem": "CNF",
+              "Destino": "GRU",
+              "Duracao": "01:20",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyNTUzQUQ0MjEy"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "volta",
+          "Origem": "FOR",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 96000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 96000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 56.88,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GRU",
+          "Embarque": "14/05/2026 18:15",
+          "Desembarque": "14/05/2026 23:05",
+          "Duracao": "04:50",
+          "Valor": [],
+          "NumeroVoo": "AD4312",
+          "Conexoes": [
+            {
+              "Embarque": "18:15",
+              "Desembarque": "21:05",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 18:15",
+              "DesembarqueCompleto": "14/05/2026 21:05",
+              "NumeroVoo": "AD4312",
+              "Origem": "FOR",
+              "Destino": "CNF",
+              "Duracao": "02:50",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "21:45",
+              "Desembarque": "23:05",
+              "DataEmbarque": "14/05/2026",
+              "DataDesembarque": "14/05/2026",
+              "EmbarqueCompleto": "14/05/2026 21:45",
+              "DesembarqueCompleto": "14/05/2026 23:05",
+              "NumeroVoo": "AD4212",
+              "Origem": "CNF",
+              "Destino": "GRU",
+              "Duracao": "01:20",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQ0MjEyQUQ0MzEy"
+        }
+      ],
+      "Semana": {
+        "11/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "12/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "13/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "14/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "15/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "16/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "17/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ]
+      }
+    },
+    "GRUFOR": {
+      "Origem": "GRU",
+      "Destino": "FOR",
+      "Data": "09/05/2026",
+      "Internacional": 0,
+      "Voos": [
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 88000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 88000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 08:25",
+          "Desembarque": "09/05/2026 23:55",
+          "Duracao": "15:30",
+          "Valor": [],
+          "NumeroVoo": "AD2744",
+          "Conexoes": [
+            {
+              "Embarque": "08:25",
+              "Desembarque": "11:25",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 08:25",
+              "DesembarqueCompleto": "09/05/2026 11:25",
+              "NumeroVoo": "AD2744",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:00",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "22:30",
+              "Desembarque": "23:55",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 22:30",
+              "DesembarqueCompleto": "09/05/2026 23:55",
+              "NumeroVoo": "AD4254",
+              "Origem": "REC",
+              "Destino": "FOR",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyNzQ0QUQ0MjU0"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 130000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 130000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 13:40",
+          "Desembarque": "09/05/2026 19:05",
+          "Duracao": "05:25",
+          "Valor": [],
+          "NumeroVoo": "AD2959",
+          "Conexoes": [
+            {
+              "Embarque": "13:40",
+              "Desembarque": "16:40",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 13:40",
+              "DesembarqueCompleto": "09/05/2026 16:40",
+              "NumeroVoo": "AD2959",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:00",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "17:40",
+              "Desembarque": "19:05",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 17:40",
+              "DesembarqueCompleto": "09/05/2026 19:05",
+              "NumeroVoo": "AD4035",
+              "Origem": "REC",
+              "Destino": "FOR",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyOTU5QUQ0MDM1"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 130000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 130000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 13:40",
+          "Desembarque": "09/05/2026 23:55",
+          "Duracao": "10:15",
+          "Valor": [],
+          "NumeroVoo": "AD2959",
+          "Conexoes": [
+            {
+              "Embarque": "13:40",
+              "Desembarque": "16:40",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 13:40",
+              "DesembarqueCompleto": "09/05/2026 16:40",
+              "NumeroVoo": "AD2959",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:00",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "22:30",
+              "Desembarque": "23:55",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 22:30",
+              "DesembarqueCompleto": "09/05/2026 23:55",
+              "NumeroVoo": "AD4254",
+              "Origem": "REC",
+              "Destino": "FOR",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyOTU5QUQ0MjU0"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 84000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 84000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 14:35",
+          "Desembarque": "10/05/2026 01:40",
+          "Duracao": "11:05",
+          "Valor": [],
+          "NumeroVoo": "AD5031",
+          "Conexoes": [
+            {
+              "Embarque": "14:35",
+              "Desembarque": "15:45",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 14:35",
+              "DesembarqueCompleto": "09/05/2026 15:45",
+              "NumeroVoo": "AD5031",
+              "Origem": "GRU",
+              "Destino": "CNF",
+              "Duracao": "01:10",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "22:55",
+              "Desembarque": "01:40",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "10/05/2026",
+              "EmbarqueCompleto": "09/05/2026 22:55",
+              "DesembarqueCompleto": "10/05/2026 01:40",
+              "NumeroVoo": "AD2932",
+              "Origem": "CNF",
+              "Destino": "FOR",
+              "Duracao": "02:45",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyOTMyQUQ1MDMx"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 102000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 102000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 16:40",
+          "Desembarque": "09/05/2026 23:55",
+          "Duracao": "07:15",
+          "Valor": [],
+          "NumeroVoo": "AD5092",
+          "Conexoes": [
+            {
+              "Embarque": "16:40",
+              "Desembarque": "19:40",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 16:40",
+              "DesembarqueCompleto": "09/05/2026 19:40",
+              "NumeroVoo": "AD5092",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:00",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "22:30",
+              "Desembarque": "23:55",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 22:30",
+              "DesembarqueCompleto": "09/05/2026 23:55",
+              "NumeroVoo": "AD4254",
+              "Origem": "REC",
+              "Destino": "FOR",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQ0MjU0QUQ1MDky"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 94000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 94000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 05:00",
+          "Desembarque": "09/05/2026 19:05",
+          "Duracao": "14:05",
+          "Valor": [],
+          "NumeroVoo": "AD4232",
+          "Conexoes": [
+            {
+              "Embarque": "05:00",
+              "Desembarque": "08:00",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 05:00",
+              "DesembarqueCompleto": "09/05/2026 08:00",
+              "NumeroVoo": "AD4232",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:00",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "17:40",
+              "Desembarque": "19:05",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 17:40",
+              "DesembarqueCompleto": "09/05/2026 19:05",
+              "NumeroVoo": "AD4035",
+              "Origem": "REC",
+              "Destino": "FOR",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQ0MDM1QUQ0MjMy"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 88000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 88000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 05:00",
+          "Desembarque": "09/05/2026 23:55",
+          "Duracao": "18:55",
+          "Valor": [],
+          "NumeroVoo": "AD4232",
+          "Conexoes": [
+            {
+              "Embarque": "05:00",
+              "Desembarque": "08:00",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 05:00",
+              "DesembarqueCompleto": "09/05/2026 08:00",
+              "NumeroVoo": "AD4232",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:00",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "22:30",
+              "Desembarque": "23:55",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 22:30",
+              "DesembarqueCompleto": "09/05/2026 23:55",
+              "NumeroVoo": "AD4254",
+              "Origem": "REC",
+              "Destino": "FOR",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQ0MjMyQUQ0MjU0"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 110000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 110000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 06:00",
+          "Desembarque": "09/05/2026 10:45",
+          "Duracao": "04:45",
+          "Valor": [],
+          "NumeroVoo": "AD4522",
+          "Conexoes": [
+            {
+              "Embarque": "06:00",
+              "Desembarque": "07:10",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 06:00",
+              "DesembarqueCompleto": "09/05/2026 07:10",
+              "NumeroVoo": "AD4522",
+              "Origem": "GRU",
+              "Destino": "CNF",
+              "Duracao": "01:10",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "08:00",
+              "Desembarque": "10:45",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 08:00",
+              "DesembarqueCompleto": "09/05/2026 10:45",
+              "NumeroVoo": "AD2552",
+              "Origem": "CNF",
+              "Destino": "FOR",
+              "Duracao": "02:45",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyNTUyQUQ0NTIy"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 110000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 110000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 06:00",
+          "Desembarque": "09/05/2026 17:35",
+          "Duracao": "11:35",
+          "Valor": [],
+          "NumeroVoo": "AD4522",
+          "Conexoes": [
+            {
+              "Embarque": "06:00",
+              "Desembarque": "07:10",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 06:00",
+              "DesembarqueCompleto": "09/05/2026 07:10",
+              "NumeroVoo": "AD4522",
+              "Origem": "GRU",
+              "Destino": "CNF",
+              "Duracao": "01:10",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "14:50",
+              "Desembarque": "17:35",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 14:50",
+              "DesembarqueCompleto": "09/05/2026 17:35",
+              "NumeroVoo": "AD4246",
+              "Origem": "CNF",
+              "Destino": "FOR",
+              "Duracao": "02:45",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQ0MjQ2QUQ0NTIy"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 106000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 106000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 08:25",
+          "Desembarque": "09/05/2026 19:05",
+          "Duracao": "10:40",
+          "Valor": [],
+          "NumeroVoo": "AD2744",
+          "Conexoes": [
+            {
+              "Embarque": "08:25",
+              "Desembarque": "11:25",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 08:25",
+              "DesembarqueCompleto": "09/05/2026 11:25",
+              "NumeroVoo": "AD2744",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:00",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "17:40",
+              "Desembarque": "19:05",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 17:40",
+              "DesembarqueCompleto": "09/05/2026 19:05",
+              "NumeroVoo": "AD4035",
+              "Origem": "REC",
+              "Destino": "FOR",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQyNzQ0QUQ0MDM1"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 130000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 130000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "FOR",
+          "Embarque": "09/05/2026 10:00",
+          "Desembarque": "09/05/2026 17:35",
+          "Duracao": "07:35",
+          "Valor": [],
+          "NumeroVoo": "AD4570",
+          "Conexoes": [
+            {
+              "Embarque": "10:00",
+              "Desembarque": "11:10",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 10:00",
+              "DesembarqueCompleto": "09/05/2026 11:10",
+              "NumeroVoo": "AD4570",
+              "Origem": "GRU",
+              "Destino": "CNF",
+              "Duracao": "01:10",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "14:50",
+              "Desembarque": "17:35",
+              "DataEmbarque": "09/05/2026",
+              "DataDesembarque": "09/05/2026",
+              "EmbarqueCompleto": "09/05/2026 14:50",
+              "DesembarqueCompleto": "09/05/2026 17:35",
+              "NumeroVoo": "AD4246",
+              "Origem": "CNF",
+              "Destino": "FOR",
+              "Duracao": "02:45",
+              "CompanhiaAparente": "AZUL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "QUQ0MjQ2QUQ0NTcw"
+        }
+      ],
+      "Semana": {
+        "06/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "07/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "08/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "09/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "10/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "11/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "12/05/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ]
+      }
+    }
+  },
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}

@@ -18,7 +18,9 @@ class LayoverCategory(str, Enum):
 
 class SourceType(str, Enum):
     KAYAK = "kayak"
-    MOBLIX_LATAM = "moblix_latam"
+    BUSCAMILHAS_LATAM = "buscamilhas_latam"
+    BUSCAMILHAS_GOL = "buscamilhas_gol"
+    BUSCAMILHAS_AZUL = "buscamilhas_azul"
 
 
 class SearchRequest(BaseModel):
@@ -45,7 +47,7 @@ class SearchRequest(BaseModel):
     flex_return: bool = Field(False, description="Se True, aplica flexibilidade também na volta")
     currency: str = Field("BRL", description="Moeda padrão da busca")
     
-    debug_dump_moblix: bool = False
+    debug_dump_buscamilhas: bool = False
 
 
 class Segment(BaseModel):
@@ -105,6 +107,8 @@ class UnifiedOffer(BaseModel):
     miles_in: Optional[int] = None
     taxes_brl_out: Optional[float] = None
     taxes_brl_in: Optional[float] = None
+    baggage_miles_out: Optional[int] = None
+    baggage_miles_in: Optional[int] = None
     
     equivalent_brl: Optional[float] = Field(None, description="Valor BRL convertido no scoring (após aplicar valor do milheiro + taxa)")
     deeplink: Optional[str] = None

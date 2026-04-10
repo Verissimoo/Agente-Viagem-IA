@@ -58,7 +58,7 @@ class TestLayoverClassifier(unittest.TestCase):
         out1 = Itinerary(segments=[self._make_dummy_segment()])
         out2 = Itinerary(segments=[self._make_dummy_segment(), self._make_dummy_segment()])
         
-        o1 = UnifiedOffer(source=SourceType.MOBLIX_LATAM, airline="LA", trip_type=TripType.ONEWAY, outbound=out1, miles=10000, layover_out=LayoverCategory.CONNECTION)
+        o1 = UnifiedOffer(source=SourceType.BUSCAMILHAS_LATAM, airline="LA", trip_type=TripType.ONEWAY, outbound=out1, miles=10000, layover_out=LayoverCategory.CONNECTION)
         o2 = UnifiedOffer(source=SourceType.KAYAK, airline="LA", trip_type=TripType.ONEWAY, outbound=out2, price_brl=2000.0, layover_out=LayoverCategory.DIRECT)
 
         # Pre-assign fake layovers

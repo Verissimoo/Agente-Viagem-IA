@@ -34,7 +34,12 @@ def rank_offers(offers: List[UnifiedOffer], top_n: int = 5) -> Tuple[List[Unifie
             taxes = offer.taxes_brl or 0.0
             
             # Regra Fixa LATAM: Se for LATAM, ignorar config geral e usar 0.0285
-            current_cpm = LATAM_COST_PER_MILE_BRL if offer.source == SourceType.MOBLIX_LATAM else cpm
+            if offer.source == SourceType.BUSCAMILHAS_LATAM:
+                current_cpm = LATAM_COST_PER_MILE_BRL
+            elif offer.source in (SourceType.BUSCAMILHAS_GOL, SourceType.BUSCAMILHAS_AZUL):
+                current_cpm = 0.0200
+            else:
+                current_cpm = cpm
             
             base_cost = (offer.miles * current_cpm) + taxes
         else:

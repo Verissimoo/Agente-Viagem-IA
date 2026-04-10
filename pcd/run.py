@@ -6,7 +6,7 @@ from typing import Optional
 
 from pcd.core.schema import SearchRequest, TripType, CabinClass
 from pcd.adapters.kayak_adapter import KayakAdapter
-from pcd.adapters.moblix_adapter import MoblixLatamAdapter
+from pcd.adapters.buscamilhas_adapter import BuscaMilhasLatamAdapter, BuscaMilhasGolAdapter, BuscaMilhasAzulAdapter
 from pcd.core.ranking import rank_offers
 from pcd.core.formatter import build_ui_report
 from pcd.core.tracer import PipelineTracer
@@ -54,7 +54,7 @@ def run_pipeline(
     origin: Optional[str] = None,
     destination: Optional[str] = None,
     debug_dump_kayak: bool = False,
-    debug_dump_moblix: bool = False,
+    debug_dump_buscamilhas: bool = False,
     flex_days: int = 0,
     flex_return: bool = False,
     flex_mode: str = "none",
@@ -115,15 +115,33 @@ def run_pipeline(
                 except (OfflineModeError, Exception) as e:
                     print(f"[!] Kayak failed for {req_i.date_start}: {e}")
 
-            # 4. Stage: moblix_search
-            with tracer.track_stage(f"moblix_search{date_trace_id}") as info:
+            # 4. Stage: buscamilhas_search
+            with tracer.track_stage(f"buscamilhas_search_latam{date_trace_id}") as info:
                 try:
-                    offers = MoblixLatamAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_moblix)
+                    offers = BuscaMilhasLatamAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_buscamilhas)
                     all_offers.extend(offers)
                     info["offers_count"] = len(offers)
                     info["date"] = req_i.date_start.isoformat()
                 except (OfflineModeError, Exception) as e:
-                    print(f"[!] Moblix failed for {req_i.date_start}: {e}")
+                    print(f"[!] BuscaMilhas LATAM failed for {req_i.date_start}: {e}")
+
+            with tracer.track_stage(f"buscamilhas_search_gol{date_trace_id}") as info:
+                try:
+                    offers = BuscaMilhasGolAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_buscamilhas)
+                    all_offers.extend(offers)
+                    info["offers_count"] = len(offers)
+                    info["date"] = req_i.date_start.isoformat()
+                except (OfflineModeError, Exception) as e:
+                    print(f"[!] BuscaMilhas GOL failed for {req_i.date_start}: {e}")
+                    
+            with tracer.track_stage(f"buscamilhas_search_azul{date_trace_id}") as info:
+                try:
+                    offers = BuscaMilhasAzulAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_buscamilhas)
+                    all_offers.extend(offers)
+                    info["offers_count"] = len(offers)
+                    info["date"] = req_i.date_start.isoformat()
+                except (OfflineModeError, Exception) as e:
+                    print(f"[!] BuscaMilhas AZUL failed for {req_i.date_start}: {e}")
 
         if not all_offers:
             return result

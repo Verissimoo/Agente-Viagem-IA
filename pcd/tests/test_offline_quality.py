@@ -4,7 +4,7 @@ import json
 from datetime import date, timedelta
 from pcd.core.schema import SearchRequest, TripType, CabinClass, UnifiedOffer, LayoverCategory
 from pcd.adapters.kayak_adapter import KayakAdapter
-from pcd.adapters.moblix_adapter import MoblixLatamAdapter
+from pcd.adapters.buscamilhas_adapter import BuscaMilhasLatamAdapter
 from pcd.core.layover_classifier import classify_many
 from pcd.core.ranking import rank_offers
 from pcd.run import run_pipeline
@@ -39,10 +39,10 @@ class TestOfflineQuality(unittest.TestCase):
             self.assertIsNotNone(o.outbound)
             self.assertIsNotNone(o.airline)
 
-        # Moblix
-        m_adapter = MoblixLatamAdapter()
+        # BuscaMilhas
+        m_adapter = BuscaMilhasLatamAdapter()
         m_offers = m_adapter.search(self.req, use_fixtures=True)
-        self.assertGreater(len(m_offers), 0, "Deveria carregar ofertas do Moblix")
+        self.assertGreater(len(m_offers), 0, "Deveria carregar ofertas do BuscaMilhas")
         for o in m_offers:
             self.assertIsInstance(o, UnifiedOffer)
             self.assertIsNotNone(o.miles)
@@ -63,31 +63,30 @@ class TestOfflineQuality(unittest.TestCase):
 
     def test_scoring_equivalent(self):
         # Independente do CPM config (ex: 0.015), LATAM deve usar sempre 0.0285
-        # Moblix (fixture) = 20000 milhas + 80.0 taxas = 20000*0.0285 + 80 = 650.0
+        # BuscaMilhas (fixture) = 20000 milhas + 80.0 taxas = 20000*0.0285 + 80 = 650.0
         k_adapter = KayakAdapter()
-        m_adapter = MoblixLatamAdapter()
+        m_adapter = BuscaMilhasLatamAdapter()
         
         all_offers = k_adapter.search(self.req, use_fixtures=True) + m_adapter.search(self.req, use_fixtures=True)
         classified = classify_many(all_offers)
         top, best, _ = rank_offers(classified)
         
-        # O ranking agora deve dar 650.0 para Mobix Latam
-        self.assertEqual(best.equivalent_brl, 650.0)
-        self.assertEqual(best.source.value, "moblix_latam")
+        # O ranking agora deve dar 325.0 para BuscaMilhas Latam
+        self.assertEqual(best.equivalent_brl, 325.0)
+        self.assertEqual(best.source.value, "buscamilhas_latam")
 
     def test_runner_offline(self):
         # Teste do runner pcd.run.run_pipeline integral
         trace_path = "test_quality_trace.jsonl"
         res = run_pipeline(prompt="SP para Miami", top_n=5, use_fixtures=True, trace_out=trace_path)
-        
-        self.assertIsNotNone(res["best_offer"])
-        self.assertTrue(len(res["top_offers"]) > 0)
+        self.assertIsNotNone(res.best_overall)
+        self.assertTrue(len(res.ranked_offers) > 0)
         
         # Verificar se trace tem etapas
         if os.path.exists(trace_path):
             with open(trace_path, "r") as f:
                 lines = f.readlines()
-                # 6 etapas (parse, kayak, moblix, layover, score, format) * 2 eventos (start/end)
+                # 6 etapas (parse, kayak, buscamilhas, layover, score, format) * 2 eventos (start/end)
                 self.assertGreaterEqual(len(lines), 12) 
             os.remove(trace_path)
 
@@ -99,7 +98,7 @@ class TestOfflineQuality(unittest.TestCase):
         with self.assertRaises(OfflineModeError):
             k_adapter.search(self.req, use_fixtures=False)
 
-        m_adapter = MoblixLatamAdapter()
+        m_adapter = BuscaMilhasLatamAdapter()
         with self.assertRaises(OfflineModeError):
             m_adapter.search(self.req, use_fixtures=False)
         

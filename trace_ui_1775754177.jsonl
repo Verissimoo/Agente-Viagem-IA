@@ -1,0 +1,14 @@
+{"request_id": "7f727d66", "stage": "parse", "status": "start", "ts": "2026-04-09T14:02:57.521707", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "parse", "status": "end", "ts": "2026-04-09T14:02:57.521707", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "date_planning", "status": "start", "ts": "2026-04-09T14:02:57.521707", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "date_planning", "status": "end", "ts": "2026-04-09T14:02:57.521707", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "kayak_search_2026-05-20", "status": "start", "ts": "2026-04-09T14:02:57.521707", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "kayak_search_2026-05-20", "status": "end", "ts": "2026-04-09T14:03:07.462476", "latency_ms": 9940.77, "offers_count": 15, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "buscamilhas_search_2026-05-20", "status": "start", "ts": "2026-04-09T14:03:07.462476", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "buscamilhas_search_2026-05-20", "status": "end", "ts": "2026-04-09T14:03:17.807115", "latency_ms": 10344.64, "offers_count": 50, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "layover_classify", "status": "start", "ts": "2026-04-09T14:03:17.807115", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "layover_classify", "status": "end", "ts": "2026-04-09T14:03:17.807115", "latency_ms": 0.0, "offers_count": 65, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "score_rank", "status": "start", "ts": "2026-04-09T14:03:17.807115", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "score_rank", "status": "end", "ts": "2026-04-09T14:03:17.807115", "latency_ms": 0.0, "offers_count": 5, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "format_report", "status": "start", "ts": "2026-04-09T14:03:17.807115", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}
+{"request_id": "7f727d66", "stage": "format_report", "status": "end", "ts": "2026-04-09T14:03:17.807115", "latency_ms": 0.0, "offers_count": null, "message": "", "error": null}

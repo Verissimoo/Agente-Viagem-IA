@@ -4,7 +4,7 @@ from datetime import date, timedelta
 
 from pcd.core.schema import SearchRequest, TripType, CabinClass
 from pcd.adapters.kayak_adapter import KayakAdapter
-from pcd.adapters.moblix_adapter import MoblixLatamAdapter
+from pcd.adapters.buscamilhas_adapter import BuscaMilhasLatamAdapter
 from pcd.core.ranking import rank_offers
 from pcd.core.formatter import build_ui_report
 
@@ -29,7 +29,7 @@ def run_demo_report(use_fixtures: bool, trace_out: str = None):
     all_offers = []
     
     with tracer.track_stage("adapters_fetch", "Fetching data from all adapters"):
-        adapters = {"kayak": KayakAdapter(), "moblix": MoblixLatamAdapter()}
+        adapters = {"kayak": KayakAdapter(), "buscamilhas": BuscaMilhasLatamAdapter()}
         for name, adapter in adapters.items():
             with tracer.track_stage(name, f"Calling {name} source") as info:
                 try:
