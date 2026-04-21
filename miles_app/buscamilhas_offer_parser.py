@@ -127,6 +127,40 @@ def _build_segments(voo: Dict[str, Any], companhia: str) -> List[Segment]:
 # Seleção de melhor tarifa
 # ──────────────────────────────────────────────────────────────
 
+def _parse_limite_bagagem(limite: Any) -> int:
+    """
+    Converte LimiteBagagem para um inteiro simples.
+
+    Formatos suportados:
+      - int/float simples:  1 → 1
+      - dict complexo (internacionais):
+        {"BagagemDespachada": {"23kg": 1, "15kg": null}, ...} → 1 se qualquer slot > 0
+    Retorna 0 se sem bagagem despachada incluída.
+    """
+    if limite is None:
+        return 0
+    if isinstance(limite, (int, float)):
+        try:
+            return int(limite)
+        except Exception:
+            return 0
+    if isinstance(limite, dict):
+        # Formato internacionais: {"BagagemDespachada": {"23kg": 1, ...}}
+        desp = limite.get("BagagemDespachada") or {}
+        if isinstance(desp, dict):
+            for v in desp.values():
+                try:
+                    if v and int(v) > 0:
+                        return 1
+                except Exception:
+                    pass
+        return 0
+    try:
+        return int(limite)
+    except Exception:
+        return 0
+
+
 def _best_milhas(lst: List[Dict], companhia: str) -> Tuple[Optional[int], Optional[int], Optional[float], str]:
     """Retorna (base_pts, bag_pts, taxa, tipo_milhas)."""
     scored = []
@@ -142,8 +176,7 @@ def _best_milhas(lst: List[Dict], companhia: str) -> Tuple[Optional[int], Option
         try:
             taxa = float(m.get("TaxaEmbarque") or 0) + float(m.get("TaxaResgate") or 0)
         except: taxa = 0.0
-        try: bag = int(m.get("LimiteBagagem") or 0)
-        except: bag = 0
+        bag = _parse_limite_bagagem(m.get("LimiteBagagem"))
         scored.append((pts, taxa, bag, str(m.get("TipoMilhas") or ""), m))
 
     if not scored:
@@ -156,14 +189,14 @@ def _best_milhas(lst: List[Dict], companhia: str) -> Tuple[Optional[int], Option
         std_cands = sorted({p for (p,_,_,t,_) in scored if "STANDARD" in t.upper() and p > base})
         if std_cands:
             bag = std_cands[0]
-            
+
     if bag is None:
         bag_cands = sorted({p for (p,_,b,_,_) in scored if b >= 1 and p > base})
         bag = bag_cands[0] if bag_cands else None
         if bag is None:
             nxt = sorted({p for (p,_,_,_,_) in scored if p > base})
             bag = nxt[0] if nxt else None
-            
+
     if bag is not None and bag <= base:
         bag = None
     return base, bag, btax, btype
@@ -183,8 +216,7 @@ def _best_valor(lst: List[Dict]) -> Tuple[Optional[float], Optional[float], Opti
             continue
         try: taxa = float(m.get("TaxaEmbarque") or 0)
         except: taxa = 0.0
-        try: bag = int(m.get("LimiteBagagem") or 0)
-        except: bag = 0
+        bag = _parse_limite_bagagem(m.get("LimiteBagagem"))
         scored.append((pts, taxa, bag, str(m.get("TipoValor") or ""), m))
 
     if not scored:

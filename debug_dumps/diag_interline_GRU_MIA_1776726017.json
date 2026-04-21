@@ -1,0 +1,43 @@
+{
+  "Token": "INTERLINE|GRU-MIA-04/06/2026|1|0|0|economica|1d4d5dc4-576e-4a00-9e4f-9f15dc20e4e4",
+  "Busca": {
+    "Companhias": [
+      "INTERLINE"
+    ],
+    "TipoBusca": 1,
+    "TipoViagem": 0,
+    "Trechos": [
+      {
+        "Origem": "GRU",
+        "Destino": "MIA",
+        "DataIda": "04/06/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 1,
+    "Hash": "INTERLINE|GRU-MIA-04/06/2026|1|0|0|economica|1d4d5dc4-576e-4a00-9e4f-9f15dc20e4e4",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": true,
+    "Sucesso": false,
+    "Alerta": [
+      "STATUS_CODE_ERROR_9000"
+    ]
+  },
+  "Trechos": null,
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}

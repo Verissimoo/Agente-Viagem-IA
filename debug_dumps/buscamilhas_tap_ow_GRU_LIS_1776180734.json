@@ -1,0 +1,834 @@
+{
+  "Token": "TAP|GRU-LIS-30/06/2026|1|0|0|economica|cbf53f4f-1d2f-4161-8787-4290c6abc508",
+  "Busca": {
+    "Companhias": [
+      "TAP"
+    ],
+    "TipoBusca": 1,
+    "TipoViagem": 0,
+    "Trechos": [
+      {
+        "Origem": "GRU",
+        "Destino": "LIS",
+        "DataIda": "30/06/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 1,
+    "Hash": "TAP|GRU-LIS-30/06/2026|1|0|0|economica|cbf53f4f-1d2f-4161-8787-4290c6abc508",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": false,
+    "Sucesso": true,
+    "Alerta": []
+  },
+  "Trechos": {
+    "GRULIS": {
+      "Origem": "GRU",
+      "Destino": "LIS",
+      "Data": "30/06/2026",
+      "Internacional": 1,
+      "Voos": [
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 53000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 190.17,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 190.17,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 190.17,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:45",
+          "Desembarque": "01/07/2026 10:35",
+          "Duracao": "09:50",
+          "Valor": [],
+          "NumeroVoo": "TP-0088",
+          "Conexoes": [],
+          "NumeroConexoes": 0
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 190.17,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 190.17,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 190.17,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 00:45",
+          "Desembarque": "30/06/2026 14:35",
+          "Duracao": "09:50",
+          "Valor": [],
+          "NumeroVoo": "TP-0084",
+          "Conexoes": [],
+          "NumeroConexoes": 0
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 190.17,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 190.17,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 190.17,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 15:30",
+          "Desembarque": "01/07/2026 05:25",
+          "Duracao": "09:55",
+          "Valor": [],
+          "NumeroVoo": "TP-0082",
+          "Conexoes": [],
+          "NumeroConexoes": 0
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 269.98,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 269.98,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 269.98,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:55",
+          "Desembarque": "01/07/2026 19:05",
+          "Duracao": "18:10",
+          "Valor": [],
+          "NumeroVoo": "TP-0094",
+          "Conexoes": [
+            {
+              "Embarque": "20:55",
+              "Desembarque": "11:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 20:55",
+              "DesembarqueCompleto": "01/07/2026 11:05",
+              "NumeroVoo": "TP-0094",
+              "Origem": "GRU",
+              "Destino": "OPO",
+              "Duracao": "10:10",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            },
+            {
+              "Embarque": "18:00",
+              "Desembarque": "19:05",
+              "DataEmbarque": "01/07/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "01/07/2026 18:00",
+              "DesembarqueCompleto": "01/07/2026 19:05",
+              "NumeroVoo": "TP-1931",
+              "Origem": "OPO",
+              "Destino": "LIS",
+              "Duracao": "01:05",
+              "CompanhiaAparente": "PORTUGÁLIA AIRLINES"
+            }
+          ],
+          "NumeroConexoes": 1
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 269.98,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 269.98,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 269.98,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:55",
+          "Desembarque": "01/07/2026 22:15",
+          "Duracao": "21:20",
+          "Valor": [],
+          "NumeroVoo": "TP-0094",
+          "Conexoes": [
+            {
+              "Embarque": "20:55",
+              "Desembarque": "11:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 20:55",
+              "DesembarqueCompleto": "01/07/2026 11:05",
+              "NumeroVoo": "TP-0094",
+              "Origem": "GRU",
+              "Destino": "OPO",
+              "Duracao": "10:10",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            },
+            {
+              "Embarque": "21:15",
+              "Desembarque": "22:15",
+              "DataEmbarque": "01/07/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "01/07/2026 21:15",
+              "DesembarqueCompleto": "01/07/2026 22:15",
+              "NumeroVoo": "TP-1933",
+              "Origem": "OPO",
+              "Destino": "LIS",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "PORTUGÁLIA AIRLINES"
+            }
+          ],
+          "NumeroConexoes": 1
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 269.98,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 269.98,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 269.98,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:55",
+          "Desembarque": "01/07/2026 23:20",
+          "Duracao": "22:25",
+          "Valor": [],
+          "NumeroVoo": "TP-0094",
+          "Conexoes": [
+            {
+              "Embarque": "20:55",
+              "Desembarque": "11:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 20:55",
+              "DesembarqueCompleto": "01/07/2026 11:05",
+              "NumeroVoo": "TP-0094",
+              "Origem": "GRU",
+              "Destino": "OPO",
+              "Duracao": "10:10",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            },
+            {
+              "Embarque": "22:30",
+              "Desembarque": "23:20",
+              "DataEmbarque": "01/07/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "01/07/2026 22:30",
+              "DesembarqueCompleto": "01/07/2026 23:20",
+              "NumeroVoo": "TP-1935",
+              "Origem": "OPO",
+              "Destino": "LIS",
+              "Duracao": "00:50",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            }
+          ],
+          "NumeroConexoes": 1
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 269.98,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 269.98,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 269.98,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:55",
+          "Desembarque": "02/07/2026 06:05",
+          "Duracao": "29:10",
+          "Valor": [],
+          "NumeroVoo": "TP-0094",
+          "Conexoes": [
+            {
+              "Embarque": "20:55",
+              "Desembarque": "11:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 20:55",
+              "DesembarqueCompleto": "01/07/2026 11:05",
+              "NumeroVoo": "TP-0094",
+              "Origem": "GRU",
+              "Destino": "OPO",
+              "Duracao": "10:10",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            },
+            {
+              "Embarque": "05:05",
+              "Desembarque": "06:05",
+              "DataEmbarque": "02/07/2026",
+              "DataDesembarque": "02/07/2026",
+              "EmbarqueCompleto": "02/07/2026 05:05",
+              "DesembarqueCompleto": "02/07/2026 06:05",
+              "NumeroVoo": "TP-1937",
+              "Origem": "OPO",
+              "Destino": "LIS",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            }
+          ],
+          "NumeroConexoes": 1
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 283.76,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 283.76,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 283.76,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:55",
+          "Desembarque": "02/07/2026 08:00",
+          "Duracao": "31:05",
+          "Valor": [],
+          "NumeroVoo": "TP-0094",
+          "Conexoes": [
+            {
+              "Embarque": "20:55",
+              "Desembarque": "11:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 20:55",
+              "DesembarqueCompleto": "01/07/2026 11:05",
+              "NumeroVoo": "TP-0094",
+              "Origem": "GRU",
+              "Destino": "OPO",
+              "Duracao": "10:10",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            },
+            {
+              "Embarque": "07:00",
+              "Desembarque": "08:00",
+              "DataEmbarque": "02/07/2026",
+              "DataDesembarque": "02/07/2026",
+              "EmbarqueCompleto": "02/07/2026 07:00",
+              "DesembarqueCompleto": "02/07/2026 08:00",
+              "NumeroVoo": "TP-1939",
+              "Origem": "OPO",
+              "Destino": "LIS",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "PORTUGÁLIA AIRLINES"
+            }
+          ],
+          "NumeroConexoes": 1
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 283.76,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 283.76,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 283.76,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:55",
+          "Desembarque": "02/07/2026 10:00",
+          "Duracao": "33:05",
+          "Valor": [],
+          "NumeroVoo": "TP-0094",
+          "Conexoes": [
+            {
+              "Embarque": "20:55",
+              "Desembarque": "11:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 20:55",
+              "DesembarqueCompleto": "01/07/2026 11:05",
+              "NumeroVoo": "TP-0094",
+              "Origem": "GRU",
+              "Destino": "OPO",
+              "Duracao": "10:10",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            },
+            {
+              "Embarque": "09:00",
+              "Desembarque": "10:00",
+              "DataEmbarque": "02/07/2026",
+              "DataDesembarque": "02/07/2026",
+              "EmbarqueCompleto": "02/07/2026 09:00",
+              "DesembarqueCompleto": "02/07/2026 10:00",
+              "NumeroVoo": "TP-1921",
+              "Origem": "OPO",
+              "Destino": "LIS",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            }
+          ],
+          "NumeroConexoes": 1
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 283.76,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 283.76,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 283.76,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:55",
+          "Desembarque": "02/07/2026 11:00",
+          "Duracao": "34:05",
+          "Valor": [],
+          "NumeroVoo": "TP-0094",
+          "Conexoes": [
+            {
+              "Embarque": "20:55",
+              "Desembarque": "11:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 20:55",
+              "DesembarqueCompleto": "01/07/2026 11:05",
+              "NumeroVoo": "TP-0094",
+              "Origem": "GRU",
+              "Destino": "OPO",
+              "Duracao": "10:10",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            },
+            {
+              "Embarque": "10:00",
+              "Desembarque": "11:00",
+              "DataEmbarque": "02/07/2026",
+              "DataDesembarque": "02/07/2026",
+              "EmbarqueCompleto": "02/07/2026 10:00",
+              "DesembarqueCompleto": "02/07/2026 11:00",
+              "NumeroVoo": "TP-1923",
+              "Origem": "OPO",
+              "Destino": "LIS",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            }
+          ],
+          "NumeroConexoes": 1
+        },
+        {
+          "Companhia": "TAP",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 99500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 283.76,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 283.76,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Bebe": 0,
+                "Adulto": 283.76,
+                "Crianca": 0
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "2kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "LIS",
+          "Embarque": "30/06/2026 20:55",
+          "Desembarque": "02/07/2026 12:00",
+          "Duracao": "35:05",
+          "Valor": [],
+          "NumeroVoo": "TP-0094",
+          "Conexoes": [
+            {
+              "Embarque": "20:55",
+              "Desembarque": "11:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 20:55",
+              "DesembarqueCompleto": "01/07/2026 11:05",
+              "NumeroVoo": "TP-0094",
+              "Origem": "GRU",
+              "Destino": "OPO",
+              "Duracao": "10:10",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            },
+            {
+              "Embarque": "11:00",
+              "Desembarque": "12:00",
+              "DataEmbarque": "02/07/2026",
+              "DataDesembarque": "02/07/2026",
+              "EmbarqueCompleto": "02/07/2026 11:00",
+              "DesembarqueCompleto": "02/07/2026 12:00",
+              "NumeroVoo": "TP-1925",
+              "Origem": "OPO",
+              "Destino": "LIS",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "TAP AIR PORTUGAL"
+            }
+          ],
+          "NumeroConexoes": 1
+        }
+      ],
+      "Semana": {
+        "01/07/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "TAP"
+          }
+        ],
+        "02/07/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "TAP"
+          }
+        ],
+        "03/07/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "TAP"
+          }
+        ],
+        "27/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "TAP"
+          }
+        ],
+        "28/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "TAP"
+          }
+        ],
+        "29/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "TAP"
+          }
+        ],
+        "30/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "TAP"
+          }
+        ]
+      }
+    }
+  },
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}

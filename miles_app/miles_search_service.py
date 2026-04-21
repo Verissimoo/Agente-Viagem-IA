@@ -12,7 +12,7 @@ import os
 from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from miles_app.buscamilhas_client import search_flights_buscamilhas, COMPANHIAS_NACIONAIS
+from miles_app.buscamilhas_client import search_flights_buscamilhas, COMPANHIAS_NACIONAIS, COMPANHIAS_INTERNACIONAIS
 from miles_app.buscamilhas_offer_parser import extract_rows_from_buscamilhas, debug_raw_json
 
 
@@ -116,6 +116,9 @@ def search_miles_in_range(
     raw_responses: List[Dict[str, Any]] = []
     errors: List[str] = []
     call_count = 0
+    
+    # Rastrear status de cada companhia (nome -> contagem de resultados)
+    airlines_status: Dict[str, int] = {c: 0 for c in companhias}
 
     for dep_iso, ret_iso in planned:
         dep_br = _to_br_date(dep_iso)
@@ -124,6 +127,7 @@ def search_miles_in_range(
         for companhia in companhias:
             call_count += 1
             try:
+                is_internacional = companhia.upper() in COMPANHIAS_INTERNACIONAIS
                 raw = search_flights_buscamilhas(
                     companhia=companhia,
                     origem=origin,
@@ -132,6 +136,7 @@ def search_miles_in_range(
                     data_volta=ret_br,
                     somente_milhas=True,
                     somente_pagante=False,
+                    internacional=is_internacional,
                 )
 
                 if return_raw:
@@ -144,10 +149,13 @@ def search_miles_in_range(
                     })
 
                 rows = extract_rows_from_buscamilhas(raw, companhia=companhia, trip_type=trip_type)
+                airlines_status[companhia] += len(rows)
                 all_rows.extend(rows)
 
             except Exception as e:
                 errors.append(f"{companhia} {dep_br}: {e}")
+                if airlines_status[companhia] == 0:
+                    airlines_status[companhia] = -1  # Indica erro
 
     # dedup por Companhia+Trecho+NumeroVoo+Data
     seen = set()
@@ -200,6 +208,7 @@ def search_miles_in_range(
             "rows_total": len(uniq),
             "bag_map_size": len(bag_map),
             "errors": errors,
+            "airlines_status": airlines_status,
         },
     }
 

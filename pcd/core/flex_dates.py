@@ -53,7 +53,9 @@ def compute_search_dates(
     else:
         dates = [base_date]
         
-    return sorted(list(set(dates)))
+    res_dates = sorted(list(set(dates)))
+    print(f"DEBUG: compute_search_dates gerou {len(res_dates)} datas: {res_dates}")
+    return res_dates
 
 def build_date_plan(request: SearchRequest) -> List[SearchRequest]:
     """

@@ -212,6 +212,15 @@ def parse_intent_regex(text: str) -> ParsedIntent:
     adult_match = re.search(r"(\d+)\s*(?:adulto|pessoa|passageiro)", text_lower)
     if adult_match:
         intent.adults = int(adult_match.group(1))
+    elif any(k in text_lower for k in ["eu e minha esposa", "eu e meu marido", "casal", "eu e mais 1"]):
+        intent.adults = 2
+    else:
+        fam_match = re.search(r"fam[ií]lia\s+de\s+(\d+)", text_lower)
+        if fam_match:
+            intent.adults = int(fam_match.group(1))
+            
+    # Limitar entre 1 e 9
+    intent.adults = max(1, min(9, getattr(intent, "adults", 1) or 1))
         
     if not extracted:
         intent.confidence = 0.2
@@ -254,6 +263,10 @@ def parse_intent_ptbr(text: str, use_llm: bool = False) -> ParsedIntent:
             1. Se o usuário pedir "datas próximas", "±3 dias" ou similar, use flex_mode="plusminus" e flex_days=3 (ou o número dito).
             2. Se o usuário der um intervalo (ex: "do dia 5 ao 15", "entre 10/10 e 20/10"), use flex_mode="range" e preencha depart_date_from/to.
             3. Caso contrário, use flex_mode="none".
+
+            REGRAS ADICIONAIS:
+            - Se o usuário disser "eu e mais 1" -> adults=2, "casal" -> adults=2, "família de 4" -> adults=4, "eu e esposa" -> adults=2. Assuma 1 como padrão. Limite máximo 9.
+            - Se o usuário falar "direto", "sem escala", "voo direto" ou "directo", marque direct_only=true.
 
             IMPORTANTE: Se a cidade tiver múltiplos aeroportos (ex: São Paulo), tente sugerir o código da cidade ou o principal. 
             Se não tiver certeza da IATA, foque no nome da cidade.

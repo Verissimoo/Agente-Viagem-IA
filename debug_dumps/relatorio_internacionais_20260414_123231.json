@@ -1,0 +1,84 @@
+[
+  {
+    "companhia": "TAP",
+    "origem": "GRU",
+    "destino": "LIS",
+    "data": "30/06/2026",
+    "sucesso_api": true,
+    "arquivo_json": "debug_dumps/buscamilhas_tap_ow_GRU_LIS_1776180734.json",
+    "status_api": {
+      "Erro": false,
+      "Sucesso": true,
+      "Alerta": []
+    },
+    "erro_api": null,
+    "total_trechos": 1,
+    "total_voos": 11,
+    "rows_milhas": 11,
+    "rows_valor": 0,
+    "erro_parser": null,
+    "amostra_tipos_milhas": [
+      "ECONOMY"
+    ]
+  },
+  {
+    "companhia": "IBERIA",
+    "origem": "GRU",
+    "destino": "LIS",
+    "data": "30/06/2026",
+    "sucesso_api": true,
+    "arquivo_json": "debug_dumps/buscamilhas_iberia_ow_GRU_LIS_1776180737.json",
+    "status_api": {
+      "Erro": true,
+      "Sucesso": false,
+      "Alerta": [
+        "STATUS_CODE_ERROR_9000"
+      ]
+    },
+    "erro_api": null,
+    "total_trechos": 0,
+    "total_voos": 0,
+    "rows_milhas": 0,
+    "rows_valor": 0,
+    "erro_parser": null,
+    "amostra_tipos_milhas": []
+  },
+  {
+    "companhia": "AMERICAN",
+    "origem": "GRU",
+    "destino": "LIS",
+    "data": "30/06/2026",
+    "sucesso_api": false,
+    "arquivo_json": null,
+    "status_api": null,
+    "erro_api": "Falha BuscaMilhas após 3 tentativas: BuscaMilhas HTTP 500 (server). Body: {\"statusCode\":500,\"error\":\"Internal Server Error\",\"message\":\"searchBody is not defined\"}",
+    "total_trechos": 0,
+    "total_voos": 0,
+    "rows_milhas": 0,
+    "rows_valor": 0,
+    "erro_parser": null,
+    "amostra_tipos_milhas": []
+  },
+  {
+    "companhia": "INTERLINE",
+    "origem": "GRU",
+    "destino": "LIS",
+    "data": "30/06/2026",
+    "sucesso_api": true,
+    "arquivo_json": "debug_dumps/buscamilhas_interline_ow_GRU_LIS_1776180750.json",
+    "status_api": {
+      "Erro": true,
+      "Sucesso": false,
+      "Alerta": [
+        "STATUS_CODE_ERROR_9000"
+      ]
+    },
+    "erro_api": null,
+    "total_trechos": 0,
+    "total_voos": 0,
+    "rows_milhas": 0,
+    "rows_valor": 0,
+    "erro_parser": null,
+    "amostra_tipos_milhas": []
+  }
+]

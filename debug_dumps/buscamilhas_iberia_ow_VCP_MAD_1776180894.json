@@ -1,0 +1,43 @@
+{
+  "Token": "IBERIA|VCP-MAD-30/06/2026|1|0|0|economica|a6b57c30-8950-43aa-88bd-504484ff282b",
+  "Busca": {
+    "Companhias": [
+      "IBERIA"
+    ],
+    "TipoBusca": 1,
+    "TipoViagem": 0,
+    "Trechos": [
+      {
+        "Origem": "VCP",
+        "Destino": "MAD",
+        "DataIda": "30/06/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 1,
+    "Hash": "IBERIA|VCP-MAD-30/06/2026|1|0|0|economica|a6b57c30-8950-43aa-88bd-504484ff282b",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": true,
+    "Sucesso": false,
+    "Alerta": [
+      "STATUS_CODE_ERROR_9000"
+    ]
+  },
+  "Trechos": null,
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}

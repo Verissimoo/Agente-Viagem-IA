@@ -21,6 +21,10 @@ class SourceType(str, Enum):
     BUSCAMILHAS_LATAM = "buscamilhas_latam"
     BUSCAMILHAS_GOL = "buscamilhas_gol"
     BUSCAMILHAS_AZUL = "buscamilhas_azul"
+    BUSCAMILHAS_TAP = "buscamilhas_tap"
+    BUSCAMILHAS_IBERIA = "buscamilhas_iberia"
+    BUSCAMILHAS_AMERICAN = "buscamilhas_american"
+    BUSCAMILHAS_INTERLINE = "buscamilhas_interline"
 
 
 class SearchRequest(BaseModel):
@@ -161,6 +165,7 @@ class PipelineResult(BaseModel):
     justification: List[str] = []
     table_rows: List[dict] = []
     trace_path: Optional[str] = None
+    direct_filter_warning: Optional[str] = None
 
 class ParsedIntent(BaseModel):
     """Representa a intenção extraída de um texto livre"""

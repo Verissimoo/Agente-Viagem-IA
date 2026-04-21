@@ -117,12 +117,12 @@ def _insert_group_separators(df: pd.DataFrame, group_col: str = "GroupId") -> pd
 # Streamlit UI
 # ------------------------------------------------------------------
 
-st.set_page_config(page_title="Busca Milhas (GOL / LATAM / AZUL)", layout="wide")
-st.title("✈️ Busca Milhas — GOL · LATAM · AZUL")
+st.set_page_config(page_title="Busca Milhas — Internacional e Nacional", layout="wide")
+st.title("✈️ Busca Milhas — GOL · LATAM · AZUL · TAP · INTERLINE")
 st.caption("Powered by apiv2.buscamilhas.com · somente ofertas em milhas.")
 
 # --- Filtros ---
-col1, col2, col3, col4 = st.columns([1, 1, 1, 2])
+col1, col2, col3, col4 = st.columns([1, 1, 2, 1])
 with col1:
     flex_days = st.number_input("Flexibilidade (± dias)", min_value=0, max_value=10, value=0, step=1)
 with col2:
@@ -130,11 +130,20 @@ with col2:
 with col3:
     companhias_sel = st.multiselect(
         "Companhias",
-        options=["LATAM", "GOL", "AZUL"],
+        options=["LATAM", "GOL", "AZUL", "TAP", "IBERIA", "AMERICAN AIRLINES", "INTERLINE"],
         default=["LATAM", "GOL", "AZUL"],
+        help="Nacionais: LATAM, GOL, AZUL | Internacionais: TAP, IBERIA*, AMERICAN AIRLINES, INTERLINE\n*com instabilidades no momento",
     )
 with col4:
     debug = st.checkbox("Debug (mostra JSON bruto)", value=False)
+
+# Aviso de status das companhias internacionais
+_fora = [c for c in companhias_sel if c in ("IBERIA",)]
+if _fora:
+    st.warning(
+        f"⚠️ {', '.join(_fora)} {'estão' if len(_fora)>1 else 'está'} com instabilidades na API BuscaMilhas "
+        "(erro do servidor deles). Os resultados podem não aparecer."
+    )
 
 prompt = st.text_input(
     "Digite seu pedido",
@@ -187,10 +196,24 @@ if st.button("Buscar"):
                     with st.expander(f"{item['companhia']} | ida {item['dep']} | volta {item.get('ret','—')}"):
                         st.code(item.get("debug_preview", ""), language="json")
 
+        # --- Resumo do Status das Companhias ---
+        airlines_status = (res.get("debug") or {}).get("airlines_status") or {}
+        if airlines_status:
+            st.write("### Status das Consultas")
+            cols = st.columns(len(airlines_status))
+            for col, (comp, count) in zip(cols, airlines_status.items()):
+                with col:
+                    if count > 0:
+                        st.success(f"**{comp}**\n\n{count} voos")
+                    elif count == 0:
+                        st.warning(f"**{comp}**\n\n0 voos")
+                    else:
+                        st.error(f"**{comp}**\n\nFalhou")
+
         rows: List[Dict[str, Any]] = (res or {}).get("rows") or []
         if not rows:
             erros = (res.get("debug") or {}).get("errors") or []
-            st.warning("Nenhuma oferta em milhas encontrada.")
+            st.warning("Nenhuma oferta em milhas encontrada para as companhias selecionadas.")
             if erros:
                 st.error("Erros: " + " | ".join(erros))
             st.stop()

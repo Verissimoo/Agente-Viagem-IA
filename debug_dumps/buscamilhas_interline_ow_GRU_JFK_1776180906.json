@@ -1,0 +1,781 @@
+{
+  "Token": "INTERLINE|GRU-JFK-30/06/2026|1|0|0|economica|40820055-5b1e-456a-878e-12581c20de5d",
+  "Busca": {
+    "Companhias": [
+      "INTERLINE"
+    ],
+    "TipoBusca": 1,
+    "TipoViagem": 0,
+    "Trechos": [
+      {
+        "Origem": "GRU",
+        "Destino": "JFK",
+        "DataIda": "30/06/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 1,
+    "Hash": "INTERLINE|GRU-JFK-30/06/2026|1|0|0|economica|40820055-5b1e-456a-878e-12581c20de5d",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": false,
+    "Sucesso": true,
+    "Alerta": []
+  },
+  "Trechos": {
+    "GRUJFK": {
+      "Origem": "GRU",
+      "Destino": "JFK",
+      "Data": "30/06/2026",
+      "Internacional": 1,
+      "Voos": [
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 248000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 280,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 03:15",
+          "Desembarque": "30/06/2026 23:00",
+          "Duracao": "20:45",
+          "Valor": [],
+          "NumeroVoo": "CM702",
+          "Conexoes": [
+            {
+              "Embarque": "03:15",
+              "Desembarque": "08:11",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 03:15",
+              "DesembarqueCompleto": "30/06/2026 08:11",
+              "NumeroVoo": "CM702",
+              "Origem": "GRU",
+              "Destino": "PTY",
+              "Duracao": "04:56",
+              "CompanhiaAparente": "COPA AIRLINES"
+            },
+            {
+              "Embarque": "16:26",
+              "Desembarque": "23:00",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 16:26",
+              "DesembarqueCompleto": "30/06/2026 23:00",
+              "NumeroVoo": "CM736",
+              "Origem": "PTY",
+              "Destino": "JFK",
+              "Duracao": "06:34",
+              "CompanhiaAparente": "COPA AIRLINES"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-CM-27"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 147000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 273.72,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 02:20",
+          "Desembarque": "30/06/2026 23:45",
+          "Duracao": "22:25",
+          "Valor": [],
+          "NumeroVoo": "AV160",
+          "Conexoes": [
+            {
+              "Embarque": "02:20",
+              "Desembarque": "06:25",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 02:20",
+              "DesembarqueCompleto": "30/06/2026 06:25",
+              "NumeroVoo": "AV160",
+              "Origem": "GRU",
+              "Destino": "BOG",
+              "Duracao": "04:05",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            },
+            {
+              "Embarque": "16:50",
+              "Desembarque": "23:45",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 16:50",
+              "DesembarqueCompleto": "30/06/2026 23:45",
+              "NumeroVoo": "AV244",
+              "Origem": "BOG",
+              "Destino": "JFK",
+              "Duracao": "06:55",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-AV-9"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 147000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 273.72,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 02:20",
+          "Desembarque": "01/07/2026 06:05",
+          "Duracao": "28:45",
+          "Valor": [],
+          "NumeroVoo": "AV160",
+          "Conexoes": [
+            {
+              "Embarque": "02:20",
+              "Desembarque": "06:25",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 02:20",
+              "DesembarqueCompleto": "30/06/2026 06:25",
+              "NumeroVoo": "AV160",
+              "Origem": "GRU",
+              "Destino": "BOG",
+              "Duracao": "04:05",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            },
+            {
+              "Embarque": "23:15",
+              "Desembarque": "06:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 23:15",
+              "DesembarqueCompleto": "01/07/2026 06:05",
+              "NumeroVoo": "AV20",
+              "Origem": "BOG",
+              "Destino": "JFK",
+              "Duracao": "06:50",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-AV-10"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 161000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 273.72,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 17:15",
+          "Desembarque": "01/07/2026 23:45",
+          "Duracao": "31:30",
+          "Valor": [],
+          "NumeroVoo": "AV184",
+          "Conexoes": [
+            {
+              "Embarque": "17:15",
+              "Desembarque": "21:30",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 17:15",
+              "DesembarqueCompleto": "30/06/2026 21:30",
+              "NumeroVoo": "AV184",
+              "Origem": "GRU",
+              "Destino": "BOG",
+              "Duracao": "04:15",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            },
+            {
+              "Embarque": "16:50",
+              "Desembarque": "23:45",
+              "DataEmbarque": "01/07/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "01/07/2026 16:50",
+              "DesembarqueCompleto": "01/07/2026 23:45",
+              "NumeroVoo": "AV244",
+              "Origem": "BOG",
+              "Destino": "JFK",
+              "Duracao": "06:55",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-AV-15"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 175000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 273.72,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 07:35",
+          "Desembarque": "30/06/2026 23:45",
+          "Duracao": "17:10",
+          "Valor": [],
+          "NumeroVoo": "AV86",
+          "Conexoes": [
+            {
+              "Embarque": "07:35",
+              "Desembarque": "11:25",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 07:35",
+              "DesembarqueCompleto": "30/06/2026 11:25",
+              "NumeroVoo": "AV86",
+              "Origem": "GRU",
+              "Destino": "BOG",
+              "Duracao": "03:50",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            },
+            {
+              "Embarque": "16:50",
+              "Desembarque": "23:45",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 16:50",
+              "DesembarqueCompleto": "30/06/2026 23:45",
+              "NumeroVoo": "AV244",
+              "Origem": "BOG",
+              "Destino": "JFK",
+              "Duracao": "06:55",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-AV-21"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 175000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 273.72,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 07:35",
+          "Desembarque": "01/07/2026 06:05",
+          "Duracao": "23:30",
+          "Valor": [],
+          "NumeroVoo": "AV86",
+          "Conexoes": [
+            {
+              "Embarque": "07:35",
+              "Desembarque": "11:25",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 07:35",
+              "DesembarqueCompleto": "30/06/2026 11:25",
+              "NumeroVoo": "AV86",
+              "Origem": "GRU",
+              "Destino": "BOG",
+              "Duracao": "03:50",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            },
+            {
+              "Embarque": "23:15",
+              "Desembarque": "06:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 23:15",
+              "DesembarqueCompleto": "01/07/2026 06:05",
+              "NumeroVoo": "AV20",
+              "Origem": "BOG",
+              "Destino": "JFK",
+              "Duracao": "06:50",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-AV-22"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 192000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 273.72,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 17:15",
+          "Desembarque": "01/07/2026 06:05",
+          "Duracao": "13:50",
+          "Valor": [],
+          "NumeroVoo": "AV184",
+          "Conexoes": [
+            {
+              "Embarque": "17:15",
+              "Desembarque": "21:30",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 17:15",
+              "DesembarqueCompleto": "30/06/2026 21:30",
+              "NumeroVoo": "AV184",
+              "Origem": "GRU",
+              "Destino": "BOG",
+              "Duracao": "04:15",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            },
+            {
+              "Embarque": "23:15",
+              "Desembarque": "06:05",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 23:15",
+              "DesembarqueCompleto": "01/07/2026 06:05",
+              "NumeroVoo": "AV20",
+              "Origem": "BOG",
+              "Destino": "JFK",
+              "Duracao": "06:50",
+              "CompanhiaAparente": "AVIANCA - VOOS INTERNACIONAIS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-AV-23"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 248000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 280,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 11:10",
+          "Desembarque": "01/07/2026 01:00",
+          "Duracao": "14:50",
+          "Valor": [],
+          "NumeroVoo": "CM700",
+          "Conexoes": [
+            {
+              "Embarque": "11:10",
+              "Desembarque": "16:08",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 11:10",
+              "DesembarqueCompleto": "30/06/2026 16:08",
+              "NumeroVoo": "CM700",
+              "Origem": "GRU",
+              "Destino": "PTY",
+              "Duracao": "04:58",
+              "CompanhiaAparente": "COPA AIRLINES"
+            },
+            {
+              "Embarque": "18:42",
+              "Desembarque": "01:00",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 18:42",
+              "DesembarqueCompleto": "01/07/2026 01:00",
+              "NumeroVoo": "CM804",
+              "Origem": "PTY",
+              "Destino": "JFK",
+              "Duracao": "06:18",
+              "CompanhiaAparente": "COPA AIRLINES"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-CM-24"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 248000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 280,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 11:10",
+          "Desembarque": "01/07/2026 03:59",
+          "Duracao": "17:49",
+          "Valor": [],
+          "NumeroVoo": "CM700",
+          "Conexoes": [
+            {
+              "Embarque": "11:10",
+              "Desembarque": "16:08",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 11:10",
+              "DesembarqueCompleto": "30/06/2026 16:08",
+              "NumeroVoo": "CM700",
+              "Origem": "GRU",
+              "Destino": "PTY",
+              "Duracao": "04:58",
+              "CompanhiaAparente": "COPA AIRLINES"
+            },
+            {
+              "Embarque": "21:47",
+              "Desembarque": "03:59",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "01/07/2026",
+              "EmbarqueCompleto": "30/06/2026 21:47",
+              "DesembarqueCompleto": "01/07/2026 03:59",
+              "NumeroVoo": "CM808",
+              "Origem": "PTY",
+              "Destino": "JFK",
+              "Duracao": "06:12",
+              "CompanhiaAparente": "COPA AIRLINES"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-CM-25"
+        },
+        {
+          "Companhia": "INTERLINE",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "ECONOMY",
+              "Adulto": 248000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 280,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {}
+              }
+            }
+          ],
+          "Destino": "JFK",
+          "Embarque": "30/06/2026 05:00",
+          "Desembarque": "30/06/2026 23:00",
+          "Duracao": "19:00",
+          "Valor": [],
+          "NumeroVoo": "CM744",
+          "Conexoes": [
+            {
+              "Embarque": "05:00",
+              "Desembarque": "09:58",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 05:00",
+              "DesembarqueCompleto": "30/06/2026 09:58",
+              "NumeroVoo": "CM744",
+              "Origem": "GRU",
+              "Destino": "PTY",
+              "Duracao": "04:58",
+              "CompanhiaAparente": "COPA AIRLINES"
+            },
+            {
+              "Embarque": "16:26",
+              "Desembarque": "23:00",
+              "DataEmbarque": "30/06/2026",
+              "DataDesembarque": "30/06/2026",
+              "EmbarqueCompleto": "30/06/2026 16:26",
+              "DesembarqueCompleto": "30/06/2026 23:00",
+              "NumeroVoo": "CM736",
+              "Origem": "PTY",
+              "Destino": "JFK",
+              "Duracao": "06:34",
+              "CompanhiaAparente": "COPA AIRLINES"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "origens": "GRU-JFK-CM-26"
+        }
+      ],
+      "Semana": {
+        "01/07/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "INTERLINE"
+          }
+        ],
+        "02/07/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "INTERLINE"
+          }
+        ],
+        "03/07/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "INTERLINE"
+          }
+        ],
+        "27/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "INTERLINE"
+          }
+        ],
+        "28/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "INTERLINE"
+          }
+        ],
+        "29/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "INTERLINE"
+          }
+        ],
+        "30/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "INTERLINE"
+          }
+        ]
+      }
+    }
+  },
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}

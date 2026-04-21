@@ -1,0 +1,3476 @@
+{
+  "Token": "GOL|GRU-SSA-19/06/2026|1|0|0|economica|134f387e-b0b7-46ad-b35a-fca988d064a1",
+  "Busca": {
+    "Companhias": [
+      "GOL"
+    ],
+    "TipoBusca": 1,
+    "TipoViagem": 0,
+    "Trechos": [
+      {
+        "Origem": "GRU",
+        "Destino": "SSA",
+        "DataIda": "19/06/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 0,
+    "Hash": "GOL|GRU-SSA-19/06/2026|1|0|0|economica|134f387e-b0b7-46ad-b35a-fca988d064a1",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": false,
+    "Sucesso": true,
+    "Alerta": []
+  },
+  "Trechos": {
+    "GRUSSA": {
+      "Origem": "GRU",
+      "Destino": "SSA",
+      "Data": "19/06/2026",
+      "Internacional": 0,
+      "Voos": [
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 27500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 27500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "e0g88xc8f3p",
+                  "FareUid": "1iq8egpyb5"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 24800,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 24800,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "e0g88xc8f3p",
+                  "FareUid": "ljpkp1shbi"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 14:00",
+          "Desembarque": "19/06/2026 22:40",
+          "Duracao": "08:40",
+          "Valor": [],
+          "NumeroVoo": "G3-1670",
+          "Conexoes": [
+            {
+              "Embarque": "14:00",
+              "Desembarque": "16:55",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 14:00",
+              "DesembarqueCompleto": "19/06/2026 16:55",
+              "NumeroVoo": "G3-1670",
+              "Origem": "GRU",
+              "Destino": "MCZ",
+              "Duracao": "02:55",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "21:30",
+              "Desembarque": "22:40",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:30",
+              "DesembarqueCompleto": "19/06/2026 22:40",
+              "NumeroVoo": "G3-1919",
+              "Origem": "MCZ",
+              "Destino": "SSA",
+              "Duracao": "01:10",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "e0g88xc8f3p",
+              "FareUid": "1iq8egpyb5"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "e0g88xc8f3p",
+              "FareUid": "ljpkp1shbi"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY3MEczLTE5MTk="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 34900,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 34900,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "mnl53sutqg",
+                  "FareUid": "e38b6h7j04"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 32100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 32100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "mnl53sutqg",
+                  "FareUid": "lrgwy97pxx"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 09:05",
+          "Desembarque": "19/06/2026 11:25",
+          "Duracao": "02:20",
+          "Valor": [],
+          "NumeroVoo": "G3-1690",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "mnl53sutqg",
+              "FareUid": "e38b6h7j04"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "mnl53sutqg",
+              "FareUid": "lrgwy97pxx"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY5MA=="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 34900,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 34900,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "stg4d24uq9f",
+                  "FareUid": "35iogf369o"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 32100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 32100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "stg4d24uq9f",
+                  "FareUid": "tyl938i06d"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 15:15",
+          "Desembarque": "19/06/2026 17:35",
+          "Duracao": "02:20",
+          "Valor": [],
+          "NumeroVoo": "G3-1692",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "stg4d24uq9f",
+              "FareUid": "35iogf369o"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "stg4d24uq9f",
+              "FareUid": "tyl938i06d"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY5Mg=="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 34900,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 34900,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "lh5ujf5nh7e",
+                  "FareUid": "3uatsh9auu"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 32100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 32100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "lh5ujf5nh7e",
+                  "FareUid": "tjddkdqiek"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 16:55",
+          "Desembarque": "19/06/2026 19:20",
+          "Duracao": "02:25",
+          "Valor": [],
+          "NumeroVoo": "G3-1356",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "lh5ujf5nh7e",
+              "FareUid": "3uatsh9auu"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "lh5ujf5nh7e",
+              "FareUid": "tjddkdqiek"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTM1Ng=="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 34900,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 34900,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "v65vdhj72fh",
+                  "FareUid": "8de4094q9l"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 32100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 32100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "v65vdhj72fh",
+                  "FareUid": "uu0915jx38"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 21:40",
+          "Desembarque": "20/06/2026 00:05",
+          "Duracao": "02:25",
+          "Valor": [],
+          "NumeroVoo": "G3-1696",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "v65vdhj72fh",
+              "FareUid": "8de4094q9l"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "v65vdhj72fh",
+              "FareUid": "uu0915jx38"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY5Ng=="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 40300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 40300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "0nafuu2wi36c",
+                  "FareUid": "nq2x3bior8"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 36300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 36300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "0nafuu2wi36c",
+                  "FareUid": "28c511fdq0"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 00:30",
+          "Desembarque": "19/06/2026 02:50",
+          "Duracao": "02:20",
+          "Valor": [],
+          "NumeroVoo": "G3-1686",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "0nafuu2wi36c",
+              "FareUid": "nq2x3bior8"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "0nafuu2wi36c",
+              "FareUid": "28c511fdq0"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY4Ng=="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 106800,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 106800,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "7dvgldfbp35",
+                  "FareUid": "u3sdamwrtn"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 103600,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 103600,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "7dvgldfbp35",
+                  "FareUid": "0m4ijp01oj"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 06:00",
+          "Desembarque": "19/06/2026 10:55",
+          "Duracao": "04:55",
+          "Valor": [],
+          "NumeroVoo": "G3-1454",
+          "Conexoes": [
+            {
+              "Embarque": "06:00",
+              "Desembarque": "07:45",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 06:00",
+              "DesembarqueCompleto": "19/06/2026 07:45",
+              "NumeroVoo": "G3-1454",
+              "Origem": "GRU",
+              "Destino": "BSB",
+              "Duracao": "01:45",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "09:00",
+              "Desembarque": "10:55",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:00",
+              "DesembarqueCompleto": "19/06/2026 10:55",
+              "NumeroVoo": "G3-1716",
+              "Origem": "BSB",
+              "Destino": "SSA",
+              "Duracao": "01:55",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "7dvgldfbp35",
+              "FareUid": "u3sdamwrtn"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "7dvgldfbp35",
+              "FareUid": "0m4ijp01oj"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTQ1NEczLTE3MTY="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "7cewp481dig",
+                  "FareUid": "eteykio6y8"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "7cewp481dig",
+                  "FareUid": "fwqmm3dhkc"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 08:40",
+          "Desembarque": "19/06/2026 13:35",
+          "Duracao": "04:55",
+          "Valor": [],
+          "NumeroVoo": "G3-1490",
+          "Conexoes": [
+            {
+              "Embarque": "08:40",
+              "Desembarque": "10:20",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 08:40",
+              "DesembarqueCompleto": "19/06/2026 10:20",
+              "NumeroVoo": "G3-1490",
+              "Origem": "GRU",
+              "Destino": "GYN",
+              "Duracao": "01:40",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "11:30",
+              "Desembarque": "13:35",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 11:30",
+              "DesembarqueCompleto": "19/06/2026 13:35",
+              "NumeroVoo": "G3-1905",
+              "Origem": "GYN",
+              "Destino": "SSA",
+              "Duracao": "02:05",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "7cewp481dig",
+              "FareUid": "eteykio6y8"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "7cewp481dig",
+              "FareUid": "fwqmm3dhkc"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTQ5MEczLTE5MDU="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "kr5p0q2chj",
+                  "FareUid": "wvjvpti7k8"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "kr5p0q2chj",
+                  "FareUid": "x8n6egd96c"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 08:45",
+          "Desembarque": "19/06/2026 13:35",
+          "Duracao": "04:50",
+          "Valor": [],
+          "NumeroVoo": "G3-1384",
+          "Conexoes": [
+            {
+              "Embarque": "08:45",
+              "Desembarque": "10:15",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 08:45",
+              "DesembarqueCompleto": "19/06/2026 10:15",
+              "NumeroVoo": "G3-1384",
+              "Origem": "GRU",
+              "Destino": "VIX",
+              "Duracao": "01:30",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "12:00",
+              "Desembarque": "13:35",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 12:00",
+              "DesembarqueCompleto": "19/06/2026 13:35",
+              "NumeroVoo": "G3-2179",
+              "Origem": "VIX",
+              "Destino": "SSA",
+              "Duracao": "01:35",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "kr5p0q2chj",
+              "FareUid": "wvjvpti7k8"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "kr5p0q2chj",
+              "FareUid": "x8n6egd96c"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTM4NEczLTIxNzk="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "ak6amxa5h14",
+                  "FareUid": "d2wy2a56h5"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "ak6amxa5h14",
+                  "FareUid": "auw1fbmsb4"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 09:10",
+          "Desembarque": "19/06/2026 13:50",
+          "Duracao": "04:40",
+          "Valor": [],
+          "NumeroVoo": "G3-1482",
+          "Conexoes": [
+            {
+              "Embarque": "09:10",
+              "Desembarque": "10:25",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:10",
+              "DesembarqueCompleto": "19/06/2026 10:25",
+              "NumeroVoo": "G3-1482",
+              "Origem": "GRU",
+              "Destino": "CNF",
+              "Duracao": "01:15",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "12:05",
+              "Desembarque": "13:50",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 12:05",
+              "DesembarqueCompleto": "19/06/2026 13:50",
+              "NumeroVoo": "G3-1947",
+              "Origem": "CNF",
+              "Destino": "SSA",
+              "Duracao": "01:45",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "ak6amxa5h14",
+              "FareUid": "d2wy2a56h5"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "ak6amxa5h14",
+              "FareUid": "auw1fbmsb4"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTQ4MkczLTE5NDc="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "3sk4nncqw3r",
+                  "FareUid": "rgvhhavu6s"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "3sk4nncqw3r",
+                  "FareUid": "mjp2a8c8x8"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 09:15",
+          "Desembarque": "19/06/2026 13:40",
+          "Duracao": "04:25",
+          "Valor": [],
+          "NumeroVoo": "G3-1668",
+          "Conexoes": [
+            {
+              "Embarque": "09:15",
+              "Desembarque": "12:05",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:15",
+              "DesembarqueCompleto": "19/06/2026 12:05",
+              "NumeroVoo": "G3-1668",
+              "Origem": "GRU",
+              "Destino": "MCZ",
+              "Duracao": "02:50",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "12:30",
+              "Desembarque": "13:40",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 12:30",
+              "DesembarqueCompleto": "19/06/2026 13:40",
+              "NumeroVoo": "G3-1917",
+              "Origem": "MCZ",
+              "Destino": "SSA",
+              "Duracao": "01:10",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "3sk4nncqw3r",
+              "FareUid": "rgvhhavu6s"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "3sk4nncqw3r",
+              "FareUid": "mjp2a8c8x8"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY2OEczLTE5MTc="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "lb5r6acfspb",
+                  "FareUid": "77p2upksy9"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "lb5r6acfspb",
+                  "FareUid": "gg3079pub9"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 09:15",
+          "Desembarque": "19/06/2026 13:55",
+          "Duracao": "04:40",
+          "Valor": [],
+          "NumeroVoo": "G3-1652",
+          "Conexoes": [
+            {
+              "Embarque": "09:15",
+              "Desembarque": "11:55",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:15",
+              "DesembarqueCompleto": "19/06/2026 11:55",
+              "NumeroVoo": "G3-1652",
+              "Origem": "GRU",
+              "Destino": "AJU",
+              "Duracao": "02:40",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "13:05",
+              "Desembarque": "13:55",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 13:05",
+              "DesembarqueCompleto": "19/06/2026 13:55",
+              "NumeroVoo": "G3-2113",
+              "Origem": "AJU",
+              "Destino": "SSA",
+              "Duracao": "00:50",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "lb5r6acfspb",
+              "FareUid": "77p2upksy9"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "lb5r6acfspb",
+              "FareUid": "gg3079pub9"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY1MkczLTIxMTM="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 129600,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 129600,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "un2apo67drq",
+                  "FareUid": "aq8i3dvtqg"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 125700,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 125700,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "un2apo67drq",
+                  "FareUid": "dfdjtu4rmk"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 09:15",
+          "Desembarque": "19/06/2026 13:45",
+          "Duracao": "04:30",
+          "Valor": [],
+          "NumeroVoo": "G3-1374",
+          "Conexoes": [
+            {
+              "Embarque": "09:15",
+              "Desembarque": "10:20",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:15",
+              "DesembarqueCompleto": "19/06/2026 10:20",
+              "NumeroVoo": "G3-1374",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:05",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "11:45",
+              "Desembarque": "13:45",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 11:45",
+              "DesembarqueCompleto": "19/06/2026 13:45",
+              "NumeroVoo": "G3-1890",
+              "Origem": "GIG",
+              "Destino": "SSA",
+              "Duracao": "02:00",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "un2apo67drq",
+              "FareUid": "aq8i3dvtqg"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "un2apo67drq",
+              "FareUid": "dfdjtu4rmk"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTM3NEczLTE4OTA="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "9h4inxe4pv4",
+                  "FareUid": "dfx110r9mh"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "9h4inxe4pv4",
+                  "FareUid": "r4rp7sil8y"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 10:00",
+          "Desembarque": "19/06/2026 13:30",
+          "Duracao": "03:30",
+          "Valor": [],
+          "NumeroVoo": "G3-1658",
+          "Conexoes": [
+            {
+              "Embarque": "10:00",
+              "Desembarque": "12:00",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 10:00",
+              "DesembarqueCompleto": "19/06/2026 12:00",
+              "NumeroVoo": "G3-1658",
+              "Origem": "GRU",
+              "Destino": "BPS",
+              "Duracao": "02:00",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "12:30",
+              "Desembarque": "13:30",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 12:30",
+              "DesembarqueCompleto": "19/06/2026 13:30",
+              "NumeroVoo": "G3-2103",
+              "Origem": "BPS",
+              "Destino": "SSA",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "9h4inxe4pv4",
+              "FareUid": "dfx110r9mh"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "9h4inxe4pv4",
+              "FareUid": "r4rp7sil8y"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY1OEczLTIxMDM="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 129600,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 129600,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "7uymkv561e2",
+                  "FareUid": "w79kblckbu"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 125700,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 125700,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "7uymkv561e2",
+                  "FareUid": "gw1jmkeclx"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 13:05",
+          "Desembarque": "19/06/2026 19:10",
+          "Duracao": "06:05",
+          "Valor": [],
+          "NumeroVoo": "G3-1376",
+          "Conexoes": [
+            {
+              "Embarque": "13:05",
+              "Desembarque": "14:10",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 13:05",
+              "DesembarqueCompleto": "19/06/2026 14:10",
+              "NumeroVoo": "G3-1376",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:05",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "17:10",
+              "Desembarque": "19:10",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 17:10",
+              "DesembarqueCompleto": "19/06/2026 19:10",
+              "NumeroVoo": "G3-1896",
+              "Origem": "GIG",
+              "Destino": "SSA",
+              "Duracao": "02:00",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "7uymkv561e2",
+              "FareUid": "w79kblckbu"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "7uymkv561e2",
+              "FareUid": "gw1jmkeclx"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTM3NkczLTE4OTY="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 35100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 35100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "anl9r0b5jxh",
+                  "FareUid": "kudtdlh7kx"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 32300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 32300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "anl9r0b5jxh",
+                  "FareUid": "tovmtdum6k"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 13:30",
+          "Desembarque": "19/06/2026 18:45",
+          "Duracao": "05:15",
+          "Valor": [],
+          "NumeroVoo": "G3-1484",
+          "Conexoes": [
+            {
+              "Embarque": "13:30",
+              "Desembarque": "14:45",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 13:30",
+              "DesembarqueCompleto": "19/06/2026 14:45",
+              "NumeroVoo": "G3-1484",
+              "Origem": "GRU",
+              "Destino": "CNF",
+              "Duracao": "01:15",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "17:00",
+              "Desembarque": "18:45",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 17:00",
+              "DesembarqueCompleto": "19/06/2026 18:45",
+              "NumeroVoo": "G3-1928",
+              "Origem": "CNF",
+              "Destino": "SSA",
+              "Duracao": "01:45",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "anl9r0b5jxh",
+              "FareUid": "kudtdlh7kx"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "anl9r0b5jxh",
+              "FareUid": "tovmtdum6k"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTQ4NEczLTE5Mjg="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "9sbp5ekoseh",
+                  "FareUid": "grjivvxoxr"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "9sbp5ekoseh",
+                  "FareUid": "ln3u4vayn1"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 13:30",
+          "Desembarque": "19/06/2026 23:15",
+          "Duracao": "09:45",
+          "Valor": [],
+          "NumeroVoo": "G3-1588",
+          "Conexoes": [
+            {
+              "Embarque": "13:30",
+              "Desembarque": "16:40",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 13:30",
+              "DesembarqueCompleto": "19/06/2026 16:40",
+              "NumeroVoo": "G3-1588",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:10",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "21:45",
+              "Desembarque": "23:15",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:45",
+              "DesembarqueCompleto": "19/06/2026 23:15",
+              "NumeroVoo": "G3-1921",
+              "Origem": "REC",
+              "Destino": "SSA",
+              "Duracao": "01:30",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "9sbp5ekoseh",
+              "FareUid": "grjivvxoxr"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "9sbp5ekoseh",
+              "FareUid": "ln3u4vayn1"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTU4OEczLTE5MjE="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "qqx9hruu5f6",
+                  "FareUid": "3ymwg6uy2y"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "qqx9hruu5f6",
+                  "FareUid": "x8var3gbi0"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 13:35",
+          "Desembarque": "19/06/2026 23:10",
+          "Duracao": "09:35",
+          "Valor": [],
+          "NumeroVoo": "G3-1556",
+          "Conexoes": [
+            {
+              "Embarque": "13:35",
+              "Desembarque": "17:00",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 13:35",
+              "DesembarqueCompleto": "19/06/2026 17:00",
+              "NumeroVoo": "G3-1556",
+              "Origem": "GRU",
+              "Destino": "FOR",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "21:20",
+              "Desembarque": "23:10",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:20",
+              "DesembarqueCompleto": "19/06/2026 23:10",
+              "NumeroVoo": "G3-1993",
+              "Origem": "FOR",
+              "Destino": "SSA",
+              "Duracao": "01:50",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "qqx9hruu5f6",
+              "FareUid": "3ymwg6uy2y"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "qqx9hruu5f6",
+              "FareUid": "x8var3gbi0"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTU1NkczLTE5OTM="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "vo97tkd7xwr",
+                  "FareUid": "6plcisvpmu"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "vo97tkd7xwr",
+                  "FareUid": "k364q4q8k9"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 14:05",
+          "Desembarque": "19/06/2026 22:40",
+          "Duracao": "08:35",
+          "Valor": [],
+          "NumeroVoo": "G3-1678",
+          "Conexoes": [
+            {
+              "Embarque": "14:05",
+              "Desembarque": "17:25",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 14:05",
+              "DesembarqueCompleto": "19/06/2026 17:25",
+              "NumeroVoo": "G3-1678",
+              "Origem": "GRU",
+              "Destino": "NAT",
+              "Duracao": "03:20",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "21:00",
+              "Desembarque": "22:40",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:00",
+              "DesembarqueCompleto": "19/06/2026 22:40",
+              "NumeroVoo": "G3-1913",
+              "Origem": "NAT",
+              "Destino": "SSA",
+              "Duracao": "01:40",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "vo97tkd7xwr",
+              "FareUid": "6plcisvpmu"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "vo97tkd7xwr",
+              "FareUid": "k364q4q8k9"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTY3OEczLTE5MTM="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 38100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 38100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "aa8oux4wa8r",
+                  "FareUid": "vv6g7d5a66"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 34300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 34300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "aa8oux4wa8r",
+                  "FareUid": "0xksqjh9fm"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 16:15",
+          "Desembarque": "19/06/2026 22:40",
+          "Duracao": "06:25",
+          "Valor": [],
+          "NumeroVoo": "G3-1386",
+          "Conexoes": [
+            {
+              "Embarque": "16:15",
+              "Desembarque": "17:40",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 16:15",
+              "DesembarqueCompleto": "19/06/2026 17:40",
+              "NumeroVoo": "G3-1386",
+              "Origem": "GRU",
+              "Destino": "VIX",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "21:00",
+              "Desembarque": "22:40",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:00",
+              "DesembarqueCompleto": "19/06/2026 22:40",
+              "NumeroVoo": "G3-1939",
+              "Origem": "VIX",
+              "Destino": "SSA",
+              "Duracao": "01:40",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "aa8oux4wa8r",
+              "FareUid": "vv6g7d5a66"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "aa8oux4wa8r",
+              "FareUid": "0xksqjh9fm"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTM4NkczLTE5Mzk="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 106800,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 106800,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "y5omtpxf15",
+                  "FareUid": "7vb751303p"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 103600,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 103600,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "y5omtpxf15",
+                  "FareUid": "0rbkcnjc7u"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 16:45",
+          "Desembarque": "19/06/2026 23:40",
+          "Duracao": "06:55",
+          "Valor": [],
+          "NumeroVoo": "G3-1458",
+          "Conexoes": [
+            {
+              "Embarque": "16:45",
+              "Desembarque": "18:30",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 16:45",
+              "DesembarqueCompleto": "19/06/2026 18:30",
+              "NumeroVoo": "G3-1458",
+              "Origem": "GRU",
+              "Destino": "BSB",
+              "Duracao": "01:45",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "21:40",
+              "Desembarque": "23:40",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:40",
+              "DesembarqueCompleto": "19/06/2026 23:40",
+              "NumeroVoo": "G3-1720",
+              "Origem": "BSB",
+              "Destino": "SSA",
+              "Duracao": "02:00",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "y5omtpxf15",
+              "FareUid": "7vb751303p"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "y5omtpxf15",
+              "FareUid": "0rbkcnjc7u"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTQ1OEczLTE3MjA="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 35100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 35100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "ldqgqkbuh67",
+                  "FareUid": "klyj1r6js9"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 32300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 32300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "ldqgqkbuh67",
+                  "FareUid": "58pbctdn6g"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 17:15",
+          "Desembarque": "19/06/2026 23:50",
+          "Duracao": "06:35",
+          "Valor": [],
+          "NumeroVoo": "G3-1486",
+          "Conexoes": [
+            {
+              "Embarque": "17:15",
+              "Desembarque": "18:30",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 17:15",
+              "DesembarqueCompleto": "19/06/2026 18:30",
+              "NumeroVoo": "G3-1486",
+              "Origem": "GRU",
+              "Destino": "CNF",
+              "Duracao": "01:15",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "22:10",
+              "Desembarque": "23:50",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 22:10",
+              "DesembarqueCompleto": "19/06/2026 23:50",
+              "NumeroVoo": "G3-1949",
+              "Origem": "CNF",
+              "Destino": "SSA",
+              "Duracao": "01:40",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "ldqgqkbuh67",
+              "FareUid": "klyj1r6js9"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "ldqgqkbuh67",
+              "FareUid": "58pbctdn6g"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTQ4NkczLTE5NDk="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 35100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 35100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "o3fvnf3doc",
+                  "FareUid": "rcnor6842s"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 32300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 32300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "o3fvnf3doc",
+                  "FareUid": "107busu9me"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 18:55",
+          "Desembarque": "20/06/2026 01:25",
+          "Duracao": "06:30",
+          "Valor": [],
+          "NumeroVoo": "G3-1378",
+          "Conexoes": [
+            {
+              "Embarque": "18:55",
+              "Desembarque": "20:05",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 18:55",
+              "DesembarqueCompleto": "19/06/2026 20:05",
+              "NumeroVoo": "G3-1378",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:10",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "23:20",
+              "Desembarque": "01:25",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 23:20",
+              "DesembarqueCompleto": "20/06/2026 01:25",
+              "NumeroVoo": "G3-1898",
+              "Origem": "GIG",
+              "Destino": "SSA",
+              "Duracao": "02:05",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "o3fvnf3doc",
+              "FareUid": "rcnor6842s"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "o3fvnf3doc",
+              "FareUid": "107busu9me"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTM3OEczLTE4OTg="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 38100,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 38100,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "9esixeoorqd",
+                  "FareUid": "hp689ijffl"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 34300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 34300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "9esixeoorqd",
+                  "FareUid": "dbjhtjtnfb"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 22:55",
+          "Desembarque": "20/06/2026 06:30",
+          "Duracao": "07:35",
+          "Valor": [],
+          "NumeroVoo": "G3-1558",
+          "Conexoes": [
+            {
+              "Embarque": "22:55",
+              "Desembarque": "02:25",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 22:55",
+              "DesembarqueCompleto": "20/06/2026 02:25",
+              "NumeroVoo": "G3-1558",
+              "Origem": "GRU",
+              "Destino": "FOR",
+              "Duracao": "03:30",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "04:40",
+              "Desembarque": "06:30",
+              "DataEmbarque": "20/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "20/06/2026 04:40",
+              "DesembarqueCompleto": "20/06/2026 06:30",
+              "NumeroVoo": "G3-1995",
+              "Origem": "FOR",
+              "Destino": "SSA",
+              "Duracao": "01:50",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 4,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "9esixeoorqd",
+              "FareUid": "hp689ijffl"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "9esixeoorqd",
+              "FareUid": "dbjhtjtnfb"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTU1OEczLTE5OTU="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "t738kbfigb",
+                  "FareUid": "ghopr3siwh"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "t738kbfigb",
+                  "FareUid": "y15804uw3i"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 23:00",
+          "Desembarque": "20/06/2026 05:20",
+          "Duracao": "06:20",
+          "Valor": [],
+          "NumeroVoo": "G3-1566",
+          "Conexoes": [
+            {
+              "Embarque": "23:00",
+              "Desembarque": "02:20",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 23:00",
+              "DesembarqueCompleto": "20/06/2026 02:20",
+              "NumeroVoo": "G3-1566",
+              "Origem": "GRU",
+              "Destino": "SLZ",
+              "Duracao": "03:20",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "03:15",
+              "Desembarque": "05:20",
+              "DataEmbarque": "20/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "20/06/2026 03:15",
+              "DesembarqueCompleto": "20/06/2026 05:20",
+              "NumeroVoo": "G3-9045",
+              "Origem": "SLZ",
+              "Destino": "SSA",
+              "Duracao": "02:05",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "t738kbfigb",
+              "FareUid": "ghopr3siwh"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "t738kbfigb",
+              "FareUid": "y15804uw3i"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTU2NkczLTkwNDU="
+        },
+        {
+          "Companhia": "GOL",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "smiles",
+              "Adulto": 93300,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 93300,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "ksbwjgn3x7d",
+                  "FareUid": "bjlf8ndldn"
+                }
+              ]
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "clube smiles e diamante",
+              "Adulto": 90500,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 90500,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "TaxaEmbarqueFaixaEtaria": {
+                "Adulto": 33.64
+              },
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              },
+              "DadosTaxa": [
+                {
+                  "Tipo": "SEGMENT_1",
+                  "Uid": "ksbwjgn3x7d",
+                  "FareUid": "emjnuuhddb"
+                }
+              ]
+            }
+          ],
+          "Destino": "SSA",
+          "Embarque": "19/06/2026 23:10",
+          "Desembarque": "20/06/2026 08:30",
+          "Duracao": "09:20",
+          "Valor": [],
+          "NumeroVoo": "G3-1560",
+          "Conexoes": [
+            {
+              "Embarque": "23:10",
+              "Desembarque": "02:20",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 23:10",
+              "DesembarqueCompleto": "20/06/2026 02:20",
+              "NumeroVoo": "G3-1560",
+              "Origem": "GRU",
+              "Destino": "REC",
+              "Duracao": "03:10",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            },
+            {
+              "Embarque": "07:00",
+              "Desembarque": "08:30",
+              "DataEmbarque": "20/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "20/06/2026 07:00",
+              "DesembarqueCompleto": "20/06/2026 08:30",
+              "NumeroVoo": "G3-1925",
+              "Origem": "REC",
+              "Destino": "SSA",
+              "Duracao": "01:30",
+              "CompanhiaAparente": "GOL LINHAS AÉREAS"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "AssentosDisponiveis": 9,
+          "DadosTaxa": [
+            {
+              "Tipo": "SMILES",
+              "TipoAparente": "smiles",
+              "Uid": "ksbwjgn3x7d",
+              "FareUid": "bjlf8ndldn"
+            },
+            {
+              "Tipo": "SMILES_CLUB",
+              "TipoAparente": "clube smiles e diamante",
+              "Uid": "ksbwjgn3x7d",
+              "FareUid": "emjnuuhddb"
+            }
+          ],
+          "CompanhiaAparente": "GOL (G3)",
+          "IdentificadorVoo": "RzMtMTU2MEczLTE5MjU="
+        }
+      ],
+      "Semana": {
+        "16/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "GOL"
+          }
+        ],
+        "17/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "GOL"
+          }
+        ],
+        "18/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "GOL"
+          }
+        ],
+        "19/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "GOL"
+          }
+        ],
+        "20/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "GOL"
+          }
+        ],
+        "21/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "GOL"
+          }
+        ],
+        "22/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "GOL"
+          }
+        ]
+      }
+    }
+  },
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}

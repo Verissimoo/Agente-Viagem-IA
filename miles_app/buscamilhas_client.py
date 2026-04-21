@@ -30,6 +30,8 @@ TIPO_VIAGEM_OW = 0   # somente ida
 TIPO_VIAGEM_RT = 1   # ida e volta
 
 COMPANHIAS_NACIONAIS = ["LATAM", "GOL", "AZUL"]
+COMPANHIAS_INTERNACIONAIS = ["TAP", "IBERIA", "AMERICAN AIRLINES", "INTERLINE"]
+COMPANHIAS_TODAS = COMPANHIAS_NACIONAIS + COMPANHIAS_INTERNACIONAIS
 
 
 # ------------------------------------------------------------------
@@ -105,6 +107,7 @@ def build_payload(
     classe: str = "economica",
     somente_milhas: bool = True,
     somente_pagante: bool = False,
+    internacional: bool = False,
     chave: str = "",
     senha: str = "",
 ) -> Dict[str, Any]:
@@ -130,6 +133,7 @@ def build_payload(
         "Senha": senha,
         "SomenteMilhas": somente_milhas,
         "SomentePagante": somente_pagante,
+        "Internacional": 1 if internacional else 0,
     }
 
 
@@ -148,6 +152,7 @@ def search_flights_buscamilhas(
     classe: str = "economica",
     somente_milhas: bool = True,
     somente_pagante: bool = False,
+    internacional: bool = False,
 ) -> Dict[str, Any]:
     """
     Realiza uma busca na API Busca Milhas para UMA companhia.
@@ -185,6 +190,7 @@ def search_flights_buscamilhas(
         classe=classe,
         somente_milhas=somente_milhas,
         somente_pagante=somente_pagante,
+        internacional=internacional,
         chave=chave,
         senha=senha,
     )

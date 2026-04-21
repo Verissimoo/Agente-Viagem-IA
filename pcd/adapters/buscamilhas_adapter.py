@@ -32,12 +32,13 @@ def _parse_time(date_str: str, time_str: str) -> datetime:
         return datetime.now()
 
 class BaseBuscaMilhasAdapter(BaseSearchAdapter):
-    def __init__(self, companhia: str, source_type: SourceType, airline_code: str, somente_milhas: bool = True, somente_pagante: bool = False):
+    def __init__(self, companhia: str, source_type: SourceType, airline_code: str, somente_milhas: bool = True, somente_pagante: bool = False, internacional: bool = False):
         self.companhia = companhia
         self.source_type = source_type
         self.airline_code = airline_code
         self.somente_milhas = somente_milhas
         self.somente_pagante = somente_pagante
+        self.internacional = internacional
 
     def search(self, request: SearchRequest, use_fixtures: bool = False, debug_dump: bool = False) -> List[UnifiedOffer]:
         if use_fixtures:
@@ -60,7 +61,8 @@ class BaseBuscaMilhasAdapter(BaseSearchAdapter):
                 adultos=request.adults,
                 classe=request.cabin.value,
                 somente_milhas=self.somente_milhas,
-                somente_pagante=self.somente_pagante
+                somente_pagante=self.somente_pagante,
+                internacional=self.internacional
             )
 
             # Debug Dump
@@ -183,4 +185,20 @@ class BuscaMilhasGolAdapter(BaseBuscaMilhasAdapter):
 class BuscaMilhasAzulAdapter(BaseBuscaMilhasAdapter):
     def __init__(self):
         super().__init__("AZUL", SourceType.BUSCAMILHAS_AZUL, "AD", somente_milhas=False, somente_pagante=False)
+
+class BuscaMilhasTapAdapter(BaseBuscaMilhasAdapter):
+    def __init__(self):
+        super().__init__("TAP", SourceType.BUSCAMILHAS_TAP, "TP", internacional=True)
+
+class BuscaMilhasIberiaAdapter(BaseBuscaMilhasAdapter):
+    def __init__(self):
+        super().__init__("IBERIA", SourceType.BUSCAMILHAS_IBERIA, "IB", internacional=True)
+
+class BuscaMilhasAmericanAdapter(BaseBuscaMilhasAdapter):
+    def __init__(self):
+        super().__init__("AMERICAN AIRLINES", SourceType.BUSCAMILHAS_AMERICAN, "AA", internacional=True)
+
+class BuscaMilhasInterlineAdapter(BaseBuscaMilhasAdapter):
+    def __init__(self):
+        super().__init__("INTERLINE", SourceType.BUSCAMILHAS_INTERLINE, "IN", internacional=True)
 

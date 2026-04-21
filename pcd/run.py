@@ -6,7 +6,12 @@ from typing import Optional
 
 from pcd.core.schema import SearchRequest, TripType, CabinClass
 from pcd.adapters.kayak_adapter import KayakAdapter
-from pcd.adapters.buscamilhas_adapter import BuscaMilhasLatamAdapter, BuscaMilhasGolAdapter, BuscaMilhasAzulAdapter
+from pcd.adapters.buscamilhas_adapter import (
+    BuscaMilhasLatamAdapter, BuscaMilhasGolAdapter, BuscaMilhasAzulAdapter,
+    BuscaMilhasTapAdapter, BuscaMilhasIberiaAdapter,
+    BuscaMilhasAmericanAdapter, BuscaMilhasInterlineAdapter,
+)
+from miles_app.buscamilhas_client import COMPANHIAS_NACIONAIS
 from pcd.core.ranking import rank_offers
 from pcd.core.formatter import build_ui_report
 from pcd.core.tracer import PipelineTracer
@@ -43,10 +48,22 @@ def simple_prompt_parser(prompt: str) -> SearchRequest:
 from pcd.core.schema import SearchRequest, TripType, CabinClass, PipelineResult
 from pcd.core.flex_dates import build_date_plan, compute_best_day
 
+# Mapa companhia → classe do adapter
+_ADAPTER_MAP = {
+    "LATAM":     BuscaMilhasLatamAdapter,
+    "GOL":       BuscaMilhasGolAdapter,
+    "AZUL":      BuscaMilhasAzulAdapter,
+    "TAP":       BuscaMilhasTapAdapter,
+    "IBERIA":    BuscaMilhasIberiaAdapter,
+    "AMERICAN":  BuscaMilhasAmericanAdapter,
+    "AMERICAN AIRLINES": BuscaMilhasAmericanAdapter,
+    "INTERLINE": BuscaMilhasInterlineAdapter,
+}
+
 def run_pipeline(
-    prompt: str, 
-    top_n: int = 5, 
-    use_fixtures: bool = False, 
+    prompt: str,
+    top_n: int = 5,
+    use_fixtures: bool = False,
     trace_out: str = None,
     date_start: date = None,
     date_return: Optional[date] = None,
@@ -58,7 +75,8 @@ def run_pipeline(
     flex_days: int = 0,
     flex_return: bool = False,
     flex_mode: str = "none",
-    date_end: Optional[date] = None
+    date_end: Optional[date] = None,
+    companhias: Optional[list] = None,
 ) -> PipelineResult:
     request_id = str(uuid.uuid4())[:8]
     tracer = PipelineTracer(request_id)
@@ -101,6 +119,7 @@ def run_pipeline(
 
         # Loop through each request in the plan
         for i, req_i in enumerate(search_plan):
+            print(f"DEBUG: Pesquisando data {req_i.date_start}")
             date_trace_id = f"_{req_i.date_start.isoformat()}"
             if req_i.return_start:
                 date_trace_id += f"_ret_{req_i.return_start.isoformat()}"
@@ -110,41 +129,36 @@ def run_pipeline(
                 try:
                     offers = KayakAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_kayak)
                     all_offers.extend(offers)
+                    print(f"DEBUG: Kayak retornou {len(offers)} ofertas para {req_i.date_start}. Total acumulado: {len(all_offers)}")
                     info["offers_count"] = len(offers)
                     info["date"] = req_i.date_start.isoformat()
                 except (OfflineModeError, Exception) as e:
                     print(f"[!] Kayak failed for {req_i.date_start}: {e}")
 
-            # 4. Stage: buscamilhas_search
-            with tracer.track_stage(f"buscamilhas_search_latam{date_trace_id}") as info:
-                try:
-                    offers = BuscaMilhasLatamAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_buscamilhas)
-                    all_offers.extend(offers)
-                    info["offers_count"] = len(offers)
-                    info["date"] = req_i.date_start.isoformat()
-                except (OfflineModeError, Exception) as e:
-                    print(f"[!] BuscaMilhas LATAM failed for {req_i.date_start}: {e}")
-
-            with tracer.track_stage(f"buscamilhas_search_gol{date_trace_id}") as info:
-                try:
-                    offers = BuscaMilhasGolAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_buscamilhas)
-                    all_offers.extend(offers)
-                    info["offers_count"] = len(offers)
-                    info["date"] = req_i.date_start.isoformat()
-                except (OfflineModeError, Exception) as e:
-                    print(f"[!] BuscaMilhas GOL failed for {req_i.date_start}: {e}")
-                    
-            with tracer.track_stage(f"buscamilhas_search_azul{date_trace_id}") as info:
-                try:
-                    offers = BuscaMilhasAzulAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_buscamilhas)
-                    all_offers.extend(offers)
-                    info["offers_count"] = len(offers)
-                    info["date"] = req_i.date_start.isoformat()
-                except (OfflineModeError, Exception) as e:
-                    print(f"[!] BuscaMilhas AZUL failed for {req_i.date_start}: {e}")
+            # 4. Stage: buscamilhas_search (loop dinâmico por companhia)
+            companhias_ativas = companhias if companhias else COMPANHIAS_NACIONAIS
+            for cia in companhias_ativas:
+                cia_up = cia.upper()
+                adapter_cls = _ADAPTER_MAP.get(cia_up)
+                if not adapter_cls:
+                    print(f"[!] Companhia '{cia_up}' sem adapter registrado — ignorada.")
+                    continue
+                stage_name = f"buscamilhas_search_{cia_up.lower()}{date_trace_id}"
+                with tracer.track_stage(stage_name) as info:
+                    try:
+                        offers = adapter_cls().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_buscamilhas)
+                        all_offers.extend(offers)
+                        print(f"DEBUG: BuscaMilhas {cia_up} retornou {len(offers)} ofertas para {req_i.date_start}. Total acumulado: {len(all_offers)}")
+                        info["offers_count"] = len(offers)
+                        info["date"] = req_i.date_start.isoformat()
+                    except (OfflineModeError, Exception) as e:
+                        print(f"[!] BuscaMilhas {cia_up} failed for {req_i.date_start}: {e}")
 
         if not all_offers:
+            print("DEBUG: Nenhuma oferta encontrada em nenhuma data.")
             return result
+        
+        print(f"DEBUG: Processamento concluído. Total de ofertas consolidadas: {len(all_offers)}")
 
         # 5. Stage: layover_classify
         with tracer.track_stage("layover_classify") as info:
@@ -154,28 +168,27 @@ def run_pipeline(
         if not all_offers:
             return result
 
+        # Filtro Rigoroso de Voo Direto
+        if request.direct_only:
+            direct_only_offers = []
+            for o in all_offers:
+                is_direct_out = (o.stops_out == 0)
+                is_direct_in = (o.trip_type == TripType.ONEWAY or o.stops_in == 0)
+                if is_direct_out and is_direct_in:
+                    direct_only_offers.append(o)
+            
+            if direct_only_offers:
+                all_offers = direct_only_offers
+            else:
+                result.direct_filter_warning = "Nenhum voo direto encontrado. Exibindo todas as opções disponíveis."
+
         # 6. Stage: score_rank
         with tracer.track_stage("score_rank") as info:
-            # 6.1 Ranking base (todas as ofertas)
+            # 6.1 Ranking base (agora all_offers já está filtrado, se aplicável)
             ranked_offers, best_overall, justifications = rank_offers(all_offers, top_n=top_n)
             
-            # 6.2 Preferência de Voo Direto no Best Overall
-            if request.direct_only:
-                direct_offers = []
-                for o in all_offers:
-                    is_direct_out = (o.stops_out == 0)
-                    is_direct_in = (o.trip_type == TripType.ONEWAY or o.stops_in == 0)
-                    if is_direct_out and is_direct_in:
-                        direct_offers.append(o)
-                
-                if direct_offers:
-                    # Ranquear apenas os diretos para achar o melhor direto
-                    _, best_direct, _ = rank_offers(direct_offers, top_n=1)
-                    if best_direct:
-                        best_overall = best_direct
-                        justifications = ["⭐ Voo Direto Priorizado: " + j for j in justifications[:1]] + justifications[1:]
-                else:
-                    justifications.append("⚠️ Nenhum voo direto encontrado; mostrando melhor com conexões.")
+            if request.direct_only and not result.direct_filter_warning:
+                justifications = ["⭐ Voo Direto Priorizado: " + j for j in justifications[:1]] + justifications[1:]
 
             # Categorizar e achar melhores específicos
             money_list = [o for o in all_offers if o.price_brl is not None]

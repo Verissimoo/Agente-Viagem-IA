@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-04-20 16:51",
+  "endpoint": "http://apiv2.buscamilhas.com",
+  "http_status": 500,
+  "elapsed_seconds": 0.71,
+  "request": {
+    "Companhias": [
+      "AMERICAN"
+    ],
+    "TipoViagem": 0,
+    "Trechos": [
+      {
+        "Origem": "GRU",
+        "Destino": "MIA",
+        "DataIda": "19/06/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa...",
+    "Senha": "****",
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "Internacional": 1
+  },
+  "response": {
+    "statusCode": 500,
+    "error": "Internal Server Error",
+    "message": "searchBody is not defined"
+  }
+}

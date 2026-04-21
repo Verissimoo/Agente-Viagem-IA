@@ -1,0 +1,3016 @@
+{
+  "Token": "LATAM|GRU-GIG-19/06/2026|1|0|0|economica|71c40bd4-c8f3-4807-a4ff-35fcecc4cc25",
+  "Busca": {
+    "Companhias": [
+      "LATAM"
+    ],
+    "TipoBusca": 1,
+    "TipoViagem": 0,
+    "Trechos": [
+      {
+        "Origem": "GRU",
+        "Destino": "GIG",
+        "DataIda": "19/06/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 0,
+    "Hash": "LATAM|GRU-GIG-19/06/2026|1|0|0|economica|71c40bd4-c8f3-4807-a4ff-35fcecc4cc25",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": false,
+    "Sucesso": true,
+    "Alerta": []
+  },
+  "Trechos": {
+    "GRUGIG": {
+      "Origem": "GRU",
+      "Destino": "GIG",
+      "Data": "19/06/2026",
+      "Internacional": 0,
+      "Voos": [
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 5375,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 5375,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 8552,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 8552,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 9622,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 9622,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 9927,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 9927,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 19:45",
+          "Desembarque": "19/06/2026 20:45",
+          "Duracao": "01:00",
+          "Valor": [],
+          "NumeroVoo": "LA4672",
+          "Conexoes": [
+            {
+              "Embarque": "19:45",
+              "Desembarque": "20:45",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 19:45",
+              "DesembarqueCompleto": "19/06/2026 20:45",
+              "NumeroVoo": "LA4672",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "TEE0Njcy"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 9567,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 9567,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 12565,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 12565,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 13665,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 13665,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 15489,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 15489,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 20:45",
+          "Desembarque": "19/06/2026 21:45",
+          "Duracao": "01:00",
+          "Valor": [],
+          "NumeroVoo": "LA3368",
+          "Conexoes": [
+            {
+              "Embarque": "20:45",
+              "Desembarque": "21:45",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 20:45",
+              "DesembarqueCompleto": "19/06/2026 21:45",
+              "NumeroVoo": "LA3368",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "TEEzMzY4"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 16882,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 16882,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 19880,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 19880,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 21255,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 21255,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 27283,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 27283,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 17:45",
+          "Desembarque": "19/06/2026 18:45",
+          "Duracao": "01:00",
+          "Valor": [],
+          "NumeroVoo": "LA3874",
+          "Conexoes": [
+            {
+              "Embarque": "17:45",
+              "Desembarque": "18:45",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 17:45",
+              "DesembarqueCompleto": "19/06/2026 18:45",
+              "NumeroVoo": "LA3874",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "TEEzODc0"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 24411,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 24411,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 27741,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 27741,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 29880,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 29880,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 30491,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 30491,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 07:55",
+          "Desembarque": "19/06/2026 08:55",
+          "Duracao": "01:00",
+          "Valor": [],
+          "NumeroVoo": "LA3340",
+          "Conexoes": [
+            {
+              "Embarque": "07:55",
+              "Desembarque": "08:55",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 07:55",
+              "DesembarqueCompleto": "19/06/2026 08:55",
+              "NumeroVoo": "LA3340",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "TEEzMzQw"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 36114,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 36114,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 39444,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 39444,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 41583,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 41583,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 42194,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 42194,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 23:05",
+          "Desembarque": "20/06/2026 00:05",
+          "Duracao": "01:00",
+          "Valor": [],
+          "NumeroVoo": "LA3352",
+          "Conexoes": [
+            {
+              "Embarque": "23:05",
+              "Desembarque": "00:05",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 23:05",
+              "DesembarqueCompleto": "20/06/2026 00:05",
+              "NumeroVoo": "LA3352",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "TEEzMzUy"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 43172,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 43172,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 46502,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 46502,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 48641,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 48641,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 49252,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 49252,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 13:10",
+          "Desembarque": "19/06/2026 14:10",
+          "Duracao": "01:00",
+          "Valor": [],
+          "NumeroVoo": "LA3366",
+          "Conexoes": [
+            {
+              "Embarque": "13:10",
+              "Desembarque": "14:10",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 13:10",
+              "DesembarqueCompleto": "19/06/2026 14:10",
+              "NumeroVoo": "LA3366",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "TEEzMzY2"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 76661,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 76661,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 80694,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 80694,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 83291,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 83291,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 83902,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 83902,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 09:45",
+          "Desembarque": "19/06/2026 10:45",
+          "Duracao": "01:00",
+          "Valor": [],
+          "NumeroVoo": "LA3698",
+          "Conexoes": [
+            {
+              "Embarque": "09:45",
+              "Desembarque": "10:45",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:45",
+              "DesembarqueCompleto": "19/06/2026 10:45",
+              "NumeroVoo": "LA3698",
+              "Origem": "GRU",
+              "Destino": "GIG",
+              "Duracao": "01:00",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "TEEzNjk4"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 07:50",
+          "Desembarque": "19/06/2026 11:20",
+          "Duracao": "03:30",
+          "Valor": [],
+          "NumeroVoo": "LA3284",
+          "Conexoes": [
+            {
+              "Embarque": "07:50",
+              "Desembarque": "08:55",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 07:50",
+              "DesembarqueCompleto": "19/06/2026 08:55",
+              "NumeroVoo": "LA3284",
+              "Origem": "GRU",
+              "Destino": "CWB",
+              "Duracao": "01:05",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "09:55",
+              "Desembarque": "11:20",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:55",
+              "DesembarqueCompleto": "19/06/2026 11:20",
+              "NumeroVoo": "LA3541",
+              "Origem": "CWB",
+              "Destino": "GIG",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzMjg0TEEzNTQx"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 17:30",
+          "Desembarque": "19/06/2026 21:35",
+          "Duracao": "04:05",
+          "Valor": [],
+          "NumeroVoo": "LA3334",
+          "Conexoes": [
+            {
+              "Embarque": "17:30",
+              "Desembarque": "18:55",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 17:30",
+              "DesembarqueCompleto": "19/06/2026 18:55",
+              "NumeroVoo": "LA3334",
+              "Origem": "GRU",
+              "Destino": "VIX",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "20:30",
+              "Desembarque": "21:35",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 20:30",
+              "DesembarqueCompleto": "19/06/2026 21:35",
+              "NumeroVoo": "LA3689",
+              "Origem": "VIX",
+              "Destino": "GIG",
+              "Duracao": "01:05",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzMzM0TEEzNjg5"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 12:40",
+          "Desembarque": "19/06/2026 21:35",
+          "Duracao": "08:55",
+          "Valor": [],
+          "NumeroVoo": "LA3332",
+          "Conexoes": [
+            {
+              "Embarque": "12:40",
+              "Desembarque": "14:05",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 12:40",
+              "DesembarqueCompleto": "19/06/2026 14:05",
+              "NumeroVoo": "LA3332",
+              "Origem": "GRU",
+              "Destino": "VIX",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "20:30",
+              "Desembarque": "21:35",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 20:30",
+              "DesembarqueCompleto": "19/06/2026 21:35",
+              "NumeroVoo": "LA3689",
+              "Origem": "VIX",
+              "Destino": "GIG",
+              "Duracao": "01:05",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzMzMyTEEzNjg5"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 15:55",
+          "Desembarque": "20/06/2026 00:50",
+          "Duracao": "08:55",
+          "Valor": [],
+          "NumeroVoo": "LA3506",
+          "Conexoes": [
+            {
+              "Embarque": "15:55",
+              "Desembarque": "19:20",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 15:55",
+              "DesembarqueCompleto": "19/06/2026 19:20",
+              "NumeroVoo": "LA3506",
+              "Origem": "GRU",
+              "Destino": "FOR",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "21:25",
+              "Desembarque": "00:50",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:25",
+              "DesembarqueCompleto": "20/06/2026 00:50",
+              "NumeroVoo": "LA4680",
+              "Origem": "FOR",
+              "Destino": "GIG",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzNTA2TEE0Njgw"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 20:40",
+          "Desembarque": "20/06/2026 05:45",
+          "Duracao": "09:05",
+          "Valor": [],
+          "NumeroVoo": "LA3252",
+          "Conexoes": [
+            {
+              "Embarque": "20:40",
+              "Desembarque": "00:05",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 20:40",
+              "DesembarqueCompleto": "20/06/2026 00:05",
+              "NumeroVoo": "LA3252",
+              "Origem": "GRU",
+              "Destino": "FOR",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "02:25",
+              "Desembarque": "05:45",
+              "DataEmbarque": "20/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "20/06/2026 02:25",
+              "DesembarqueCompleto": "20/06/2026 05:45",
+              "NumeroVoo": "LA3887",
+              "Origem": "FOR",
+              "Destino": "GIG",
+              "Duracao": "03:20",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzMjUyTEEzODg3"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 23:15",
+          "Desembarque": "20/06/2026 09:25",
+          "Duracao": "10:10",
+          "Valor": [],
+          "NumeroVoo": "LA3336",
+          "Conexoes": [
+            {
+              "Embarque": "23:15",
+              "Desembarque": "00:40",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 23:15",
+              "DesembarqueCompleto": "20/06/2026 00:40",
+              "NumeroVoo": "LA3336",
+              "Origem": "GRU",
+              "Destino": "VIX",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "08:15",
+              "Desembarque": "09:25",
+              "DataEmbarque": "20/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "20/06/2026 08:15",
+              "DesembarqueCompleto": "20/06/2026 09:25",
+              "NumeroVoo": "LA3665",
+              "Origem": "VIX",
+              "Destino": "GIG",
+              "Duracao": "01:10",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzMzM2TEEzNjY1"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 09:45",
+          "Desembarque": "19/06/2026 21:35",
+          "Duracao": "11:50",
+          "Valor": [],
+          "NumeroVoo": "LA3594",
+          "Conexoes": [
+            {
+              "Embarque": "09:45",
+              "Desembarque": "11:10",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:45",
+              "DesembarqueCompleto": "19/06/2026 11:10",
+              "NumeroVoo": "LA3594",
+              "Origem": "GRU",
+              "Destino": "VIX",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "20:30",
+              "Desembarque": "21:35",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 20:30",
+              "DesembarqueCompleto": "19/06/2026 21:35",
+              "NumeroVoo": "LA3689",
+              "Origem": "VIX",
+              "Destino": "GIG",
+              "Duracao": "01:05",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzNTk0TEEzNjg5"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 12:35",
+          "Desembarque": "20/06/2026 00:50",
+          "Duracao": "12:15",
+          "Valor": [],
+          "NumeroVoo": "LA3320",
+          "Conexoes": [
+            {
+              "Embarque": "12:35",
+              "Desembarque": "16:00",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 12:35",
+              "DesembarqueCompleto": "19/06/2026 16:00",
+              "NumeroVoo": "LA3320",
+              "Origem": "GRU",
+              "Destino": "FOR",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "21:25",
+              "Desembarque": "00:50",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:25",
+              "DesembarqueCompleto": "20/06/2026 00:50",
+              "NumeroVoo": "LA4680",
+              "Origem": "FOR",
+              "Destino": "GIG",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzMzIwTEE0Njgw"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 23:05",
+          "Desembarque": "20/06/2026 11:20",
+          "Duracao": "12:15",
+          "Valor": [],
+          "NumeroVoo": "LA4708",
+          "Conexoes": [
+            {
+              "Embarque": "23:05",
+              "Desembarque": "00:10",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 23:05",
+              "DesembarqueCompleto": "20/06/2026 00:10",
+              "NumeroVoo": "LA4708",
+              "Origem": "GRU",
+              "Destino": "CWB",
+              "Duracao": "01:05",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "09:55",
+              "Desembarque": "11:20",
+              "DataEmbarque": "20/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "20/06/2026 09:55",
+              "DesembarqueCompleto": "20/06/2026 11:20",
+              "NumeroVoo": "LA3541",
+              "Origem": "CWB",
+              "Destino": "GIG",
+              "Duracao": "01:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzNTQxTEE0NzA4"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 15:55",
+          "Desembarque": "20/06/2026 05:45",
+          "Duracao": "13:50",
+          "Valor": [],
+          "NumeroVoo": "LA3506",
+          "Conexoes": [
+            {
+              "Embarque": "15:55",
+              "Desembarque": "19:20",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 15:55",
+              "DesembarqueCompleto": "19/06/2026 19:20",
+              "NumeroVoo": "LA3506",
+              "Origem": "GRU",
+              "Destino": "FOR",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "02:25",
+              "Desembarque": "05:45",
+              "DataEmbarque": "20/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "20/06/2026 02:25",
+              "DesembarqueCompleto": "20/06/2026 05:45",
+              "NumeroVoo": "LA3887",
+              "Origem": "FOR",
+              "Destino": "GIG",
+              "Duracao": "03:20",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzNTA2TEEzODg3"
+        },
+        {
+          "Companhia": "LATAM",
+          "Sentido": "ida",
+          "Origem": "GRU",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "LIGHT economy",
+              "Adulto": 131910,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 131910,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "LIGHT",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "STANDARD economy",
+              "Adulto": 135035,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 135035,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "STANDARD",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "FULL economy",
+              "Adulto": 137813,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 137813,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "FULL",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": 1,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            },
+            {
+              "Executivo": false,
+              "TipoMilhas": "PREMIUM ECONOMY premiumeconomy",
+              "Adulto": 138681,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 138681,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaEmbarque": 33.64,
+              "LimiteBagagem": {
+                "Tipo": "PREMIUM ECONOMY",
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 1,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": null,
+                  "12kg": null,
+                  "16kg": 1
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 09:45",
+          "Desembarque": "20/06/2026 00:50",
+          "Duracao": "15:05",
+          "Valor": [],
+          "NumeroVoo": "LA3318",
+          "Conexoes": [
+            {
+              "Embarque": "09:45",
+              "Desembarque": "13:10",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "19/06/2026",
+              "EmbarqueCompleto": "19/06/2026 09:45",
+              "DesembarqueCompleto": "19/06/2026 13:10",
+              "NumeroVoo": "LA3318",
+              "Origem": "GRU",
+              "Destino": "FOR",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            },
+            {
+              "Embarque": "21:25",
+              "Desembarque": "00:50",
+              "DataEmbarque": "19/06/2026",
+              "DataDesembarque": "20/06/2026",
+              "EmbarqueCompleto": "19/06/2026 21:25",
+              "DesembarqueCompleto": "20/06/2026 00:50",
+              "NumeroVoo": "LA4680",
+              "Origem": "FOR",
+              "Destino": "GIG",
+              "Duracao": "03:25",
+              "CompanhiaAparente": "LATAM AIRLINES (TAM)"
+            }
+          ],
+          "NumeroConexoes": 1,
+          "IdentificadorVoo": "TEEzMzE4TEE0Njgw"
+        }
+      ],
+      "Semana": {
+        "16/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "LATAM"
+          }
+        ],
+        "17/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "LATAM"
+          }
+        ],
+        "18/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "LATAM"
+          }
+        ],
+        "19/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "LATAM"
+          }
+        ],
+        "20/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "LATAM"
+          }
+        ],
+        "21/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "LATAM"
+          }
+        ],
+        "22/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "LATAM"
+          }
+        ]
+      }
+    }
+  },
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}

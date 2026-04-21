@@ -1,0 +1,289 @@
+{
+  "Token": "AZUL|VCP-GIG-19/06/2026|1|0|0|economica|ad3091ba-2a43-4568-b119-47206f163966",
+  "Busca": {
+    "Companhias": [
+      "AZUL"
+    ],
+    "TipoBusca": 1,
+    "TipoViagem": 0,
+    "Trechos": [
+      {
+        "Origem": "VCP",
+        "Destino": "GIG",
+        "DataIda": "19/06/2026"
+      }
+    ],
+    "Classe": "economica",
+    "Adultos": 1,
+    "Criancas": 0,
+    "Bebes": 0,
+    "Chave": "5bb896aa-a28a-4380-84e2-43c71b74e082",
+    "Senha": "363178e0-c9c4-4d04-9ca2-540f0055a2e6",
+    "Combinar": false,
+    "SomenteMilhas": true,
+    "SomentePagante": false,
+    "RetornoBruto": false,
+    "Internacional": 0,
+    "Hash": "AZUL|VCP-GIG-19/06/2026|1|0|0|economica|ad3091ba-2a43-4568-b119-47206f163966",
+    "StartId": null,
+    "Timeout": null
+  },
+  "Status": {
+    "Erro": false,
+    "Sucesso": true,
+    "Alerta": []
+  },
+  "Trechos": {
+    "VCPGIG": {
+      "Origem": "VCP",
+      "Destino": "GIG",
+      "Data": "19/06/2026",
+      "Internacional": 0,
+      "Voos": [
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "VCP",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 20000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 20000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 31.94,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 07:55",
+          "Desembarque": "19/06/2026 09:00",
+          "Duracao": "01:05",
+          "Valor": [],
+          "NumeroVoo": "AD4469",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "QUQ0NDY5"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "VCP",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 8000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 8000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 31.94,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 11:35",
+          "Desembarque": "19/06/2026 12:40",
+          "Duracao": "01:05",
+          "Valor": [],
+          "NumeroVoo": "AD4173",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "QUQ0MTcz"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "VCP",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 36000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 36000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 31.94,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 19:15",
+          "Desembarque": "19/06/2026 20:20",
+          "Duracao": "01:05",
+          "Valor": [],
+          "NumeroVoo": "AD4040",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "QUQ0MDQw"
+        },
+        {
+          "Companhia": "AZUL",
+          "Sentido": "ida",
+          "Origem": "VCP",
+          "Milhas": [
+            {
+              "Executivo": false,
+              "TipoMilhas": "Azul",
+              "Adulto": 130000,
+              "Crianca": 0,
+              "Bebe": 0,
+              "TotalAdulto": 130000,
+              "TotalCrianca": 0,
+              "TotalBebe": 0,
+              "TaxaAdulto": 0,
+              "TaxaCrianca": 0,
+              "TaxaBebe": 0,
+              "TaxaResgate": 39.9,
+              "TaxaEmbarque": 31.94,
+              "LimiteBagagem": {
+                "BagagemDespachada": {
+                  "15kg": null,
+                  "23kg": 0,
+                  "32kg": null
+                },
+                "BagagemMao": {
+                  "8kg": null,
+                  "10kg": 1,
+                  "12kg": null,
+                  "16kg": null
+                },
+                "BagagemPessoal": {
+                  "10kg": 1
+                }
+              }
+            }
+          ],
+          "Destino": "GIG",
+          "Embarque": "19/06/2026 23:20",
+          "Desembarque": "20/06/2026 00:25",
+          "Duracao": "01:05",
+          "Valor": [],
+          "NumeroVoo": "AD4449",
+          "Conexoes": [],
+          "NumeroConexoes": 0,
+          "IdentificadorVoo": "QUQ0NDQ5"
+        }
+      ],
+      "Semana": {
+        "16/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "17/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "18/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "19/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "20/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "21/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ],
+        "22/06/2026": [
+          {
+            "Valor": "",
+            "Milhas": "",
+            "Companhia": "AZUL"
+          }
+        ]
+      }
+    }
+  },
+  "Cache": {
+    "cacheMilhas": false,
+    "cachePagante": false
+  }
+}
