@@ -133,6 +133,13 @@ with col_btn:
     use_llm = st.checkbox("Interpretar com Grok", value=True)
     buscar  = st.button("✈️  BUSCAR AGORA", use_container_width=True)
 
+# ── Toggle Cotação Inteligente ──
+smart_mode = st.toggle(
+    "🧠 Cotação Inteligente",
+    value=False,
+    help="Analisa ±4 dias automaticamente, identifica o dia mais barato e os melhores programas de milhas para a rota.",
+)
+
 if buscar and prompt_text:
     with st.spinner("Analisando pedido e buscando voos..."):
         intent = parse_intent_ptbr(prompt_text, use_llm=use_llm)
@@ -141,6 +148,29 @@ if buscar and prompt_text:
             intent.flex_days = st.session_state["v_flex"]
             if intent.flex_days > 0 and intent.flex_mode == "none":
                 intent.flex_mode = "plusminus"
+
+        # Cotação Inteligente roda em paralelo ao pipeline normal.
+        from concurrent.futures import ThreadPoolExecutor
+        from pcd.agents.smart_quote import SmartQuoteAgent
+
+        smart_future = None
+        smart_progress: list[str] = []
+        if smart_mode and intent.origin_iata and intent.destination_iata and (intent.date_start or intent.depart_date_from):
+            _smart_executor = ThreadPoolExecutor(max_workers=1)
+            _smart_pax = getattr(intent, "adults", 1) or 1
+            _smart_origin = intent.origin_iata
+            _smart_destination = intent.destination_iata
+            _smart_date_req = intent.date_start or intent.depart_date_from
+            _smart_date_ret = intent.date_return
+
+            def _capture(msg: str):
+                smart_progress.append(msg)
+
+            smart_future = _smart_executor.submit(
+                SmartQuoteAgent().run,
+                _smart_origin, _smart_destination, _smart_date_req,
+                _smart_pax, _smart_date_ret, _capture,
+            )
 
         res = run_pipeline(
             prompt=prompt_text, top_n=top_n, use_fixtures=use_fixtures,
@@ -155,6 +185,20 @@ if buscar and prompt_text:
             companhias=companhias_selecionadas if companhias_selecionadas else None,
         )
         st.session_state["pipeline_result"] = res
+
+        # Aguarda a Cotação Inteligente (que rodou em paralelo). Se falhar,
+        # degrada graciosamente — só o pipeline normal aparece.
+        if smart_future is not None:
+            try:
+                smart_result = smart_future.result(timeout=180)
+            except Exception as e:
+                smart_result = None
+                smart_progress.append(f"⚠️ Cotação Inteligente falhou: {str(e)[:160]}")
+            st.session_state["smart_result"] = smart_result
+            st.session_state["smart_progress"] = smart_progress
+        else:
+            st.session_state["smart_result"] = None
+            st.session_state["smart_progress"] = []
 
 # ── Chips de validação ──
 if st.session_state.get("parsed_intent"):
@@ -252,6 +296,109 @@ tab_specs.append(("📊 Ranking Geral", "ranking"))
 
 tab_labels = [t[0] for t in tab_specs]
 tab_keys   = [t[1] for t in tab_specs]
+
+
+# ═══════════════════════════════════════════════════════════════
+# Cotação Inteligente — exibida ANTES das tabs quando ativada
+# ═══════════════════════════════════════════════════════════════
+def _render_smart_quote_section():
+    smart_result = st.session_state.get("smart_result")
+    smart_progress_msgs = st.session_state.get("smart_progress") or []
+
+    if smart_result is None and not smart_progress_msgs:
+        return
+
+    st.markdown("## 🧠 Cotação Inteligente")
+
+    # Status dos agentes (replay do progresso capturado)
+    if smart_progress_msgs:
+        with st.status("Agentes executados", expanded=False, state="complete"):
+            for msg in smart_progress_msgs:
+                st.write(msg)
+
+    if smart_result is None:
+        st.warning("A Cotação Inteligente não pôde ser concluída. Veja a busca normal abaixo.")
+        st.divider()
+        return
+
+    if smart_result.notes:
+        for note in smart_result.notes:
+            st.info(note)
+
+    # ── Calendário de preços ──
+    cal = smart_result.price_calendar or {}
+    if cal:
+        st.markdown("### 📅 Calendário de preços (±4 dias)")
+        try:
+            import pandas as _pd
+            df_cal = _pd.DataFrame(
+                [{"data": d, "BRL": v} for d, v in sorted(cal.items())]
+            )
+            st.bar_chart(df_cal, x="data", y="BRL", use_container_width=True)
+        except Exception:
+            for d, v in sorted(cal.items()):
+                st.write(f"  • {d}: R$ {v:,.2f}")
+
+        # Legenda de destaques
+        anchor = smart_result.anchor_date
+        requested = smart_result.date_requested
+        leg_cols = st.columns(3)
+        with leg_cols[0]:
+            if anchor:
+                st.metric("Data âncora (mais barata)", anchor, f"R$ {cal.get(anchor, 0):,.2f}")
+        with leg_cols[1]:
+            if requested in cal:
+                st.metric("Data solicitada", requested, f"R$ {cal[requested]:,.2f}")
+        with leg_cols[2]:
+            st.metric("Economia potencial", f"R$ {smart_result.savings_vs_requested:,.2f}")
+
+    # ── Mensagem chave ──
+    if smart_result.date_is_already_best:
+        st.success(f"✅ Ótima escolha! A data solicitada ({smart_result.date_requested}) já é a mais barata do período.")
+    elif smart_result.anchor_date and smart_result.savings_vs_requested > 0:
+        st.success(
+            f"✅ Melhor dia: **{smart_result.anchor_date}** "
+            f"(R$ {smart_result.savings_vs_requested:,.2f} mais barato que "
+            f"{smart_result.date_requested} solicitado)"
+        )
+
+    # ── Companhias e programas ──
+    if smart_result.anchor_carriers:
+        st.markdown(f"**✈️ Companhias na data âncora:** {', '.join(smart_result.anchor_carriers)}")
+
+    rp = smart_result.relevant_programs or {}
+    if rp.get("relevant_programs"):
+        st.markdown("**💎 Programas relevantes para essa rota:**")
+        from pcd.agents.smart_quote import PROGRAM_PARTNERS as _PP
+        for pkey in rp["relevant_programs"]:
+            covered = rp.get(pkey, [])
+            label = _PP.get(pkey, {}).get("label", pkey)
+            tag = ""
+            if pkey in (rp.get("own_carrier_present") or []):
+                tag = " · 🏠 programa próprio"
+            elif rp.get("award_only", {}).get(pkey):
+                tag = " · 🎯 award real"
+            st.markdown(f"- **{label}** cobre `{', '.join(covered)}` na rota{tag}")
+
+    # ── Cotação de milhas na data âncora ──
+    if smart_result.miles_offers:
+        st.markdown("### 💎 Cotação de milhas na data âncora")
+        for offer in smart_result.miles_offers:
+            with st.expander(f"{offer['label']} — {offer['elapsed_ms']:.0f}ms"):
+                if offer.get("error"):
+                    st.warning(f"Falha: {offer['error']}")
+                else:
+                    raw = offer.get("raw") or {}
+                    n_trechos = len((raw.get("Trechos") or []))
+                    st.write(f"Resposta da API recebida — {n_trechos} bloco(s) de trechos.")
+                    st.caption("Ofertas detalhadas aparecem nas tabs normais abaixo, na coluna do programa correspondente.")
+
+    st.divider()
+
+
+_render_smart_quote_section()
+
+
 tabs = st.tabs(tab_labels)
 
 # ─── helpers banner ───────────────────────────────────────────
