@@ -26,6 +26,42 @@ from miles_app.buscamilhas_client import search_flights_buscamilhas
 
 
 # ──────────────────────────────────────────────────────────────────
+# Display de companhias — usado pela UI para chips coloridos
+# ──────────────────────────────────────────────────────────────────
+AIRLINE_DISPLAY: dict[str, dict[str, str]] = {
+    "LA": {"name": "LATAM Airlines",    "color": "#E31837", "bg": "#fdf0f2"},
+    "G3": {"name": "GOL",               "color": "#FF5B00", "bg": "#fff4f0"},
+    "AD": {"name": "Azul",              "color": "#0032A0", "bg": "#f0f3ff"},
+    "TP": {"name": "TAP Air Portugal",  "color": "#008A5E", "bg": "#f0faf6"},
+    "AF": {"name": "Air France",        "color": "#002157", "bg": "#f0f3ff"},
+    "KL": {"name": "KLM",               "color": "#00A1DE", "bg": "#f0faff"},
+    "AA": {"name": "American Airlines", "color": "#0078D2", "bg": "#f0f7ff"},
+    "DL": {"name": "Delta Air Lines",   "color": "#E01933", "bg": "#fdf0f2"},
+    "UA": {"name": "United Airlines",   "color": "#005DAA", "bg": "#f0f6ff"},
+    "TK": {"name": "Turkish Airlines",  "color": "#C8102E", "bg": "#fdf0f2"},
+    "EK": {"name": "Emirates",          "color": "#D71921", "bg": "#fdf0f2"},
+    "QR": {"name": "Qatar Airways",     "color": "#5C0632", "bg": "#f8f0f4"},
+    "CM": {"name": "Copa Airlines",     "color": "#003DA5", "bg": "#f0f3ff"},
+    "AC": {"name": "Air Canada",        "color": "#CC0000", "bg": "#fdf0f0"},
+    "EY": {"name": "Etihad Airways",    "color": "#B8A06A", "bg": "#fdfbf5"},
+    "IB": {"name": "Iberia",            "color": "#C8102E", "bg": "#fdf0f2"},
+    "BA": {"name": "British Airways",   "color": "#2B5CA6", "bg": "#f0f4fc"},
+    "LH": {"name": "Lufthansa",         "color": "#05164D", "bg": "#f0f2f8"},
+    "JL": {"name": "Japan Airlines",    "color": "#CC0000", "bg": "#fdf0f0"},
+    "CX": {"name": "Cathay Pacific",    "color": "#005A6E", "bg": "#f0f6f8"},
+}
+
+
+def airline_display(iata: str) -> dict[str, str]:
+    """Retorna dict {name, color, bg} para o IATA. Fallback para o próprio
+    código com cor neutra quando a companhia não está cadastrada."""
+    return AIRLINE_DISPLAY.get(
+        (iata or "").upper(),
+        {"name": iata, "color": "#1a56a0", "bg": "#e8f0fb"},
+    )
+
+
+# ──────────────────────────────────────────────────────────────────
 # Mapeamento de programas brasileiros → companhias parceiras (IATA)
 # ──────────────────────────────────────────────────────────────────
 PROGRAM_PARTNERS: dict[str, dict] = {
