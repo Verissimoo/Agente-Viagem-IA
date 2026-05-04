@@ -1,61 +1,31 @@
-import os
 from typing import List, Tuple
-from pcd.core.schema import UnifiedOffer, LayoverCategory, SourceType
+from pcd.core.schema import UnifiedOffer, LayoverCategory
 from pcd.core.layover_classifier import classify_offer
+from pcd.core.conversion import offer_equivalent_brl
 
 def rank_offers(offers: List[UnifiedOffer], top_n: int = 5) -> Tuple[List[UnifiedOffer], UnifiedOffer, List[str]]:
     """
-    Compara ofertas financeiras e em milhas, aplicando custo fictício da milha e penalidades 
+    Compara ofertas financeiras e em milhas, aplicando custo fictício da milha e penalidades
     por conexão para encontrar a melhor opção.
-    
+
     Returns:
        (top_n_offers, best_offer, justifications)
     """
-    
+
     if not offers:
         return [], None, ["Nenhuma oferta encontrada."]
 
-    try:
-        cpm = float(os.getenv("COST_PER_MILE_BRL", "0.0285"))
-    except ValueError:
-        cpm = 0.0285
-        
     scored_offers = []
-    LATAM_COST_PER_MILE_BRL = 0.0285
 
     for offer in offers:
         # Garante a classificação do layover (necessário para filtros UI)
         classify_offer(offer)
-        
-        # 1. Base cost (Miles vs Currency)
-        if offer.price_brl is not None:
-            base_cost = offer.price_brl
-        elif offer.miles is not None:
-            taxes = offer.taxes_brl or 0.0
-            
-            # Regra Fixa LATAM: Se for LATAM, ignorar config geral e usar 0.0285
-            if offer.source == SourceType.BUSCAMILHAS_LATAM:
-                current_cpm = LATAM_COST_PER_MILE_BRL
-            elif offer.source in (SourceType.BUSCAMILHAS_GOL, SourceType.BUSCAMILHAS_AZUL):
-                current_cpm = 0.0200
-            elif offer.source in (SourceType.MCP_AWARD, SourceType.MCP_QATAR):
-                # Programas internacionais (AVIOS, etc) tendem a ser mais caros
-                prog = (offer.miles_program or "").upper()
-                if "AVIOS" in prog:
-                    current_cpm = 0.0700
-                elif "ASIA" in prog:
-                    current_cpm = 0.0650
-                else:
-                    current_cpm = 0.0500 # Fallback internacional
-            else:
-                current_cpm = cpm
-            
-            base_cost = (offer.miles * current_cpm) + taxes
-        else:
+
+        if offer.price_brl is None and offer.miles is None:
             continue
-            
-        # Salva o valor final consolidado (sem penalidades)
-        offer.equivalent_brl = base_cost
+
+        # Custo equivalente em BRL via tabela única (pcd/core/conversion.py)
+        offer.equivalent_brl = offer_equivalent_brl(offer)
         scored_offers.append(offer)
 
     # Ordenar ASC

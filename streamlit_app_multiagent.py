@@ -6,28 +6,16 @@ from pathlib import Path
 from typing import List
 from pcd.run import run_pipeline
 from pcd.core.schema import TripType, SourceType
+from pcd.core.conversion import miles_to_brl as _miles_to_brl_core
+from pcd.core.conversion import RATES_BRL_PER_MILE as RATES
 from pcd.nlp.intent_parser import parse_intent_ptbr
 from miles_app.buscamilhas_client import COMPANHIAS_NACIONAIS, COMPANHIAS_INTERNACIONAIS
 from mcp_offer_parser import extract_mcp_offers
 
 _MCP_FIXTURE = Path(__file__).parent / "debug_dumps" / "mcp_all_airlines_GRU_JFK_sample.json"
 
-# ═══════════════════════════════════════════════════════════════
-# TAXAS DE CONVERSÃO MILHAS → BRL  (por companhia)
-# ═══════════════════════════════════════════════════════════════
-RATES = {
-    "LATAM":     0.0285,
-    "GOL":       0.0200,
-    "AZUL":      0.0200,
-    "TAP":       0.0220,
-    "AMERICAN AIRLINES": 0.0220,
-    "INTERLINE": 0.0200,
-    "COPA":      0.0200,   # Copa Airlines (milhas ConnectMiles)
-    # MCP Award Travel Finder — programas internacionais
-    "AVIOS":     0.0700,   # British Airways / Qatar Airways / Iberia Avios
-    "ASIA MILES":0.0650,   # Cathay Pacific
-    "DEFAULT":   0.0210,
-}
+# Taxas de conversão milhas→BRL agora vivem em pcd/core/conversion.py
+# (fonte única para UI e ranking).
 
 # Metadados visuais de cada companhia (src = valor exato do SourceType)
 _CIA_META = {
@@ -57,27 +45,8 @@ def _tab_key(cia: str) -> str:
 
 
 def miles_to_brl(miles, airline: str = "", program: str = "") -> float:
-    """
-    Converte milhas/pontos para BRL.
-    Prioridade: programa (miles_program) > nome da companhia > DEFAULT.
-    """
-    try:
-        # Busca pelo nome do programa primeiro (ex: 'Avios', 'Asia Miles')
-        prog = str(program).upper()
-        if prog:
-            for k in RATES:
-                if k != "DEFAULT" and k in prog:
-                    return float(miles) * RATES[k]
-        # Fallback: nome da companhia
-        a = str(airline).upper()
-        key = "DEFAULT"
-        for k in RATES:
-            if k != "DEFAULT" and k in a:
-                key = k
-                break
-        return float(miles) * RATES.get(key, RATES["DEFAULT"])
-    except Exception:
-        return 0.0
+    """Wrapper compatível — delega para pcd.core.conversion.miles_to_brl."""
+    return _miles_to_brl_core(miles, airline=airline, program=program)
 
 
 # ═══════════════════════════════════════════════════════════════
