@@ -441,6 +441,19 @@ def _render_carrier_chips(carriers: list) -> str:
     return f'<div class="airline-chip-row">{"".join(chips)}</div>'
 
 
+def _is_calendar_uniform(prices: list, threshold: float = 0.03) -> bool:
+    """True quando a variação relativa entre min e max é menor que `threshold`
+    (default 3%). Indica que o Kayak retornou efetivamente o mesmo preço para
+    todas as datas — comum quando há uma tarifa âncora barata disponível em
+    todo o período."""
+    if not prices:
+        return False
+    pmin, pmax = min(prices), max(prices)
+    if pmin <= 0:
+        return False
+    return (pmax - pmin) / pmin < threshold
+
+
 def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, requested_iso: str) -> str:
     if not cal:
         return ""
@@ -449,10 +462,26 @@ def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, reques
     pmin, pmax = min(prices), max(prices)
     span = max(1.0, pmax - pmin)
     H_MAX, H_MIN = 160, 20
+    uniform = _is_calendar_uniform(prices)
+
+    uniform_banner = ""
+    if uniform:
+        uniform_banner = (
+            '<div style="background:#fff8e6;border:1px dashed #e59a00;color:#856404;'
+            'border-radius:8px;padding:8px 14px;text-align:center;font-size:12px;'
+            'font-weight:600;margin:0 0 12px 0">'
+            'ℹ️ Preços similares no período — qualquer dia tem oferta parecida (dado real do Kayak)'
+            '</div>'
+        )
 
     cols_html = []
     for iso, price in items:
-        h = H_MIN + (price - pmin) / span * (H_MAX - H_MIN)
+        if uniform:
+            # Barras uniformes (~70% da altura máxima) — evita ilusão de variação
+            # quando a normalização amplificaria diferenças de centavos.
+            h = 110.0
+        else:
+            h = H_MIN + (price - pmin) / span * (H_MAX - H_MIN)
         kind = "normal"
         badge_html = '<div class="cal-badge spacer">·</div>'
         if iso == anchor_iso:
@@ -479,6 +508,7 @@ def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, reques
     return f"""
 <div class="smart-card">
   <div class="smart-card-title">📅 Calendário de preços (±4 dias)</div>
+  {uniform_banner}
   <div class="price-calendar">{''.join(cols_html)}</div>
 </div>"""
 
@@ -647,7 +677,15 @@ def _render_smart_quote_section():
         )
 
     # ── Mensagem chave ──
-    if smart_result.date_is_already_best:
+    _cal_uniform = _is_calendar_uniform(list(cal.values())) if cal else False
+    if _cal_uniform:
+        st.markdown(
+            f'<div class="smart-message green">✅ <b>Preços estáveis no período.</b> '
+            f'A tarifa mais barata é praticamente a mesma nos 9 dias — você pode '
+            f'manter {_fmt_date_long(requested_iso)} sem perda financeira.</div>',
+            unsafe_allow_html=True,
+        )
+    elif smart_result.date_is_already_best:
         st.markdown(
             f'<div class="smart-message green">✅ <b>Ótima escolha!</b> A data solicitada '
             f'({_fmt_date_long(requested_iso)}) já é a mais barata do período analisado.</div>',
