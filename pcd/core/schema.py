@@ -25,6 +25,9 @@ class SourceType(str, Enum):
     BUSCAMILHAS_IBERIA = "buscamilhas_iberia"
     BUSCAMILHAS_AMERICAN = "buscamilhas_american"
     BUSCAMILHAS_INTERLINE = "buscamilhas_interline"
+    BUSCAMILHAS_COPA = "buscamilhas_copa"
+    MCP_AWARD = "mcp_award"      # Award Travel Finder (internacional genérico)
+    MCP_QATAR = "mcp_qatar"      # Award Travel Finder (exclusivo Qatar)
 
 
 class SearchRequest(BaseModel):
@@ -99,9 +102,10 @@ class UnifiedOffer(BaseModel):
     
     # Preços
     price_brl: Optional[float] = None
-    price_amount: Optional[float] = Field(None, description="Preço na moeda original")
-    price_currency: Optional[str] = Field(None, description="Código da moeda original (BRL, USD, etc.)")
+    price_amount: Optional[float] = Field(None, description="Preco na moeda original")
+    price_currency: Optional[str] = Field(None, description="Codigo da moeda original (BRL, USD, etc.)")
     miles: Optional[int] = None
+    miles_program: Optional[str] = Field(None, description="Nome do programa de milhagem (ex: Avios, MileagePlus)")
     taxes_brl: Optional[float] = None
     
     # Detalhes por perna (para Roundtrip)

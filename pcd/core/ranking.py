@@ -38,6 +38,15 @@ def rank_offers(offers: List[UnifiedOffer], top_n: int = 5) -> Tuple[List[Unifie
                 current_cpm = LATAM_COST_PER_MILE_BRL
             elif offer.source in (SourceType.BUSCAMILHAS_GOL, SourceType.BUSCAMILHAS_AZUL):
                 current_cpm = 0.0200
+            elif offer.source in (SourceType.MCP_AWARD, SourceType.MCP_QATAR):
+                # Programas internacionais (AVIOS, etc) tendem a ser mais caros
+                prog = (offer.miles_program or "").upper()
+                if "AVIOS" in prog:
+                    current_cpm = 0.0700
+                elif "ASIA" in prog:
+                    current_cpm = 0.0650
+                else:
+                    current_cpm = 0.0500 # Fallback internacional
             else:
                 current_cpm = cpm
             

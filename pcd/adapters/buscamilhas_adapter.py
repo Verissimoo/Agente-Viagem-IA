@@ -202,3 +202,7 @@ class BuscaMilhasInterlineAdapter(BaseBuscaMilhasAdapter):
     def __init__(self):
         super().__init__("INTERLINE", SourceType.BUSCAMILHAS_INTERLINE, "IN", internacional=True)
 
+class BuscaMilhasCopaAdapter(BaseBuscaMilhasAdapter):
+    def __init__(self):
+        super().__init__("COPA", SourceType.BUSCAMILHAS_COPA, "CM", internacional=True)
+

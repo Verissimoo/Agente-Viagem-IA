@@ -6,10 +6,12 @@ from typing import Optional
 
 from pcd.core.schema import SearchRequest, TripType, CabinClass
 from pcd.adapters.kayak_adapter import KayakAdapter
+from pcd.adapters.mcp_award_adapter import McpAwardAdapter, McpQatarAdapter
 from pcd.adapters.buscamilhas_adapter import (
     BuscaMilhasLatamAdapter, BuscaMilhasGolAdapter, BuscaMilhasAzulAdapter,
     BuscaMilhasTapAdapter, BuscaMilhasIberiaAdapter,
     BuscaMilhasAmericanAdapter, BuscaMilhasInterlineAdapter,
+    BuscaMilhasCopaAdapter
 )
 from miles_app.buscamilhas_client import COMPANHIAS_NACIONAIS
 from pcd.core.ranking import rank_offers
@@ -58,6 +60,9 @@ _ADAPTER_MAP = {
     "AMERICAN":  BuscaMilhasAmericanAdapter,
     "AMERICAN AIRLINES": BuscaMilhasAmericanAdapter,
     "INTERLINE": BuscaMilhasInterlineAdapter,
+    "COPA":      BuscaMilhasCopaAdapter,
+    "MCP_AWARD": McpAwardAdapter,
+    "QATAR":     McpQatarAdapter,
 }
 
 def run_pipeline(

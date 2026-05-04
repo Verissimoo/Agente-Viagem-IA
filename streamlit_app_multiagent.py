@@ -1,11 +1,16 @@
 import streamlit as st
 import pandas as pd
+import json
 from datetime import date
+from pathlib import Path
 from typing import List
 from pcd.run import run_pipeline
-from pcd.core.schema import TripType
+from pcd.core.schema import TripType, SourceType
 from pcd.nlp.intent_parser import parse_intent_ptbr
 from miles_app.buscamilhas_client import COMPANHIAS_NACIONAIS, COMPANHIAS_INTERNACIONAIS
+from mcp_offer_parser import extract_mcp_offers
+
+_MCP_FIXTURE = Path(__file__).parent / "debug_dumps" / "mcp_all_airlines_GRU_JFK_sample.json"
 
 # ═══════════════════════════════════════════════════════════════
 # TAXAS DE CONVERSÃO MILHAS → BRL  (por companhia)
@@ -17,6 +22,10 @@ RATES = {
     "TAP":       0.0220,
     "AMERICAN AIRLINES": 0.0220,
     "INTERLINE": 0.0200,
+    "COPA":      0.0200,   # Copa Airlines (milhas ConnectMiles)
+    # MCP Award Travel Finder — programas internacionais
+    "AVIOS":     0.0700,   # British Airways / Qatar Airways / Iberia Avios
+    "ASIA MILES":0.0650,   # Cathay Pacific
     "DEFAULT":   0.0210,
 }
 
@@ -28,6 +37,9 @@ _CIA_META = {
     "TAP":       {"emoji": "🟢", "css": "tap",       "prefix": "TP", "src": "buscamilhas_tap"},
     "AMERICAN AIRLINES": {"emoji": "🦅", "css": "american",  "prefix": "AA", "src": "buscamilhas_american"},
     "INTERLINE": {"emoji": "🌐", "css": "interline", "prefix": "IN", "src": "buscamilhas_interline"},
+    "COPA":      {"emoji": "🛫", "css": "copa",      "prefix": "CM", "src": "buscamilhas_copa"},
+    "MCP_AWARD": {"emoji": "🌍", "css": "mcp",       "prefix": "W",  "src": "mcp_award"},
+    "QATAR":     {"emoji": "🇶🇦", "css": "qatar",     "prefix": "QR", "src": "mcp_qatar"},
 }
 
 # Companhias internacionais sem acréscimo de bagagem (já inclusa na tarifa de milhas)
@@ -44,8 +56,19 @@ def _tab_key(cia: str) -> str:
     return f"cia_{cia.lower().replace(' ', '_')}"
 
 
-def miles_to_brl(miles, airline: str = "") -> float:
+def miles_to_brl(miles, airline: str = "", program: str = "") -> float:
+    """
+    Converte milhas/pontos para BRL.
+    Prioridade: programa (miles_program) > nome da companhia > DEFAULT.
+    """
     try:
+        # Busca pelo nome do programa primeiro (ex: 'Avios', 'Asia Miles')
+        prog = str(program).upper()
+        if prog:
+            for k in RATES:
+                if k != "DEFAULT" and k in prog:
+                    return float(miles) * RATES[k]
+        # Fallback: nome da companhia
         a = str(airline).upper()
         key = "DEFAULT"
         for k in RATES:
@@ -131,6 +154,7 @@ def _id_prefix(airline: str, source: str = "") -> str:
     if "TAP"       in a or "TAP"       in s: return "TP"
     if "AMERICAN"  in a or "AMERICAN"  in s: return "AA"
     if "INTERLINE" in a or "INTERLINE" in s: return "IN"
+    if "MCP"       in s or "MCP_AWARD" in s: return "W"
     return "X"
 
 def build_table_rows(offers, include_baggage=False, id_prefix=""):
@@ -158,23 +182,29 @@ def build_table_rows(offers, include_baggage=False, id_prefix=""):
         # ── IDA ──
         if hasattr(o, "outbound") and o.outbound and o.outbound.segments:
             fs = o.outbound.segments[0]; ls = o.outbound.segments[-1]
-            m_out = safe_int_miles(o.miles_out if o.miles_out is not None else o.miles)
-            eq_unit = miles_to_brl(m_out, airline)
+            raw_miles = o.miles_out if o.miles_out is not None else o.miles
+            m_out = safe_int_miles(raw_miles)
+            # Sentinela -1: disponível mas pontos não informados pela API PRO
+            miles_display = "Consultar" if (raw_miles is not None and int(raw_miles or 0) == -1) else (f"{m_out:,}" if m_out else "—")
+            prog  = getattr(o, "miles_program", "")
+            eq_unit = miles_to_brl(m_out, airline, prog) if m_out > 0 else 0.0
+            tx = safe_float(o.taxes_brl_out if o.taxes_brl_out is not None else o.taxes_brl)
+            preco_final = eq_unit + tx
             
             r_out = {
                 "ID": fid, "Companhia": airline, "Trecho": "IDA",
                 "Data":    fs.departure_dt.strftime("%d/%m/%Y"),
                 "Saída":   fs.departure_dt.strftime("%H:%M"),
                 "Chegada": ls.arrival_dt.strftime("%H:%M"),
-                "Milhas":      f"{m_out:,}" if m_out else "—",
-                "Equiv. BRL":  f"R$ {eq_unit:.2f}" if m_out else "—",
+                "Milhas":      miles_display,
+                "Equiv. BRL":  f"R$ {eq_unit:.2f}" if eq_unit > 0 else "—",
             }
             if adults > 1:
                 r_out[f"Total ({adults}pax)"] = f"R$ {eq_unit * adults:,.2f}" if m_out else "—"
                 
             r_out.update({
-                "Taxas":       f"R$ {safe_float(o.taxes_brl_out if o.taxes_brl_out is not None else o.taxes_brl):.2f}",
-                "Preço Final": f"R$ {safe_float(o.equivalent_brl):.2f}",
+                "Taxas":       f"R$ {tx:.2f}",
+                "Preço Final": f"R$ {preco_final:.2f}" if m_out else f"R$ {safe_float(o.equivalent_brl):.2f}",
                 "Valor c/ Mala": f"R$ {val_mala:.2f}",
                 "Duração":  format_duration(o.outbound.duration_min),
                 "Escalas":  int(getattr(o, "stops_out", 0) or 0),
@@ -196,7 +226,10 @@ def build_table_rows(offers, include_baggage=False, id_prefix=""):
                 and hasattr(o, "inbound") and o.inbound and o.inbound.segments):
             fi = o.inbound.segments[0]; li = o.inbound.segments[-1]
             m_in = safe_int_miles(o.miles_in if o.miles_in is not None else o.miles)
-            eq_unit = miles_to_brl(m_in, airline)
+            prog = getattr(o, "miles_program", "")
+            eq_unit = miles_to_brl(m_in, airline, prog)
+            tx = safe_float(o.taxes_brl_in if o.taxes_brl_in is not None else o.taxes_brl)
+            preco_final = eq_unit + tx
             
             r_in = {
                 "ID": fid, "Companhia": airline, "Trecho": "VOLTA",
@@ -210,8 +243,8 @@ def build_table_rows(offers, include_baggage=False, id_prefix=""):
                 r_in[f"Total ({adults}pax)"] = f"R$ {eq_unit * adults:,.2f}" if m_in else "—"
                 
             r_in.update({
-                "Taxas":       f"R$ {safe_float(o.taxes_brl_in if o.taxes_brl_in is not None else o.taxes_brl):.2f}",
-                "Preço Final": f"R$ {safe_float(o.equivalent_brl):.2f}",
+                "Taxas":       f"R$ {tx:.2f}",
+                "Preço Final": f"R$ {preco_final:.2f}" if m_in else f"R$ {safe_float(o.equivalent_brl):.2f}",
                 "Valor c/ Mala": f"R$ {val_mala:.2f}",
                 "Duração":  format_duration(o.inbound.duration_min),
                 "Escalas":  int(getattr(o, "stops_in", 0) or 0),
@@ -388,6 +421,8 @@ section[data-testid="stSidebarContent"]{display:none!important;}
 .rank-card.iberia::before{background:#c8102e;}
 .rank-card.american::before{background:#0078d2;}
 .rank-card.interline::before{background:#6c3483;}
+.rank-card.copa::before{background:#005898;}
+.rank-card.mcp::before{background:#0ea47a;}
 .rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .rc-company{font-size:13px;font-weight:600;color:var(--pcd-text);}
 .rc-best-badge{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--pcd-green-light);color:var(--pcd-green);border:1px solid #b8ddc8;}
@@ -464,10 +499,12 @@ with col_gear:
         s_azul  = st.checkbox("AZUL",  value=True, key="chk_azul")
 
         # ── Fontes: Internacionais ──
-        st.markdown('<div class="cfg-group-label">🌍 Internacionais</div>', unsafe_allow_html=True)
-        s_tap       = st.checkbox("TAP",       value=False, key="chk_tap")
-        s_american  = st.checkbox("AMERICAN AIRLINES", value=False, key="chk_american")
-        s_interline = st.checkbox("INTERLINE", value=False, key="chk_interline")
+        st.markdown('<div class="cfg-group-label">🌍 Internacionais (Busca Milhas)</div>', unsafe_allow_html=True)
+        s_tap       = st.checkbox("TAP",              value=False, key="chk_tap")
+        s_american  = st.checkbox("AMERICAN AIRLINES",value=False, key="chk_american")
+        s_interline = st.checkbox("INTERLINE",         value=False, key="chk_interline")
+        s_copa      = st.checkbox("COPA",              value=False, key="chk_copa")
+        s_qatar     = st.checkbox("QATAR (vía MCP)",    value=False, key="chk_qatar")
 
         s_money = st.checkbox("Dinheiro (Kayak)", value=True, key="chk_money")
 
@@ -482,20 +519,30 @@ with col_gear:
 
         # ── Taxas de conversão: Internacionais ──
         st.markdown('<div class="cfg-group-label">💱 Taxas Internacionais (R$/milha)</div>', unsafe_allow_html=True)
-        RATES["TAP"]       = st.number_input("TAP",       value=RATES["TAP"],       step=0.001, format="%.4f", key="rate_tap")
-        RATES["AMERICAN AIRLINES"] = st.number_input("AMERICAN AIRLINES", value=RATES.get("AMERICAN AIRLINES", 0.0220), step=0.001, format="%.4f", key="rate_american")
-        RATES["INTERLINE"] = st.number_input("INTERLINE", value=RATES["INTERLINE"], step=0.001, format="%.4f", key="rate_interline")
+        RATES["TAP"]              = st.number_input("TAP",              value=RATES["TAP"],       step=0.001, format="%.4f", key="rate_tap")
+        RATES["AMERICAN AIRLINES"]= st.number_input("AMERICAN AIRLINES",value=RATES.get("AMERICAN AIRLINES", 0.0220), step=0.001, format="%.4f", key="rate_american")
+        RATES["INTERLINE"]        = st.number_input("INTERLINE",        value=RATES["INTERLINE"], step=0.001, format="%.4f", key="rate_interline")
+        RATES["COPA"]             = st.number_input("COPA",             value=RATES["COPA"],      step=0.001, format="%.4f", key="rate_copa")
+
+        # ── Taxas MCP (Programas Internacionais) ──
+        st.markdown('<div class="cfg-group-label">🌍 MCP Award (R$/ponto)</div>', unsafe_allow_html=True)
+        s_mcp = st.checkbox("Buscar via MCP Award", value=True, key="chk_mcp")
+        RATES["AVIOS"]      = st.number_input("Avios (BA/Qatar)", value=RATES["AVIOS"],      step=0.001, format="%.4f", key="rate_avios")
+        RATES["ASIA MILES"] = st.number_input("Asia Miles (CX)", value=RATES["ASIA MILES"], step=0.001, format="%.4f", key="rate_asiamiles")
 
         RATES["DEFAULT"] = RATES["GOL"]
 
 # Mapa de checkboxes por companhia BuscaMilhas
 _CIA_ACTIVE = {
-    "LATAM":     s_latam,
-    "GOL":       s_gol,
-    "AZUL":      s_azul,
-    "TAP":       s_tap,
-    "AMERICAN AIRLINES": s_american,
-    "INTERLINE": s_interline,
+    "LATAM":            s_latam,
+    "GOL":              s_gol,
+    "AZUL":             s_azul,
+    "TAP":              s_tap,
+    "AMERICAN AIRLINES":s_american,
+    "INTERLINE":        s_interline,
+    "COPA":             s_copa,
+    "MCP_AWARD":        s_mcp,
+    "QATAR":            s_qatar,
 }
 
 # Lista de companhias que o usuário ativou para buscar
@@ -625,6 +672,11 @@ for cia in COMPANHIAS_INTERNACIONAIS:
         meta = _CIA_META.get(cia, {"emoji": "✈️"})
         tab_specs.append((f"{meta['emoji']} {cia}", f"cia_{cia.lower()}"))
 
+tab_specs.append(("🌍 Internacional (MCP)", "mcp_award"))
+
+if s_qatar:
+    tab_specs.append(("🇶🇦 Qatar", "mcp_qatar"))
+
 tab_specs.append(("📊 Ranking Geral", "ranking"))
 
 tab_labels = [t[0] for t in tab_specs]
@@ -654,7 +706,8 @@ def _offer_main_display(offer, adults=1):
             return f"R$ {unit_price:,.2f}", f"{airline} · Kayak · em dinheiro", f"{dt_str}Valor s/ taxa pode variar"
     else:
         m  = safe_int_miles(getattr(offer, "miles", 0))
-        eq = miles_to_brl(m, airline)
+        prog = getattr(offer, "miles_program", "")
+        eq = miles_to_brl(m, airline, prog)
         tx = safe_float(getattr(offer, "taxes_brl", 0))
         
         if adults > 1:
@@ -766,7 +819,8 @@ with tabs[tab_keys.index("verdito")]:
         if o is None:
             return f'<div class="rank-card {css} empty"><div class="rc-header"><span class="rc-company">{label}</span></div><div class="rc-brl">—</div><div class="rc-detail">Sem resultado</div></div>'
         m   = safe_int_miles(getattr(o, "miles", 0))
-        eq  = miles_to_brl(m, label)
+        prog = getattr(o, "miles_program", "")
+        eq  = miles_to_brl(m, label, prog)
         tx  = safe_float(getattr(o, "taxes_brl", 0))
         dur = format_duration(getattr(getattr(o, "outbound", None), "duration_min", 0) or 0)
         esc = int(getattr(o, "stops_out", 0) or 0)
@@ -807,7 +861,8 @@ with tabs[tab_keys.index("verdito")]:
             st.info(f"A melhor opção encontrada foi **{a_bo}** em dinheiro por **R$ {p:,.2f}**.")
         else:
             m_bo  = safe_int_miles(getattr(bo, "miles", 0))
-            eq_bo = miles_to_brl(m_bo, a_bo); tx_bo = safe_float(getattr(bo, "taxes_brl", 0))
+            prog_bo = getattr(bo, "miles_program", "")
+            eq_bo = miles_to_brl(m_bo, a_bo, prog_bo); tx_bo = safe_float(getattr(bo, "taxes_brl", 0))
             bdo_p = safe_float(getattr(bd, "equivalent_brl", 0)) if bd else 0
             eco   = bdo_p - (eq_bo + tx_bo)
             eco_t = f" Comparado ao melhor em dinheiro (R$ {bdo_p:,.2f}), economia estimada de R$ {eco:,.2f}." if eco > 0 else ""
@@ -846,6 +901,39 @@ for cia in COMPANHIAS_NACIONAIS + COMPANHIAS_INTERNACIONAIS:
         st.dataframe(df[[c for c in COLS if c in df.columns]], use_container_width=True, hide_index=True)
 
 
+# ─── Tab MCP Award Travel Finder ─────────────────────────────
+with tabs[tab_keys.index("mcp_award")]:
+    pipeline_mcp = [
+        o for o in (getattr(res, "miles_offers", []) or [])
+        if source_is(o, "mcp_award")
+    ]
+
+    if not pipeline_mcp:
+        st.info("Nenhuma oferta encontrada via MCP Award para esta busca.")
+    else:
+        pipeline_mcp = sorted(pipeline_mcp, key=lambda o: get_baggage_price(o, incluir_mala))
+        rows_mcp = build_table_rows(pipeline_mcp, incluir_mala, id_prefix="W")
+        df_mcp = pd.DataFrame(rows_mcp)
+        st.dataframe(df_mcp[[c for c in COLS if c in df_mcp.columns]], use_container_width=True, hide_index=True)
+
+
+# ─── Tab QATAR (MCP PRO) ─────────────────────────────────────
+if s_qatar:
+    with tabs[tab_keys.index("mcp_qatar")]:
+        pipeline_qatar = [
+            o for o in (getattr(res, "miles_offers", []) or [])
+            if source_is(o, "mcp_qatar")
+        ]
+
+        if not pipeline_qatar:
+            st.info("Nenhuma oferta encontrada da Qatar para esta busca.")
+        else:
+            pipeline_qatar = sorted(pipeline_qatar, key=lambda o: get_baggage_price(o, incluir_mala))
+            rows_qatar = build_table_rows(pipeline_qatar, incluir_mala, id_prefix="QR")
+            df_qatar = pd.DataFrame(rows_qatar)
+            st.dataframe(df_qatar[[c for c in COLS if c in df_qatar.columns]], use_container_width=True, hide_index=True)
+
+
 # ─── Tab Ranking Geral ────────────────────────────────────────
 with tabs[tab_keys.index("ranking")]:
     rk = getattr(res, "ranked_offers", None)
@@ -879,6 +967,9 @@ for o in (getattr(res, "money_offers", []) or []):
     _add_offer(o, "$")
 for o in (getattr(res, "miles_offers", []) or []):
     _add_offer(o)
+# MCP pipeline offers (se o pipeline trouxer MCP_AWARD)
+for o in [o for o in (getattr(res, "miles_offers", []) or []) if source_is(o, "mcp_award")]:
+    pass  # ja indexado acima; MCP fixture nao e UnifiedOffer, exibido apenas na aba MCP
 
 if not all_idx:
     st.info("Nenhum voo disponível para detalhar.")
@@ -890,7 +981,8 @@ def _itin_lbl(fid, o):
         p = safe_float(getattr(o, "equivalent_brl", 0))
         return f"{fid} — {a} | R$ {p:,.2f} (dinheiro)"
     m  = safe_int_miles(getattr(o, "miles", 0))
-    eq = miles_to_brl(m, a)
+    prog = getattr(o, "miles_program", "")
+    eq = miles_to_brl(m, a, prog)
     return f"{fid} — {a} | {m:,} mi ≈ R$ {eq:,.2f}"
 
 sel = st.selectbox(
