@@ -1,5 +1,6 @@
 import json
 import time
+import threading
 import traceback
 from datetime import datetime
 from typing import List, Optional, Dict, Any
@@ -9,14 +10,15 @@ class PipelineTracer:
     def __init__(self, request_id: str):
         self.request_id = request_id
         self.events: List[Dict[str, Any]] = []
+        self._lock = threading.Lock()
 
     def log_event(
-        self, 
-        stage: str, 
-        status: str, 
-        message: str = "", 
-        latency_ms: float = 0.0, 
-        offers_count: Optional[int] = None, 
+        self,
+        stage: str,
+        status: str,
+        message: str = "",
+        latency_ms: float = 0.0,
+        offers_count: Optional[int] = None,
         error: Optional[str] = None
     ):
         event = {
@@ -29,7 +31,8 @@ class PipelineTracer:
             "message": message,
             "error": error
         }
-        self.events.append(event)
+        with self._lock:
+            self.events.append(event)
 
     @contextmanager
     def track_stage(self, stage: str, message: str = ""):
