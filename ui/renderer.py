@@ -60,10 +60,10 @@ def build_table_rows(offers, include_baggage: bool = False, id_prefix: str = "",
                 "Saída":   fs.departure_dt.strftime("%H:%M"),
                 "Chegada": ls.arrival_dt.strftime("%H:%M"),
                 "Milhas":      miles_display,
-                "Equiv. BRL":  f"R$ {eq_unit:.2f}" if eq_unit > 0 else "—",
+                "Custo Real (mi+taxas)": f"R$ {preco_final:.2f}" if eq_unit > 0 else "—",
             }
             if adults > 1:
-                r_out[f"Total ({adults}pax)"] = f"R$ {eq_unit * adults:,.2f}" if m_out else "—"
+                r_out[f"Total ({adults}pax)"] = f"R$ {preco_final * adults:,.2f}" if m_out else "—"
 
             r_out.update({
                 "Taxas":       f"R$ {tx:.2f}",
@@ -101,10 +101,10 @@ def build_table_rows(offers, include_baggage: bool = False, id_prefix: str = "",
                 "Saída":   fi.departure_dt.strftime("%H:%M"),
                 "Chegada": li.arrival_dt.strftime("%H:%M"),
                 "Milhas":      f"{m_in:,}" if m_in else "—",
-                "Equiv. BRL":  f"R$ {eq_unit:.2f}" if m_in else "—",
+                "Custo Real (mi+taxas)": f"R$ {preco_final:.2f}" if m_in else "—",
             }
             if adults > 1:
-                r_in[f"Total ({adults}pax)"] = f"R$ {eq_unit * adults:,.2f}" if m_in else "—"
+                r_in[f"Total ({adults}pax)"] = f"R$ {preco_final * adults:,.2f}" if m_in else "—"
 
             r_in.update({
                 "Taxas":       f"R$ {tx:.2f}",

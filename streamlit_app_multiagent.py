@@ -212,7 +212,7 @@ if getattr(res, "direct_filter_warning", None):
     st.warning(res.direct_filter_warning)
 
 COLS = ["ID", "Companhia", "Trecho", "Data",
-        "Milhas", "Equiv. BRL", "Taxas", "Preço Final", "Valor c/ Mala",
+        "Milhas", "Custo Real (mi+taxas)", "Taxas", "Preço Final", "Valor c/ Mala",
         "Duração", "Escalas", "Saída", "Chegada", "Local Escala"]
 
 if adults > 1:
@@ -280,32 +280,38 @@ def _offer_main_display(offer, adults=1):
         prog = getattr(offer, "miles_program", "")
         eq = miles_to_brl(m, airline, prog)
         tx = safe_float(getattr(offer, "taxes_brl", 0))
-        
+        custo_real = eq + tx
+
         if adults > 1:
-            tot_eq = eq * adults
-            return (f"R$ {tot_eq:,.2f}",
-                    f"Total para {adults} passageiros",
-                    f"Por passageiro: R$ {eq:,.2f} · {dt_str}{m:,} milhas + R$ {tx:.2f} taxas")
+            tot_real = custo_real * adults
+            return (f"R$ {tot_real:,.2f}",
+                    f"Total para {adults} passageiros (custo real)",
+                    f"Por passageiro: R$ {custo_real:,.2f} · {dt_str}{m:,} milhas (≈ R$ {eq:,.2f}) + R$ {tx:.2f} taxas")
         else:
-            return (f"R$ {eq:,.2f}",
-                    f"{airline} · em milhas convertidas",
-                    f"{dt_str}{m:,} milhas + R$ {tx:.2f} em taxas")
+            return (f"R$ {custo_real:,.2f}",
+                    f"{airline} · custo real (milhas + taxas)",
+                    f"{dt_str}{m:,} milhas (≈ R$ {eq:,.2f}) + R$ {tx:.2f} taxas")
 
 def _miles_mini_display(offer, adults=1):
     if offer is None: return "—", "—", "—"
     a = str(getattr(offer, "airline", ""))
     m = safe_int_miles(getattr(offer, "miles", 0))
     eq = miles_to_brl(m, a); tx = safe_float(getattr(offer, "taxes_brl", 0))
+    custo_real = eq + tx
     dt_str = ""
     if getattr(offer, "outbound", None) and getattr(offer.outbound, "segments", []):
         dt = offer.outbound.segments[0].departure_dt
         if dt: dt_str = f"📅 Partida: {dt.strftime('%d/%m')} · "
-    
+
     if adults > 1:
-        tot_eq = eq * adults
-        return f"R$ {tot_eq:,.2f}", f"Para {adults} passageiros", f"Por pax: R$ {eq:,.2f} · {m:,} mi + R${tx:.2f} tx"
+        tot_real = custo_real * adults
+        return (f"R$ {tot_real:,.2f}",
+                f"Para {adults} passageiros (custo real)",
+                f"Por pax: R$ {custo_real:,.2f} · {m:,} mi (≈ R$ {eq:,.2f}) + R$ {tx:.2f} tx")
     else:
-        return f"R$ {eq:,.2f}", f"{m:,} milhas", f"{dt_str}Taxas R$ {tx:.2f} · {a}"
+        return (f"R$ {custo_real:,.2f}",
+                f"{m:,} milhas (custo real)",
+                f"{dt_str}{m:,} mi (≈ R$ {eq:,.2f}) + R$ {tx:.2f} taxas · {a}")
 
 def _money_mini_display(offer, adults=1):
     if offer is None: return "—", "—"
@@ -393,6 +399,7 @@ with tabs[tab_keys.index("verdito")]:
         prog = getattr(o, "miles_program", "")
         eq  = miles_to_brl(m, label, prog)
         tx  = safe_float(getattr(o, "taxes_brl", 0))
+        custo_real = eq + tx
         dur = format_duration(getattr(getattr(o, "outbound", None), "duration_min", 0) or 0)
         esc = int(getattr(o, "stops_out", 0) or 0)
         dt_str = ""
@@ -400,23 +407,23 @@ with tabs[tab_keys.index("verdito")]:
             dt = o.outbound.segments[0].departure_dt
             if dt: dt_str = f"📅 {dt.strftime('%d/%m')} • "
         esc_str = f"{esc} esc" if esc > 0 else "Direto"
-        
+
         if adults > 1:
-            tot_eq = eq * adults
+            tot_real = custo_real * adults
             return f"""
 <div class="rank-card {css}">
   <div class="rc-header"><span class="rc-company">{label}</span>{badge}</div>
-  <div class="rc-brl" style="font-size:18px">R$ {tot_eq:,.2f} <span style="font-size:11px;color:#6b7a99">({adults}pax)</span></div>
-  <div class="rc-miles">R$ {eq:,.2f} / pax</div>
-  <div class="rc-detail">{dt_str}{esc_str} • {dur}<br>{m:,} milhas + R$ {tx:.2f} tx / pax</div>
+  <div class="rc-brl" style="font-size:18px">R$ {tot_real:,.2f} <span style="font-size:11px;color:#6b7a99">({adults}pax)</span></div>
+  <div class="rc-miles">R$ {custo_real:,.2f} / pax (mi+taxas)</div>
+  <div class="rc-detail">{dt_str}{esc_str} • {dur}<br>{m:,} mi (≈ R$ {eq:,.2f}) + R$ {tx:.2f} tx / pax</div>
 </div>"""
         else:
             return f"""
 <div class="rank-card {css}">
   <div class="rc-header"><span class="rc-company">{label}</span>{badge}</div>
-  <div class="rc-brl">R$ {eq:,.2f}</div>
-  <div class="rc-miles">{m:,} milhas</div>
-  <div class="rc-detail">{dt_str}{esc_str} • {dur}<br>Taxas R$ {tx:.2f}</div>
+  <div class="rc-brl">R$ {custo_real:,.2f}</div>
+  <div class="rc-miles">{m:,} milhas (custo real)</div>
+  <div class="rc-detail">{dt_str}{esc_str} • {dur}<br>{m:,} mi (≈ R$ {eq:,.2f}) + R$ {tx:.2f} taxas</div>
 </div>"""
 
     # Gerar cards apenas das companhias ativas
@@ -434,13 +441,15 @@ with tabs[tab_keys.index("verdito")]:
             m_bo  = safe_int_miles(getattr(bo, "miles", 0))
             prog_bo = getattr(bo, "miles_program", "")
             eq_bo = miles_to_brl(m_bo, a_bo, prog_bo); tx_bo = safe_float(getattr(bo, "taxes_brl", 0))
+            custo_real_bo = eq_bo + tx_bo
             bdo_p = safe_float(getattr(bd, "equivalent_brl", 0)) if bd else 0
-            eco   = bdo_p - (eq_bo + tx_bo)
-            eco_t = f" Comparado ao melhor em dinheiro (R$ {bdo_p:,.2f}), economia estimada de R$ {eco:,.2f}." if eco > 0 else ""
+            eco   = bdo_p - custo_real_bo
+            eco_t = f" Comparado ao melhor em dinheiro (R$ {bdo_p:,.2f}), economia real de R$ {eco:,.2f}." if eco > 0 else ""
             if adults > 1:
-                st.info(f"A melhor opção foi **{a_bo}** em milhas. Total: {m_bo * adults:,} mi ≈ R$ {eq_bo * adults:,.2f} + R$ {tx_bo * adults:.2f} taxas ({adults} pax).{eco_t} (Unitário: {m_bo:,} mi + R$ {tx_bo:.2f} tx)")
+                tot_real = custo_real_bo * adults
+                st.info(f"A melhor opção foi **{a_bo}** em milhas. Custo real total ({adults} pax): **R$ {tot_real:,.2f}** — composto por {m_bo * adults:,} mi (≈ R$ {eq_bo * adults:,.2f}) + R$ {tx_bo * adults:.2f} taxas. (Unitário: R$ {custo_real_bo:,.2f}).{eco_t}")
             else:
-                st.info(f"A melhor opção foi **{a_bo}** em milhas: {m_bo:,} mi ≈ R$ {eq_bo:,.2f} + R$ {tx_bo:.2f} taxas.{eco_t}")
+                st.info(f"A melhor opção foi **{a_bo}** em milhas. Custo real: **R$ {custo_real_bo:,.2f}** — composto por {m_bo:,} mi (≈ R$ {eq_bo:,.2f}) + R$ {tx_bo:.2f} taxas.{eco_t}")
 
 
 # ─── Tab Dinheiro ─────────────────────────────────────────────
@@ -554,7 +563,9 @@ def _itin_lbl(fid, o):
     m  = safe_int_miles(getattr(o, "miles", 0))
     prog = getattr(o, "miles_program", "")
     eq = miles_to_brl(m, a, prog)
-    return f"{fid} — {a} | {m:,} mi ≈ R$ {eq:,.2f}"
+    tx = safe_float(getattr(o, "taxes_brl", 0))
+    custo_real = eq + tx
+    return f"{fid} — {a} | R$ {custo_real:,.2f} ({m:,} mi + R$ {tx:.2f} tx)"
 
 sel = st.selectbox(
     "Selecione o voo pelo ID",
