@@ -6,326 +6,41 @@ from pathlib import Path
 from typing import List
 from pcd.run import run_pipeline
 from pcd.core.schema import TripType, SourceType
-from pcd.core.conversion import miles_to_brl as _miles_to_brl_core
 from pcd.core.conversion import RATES_BRL_PER_MILE as RATES
 from pcd.nlp.intent_parser import parse_intent_ptbr
 from miles_app.buscamilhas_client import COMPANHIAS_NACIONAIS, COMPANHIAS_INTERNACIONAIS
 from mcp_offer_parser import extract_mcp_offers
 
+from ui.styles import inject_styles, render_topbar
+from ui.formatters import (
+    CIA_META as _CIA_META,
+    INTERNACIONAIS_SEM_BAGAGEM_EXTRA as _INTERNACIONAIS_SEM_BAGAGEM_EXTRA,
+    src_name as _src_name,
+    tab_key as _tab_key,
+    miles_to_brl,
+    format_duration,
+    safe_int_miles,
+    safe_float,
+    get_baggage_price,
+    source_is,
+    id_prefix as _id_prefix,
+)
+from ui.renderer import (
+    build_table_rows as _build_table_rows_core,
+    render_itin_card,
+)
+
 _MCP_FIXTURE = Path(__file__).parent / "debug_dumps" / "mcp_all_airlines_GRU_JFK_sample.json"
 
-# Taxas de conversão milhas→BRL agora vivem em pcd/core/conversion.py
-# (fonte única para UI e ranking).
+# Helpers, metadados e taxas de conversão estão em ui/ e pcd/core/conversion.py.
+# Importados acima como aliases para preservar os nomes usados por todo o app.
 
-# Metadados visuais de cada companhia (src = valor exato do SourceType)
-_CIA_META = {
-    "LATAM":     {"emoji": "💎", "css": "latam",     "prefix": "L",  "src": "buscamilhas_latam"},
-    "GOL":       {"emoji": "🟠", "css": "gol",       "prefix": "G",  "src": "buscamilhas_gol"},
-    "AZUL":      {"emoji": "🔵", "css": "azul",      "prefix": "A",  "src": "buscamilhas_azul"},
-    "TAP":       {"emoji": "🟢", "css": "tap",       "prefix": "TP", "src": "buscamilhas_tap"},
-    "AMERICAN AIRLINES": {"emoji": "🦅", "css": "american",  "prefix": "AA", "src": "buscamilhas_american"},
-    "INTERLINE": {"emoji": "🌐", "css": "interline", "prefix": "IN", "src": "buscamilhas_interline"},
-    "COPA":      {"emoji": "🛫", "css": "copa",      "prefix": "CM", "src": "buscamilhas_copa"},
-    "MCP_AWARD": {"emoji": "🌍", "css": "mcp",       "prefix": "W",  "src": "mcp_award"},
-    "QATAR":     {"emoji": "🇶🇦", "css": "qatar",     "prefix": "QR", "src": "mcp_qatar"},
-}
-
-# Companhias internacionais sem acréscimo de bagagem (já inclusa na tarifa de milhas)
-_INTERNACIONAIS_SEM_BAGAGEM_EXTRA = {"TAP", "AMERICAN AIRLINES", "INTERLINE"}
-
-
-def _src_name(cia: str) -> str:
-    """Retorna o valor exato do SourceType para a companhia."""
-    return _CIA_META.get(cia, {}).get("src", f"buscamilhas_{cia.lower()}")
-
-
-def _tab_key(cia: str) -> str:
-    """Chave única da tab da companhia (sem espaços)."""
-    return f"cia_{cia.lower().replace(' ', '_')}"
-
-
-def miles_to_brl(miles, airline: str = "", program: str = "") -> float:
-    """Wrapper compatível — delega para pcd.core.conversion.miles_to_brl."""
-    return _miles_to_brl_core(miles, airline=airline, program=program)
-
-
-# ═══════════════════════════════════════════════════════════════
-# HELPERS GERAIS
-# ═══════════════════════════════════════════════════════════════
-
-def format_duration(min_total) -> str:
-    try:
-        v = int(min_total or 0)
-    except Exception:
-        return "—"
-    if v <= 0:
-        return "0m"
-    h, m = divmod(v, 60)
-    return f"{h}h{m:02d}m" if h else f"{m}m"
-
-def safe_int_miles(val) -> int:
-    try:
-        if val is None or str(val).lower() in ("none", "", "—"):
-            return 0
-        return int(float(str(val).replace(",", "")))
-    except Exception:
-        return 0
-
-def safe_float(val) -> float:
-    try:
-        return float(val) if val is not None else 0.0
-    except Exception:
-        return 0.0
-
-def get_baggage_price(offer, include_baggage: bool) -> float:
-    base = safe_float(getattr(offer, "equivalent_brl", 0))
-    if not include_baggage:
-        return base
-    a = str(getattr(offer, "airline", "")).upper()
-
-    # Internacionais já incluem bagagem — sem acréscimo
-    for cia in _INTERNACIONAIS_SEM_BAGAGEM_EXTRA:
-        if cia in a:
-            return base
-
-    if "GOL"  in a: return base + 130.0
-    if "AZUL" in a: return base + 160.0
-
-    if "LATAM" in a:
-        m_out = getattr(offer, "baggage_miles_out", None)
-        m_in  = getattr(offer, "baggage_miles_in",  None)
-        has_bag_out = m_out is not None
-        has_bag_in  = m_in  is not None
-        if has_bag_out or has_bag_in:
-            val_out = safe_int_miles(m_out) if has_bag_out else safe_int_miles(getattr(offer, "miles_out", 0) or getattr(offer, "miles", 0))
-            val_in  = 0
-            trip_type_val = getattr(getattr(offer, "trip_type", None), "name", str(getattr(offer, "trip_type", "")))
-            if "ROUNDTRIP" in trip_type_val.upper():
-                val_in = safe_int_miles(m_in) if has_bag_in else safe_int_miles(getattr(offer, "miles_in", 0) or 0)
-            total_m = val_out + val_in
-            eq = miles_to_brl(total_m, "LATAM")
-            return eq + safe_float(getattr(offer, "taxes_brl", 0))
-
-    return base
-
-def source_is(offer, name: str) -> bool:
-    if not offer or not hasattr(offer, "source"):
-        return False
-    s = offer.source
-    return str(s.value if hasattr(s, "value") else s).lower() == name.lower()
-
-def _id_prefix(airline: str, source: str = "") -> str:
-    a = str(airline).upper(); s = str(source).upper()
-    if "LATAM"     in a or "LATAM"     in s: return "L"
-    if "GOL"       in a or "GOL"       in s: return "G"
-    if "AZUL"      in a or "AZUL"      in s: return "A"
-    if "IBERIA"    in a or "IBERIA"    in s: return "IB"
-    if "TAP"       in a or "TAP"       in s: return "TP"
-    if "AMERICAN"  in a or "AMERICAN"  in s: return "AA"
-    if "INTERLINE" in a or "INTERLINE" in s: return "IN"
-    if "MCP"       in s or "MCP_AWARD" in s: return "W"
-    return "X"
 
 def build_table_rows(offers, include_baggage=False, id_prefix=""):
-    import streamlit as st
+    """Wrapper local que injeta `adults` a partir do session_state."""
     pi = st.session_state.get("parsed_intent")
     adults = getattr(pi, "adults", 1) if pi else 1
-    
-    rows = []
-    for i, o in enumerate(offers):
-        val_mala = get_baggage_price(o, True)
-        airline  = str(getattr(o, "airline", ""))
-        src_val  = str(getattr(getattr(o, "source", None), "value", "") or "")
-        prefix   = id_prefix or _id_prefix(airline, src_val)
-        fid      = f"{prefix}{i+1}"
-
-        # ── Escala IDA ──
-        segs_out_raw = getattr(o, "outbound_segments_raw", None) or []
-        if segs_out_raw and len(segs_out_raw) > 1:
-            local_out = ", ".join(getattr(s, "destination", "") for s in segs_out_raw[:-1] if getattr(s, "destination", ""))
-        elif hasattr(o, "outbound") and o.outbound and len(o.outbound.segments) > 1:
-            local_out = ", ".join(s.destination for s in o.outbound.segments[:-1])
-        else:
-            local_out = "Direto"
-
-        # ── IDA ──
-        if hasattr(o, "outbound") and o.outbound and o.outbound.segments:
-            fs = o.outbound.segments[0]; ls = o.outbound.segments[-1]
-            raw_miles = o.miles_out if o.miles_out is not None else o.miles
-            m_out = safe_int_miles(raw_miles)
-            # Sentinela -1: disponível mas pontos não informados pela API PRO
-            miles_display = "Consultar" if (raw_miles is not None and int(raw_miles or 0) == -1) else (f"{m_out:,}" if m_out else "—")
-            prog  = getattr(o, "miles_program", "")
-            eq_unit = miles_to_brl(m_out, airline, prog) if m_out > 0 else 0.0
-            tx = safe_float(o.taxes_brl_out if o.taxes_brl_out is not None else o.taxes_brl)
-            preco_final = eq_unit + tx
-            
-            r_out = {
-                "ID": fid, "Companhia": airline, "Trecho": "IDA",
-                "Data":    fs.departure_dt.strftime("%d/%m/%Y"),
-                "Saída":   fs.departure_dt.strftime("%H:%M"),
-                "Chegada": ls.arrival_dt.strftime("%H:%M"),
-                "Milhas":      miles_display,
-                "Equiv. BRL":  f"R$ {eq_unit:.2f}" if eq_unit > 0 else "—",
-            }
-            if adults > 1:
-                r_out[f"Total ({adults}pax)"] = f"R$ {eq_unit * adults:,.2f}" if m_out else "—"
-                
-            r_out.update({
-                "Taxas":       f"R$ {tx:.2f}",
-                "Preço Final": f"R$ {preco_final:.2f}" if m_out else f"R$ {safe_float(o.equivalent_brl):.2f}",
-                "Valor c/ Mala": f"R$ {val_mala:.2f}",
-                "Duração":  format_duration(o.outbound.duration_min),
-                "Escalas":  int(getattr(o, "stops_out", 0) or 0),
-                "Local Escala": local_out,
-            })
-            rows.append(r_out)
-
-        # ── Escala VOLTA ──
-        segs_in_raw = getattr(o, "inbound_segments_raw", None) or []
-        if segs_in_raw and len(segs_in_raw) > 1:
-            local_in = ", ".join(getattr(s, "destination", "") for s in segs_in_raw[:-1] if getattr(s, "destination", ""))
-        elif hasattr(o, "inbound") and o.inbound and o.inbound.segments and len(o.inbound.segments) > 1:
-            local_in = ", ".join(s.destination for s in o.inbound.segments[:-1])
-        else:
-            local_in = "Direto"
-
-        # ── VOLTA ──
-        if (hasattr(o, "trip_type") and o.trip_type == TripType.ROUNDTRIP
-                and hasattr(o, "inbound") and o.inbound and o.inbound.segments):
-            fi = o.inbound.segments[0]; li = o.inbound.segments[-1]
-            m_in = safe_int_miles(o.miles_in if o.miles_in is not None else o.miles)
-            prog = getattr(o, "miles_program", "")
-            eq_unit = miles_to_brl(m_in, airline, prog)
-            tx = safe_float(o.taxes_brl_in if o.taxes_brl_in is not None else o.taxes_brl)
-            preco_final = eq_unit + tx
-            
-            r_in = {
-                "ID": fid, "Companhia": airline, "Trecho": "VOLTA",
-                "Data":    fi.departure_dt.strftime("%d/%m/%Y"),
-                "Saída":   fi.departure_dt.strftime("%H:%M"),
-                "Chegada": li.arrival_dt.strftime("%H:%M"),
-                "Milhas":      f"{m_in:,}" if m_in else "—",
-                "Equiv. BRL":  f"R$ {eq_unit:.2f}" if m_in else "—",
-            }
-            if adults > 1:
-                r_in[f"Total ({adults}pax)"] = f"R$ {eq_unit * adults:,.2f}" if m_in else "—"
-                
-            r_in.update({
-                "Taxas":       f"R$ {tx:.2f}",
-                "Preço Final": f"R$ {preco_final:.2f}" if m_in else f"R$ {safe_float(o.equivalent_brl):.2f}",
-                "Valor c/ Mala": f"R$ {val_mala:.2f}",
-                "Duração":  format_duration(o.inbound.duration_min),
-                "Escalas":  int(getattr(o, "stops_in", 0) or 0),
-                "Local Escala": local_in,
-            })
-            rows.append(r_in)
-            
-    return rows
-
-
-# ═══════════════════════════════════════════════════════════════
-# RENDER ITINERÁRIO — recebe o offer completo, não o itinerary
-# ═══════════════════════════════════════════════════════════════
-
-def render_itin_card(offer, direction: str = "outbound"):
-    is_volta  = direction == "inbound"
-    hcls      = "itin-header volta" if is_volta else "itin-header"
-    lbl       = "Volta" if is_volta else "Ida"
-    raw_key   = "inbound_segments_raw" if is_volta else "outbound_segments_raw"
-
-    segs_raw  = getattr(offer, raw_key, None) or []
-    itin      = offer.inbound if is_volta else offer.outbound
-    if not itin:
-        return
-
-    # ── metadados ──
-    if segs_raw:
-        fr, lr = segs_raw[0], segs_raw[-1]
-        orig = getattr(fr, "origin", ""); dest = getattr(lr, "destination", "")
-        dep_dt = getattr(fr, "departure_dt", None); arr_dt = getattr(lr, "arrival_dt", None)
-        dep_s  = dep_dt.strftime("%H:%M")    if dep_dt else "—"
-        arr_s  = arr_dt.strftime("%H:%M")    if arr_dt else "—"
-        ddate  = dep_dt.strftime("%d/%m/%Y") if dep_dt else "—"
-        tot_min = int((arr_dt - dep_dt).total_seconds() // 60) if arr_dt and dep_dt else 0
-        tot    = format_duration(tot_min)
-        nstops = len(segs_raw) - 1
-    else:
-        ss = itin.segments
-        fs, ls = ss[0], ss[-1]
-        orig = fs.origin; dest = ls.destination
-        dep_s  = fs.departure_dt.strftime("%H:%M")
-        arr_s  = ls.arrival_dt.strftime("%H:%M")
-        ddate  = fs.departure_dt.strftime("%d/%m/%Y")
-        tot    = format_duration(itin.duration_min)
-        nstops = len(ss) - 1
-
-    slbl = "Direto" if nstops == 0 else f"{nstops} escala(s)"
-
-    st.markdown(f"""
-<div class="itin-card">
-  <div class="{hcls}">
-    <div>
-      <div style="font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.05em">{lbl}</div>
-      <div class="ih-route">{orig} → {dest}</div>
-    </div>
-    <div class="ih-meta">{ddate} · {slbl} · {tot}</div>
-  </div>
-  <div class="itin-body">
-    <div class="itin-timeline">
-      <div class="itin-ap"><div class="ap-code">{orig}</div><div class="ap-time">{dep_s}</div></div>
-      <div class="itin-line">
-        <div class="itin-dur">{tot}</div>
-        <div class="itin-bar"></div>
-        <div class="itin-stops-badge">{slbl}</div>
-      </div>
-      <div class="itin-ap" style="text-align:right"><div class="ap-code">{dest}</div><div class="ap-time">{arr_s}</div></div>
-    </div>
-""", unsafe_allow_html=True)
-
-    # ── segmentos ──
-    if segs_raw:
-        for idx, seg in enumerate(segs_raw):
-            dep = getattr(seg, "departure_dt", None); arr = getattr(seg, "arrival_dt", None)
-            ds  = dep.strftime("%H:%M") if dep else "—"
-            as_ = arr.strftime("%H:%M") if arr else "—"
-            seg_dur_min = int((arr - dep).total_seconds() // 60) if arr and dep else 0
-            dur = format_duration(seg_dur_min)
-            carrier = getattr(seg, "carrier", ""); flt = getattr(seg, "flight_number", "") or carrier
-            o_s = getattr(seg, "origin", ""); d_s = getattr(seg, "destination", "")
-            st.markdown(f"""
-<div class="seg-row">
-  <div class="seg-flt">{flt}</div>
-  <div class="seg-route">{o_s} → {d_s}</div>
-  <div class="seg-times">{ds} → {as_}</div>
-  <div class="seg-dur">{dur}</div>
-  <div class="seg-carrier">{carrier}</div>
-</div>""", unsafe_allow_html=True)
-            if idx < len(segs_raw) - 1:
-                nxt = segs_raw[idx + 1]
-                nxt_dep = getattr(nxt, "departure_dt", None)
-                if arr and nxt_dep:
-                    lv_min = int((nxt_dep - arr).total_seconds() // 60)
-                    if lv_min > 0:
-                        st.markdown(f'<div class="layover-banner">🛑 Conexão em {d_s}: {format_duration(lv_min)}</div>',
-                                    unsafe_allow_html=True)
-    else:
-        for idx, seg in enumerate(itin.segments):
-            ds_ = seg.departure_dt.strftime("%H:%M"); as__ = seg.arrival_dt.strftime("%H:%M")
-            st.markdown(f"""
-<div class="seg-row">
-  <div class="seg-flt">{seg.carrier} {seg.flight_number or ''}</div>
-  <div class="seg-route">{seg.origin} → {seg.destination}</div>
-  <div class="seg-times">{ds_} → {as__}</div>
-</div>""", unsafe_allow_html=True)
-            if idx < len(itin.segments) - 1:
-                nxt = itin.segments[idx+1]
-                lv  = int((nxt.departure_dt - seg.arrival_dt).total_seconds() // 60)
-                if lv > 0:
-                    st.markdown(f'<div class="layover-banner">🛑 Conexão em {seg.destination}: {format_duration(lv)}</div>',
-                                unsafe_allow_html=True)
-
-    st.markdown("</div></div>", unsafe_allow_html=True)
+    return _build_table_rows_core(offers, include_baggage, id_prefix, adults=adults)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -336,123 +51,9 @@ st.set_page_config(
     layout="wide", initial_sidebar_state="collapsed",
 )
 
-st.markdown("""
-<style>
-:root{--pcd-blue:#1a56a0;--pcd-blue-dark:#0d2b6e;--pcd-blue-light:#e8f0fb;
-      --pcd-red:#c0392b;--pcd-gray:#f5f6fa;--pcd-border:#dde3ef;
-      --pcd-text:#1a2236;--pcd-muted:#6b7a99;
-      --pcd-green:#1a7a4a;--pcd-green-light:#eaf4ef;}
-[data-testid="stSidebar"]{display:none!important;}
-section[data-testid="stSidebarContent"]{display:none!important;}
-.block-container{padding-top:0!important;padding-bottom:2rem!important;}
-.stApp{background-color:var(--pcd-gray)!important;}
-.pcd-topbar{background:var(--pcd-blue-dark);padding:0 24px;height:56px;
-    display:flex;align-items:center;justify-content:space-between;
-    margin:-1rem -4rem 1.5rem -4rem;position:sticky;top:0;z-index:100;}
-.pcd-logo-name{color:white;font-size:16px;font-weight:600;}
-.pcd-logo-sub{color:rgba(255,255,255,.55);font-size:11px;}
-.stTextArea textarea{border:2px solid var(--pcd-blue)!important;border-radius:10px!important;font-size:15px!important;}
-.stTextArea textarea:focus{box-shadow:0 0 0 3px rgba(26,86,160,.15)!important;}
-.stButton>button{background-color:var(--pcd-red)!important;color:white!important;
-    font-weight:600!important;border-radius:10px!important;border:none!important;
-    font-size:15px!important;padding:.65rem 2rem!important;}
-.stButton>button:hover{background-color:#a93226!important;}
-.stTabs [data-baseweb="tab-list"]{gap:4px;border-bottom:2px solid var(--pcd-border)!important;background:transparent!important;}
-.stTabs [data-baseweb="tab"]{font-size:13px!important;font-weight:500!important;
-    color:var(--pcd-muted)!important;border-radius:8px 8px 0 0!important;
-    padding:8px 16px!important;background:transparent!important;border:none!important;}
-.stTabs [aria-selected="true"]{color:var(--pcd-blue)!important;
-    border-bottom:2px solid var(--pcd-blue)!important;background:var(--pcd-blue-light)!important;}
-/* banner */
-.banner-wrap{background:var(--pcd-blue-dark);border-radius:12px;padding:16px 20px;
-    display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem;}
-.banner-main{flex:1.6;min-width:220px;background:rgba(255,255,255,.97);
-    border-radius:8px;padding:16px 20px;border:2px solid rgba(255,255,255,.8);}
-.bm-label{font-size:11px;color:var(--pcd-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
-.bm-company{font-size:13px;font-weight:600;color:var(--pcd-text);margin-bottom:4px;}
-.bm-value-primary{font-size:28px;font-weight:800;color:var(--pcd-red);line-height:1.1;}
-.bm-value-secondary{font-size:14px;font-weight:600;color:var(--pcd-blue);margin-top:4px;}
-.bm-taxes{font-size:12px;color:var(--pcd-muted);margin-top:3px;}
-.banner-mini{flex:1;min-width:160px;background:rgba(255,255,255,.1);
-    border-radius:8px;padding:14px 16px;border:1px solid rgba(255,255,255,.15);}
-.bm-mini-label{font-size:10px;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
-.bm-val-main{font-size:22px;font-weight:700;color:white;line-height:1.1;}
-.bm-val-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px;font-weight:500;}
-.bm-detail{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
-/* ranking dinâmico */
-.rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:1rem;}
-.rank-card{background:white;border-radius:10px;border:1px solid var(--pcd-border);padding:14px 16px;position:relative;overflow:hidden;}
-.rank-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;}
-.rank-card.latam::before{background:var(--pcd-red);}
-.rank-card.gol::before{background:#ff6b00;}
-.rank-card.azul::before{background:#0032a0;}
-.rank-card.tap::before{background:#00b761;}
-.rank-card.iberia::before{background:#c8102e;}
-.rank-card.american::before{background:#0078d2;}
-.rank-card.interline::before{background:#6c3483;}
-.rank-card.copa::before{background:#005898;}
-.rank-card.mcp::before{background:#0ea47a;}
-.rc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.rc-company{font-size:13px;font-weight:600;color:var(--pcd-text);}
-.rc-best-badge{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--pcd-green-light);color:var(--pcd-green);border:1px solid #b8ddc8;}
-.rc-brl{font-size:22px;font-weight:800;color:var(--pcd-red);line-height:1.1;}
-.rc-miles{font-size:13px;color:var(--pcd-blue);font-weight:500;margin-top:3px;}
-.rc-detail{font-size:11px;color:var(--pcd-muted);margin-top:4px;}
-.rank-card.empty .rc-brl{color:#ccc;}
-/* chips */
-.parsed-wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0 4px;}
-.p-chip{background:white;border:1px solid var(--pcd-border);border-radius:20px;padding:4px 12px;font-size:12px;display:inline-flex;align-items:center;gap:4px;}
-.p-chip b{color:var(--pcd-blue);}
-.p-badge-rt{background:var(--pcd-blue);color:white;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600;}
-.p-badge-ow{background:var(--pcd-blue-light);color:var(--pcd-blue);border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600;}
-.p-badge-dir{background:var(--pcd-green-light);color:var(--pcd-green);border-radius:20px;padding:3px 12px;font-size:11px;border:1px solid #b8ddc8;}
-/* itinerário */
-.itin-card{background:white;border-radius:12px;border:1px solid var(--pcd-border);overflow:hidden;margin-bottom:12px;}
-.itin-header{background:var(--pcd-blue-dark);color:white;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;}
-.itin-header.volta{background:var(--pcd-red);}
-.ih-route{font-size:16px;font-weight:600;}
-.ih-meta{font-size:12px;color:rgba(255,255,255,.7);}
-.itin-body{padding:14px 18px;}
-.itin-timeline{display:flex;align-items:center;margin-bottom:14px;}
-.itin-ap{text-align:center;min-width:64px;}
-.ap-code{font-size:24px;font-weight:700;color:var(--pcd-text);}
-.ap-time{font-size:14px;color:var(--pcd-blue);font-weight:600;margin-top:2px;}
-.itin-line{flex:1;display:flex;flex-direction:column;align-items:center;padding:0 8px;gap:3px;}
-.itin-bar{width:100%;height:2px;background:var(--pcd-border);position:relative;}
-.itin-bar::after{content:'';position:absolute;right:-5px;top:-4px;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:8px solid var(--pcd-border);}
-.itin-dur{font-size:11px;color:var(--pcd-muted);}
-.itin-stops-badge{font-size:10px;color:var(--pcd-muted);background:var(--pcd-gray);padding:2px 8px;border-radius:10px;}
-.seg-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px dashed var(--pcd-border);}
-.seg-row:first-child{border-top:none;}
-.seg-flt{background:var(--pcd-blue-light);color:var(--pcd-blue);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;min-width:80px;text-align:center;}
-.seg-route{font-size:13px;font-weight:600;color:var(--pcd-text);min-width:90px;}
-.seg-times{font-size:12px;color:var(--pcd-blue);font-weight:600;}
-.seg-dur{font-size:11px;color:var(--pcd-muted);}
-.seg-carrier{font-size:11px;color:var(--pcd-muted);flex:1;}
-.layover-banner{background:#fff8e6;border:1px dashed #e59a00;color:#856404;border-radius:8px;padding:7px 14px;text-align:center;font-size:12px;font-weight:600;margin:6px 0;}
-.sec-title{font-size:12px;font-weight:600;color:var(--pcd-muted);text-transform:uppercase;letter-spacing:.05em;padding-bottom:8px;border-bottom:1px solid var(--pcd-border);margin:16px 0 10px;}
-/* grupo de config */
-.cfg-group-label{font-size:11px;font-weight:700;color:var(--pcd-muted);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px;}
-</style>
-""", unsafe_allow_html=True)
+inject_styles()
+render_topbar()
 
-# ── Top bar ──
-st.markdown("""
-<div class="pcd-topbar">
-  <div style="display:flex;align-items:center;gap:10px">
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none"
-         style="background:white;border-radius:6px;padding:4px">
-      <path d="M4 18L16 7L28 18" stroke="#1a56a0" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M16 7V25M9 25H23" stroke="#1a56a0" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="24" cy="10" r="4" fill="#c0392b"/>
-    </svg>
-    <div>
-      <div class="pcd-logo-name">Agente de Cotação PcD</div>
-      <div class="pcd-logo-sub">PassagensComDesconto · Brasília</div>
-    </div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
 
 # ── Engrenagem / Configurações ──
 col_gear, _ = st.columns([1, 14])
