@@ -24,3 +24,28 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# Artefatos de execução / debug
+debug_dumps/
+trace_ui_*.jsonl
+trace*.jsonl
+run_trace.jsonl
+out.txt
+out_e.txt
+output.txt
+output_*.txt
+report_*.txt
+stderr.txt
+stdout*.txt
+rank_error.txt
+verification_output.txt
+test_out*.txt
+
+# Pacotes Node (não usado no projeto principal)
+node_modules/
+
+# Claude Code (config local do agente)
+.claude/
+
+# Scratch (experimentos isolados, fora do app)
+scratch/

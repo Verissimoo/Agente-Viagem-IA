@@ -5,7 +5,6 @@ from datetime import date, datetime, timedelta
 from typing import Optional
 
 from pcd.core.schema import SearchRequest, TripType, CabinClass
-from pcd.adapters.kayak_adapter import KayakAdapter
 from pcd.adapters.mcp_award_adapter import McpAwardAdapter, McpQatarAdapter
 from pcd.adapters.buscamilhas_adapter import (
     BuscaMilhasLatamAdapter, BuscaMilhasGolAdapter, BuscaMilhasAzulAdapter,
@@ -75,7 +74,6 @@ def run_pipeline(
     direct_only: bool = False,
     origin: Optional[str] = None,
     destination: Optional[str] = None,
-    debug_dump_kayak: bool = False,
     debug_dump_buscamilhas: bool = False,
     flex_days: int = 0,
     flex_return: bool = False,
@@ -129,18 +127,7 @@ def run_pipeline(
             if req_i.return_start:
                 date_trace_id += f"_ret_{req_i.return_start.isoformat()}"
 
-            # 3. Stage: kayak_search
-            with tracer.track_stage(f"kayak_search{date_trace_id}") as info:
-                try:
-                    offers = KayakAdapter().search(req_i, use_fixtures=use_fixtures, debug_dump=debug_dump_kayak)
-                    all_offers.extend(offers)
-                    print(f"DEBUG: Kayak retornou {len(offers)} ofertas para {req_i.date_start}. Total acumulado: {len(all_offers)}")
-                    info["offers_count"] = len(offers)
-                    info["date"] = req_i.date_start.isoformat()
-                except (OfflineModeError, Exception) as e:
-                    print(f"[!] Kayak failed for {req_i.date_start}: {e}")
-
-            # 4. Stage: buscamilhas_search (loop dinâmico por companhia)
+            # 3. Stage: buscamilhas_search (loop dinâmico por companhia)
             companhias_ativas = companhias if companhias else COMPANHIAS_NACIONAIS
             for cia in companhias_ativas:
                 cia_up = cia.upper()
