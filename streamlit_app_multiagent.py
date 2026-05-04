@@ -104,6 +104,7 @@ with col_gear:
 
 # Mapa de checkboxes por companhia BuscaMilhas
 _CIA_ACTIVE = {
+    "KAYAK":            s_money,
     "LATAM":            s_latam,
     "GOL":              s_gol,
     "AZUL":             s_azul,

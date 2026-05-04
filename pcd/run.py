@@ -9,6 +9,7 @@ from typing import Optional, Tuple
 from pcd.core.schema import (
     SearchRequest, TripType, CabinClass, PipelineResult,
 )
+from pcd.adapters.kayak_adapter import KayakAdapter
 from pcd.adapters.mcp_award_adapter import McpAwardAdapter, McpQatarAdapter
 from pcd.adapters.buscamilhas_adapter import (
     BuscaMilhasLatamAdapter, BuscaMilhasGolAdapter, BuscaMilhasAzulAdapter,
@@ -27,6 +28,7 @@ from pcd.core.flex_dates import build_date_plan, compute_best_day
 
 # Mapa companhia → classe do adapter
 _ADAPTER_MAP = {
+    "KAYAK":             KayakAdapter,
     "LATAM":             BuscaMilhasLatamAdapter,
     "GOL":               BuscaMilhasGolAdapter,
     "AZUL":              BuscaMilhasAzulAdapter,
@@ -139,7 +141,7 @@ def _execute_adapters_parallel(
         }
         for fut in as_completed(futures):
             cia_up, offers, error, elapsed_ms = fut.result()
-            stage_name = f"buscamilhas_search_{cia_up.lower()}{date_trace_id}"
+            stage_name = f"adapter_search_{cia_up.lower()}{date_trace_id}"
             if error is not None:
                 tracer.log_event(
                     stage=stage_name,
@@ -148,7 +150,7 @@ def _execute_adapters_parallel(
                     offers_count=0,
                     error=str(error),
                 )
-                print(f"[!] BuscaMilhas {cia_up} failed for {req_i.date_start}: {error}")
+                print(f"[!] Adapter {cia_up} failed for {req_i.date_start}: {error}")
             else:
                 tracer.log_event(
                     stage=stage_name,
@@ -159,7 +161,7 @@ def _execute_adapters_parallel(
                 )
                 aggregated.extend(offers)
                 print(
-                    f"DEBUG: BuscaMilhas {cia_up} retornou {len(offers)} ofertas "
+                    f"DEBUG: Adapter {cia_up} retornou {len(offers)} ofertas "
                     f"para {req_i.date_start} em {elapsed_ms:.0f}ms"
                 )
 
