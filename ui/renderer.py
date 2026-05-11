@@ -18,6 +18,48 @@ from ui.formatters import (
 )
 
 
+def _airline_meta(iata_or_name: str) -> dict:
+    """Resolve nome completo, cor primária e cor de fundo da companhia.
+
+    Lookup ordenado (igual ao usado em streamlit_app_multiagent):
+      1) pcd.agents.smart_quote.AIRLINE_DISPLAY (IATA → meta)
+      2) Mapeamento por nome completo (LATAM, GOL, AZUL etc.)
+      3) Fallback neutro azul PcD.
+    """
+    code = (iata_or_name or "").upper().strip()
+    if not code:
+        return {"name": "—", "color": "#1a56a0", "bg": "#e8f0fb"}
+    try:
+        from pcd.agents.smart_quote import AIRLINE_DISPLAY as _CENTRAL
+        if code in _CENTRAL:
+            return _CENTRAL[code]
+    except Exception:
+        pass
+    # Aliases por nome (carrier pode vir como "LATAM", "AZUL LINHAS AÉREAS", etc.)
+    by_name = {
+        "LATAM": "LA", "LATAM AIRLINES": "LA", "LATAM LINHAS AÉREAS": "LA",
+        "GOL": "G3", "GOL LINHAS AÉREAS": "G3",
+        "AZUL": "AD", "AZUL LINHAS AÉREAS": "AD",
+        "TAP": "TP", "TAP AIR PORTUGAL": "TP",
+        "AMERICAN AIRLINES": "AA", "AMERICAN": "AA",
+        "COPA": "CM", "COPA AIRLINES": "CM",
+        "IBERIA": "IB",
+        "QATAR": "QR", "QATAR AIRWAYS": "QR",
+        "INTERLINE": "INTERLINE",
+    }
+    if code in by_name:
+        mapped = by_name[code]
+        try:
+            from pcd.agents.smart_quote import AIRLINE_DISPLAY as _CENTRAL
+            if mapped in _CENTRAL:
+                return _CENTRAL[mapped]
+        except Exception:
+            pass
+    if code == "INTERLINE":
+        return {"name": "Interline", "color": "#6c3483", "bg": "#f3e9f7"}
+    return {"name": code, "color": "#1a56a0", "bg": "#e8f0fb"}
+
+
 def build_table_rows(offers, include_baggage: bool = False, id_prefix: str = "", adults: int = 1):
     """Monta linhas de tabela para o app multiagent.
 
@@ -119,9 +161,49 @@ def build_table_rows(offers, include_baggage: bool = False, id_prefix: str = "",
     return rows
 
 
+def _fmt_arrival_offset(dep_dt, arr_dt) -> str:
+    """HH:MM com sufixo (+N) se o segmento aterrissa em outro dia."""
+    if dep_dt is None or arr_dt is None:
+        return "—"
+    base = arr_dt.strftime("%H:%M")
+    try:
+        diff = (arr_dt.date() - dep_dt.date()).days
+        if diff > 0:
+            return f"{base} (+{diff})"
+    except Exception:
+        pass
+    return base
+
+
+def _segments_are_degraded(segs) -> bool:
+    """Detecta o caso em que o adapter duplicou o segmento de leg inteiro
+    (ex.: `[seg] * (escalas+1)` quando a API não trouxe Conexoes).
+
+    Quando todos os segmentos têm a mesma origem E o mesmo destino,
+    eles não representam conexões reais — são duplicatas degradadas.
+    """
+    if len(segs) <= 1:
+        return False
+    first = segs[0]
+    o0, d0 = getattr(first, "origin", ""), getattr(first, "destination", "")
+    return all(
+        getattr(s, "origin", "") == o0 and getattr(s, "destination", "") == d0
+        for s in segs
+    )
+
+
 def render_itin_card(offer, direction: str = "outbound"):
+    """Card profissional do itinerário detalhado com renderização por segmento.
+
+    Fontes de dados (em ordem):
+      1) offer.outbound_segments_raw / inbound_segments_raw (alguns parsers)
+      2) offer.outbound.segments / inbound.segments (Itinerary do schema)
+
+    Quando o adapter degradou os segmentos (duplicou o leg inteiro), o
+    detalhe por segmento é colapsado num único bloco — evita exibir a
+    mesma linha N vezes.
+    """
     is_volta  = direction == "inbound"
-    hcls      = "itin-header volta" if is_volta else "itin-header"
     lbl       = "Volta" if is_volta else "Ida"
     raw_key   = "inbound_segments_raw" if is_volta else "outbound_segments_raw"
 
@@ -130,99 +212,100 @@ def render_itin_card(offer, direction: str = "outbound"):
     if not itin:
         return
 
-    if segs_raw:
-        fr, lr = segs_raw[0], segs_raw[-1]
-        orig = getattr(fr, "origin", "")
-        dest = getattr(lr, "destination", "")
-        dep_dt = getattr(fr, "departure_dt", None)
-        arr_dt = getattr(lr, "arrival_dt", None)
-        dep_s  = dep_dt.strftime("%H:%M")    if dep_dt else "—"
-        arr_s  = arr_dt.strftime("%H:%M")    if arr_dt else "—"
-        ddate  = dep_dt.strftime("%d/%m/%Y") if dep_dt else "—"
-        tot_min = int((arr_dt - dep_dt).total_seconds() // 60) if arr_dt and dep_dt else 0
-        tot    = format_duration(tot_min)
-        nstops = len(segs_raw) - 1
+    # Preferir segs_raw quando disponível e não degradado; cair para itin.segments.
+    candidate = list(segs_raw) if segs_raw else list(itin.segments)
+    degraded  = _segments_are_degraded(candidate)
+    if degraded:
+        # Mantém apenas 1 entrada (o leg inteiro) para o detalhe por segmento.
+        segs = [candidate[0]] if candidate else []
     else:
-        ss = itin.segments
-        fs, ls = ss[0], ss[-1]
-        orig = fs.origin
-        dest = ls.destination
-        dep_s  = fs.departure_dt.strftime("%H:%M")
-        arr_s  = ls.arrival_dt.strftime("%H:%M")
-        ddate  = fs.departure_dt.strftime("%d/%m/%Y")
-        tot    = format_duration(itin.duration_min)
-        nstops = len(ss) - 1
+        segs = candidate
 
-    slbl = "Direto" if nstops == 0 else f"{nstops} escala(s)"
+    if not segs:
+        return
+
+    fr, lr = segs[0], segs[-1]
+    orig   = getattr(fr, "origin", "") or ""
+    dest   = getattr(lr, "destination", "") or ""
+    dep_dt = getattr(fr, "departure_dt", None)
+    arr_dt = getattr(lr, "arrival_dt", None)
+    ddate  = dep_dt.strftime("%d/%m/%Y") if dep_dt else "—"
+    tot_min = int((arr_dt - dep_dt).total_seconds() // 60) if (arr_dt and dep_dt) else (itin.duration_min or 0)
+    tot     = format_duration(tot_min)
+
+    # Número real de escalas (de segments_raw quando há), com fallback no schema.
+    if degraded:
+        nstops = int(getattr(offer, "stops_in" if is_volta else "stops_out", 0) or 0)
+    else:
+        nstops = max(0, len(segs) - 1)
+    slbl = "Direto" if nstops == 0 else (f"{nstops} escala" if nstops == 1 else f"{nstops} escalas")
+
+    border_color = "#c0392b" if is_volta else "#1a56a0"
+    head_bg      = "#fdf0f2" if is_volta else "#e8f0fb"
+    head_fg      = "#c0392b" if is_volta else "#1a56a0"
 
     st.markdown(f"""
-<div class="itin-card">
-  <div class="{hcls}">
-    <div>
-      <div style="font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:.05em">{lbl}</div>
-      <div class="ih-route">{orig} → {dest}</div>
+<div class="itin-card-pro" style="border-left:5px solid {border_color}">
+  <div class="itin-pro-head" style="background:{head_bg};color:{head_fg}">
+    <div class="itin-pro-leg">{lbl.upper()}</div>
+    <div class="itin-pro-route">
+      <span class="itin-pro-iata">{orig}</span>
+      <span class="itin-pro-arrow">→</span>
+      <span class="itin-pro-iata">{dest}</span>
     </div>
-    <div class="ih-meta">{ddate} · {slbl} · {tot}</div>
+    <div class="itin-pro-meta">{ddate} · {slbl} · {tot}</div>
   </div>
-  <div class="itin-body">
-    <div class="itin-timeline">
-      <div class="itin-ap"><div class="ap-code">{orig}</div><div class="ap-time">{dep_s}</div></div>
-      <div class="itin-line">
-        <div class="itin-dur">{tot}</div>
-        <div class="itin-bar"></div>
-        <div class="itin-stops-badge">{slbl}</div>
-      </div>
-      <div class="itin-ap" style="text-align:right"><div class="ap-code">{dest}</div><div class="ap-time">{arr_s}</div></div>
-    </div>
+  <div class="itin-pro-body">
 """, unsafe_allow_html=True)
 
-    if segs_raw:
-        for idx, seg in enumerate(segs_raw):
-            dep = getattr(seg, "departure_dt", None)
-            arr = getattr(seg, "arrival_dt", None)
-            ds  = dep.strftime("%H:%M") if dep else "—"
-            as_ = arr.strftime("%H:%M") if arr else "—"
-            seg_dur_min = int((arr - dep).total_seconds() // 60) if arr and dep else 0
-            dur = format_duration(seg_dur_min)
-            carrier = getattr(seg, "carrier", "")
-            flt = getattr(seg, "flight_number", "") or carrier
-            o_s = getattr(seg, "origin", "")
-            d_s = getattr(seg, "destination", "")
-            st.markdown(f"""
-<div class="seg-row">
-  <div class="seg-flt">{flt}</div>
-  <div class="seg-route">{o_s} → {d_s}</div>
-  <div class="seg-times">{ds} → {as_}</div>
-  <div class="seg-dur">{dur}</div>
-  <div class="seg-carrier">{carrier}</div>
-</div>""", unsafe_allow_html=True)
-            if idx < len(segs_raw) - 1:
-                nxt = segs_raw[idx + 1]
-                nxt_dep = getattr(nxt, "departure_dt", None)
-                if arr and nxt_dep:
-                    lv_min = int((nxt_dep - arr).total_seconds() // 60)
-                    if lv_min > 0:
-                        st.markdown(
-                            f'<div class="layover-banner">🛑 Conexão em {d_s}: {format_duration(lv_min)}</div>',
-                            unsafe_allow_html=True,
-                        )
-    else:
-        for idx, seg in enumerate(itin.segments):
-            ds_ = seg.departure_dt.strftime("%H:%M")
-            as__ = seg.arrival_dt.strftime("%H:%M")
-            st.markdown(f"""
-<div class="seg-row">
-  <div class="seg-flt">{seg.carrier} {seg.flight_number or ''}</div>
-  <div class="seg-route">{seg.origin} → {seg.destination}</div>
-  <div class="seg-times">{ds_} → {as__}</div>
-</div>""", unsafe_allow_html=True)
-            if idx < len(itin.segments) - 1:
-                nxt = itin.segments[idx + 1]
-                lv  = int((nxt.departure_dt - seg.arrival_dt).total_seconds() // 60)
-                if lv > 0:
+    for idx, seg in enumerate(segs):
+        dep  = getattr(seg, "departure_dt", None)
+        arr  = getattr(seg, "arrival_dt", None)
+        ds   = dep.strftime("%H:%M") if dep else "—"
+        as_  = _fmt_arrival_offset(dep, arr)
+        seg_dur_min = int((arr - dep).total_seconds() // 60) if (arr and dep) else 0
+        dur  = format_duration(seg_dur_min)
+        carrier_code = (getattr(seg, "carrier", "") or "").upper()
+        meta = _airline_meta(carrier_code)
+        flt  = getattr(seg, "flight_number", "") or ""
+        flight_label = (f"{carrier_code} {flt}".strip()) if flt else carrier_code
+        o_s  = getattr(seg, "origin", "")
+        d_s  = getattr(seg, "destination", "")
+
+        st.markdown(f"""
+<div class="itin-pro-seg">
+  <div class="itin-pro-seg-airline" style="background:{meta['bg']};color:{meta['color']};border-color:{meta['color']}">
+    <div class="itin-pro-airline-name">✈️ {meta['name']}</div>
+    <div class="itin-pro-airline-flt">{flight_label}</div>
+  </div>
+  <div class="itin-pro-seg-cities">
+    <div class="itin-pro-cityline">
+      <span class="itin-pro-city">{o_s}</span>
+      <span class="itin-pro-sep">→</span>
+      <span class="itin-pro-city">{d_s}</span>
+    </div>
+    <div class="itin-pro-times">{ds} → {as_}</div>
+    <div class="itin-pro-dur">⏱ {dur}</div>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+        if idx < len(segs) - 1:
+            nxt = segs[idx + 1]
+            nxt_dep = getattr(nxt, "departure_dt", None)
+            if arr and nxt_dep:
+                lv_min = int((nxt_dep - arr).total_seconds() // 60)
+                if lv_min > 0:
                     st.markdown(
-                        f'<div class="layover-banner">🛑 Conexão em {seg.destination}: {format_duration(lv)}</div>',
+                        f'<div class="itin-pro-layover">🕐 Conexão em <b>{d_s}</b> · {format_duration(lv_min)}</div>',
                         unsafe_allow_html=True,
                     )
+
+    if degraded and nstops > 0:
+        st.markdown(
+            '<div class="itin-pro-note">ℹ️ A companhia retornou apenas o resumo do trecho; '
+            'detalhes de cada perna da conexão não foram informados pela API.</div>',
+            unsafe_allow_html=True,
+        )
 
     st.markdown("</div></div>", unsafe_allow_html=True)

@@ -1,0 +1,59 @@
+{
+  "timestamp": "2026-05-05T18:51:18",
+  "program": "COPA",
+  "route": {
+    "origin": "BSB",
+    "destination": "LIS",
+    "date": "2026-06-15",
+    "name": "internacional_BSB_LIS"
+  },
+  "request": {
+    "endpoint": "https://api.economilha.com/flights/search",
+    "method": "POST",
+    "headers": {
+      "x-api-key": "eco_sk_l…EJGr",
+      "Accept": "application/vnd.economilha.v1+json",
+      "Content-Type": "application/json"
+    },
+    "payload": {
+      "airlineLoyalty": [
+        "COPA"
+      ],
+      "priceType": "MILES",
+      "tripType": "ONE_WAY",
+      "cabinType": "ECONOMY",
+      "origin": "BSB",
+      "destination": "LIS",
+      "departureDate": "2026-06-15",
+      "passengers": {
+        "adults": 1,
+        "children": 0,
+        "infants": 0
+      }
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "elapsed_ms": 5435.7,
+    "correlationId": null,
+    "body": {
+      "results": [
+        {
+          "airline": "COPA",
+          "success": false,
+          "error": {
+            "message": "Failed to fetch data from COPA",
+            "providerStatusCode": 422
+          },
+          "data": null
+        }
+      ],
+      "summary": {
+        "totalAirlinesRequested": 1,
+        "successfulSearches": 0,
+        "failedSearches": 1
+      }
+    }
+  },
+  "diagnosis": "provider_failure(prov_status=422): Failed to fetch data from COPA"
+}

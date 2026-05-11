@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-05-05T18:51:28",
+  "program": "BRITISH",
+  "route": {
+    "origin": "BSB",
+    "destination": "LIS",
+    "date": "2026-06-15",
+    "name": "internacional_BSB_LIS"
+  },
+  "request": {
+    "endpoint": "https://api.economilha.com/flights/search",
+    "method": "POST",
+    "headers": {
+      "x-api-key": "eco_sk_l…EJGr",
+      "Accept": "application/vnd.economilha.v1+json",
+      "Content-Type": "application/json"
+    },
+    "payload": {
+      "airlineLoyalty": [
+        "BRITISH"
+      ],
+      "priceType": "MILES",
+      "tripType": "ONE_WAY",
+      "cabinType": "ECONOMY",
+      "origin": "BSB",
+      "destination": "LIS",
+      "departureDate": "2026-06-15",
+      "passengers": {
+        "adults": 1,
+        "children": 0,
+        "infants": 0
+      }
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "elapsed_ms": 2697.9,
+    "correlationId": null,
+    "body": {
+      "results": [
+        {
+          "airline": "BRITISH",
+          "success": true,
+          "data": {
+            "outbound": [],
+            "inbound": null
+          }
+        }
+      ],
+      "summary": {
+        "totalAirlinesRequested": 1,
+        "successfulSearches": 1,
+        "failedSearches": 0
+      }
+    }
+  },
+  "diagnosis": "ok"
+}

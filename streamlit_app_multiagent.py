@@ -43,6 +43,96 @@ def build_table_rows(offers, include_baggage=False, id_prefix=""):
     return _build_table_rows_core(offers, include_baggage, id_prefix, adults=adults)
 
 
+# ──────────────────────────────────────────────────────────────
+# Click-to-select nas tabelas (Problemas 3 e 4)
+#
+# Cada tab que renderiza dataframe de ofertas usa o helper abaixo,
+# que ativa seleção single-row e propaga o ID escolhido + aba ativa
+# para o session_state. O Itinerário Detalhado lê esses valores e
+# filtra/pré-seleciona automaticamente.
+# ──────────────────────────────────────────────────────────────
+def _render_selectable_offers_df(df, cols_visible, tab_key: str, df_key: str):
+    """Renderiza um dataframe de ofertas com seleção clicável.
+
+    - `tab_key` identifica a aba (governa o filtro do selectbox no fim da página).
+    - `df_key` é a key única do widget Streamlit.
+
+    Side-effects no session_state quando o usuário clica numa linha:
+      * selected_flight_id ← ID da oferta selecionada
+      * active_tab         ← tab_key
+      * _scroll_to_itin    ← True (faz o scroll automático até o itinerário)
+    """
+    if df is None or df.empty:
+        st.dataframe(df, use_container_width=True, hide_index=True)
+        return
+    visible = [c for c in cols_visible if c in df.columns]
+    event = st.dataframe(
+        df[visible],
+        use_container_width=True,
+        hide_index=True,
+        on_select="rerun",
+        selection_mode="single-row",
+        key=df_key,
+    )
+    try:
+        rows_sel = (event.selection.rows or []) if event is not None else []  # type: ignore[attr-defined]
+    except Exception:
+        rows_sel = []
+    if rows_sel and "ID" in df.columns:
+        sel_idx = int(rows_sel[0])
+        if 0 <= sel_idx < len(df):
+            fid = str(df.iloc[sel_idx]["ID"])
+            if st.session_state.get("selected_flight_id") != fid \
+               or st.session_state.get("active_tab") != tab_key:
+                st.session_state["selected_flight_id"] = fid
+                st.session_state["active_tab"] = tab_key
+                st.session_state["_scroll_to_itin"] = True
+
+
+# Mapa: tab_key → lista de prefixos de ID aceitos pelo filtro do selectbox.
+# Tabs que listam ofertas heterogêneas (Veredito, Ranking Geral) liberam tudo.
+_TAB_PREFIXES: dict[str, list[str] | None] = {
+    "verdito":   None,           # libera tudo
+    "ranking":   None,           # libera tudo
+    "dinheiro":  ["$"],
+    "cia_latam": ["L"],
+    "cia_gol":   ["G"],
+    "cia_azul":  ["A"],
+    "cia_tap":   ["TP"],
+    "cia_american airlines": ["AA"],
+    "cia_interline": ["IN"],
+    "cia_copa":  ["CM"],
+    "mcp_award": ["W", "IB"],    # MCP inclui Iberia e outros internacionais
+    "mcp_qatar": ["QR"],
+}
+
+# Título exibido sobre o itinerário detalhado, por aba.
+_TAB_ITIN_TITLE: dict[str, str] = {
+    "verdito":   "Todos os voos",
+    "ranking":   "Todos os voos",
+    "dinheiro":  "Dinheiro",
+    "cia_latam": "LATAM",
+    "cia_gol":   "GOL",
+    "cia_azul":  "AZUL",
+    "cia_tap":   "TAP",
+    "cia_american airlines": "American Airlines",
+    "cia_interline": "Interline",
+    "cia_copa":  "COPA",
+    "mcp_award": "Internacional (MCP)",
+    "mcp_qatar": "Qatar",
+}
+
+
+def _id_alpha_prefix(fid: str) -> str:
+    """'AA3' → 'AA'; '$12' → '$'; 'L7' → 'L'."""
+    out = []
+    for ch in (fid or ""):
+        if ch.isdigit():
+            break
+        out.append(ch)
+    return "".join(out)
+
+
 # ═══════════════════════════════════════════════════════════════
 # PAGE CONFIG
 # ═══════════════════════════════════════════════════════════════
@@ -55,31 +145,118 @@ inject_styles()
 render_topbar()
 
 
+# ── Estado: flexibilidade da Cotação Inteligente (sincronizado entre
+#    o slider do popover e o numérico inline ao lado do toggle).
+if "smart_flex_days" not in st.session_state:
+    st.session_state["smart_flex_days"] = 4
+
+def _sync_smart_flex_from_slider():
+    st.session_state["smart_flex_days"] = int(st.session_state["smart_flex_slider"])
+
+def _sync_smart_flex_from_inline():
+    st.session_state["smart_flex_days"] = int(st.session_state["smart_flex_inline"])
+
+
+# Defaults dos checkboxes — garantem que cada flag esteja definida mesmo
+# quando o submenu correspondente está oculto (provedor diferente).
+s_latam = s_gol = s_azul = False
+s_tap = s_american = s_interline = s_copa = s_qatar = False
+s_money = True
+s_mcp = False
+e_smiles = e_latam_p = e_azul = e_azul_int = e_copa_e = e_iberia = e_british = False
+e_money = True
+e_debug = False
+provider = st.session_state.get("miles_provider", "BuscaMilhas")
+
 # ── Engrenagem / Configurações ──
 col_gear, _ = st.columns([1, 14])
 with col_gear:
     with st.popover("⚙️"):
+        # ── Seletor de provedor (no topo, governa o submenu abaixo) ──
+        st.markdown("**Provedor de busca de milhas:**")
+        provider = st.radio(
+            "Provedor",
+            options=["BuscaMilhas", "Economilhas"],
+            index=0 if st.session_state.get("miles_provider", "BuscaMilhas") == "BuscaMilhas" else 1,
+            horizontal=True,
+            label_visibility="collapsed",
+            key="miles_provider_radio",
+        )
+        st.session_state["miles_provider"] = provider
+
         st.markdown("**Configurações**")
         use_fixtures = st.toggle("Dados Estáticos (Mock)", value=False)
 
-        # ── Fontes: Nacionais ──
-        st.markdown('<div class="cfg-group-label">📍 Nacionais</div>', unsafe_allow_html=True)
-        s_latam = st.checkbox("LATAM", value=True, key="chk_latam")
-        s_gol   = st.checkbox("GOL",   value=True, key="chk_gol")
-        s_azul  = st.checkbox("AZUL",  value=True, key="chk_azul")
+        if provider == "BuscaMilhas":
+            # ── Fontes: Nacionais ──
+            st.markdown('<div class="cfg-group-label">📍 Nacionais</div>', unsafe_allow_html=True)
+            s_latam = st.checkbox("LATAM", value=True, key="chk_latam")
+            s_gol   = st.checkbox("GOL",   value=True, key="chk_gol")
+            s_azul  = st.checkbox("AZUL",  value=True, key="chk_azul")
 
-        # ── Fontes: Internacionais ──
-        st.markdown('<div class="cfg-group-label">🌍 Internacionais (Busca Milhas)</div>', unsafe_allow_html=True)
-        s_tap       = st.checkbox("TAP",              value=False, key="chk_tap")
-        s_american  = st.checkbox("AMERICAN AIRLINES",value=False, key="chk_american")
-        s_interline = st.checkbox("INTERLINE",         value=False, key="chk_interline")
-        s_copa      = st.checkbox("COPA",              value=False, key="chk_copa")
-        s_qatar     = st.checkbox("QATAR (vía MCP)",    value=False, key="chk_qatar")
+            # ── Fontes: Internacionais ──
+            st.markdown('<div class="cfg-group-label">🌍 Internacionais (Busca Milhas)</div>', unsafe_allow_html=True)
+            s_tap       = st.checkbox("TAP",              value=False, key="chk_tap")
+            s_american  = st.checkbox("AMERICAN AIRLINES",value=False, key="chk_american")
+            s_interline = st.checkbox("INTERLINE",         value=False, key="chk_interline")
+            s_copa      = st.checkbox("COPA",              value=False, key="chk_copa")
+            s_qatar     = st.checkbox("QATAR (vía MCP)",    value=False, key="chk_qatar")
 
-        s_money = st.checkbox("Dinheiro (Kayak)", value=True, key="chk_money")
+            s_money = st.checkbox("Dinheiro (Kayak)", value=True, key="chk_money")
+        else:
+            # ── Fontes Economilhas ──
+            st.markdown('<div class="cfg-group-label">💎 Programas Economilhas</div>', unsafe_allow_html=True)
+            e_smiles    = st.checkbox("Smiles (GOL)",                value=True,  key="ec_smiles")
+            e_latam_p   = st.checkbox("LATAM Pass",                  value=True,  key="ec_latam")
+            e_azul      = st.checkbox("Azul Fidelidade",             value=True,  key="ec_azul")
+            e_azul_int  = st.checkbox("Azul Pelo Mundo (Interline)", value=False, key="ec_azul_int")
+            e_copa_e    = st.checkbox("Copa ConnectMiles",           value=False, key="ec_copa")
+            e_iberia    = st.checkbox("Iberia Plus",                 value=False, key="ec_iberia")
+            e_british   = st.checkbox("British Airways Avios",       value=False, key="ec_british")
+
+            st.markdown('<div class="cfg-group-label">💵 Dinheiro</div>', unsafe_allow_html=True)
+            e_money = st.checkbox("Dinheiro (Kayak)", value=True, key="ec_money")
+
+            e_debug = st.checkbox(
+                "🐛 Debug: salvar payloads brutos por programa",
+                value=False, key="ec_debug",
+                help="Quando marcado, cada `data` recebido é gravado em debug_dumps/.",
+            )
+
+            # ── Indicador de quota Economilhas ──
+            if st.button("📊 Verificar quota", key="ec_check_quota"):
+                try:
+                    from economilhas_client import get_quota_cached
+                    q = get_quota_cached(force=True)
+                    if isinstance(q, dict):
+                        limit = q.get("limit") or q.get("monthlyLimit") or q.get("plan", {}).get("limit")
+                        consumed = q.get("consumed") or q.get("used")
+                        remaining = q.get("remaining") or q.get("available")
+                        usage_by = q.get("usageByCompany") or q.get("byCompany") or {}
+                        st.success(
+                            f"Quota — limite: **{limit}**, consumido: **{consumed}**, restante: **{remaining}**"
+                        )
+                        if usage_by:
+                            st.caption(f"Uso por programa: {usage_by}")
+                    else:
+                        st.success(f"Quota: {q}")
+                except Exception as ex:
+                    st.error(f"Falha ao consultar quota: {ex}")
 
         st.markdown("**Parâmetros:**")
         top_n = st.slider("Qtd. resultados", 1, 15, 5)
+
+        # ── Cotação Inteligente: flexibilidade ──
+        st.markdown('<div class="cfg-group-label">🧠 Cotação Inteligente</div>', unsafe_allow_html=True)
+        st.slider(
+            "Flexibilidade Cotação Inteligente (± dias)",
+            min_value=1, max_value=10,
+            value=int(st.session_state["smart_flex_days"]),
+            step=1,
+            key="smart_flex_slider",
+            on_change=_sync_smart_flex_from_slider,
+            help="Quantos dias antes e depois da data solicitada o Kayak vai analisar.",
+        )
 
         # ── Taxas de conversão: Nacionais ──
         st.markdown('<div class="cfg-group-label">💱 Taxas Nacionais (R$/milha)</div>', unsafe_allow_html=True)
@@ -102,19 +279,38 @@ with col_gear:
 
         RATES["DEFAULT"] = RATES["GOL"]
 
-# Mapa de checkboxes por companhia BuscaMilhas
-_CIA_ACTIVE = {
-    "KAYAK":            s_money,
-    "LATAM":            s_latam,
-    "GOL":              s_gol,
-    "AZUL":             s_azul,
-    "TAP":              s_tap,
-    "AMERICAN AIRLINES":s_american,
-    "INTERLINE":        s_interline,
-    "COPA":             s_copa,
-    "MCP_AWARD":        s_mcp,
-    "QATAR":            s_qatar,
-}
+# Mapa de companhias ativas — alimenta as tabs do Veredito.
+# Quando o provedor é Economilhas, o mapa é construído a partir dos checkboxes
+# Economilhas (que reusam SourceTypes existentes — ver economilhas_pipeline.py).
+if provider == "BuscaMilhas":
+    _CIA_ACTIVE = {
+        "KAYAK":            s_money,
+        "LATAM":            s_latam,
+        "GOL":              s_gol,
+        "AZUL":             s_azul,
+        "TAP":              s_tap,
+        "AMERICAN AIRLINES":s_american,
+        "INTERLINE":        s_interline,
+        "COPA":             s_copa,
+        "MCP_AWARD":        s_mcp,
+        "QATAR":            s_qatar,
+    }
+else:
+    _CIA_ACTIVE = {
+        "KAYAK":            e_money,
+        # Smiles (GOL) → tab GOL; LATAM Pass → tab LATAM; Azul Fid./Interline → tabs AZUL/INTERLINE
+        "LATAM":            e_latam_p,
+        "GOL":              e_smiles,
+        "AZUL":             e_azul,
+        "INTERLINE":        e_azul_int,
+        "COPA":             e_copa_e,
+        "IBERIA":           e_iberia,
+        "TAP":              False,
+        "AMERICAN AIRLINES": False,
+        # British Avios cai em MCP_AWARD na conversão.
+        "MCP_AWARD":        e_british,
+        "QATAR":            False,
+    }
 
 # Lista de companhias que o usuário ativou para buscar
 companhias_selecionadas: List[str] = [c for c, ativo in _CIA_ACTIVE.items() if ativo]
@@ -133,72 +329,147 @@ with col_btn:
     use_llm = st.checkbox("Interpretar com Grok", value=True)
     buscar  = st.button("✈️  BUSCAR AGORA", use_container_width=True)
 
-# ── Toggle Cotação Inteligente ──
-smart_mode = st.toggle(
-    "🧠 Cotação Inteligente",
-    value=False,
-    help="Analisa ±4 dias automaticamente, identifica o dia mais barato e os melhores programas de milhas para a rota.",
-)
+# Indicador discreto do provedor ativo logo abaixo do botão.
+st.caption(f"🔌 Provedor ativo: **{provider}**")
+
+# ── Toggle Cotação Inteligente + flexibilidade inline ──
+_flex_now = int(st.session_state.get("smart_flex_days", 4))
+col_smart_t, col_smart_f, _col_smart_pad = st.columns([4, 2, 8], vertical_alignment="center")
+with col_smart_t:
+    smart_mode = st.toggle(
+        "🧠 Cotação Inteligente",
+        value=st.session_state.get("smart_mode", False),
+        key="smart_mode",
+        help=(
+            f"Analisa ±{_flex_now} dias automaticamente, identifica o dia "
+            "mais barato e os melhores programas de milhas para a rota."
+        ),
+    )
+with col_smart_f:
+    if smart_mode:
+        st.number_input(
+            "± dias",
+            min_value=1, max_value=10,
+            value=int(st.session_state["smart_flex_days"]),
+            step=1,
+            key="smart_flex_inline",
+            on_change=_sync_smart_flex_from_inline,
+            help="Flexibilidade da Cotação Inteligente (sincronizado com o slider em ⚙️).",
+        )
 
 if buscar and prompt_text:
-    with st.spinner("Analisando pedido e buscando voos..."):
+    # Limpa estado anterior — cada nova busca recomeça do zero.
+    # Inclui o widget-key do select de data: opções podem mudar entre buscas
+    # e um valor stale fora das novas opções dispararia erro.
+    for _k in (
+        "smart_result", "smart_progress", "smart_selected_date",
+        "pipeline_result", "smart_active",
+        "split_result", "split_data_key", "split_active",
+        "split_fits", "split_fit_cache_keys", "split_fitted_combinations",
+        "miles_match_cache_keys",
+        "smart_date_picker",
+    ):
+        st.session_state.pop(_k, None)
+
+    flex_smart_days = int(st.session_state.get("smart_flex_days", 4))
+
+    with st.spinner("Analisando pedido..."):
         intent = parse_intent_ptbr(prompt_text, use_llm=use_llm)
         st.session_state["parsed_intent"] = intent
         if st.session_state.get("v_flex") is not None:
             intent.flex_days = st.session_state["v_flex"]
-            if intent.flex_days > 0 and intent.flex_mode == "none":
+            if (intent.flex_days or 0) > 0 and intent.flex_mode == "none":
                 intent.flex_mode = "plusminus"
 
-        # Cotação Inteligente roda em paralelo ao pipeline normal.
-        from concurrent.futures import ThreadPoolExecutor
+    _smart_date_req = intent.date_start or intent.depart_date_from
+    if smart_mode and intent.origin_iata and intent.destination_iata and _smart_date_req:
+        # ETAPA 1 — só Agente 1 (Kayak) + Agente 2 (mapeamento de programas).
+        # Veredito PcD / tabs / itinerário ficam adiados até o vendedor
+        # escolher a data e clicar "Buscar milhas para esta data".
         from pcd.agents.smart_quote import SmartQuoteAgent
 
-        smart_future = None
         smart_progress: list[str] = []
-        if smart_mode and intent.origin_iata and intent.destination_iata and (intent.date_start or intent.depart_date_from):
-            _smart_executor = ThreadPoolExecutor(max_workers=1)
-            _smart_pax = getattr(intent, "adults", 1) or 1
-            _smart_origin = intent.origin_iata
-            _smart_destination = intent.destination_iata
-            _smart_date_req = intent.date_start or intent.depart_date_from
-            _smart_date_ret = intent.date_return
+        def _capture(msg: str):
+            smart_progress.append(msg)
 
-            def _capture(msg: str):
-                smart_progress.append(msg)
-
-            smart_future = _smart_executor.submit(
-                SmartQuoteAgent().run,
-                _smart_origin, _smart_destination, _smart_date_req,
-                _smart_pax, _smart_date_ret, _capture,
-            )
-
-        res = run_pipeline(
-            prompt=prompt_text, top_n=top_n, use_fixtures=use_fixtures,
-            origin=intent.origin_iata, destination=intent.destination_iata,
-            date_start=intent.date_start or intent.depart_date_from,
-            date_end=intent.depart_date_to,
-            date_return=intent.date_return,
-            flex_mode=intent.flex_mode,
-            flex_days=intent.flex_days or 0,
-            flex_return=intent.flex_return or False,
-            direct_only=intent.direct_only,
-            companhias=companhias_selecionadas if companhias_selecionadas else None,
-        )
-        st.session_state["pipeline_result"] = res
-
-        # Aguarda a Cotação Inteligente (que rodou em paralelo). Se falhar,
-        # degrada graciosamente — só o pipeline normal aparece.
-        if smart_future is not None:
+        with st.spinner(f"🧠 Analisando datas (±{flex_smart_days}) e programas..."):
             try:
-                smart_result = smart_future.result(timeout=180)
+                smart_result = SmartQuoteAgent().run(
+                    origin=intent.origin_iata,
+                    destination=intent.destination_iata,
+                    date_requested=_smart_date_req,
+                    adults=getattr(intent, "adults", 1) or 1,
+                    return_date=intent.date_return,
+                    flex_days=flex_smart_days,
+                    progress_cb=_capture,
+                )
             except Exception as e:
                 smart_result = None
                 smart_progress.append(f"⚠️ Cotação Inteligente falhou: {str(e)[:160]}")
-            st.session_state["smart_result"] = smart_result
-            st.session_state["smart_progress"] = smart_progress
+
+        st.session_state["smart_result"] = smart_result
+        st.session_state["smart_progress"] = smart_progress
+        st.session_state["smart_active"] = True
+        # NÃO roda run_pipeline aqui — Etapa 2 dispara sob demanda.
+    else:
+        # Modo clássico — toggle off (ou sem dados mínimos): pipeline completo.
+        st.session_state["smart_active"] = False
+        st.session_state.pop("economilhas_partial", None)
+        if provider == "BuscaMilhas":
+            with st.spinner("Buscando voos (BuscaMilhas)..."):
+                res = run_pipeline(
+                    prompt=prompt_text, top_n=top_n, use_fixtures=use_fixtures,
+                    origin=intent.origin_iata, destination=intent.destination_iata,
+                    date_start=intent.date_start or intent.depart_date_from,
+                    date_end=intent.depart_date_to,
+                    date_return=intent.date_return,
+                    flex_mode=intent.flex_mode,
+                    flex_days=intent.flex_days or 0,
+                    flex_return=intent.flex_return or False,
+                    direct_only=intent.direct_only,
+                    companhias=companhias_selecionadas if companhias_selecionadas else None,
+                )
+                st.session_state["pipeline_result"] = res
         else:
-            st.session_state["smart_result"] = None
-            st.session_state["smart_progress"] = []
+            # Provedor Economilhas — uma única chamada cobre todos os
+            # programas de milhas marcados; cash continua via Kayak.
+            from pcd.agents.economilhas_pipeline import run_pipeline_economilhas
+            miles_airlines = []
+            if e_smiles:   miles_airlines.append("SMILES")
+            if e_latam_p:  miles_airlines.append("LATAM")
+            if e_azul:     miles_airlines.append("AZUL")
+            if e_azul_int: miles_airlines.append("AZUL_INTERLINE")
+            if e_copa_e:   miles_airlines.append("COPA")
+            if e_iberia:   miles_airlines.append("IBERIA")
+            if e_british:  miles_airlines.append("BRITISH")
+
+            with st.spinner("Buscando voos (Economilhas)..."):
+                try:
+                    res, partial_failures = run_pipeline_economilhas(
+                        prompt=prompt_text, top_n=top_n, use_fixtures=use_fixtures,
+                        origin=intent.origin_iata, destination=intent.destination_iata,
+                        date_start=intent.date_start or intent.depart_date_from,
+                        date_end=intent.depart_date_to,
+                        date_return=intent.date_return,
+                        flex_mode=intent.flex_mode,
+                        flex_days=intent.flex_days or 0,
+                        flex_return=intent.flex_return or False,
+                        direct_only=intent.direct_only,
+                        adults=getattr(intent, "adults", 1) or 1,
+                        miles_airlines=miles_airlines,
+                        use_kayak_cash=bool(e_money),
+                        debug=bool(e_debug),
+                    )
+                except Exception as ex_call:
+                    res = None
+                    partial_failures = [{
+                        "airline": "ALL",
+                        "message": f"Falha geral Economilhas: {str(ex_call)[:200]}",
+                        "providerStatusCode": None, "fatal": True,
+                    }]
+                if res is not None:
+                    st.session_state["pipeline_result"] = res
+                st.session_state["economilhas_partial"] = partial_failures
 
 # ── Chips de validação ──
 if st.session_state.get("parsed_intent"):
@@ -246,56 +517,11 @@ if st.session_state.get("parsed_intent"):
             st.number_input("Dias de Flexibilidade", min_value=0, max_value=7, value=int(pi.flex_days or 0), key="v_flex")
 
 # ── Resultados ──
-if "pipeline_result" not in st.session_state:
+# Quando a Cotação Inteligente está ativa, a Etapa 1 (smart_result) renderiza
+# acima do Veredito; a Etapa 2 (pipeline_result) só é gerada após o vendedor
+# clicar em "Buscar milhas para esta data". Stop só quando nada para mostrar.
+if "pipeline_result" not in st.session_state and not st.session_state.get("smart_result"):
     st.stop()
-
-res          = st.session_state["pipeline_result"]
-incluir_mala = st.session_state.get("v_bagagem", False)
-
-if getattr(res, "direct_filter_warning", None):
-    st.warning(res.direct_filter_warning)
-
-COLS = ["ID", "Companhia", "Trecho", "Data",
-        "Milhas", "Custo Real (mi+taxas)", "Taxas", "Preço Final", "Valor c/ Mala",
-        "Duração", "Escalas", "Saída", "Chegada", "Local Escala"]
-
-if adults > 1:
-    COLS.insert(6, f"Total ({adults}pax)")
-
-
-# ─── Monta tabs dinamicamente ──────────────────────────────────
-# Ordem: Melhores Achados | Dinheiro | [nacionais] | [internacionais] | Ranking Geral
-
-def _has_result_for(cia: str) -> bool:
-    """True se a companhia está ativa E trouxe pelo menos uma oferta."""
-    active = _CIA_ACTIVE.get(cia.upper(), False)
-    if not active:
-        return False
-    src_name = f"buscamilhas_{cia.lower()}"
-    miles_ofs = getattr(res, "miles_offers", []) or []
-    return any(source_is(o, src_name) for o in miles_ofs)
-
-tab_specs = [("✨ O Veredito PcD", "verdito"), ("💵 Dinheiro (Kayak)", "dinheiro")]
-
-for cia in COMPANHIAS_NACIONAIS:
-    if _CIA_ACTIVE.get(cia, False):
-        meta = _CIA_META.get(cia, {"emoji": "✈️"})
-        tab_specs.append((f"{meta['emoji']} {cia}", f"cia_{cia.lower()}"))
-
-for cia in COMPANHIAS_INTERNACIONAIS:
-    if _CIA_ACTIVE.get(cia, False):
-        meta = _CIA_META.get(cia, {"emoji": "✈️"})
-        tab_specs.append((f"{meta['emoji']} {cia}", f"cia_{cia.lower()}"))
-
-tab_specs.append(("🌍 Internacional (MCP)", "mcp_award"))
-
-if s_qatar:
-    tab_specs.append(("🇶🇦 Qatar", "mcp_qatar"))
-
-tab_specs.append(("📊 Ranking Geral", "ranking"))
-
-tab_labels = [t[0] for t in tab_specs]
-tab_keys   = [t[1] for t in tab_specs]
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -454,7 +680,7 @@ def _is_calendar_uniform(prices: list, threshold: float = 0.03) -> bool:
     return (pmax - pmin) / pmin < threshold
 
 
-def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, requested_iso: str) -> str:
+def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, requested_iso: str, flex_days: int = 4) -> str:
     if not cal:
         return ""
     items = sorted(cal.items())
@@ -507,7 +733,7 @@ def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, reques
 
     return f"""
 <div class="smart-card">
-  <div class="smart-card-title">📅 Calendário de preços (±4 dias)</div>
+  <div class="smart-card-title">📅 Calendário de preços (±{flex_days} dias)</div>
   {uniform_banner}
   <div class="price-calendar">{''.join(cols_html)}</div>
 </div>"""
@@ -620,26 +846,49 @@ def _render_programs_cards_html(rp: dict) -> str:
     return f'<div class="program-grid">{"".join(cards)}</div>'
 
 
-def _render_smart_header_html() -> str:
-    return """
+def _render_smart_header_html(flex_days: int = 4) -> str:
+    return f"""
 <div class="smart-header">
   <div class="smart-icon">🧠</div>
   <div>
     <div class="smart-title">Cotação Inteligente</div>
-    <div class="smart-sub">Análise automática de ±4 dias · Mapeamento de programas · Melhor data identificada</div>
+    <div class="smart-sub">Análise automática de ±{flex_days} dias · Mapeamento de programas · Melhor data identificada</div>
   </div>
 </div>"""
 
 
+_DATE_PICKER_CSS = """
+<style>
+.smart-date-pick{background:#fff;border:1px solid #dde3ef;border-radius:12px;
+    padding:18px 22px;box-shadow:0 1px 3px rgba(13,43,110,.04);margin-bottom:8px;
+    border-left:4px solid #c0392b;}
+.smart-date-pick-title{font-size:14px;font-weight:700;color:#1a2236;margin-bottom:4px;}
+.smart-date-pick-sub{font-size:12px;color:#6b7a99;margin-bottom:12px;}
+
+/* Botão vermelho para "Buscar milhas para esta data" */
+div[data-testid="stButton"] button[kind="primary"][data-smart="miles"]{
+    background:#c0392b !important;border-color:#a8311e !important;
+}
+</style>
+"""
+
+
 def _render_smart_quote_section():
+    """Renderiza Etapa 1 (calendário, métricas, programas) + seletor de data
+    e botão da Etapa 2. Retorna a data ISO escolhida + dict de programas
+    relevantes quando o vendedor clica em 'Buscar milhas para esta data',
+    senão None."""
     smart_result = st.session_state.get("smart_result")
     smart_progress_msgs = st.session_state.get("smart_progress") or []
 
     if smart_result is None and not smart_progress_msgs:
-        return
+        return None
+
+    flex_days_used = getattr(smart_result, "flex_days_used", 4) if smart_result else int(st.session_state.get("smart_flex_days", 4))
 
     st.markdown(_SMART_CSS, unsafe_allow_html=True)
-    st.markdown(_render_smart_header_html(), unsafe_allow_html=True)
+    st.markdown(_DATE_PICKER_CSS, unsafe_allow_html=True)
+    st.markdown(_render_smart_header_html(flex_days_used), unsafe_allow_html=True)
 
     if smart_progress_msgs:
         with st.status("Agentes executados", expanded=False, state="complete"):
@@ -647,9 +896,8 @@ def _render_smart_quote_section():
                 st.write(msg)
 
     if smart_result is None:
-        st.warning("A Cotação Inteligente não pôde ser concluída. Veja a busca normal abaixo.")
-        st.divider()
-        return
+        st.warning("A Cotação Inteligente não pôde ser concluída. Tente novamente ou desligue o toggle 🧠 e refaça a busca.")
+        return None
 
     if smart_result.notes:
         for note in smart_result.notes:
@@ -659,11 +907,12 @@ def _render_smart_quote_section():
     anchor_iso = smart_result.anchor_date or ""
     requested_iso = smart_result.date_requested or ""
     carriers_cal = smart_result.calendar_carriers or {}
+    total_dates = flex_days_used * 2 + 1
 
     # ── Calendário de preços ──
     if cal:
         st.markdown(
-            _render_calendar_html(cal, carriers_cal, anchor_iso, requested_iso),
+            _render_calendar_html(cal, carriers_cal, anchor_iso, requested_iso, flex_days_used),
             unsafe_allow_html=True,
         )
         # Cards de métricas
@@ -681,7 +930,7 @@ def _render_smart_quote_section():
     if _cal_uniform:
         st.markdown(
             f'<div class="smart-message green">✅ <b>Preços estáveis no período.</b> '
-            f'A tarifa mais barata é praticamente a mesma nos 9 dias — você pode '
+            f'A tarifa mais barata é praticamente a mesma nos {total_dates} dias — você pode '
             f'manter {_fmt_date_long(requested_iso)} sem perda financeira.</div>',
             unsafe_allow_html=True,
         )
@@ -717,23 +966,1559 @@ def _render_smart_quote_section():
   {_render_programs_cards_html(rp)}
 </div>""", unsafe_allow_html=True)
 
-    # ── Cotação de milhas na data âncora ──
-    if smart_result.miles_offers:
-        st.markdown('<div class="smart-card-title" style="margin:18px 0 8px 0">💎 Cotação de milhas na data âncora</div>', unsafe_allow_html=True)
-        for offer in smart_result.miles_offers:
-            with st.expander(f"{offer['label']} — {offer['elapsed_ms']:.0f}ms"):
-                if offer.get("error"):
-                    st.warning(f"Falha: {offer['error']}")
+    # ── Etapa 2 — Seletor de data + botão de cotação completa ──
+    if not cal:
+        return None
+
+    options = sorted(cal.keys())
+    default_iso = anchor_iso if anchor_iso in options else (
+        st.session_state.get("smart_selected_date") or options[0]
+    )
+    if st.session_state.get("smart_selected_date") in options:
+        default_iso = st.session_state["smart_selected_date"]
+
+    def _fmt_option(iso: str) -> str:
+        pretty = _fmt_date_short(iso)
+        price = cal.get(iso, 0.0)
+        badge = ""
+        if iso == anchor_iso:
+            badge = "  ✓ Melhor dia"
+        elif iso == requested_iso:
+            badge = "  📌 Sua data original"
+        return f"{pretty} · R$ {price:,.0f}{badge}"
+
+    st.markdown(
+        '<div class="smart-date-pick">'
+        '<div class="smart-date-pick-title">📌 Escolha a data para a cotação completa</div>'
+        '<div class="smart-date-pick-sub">A busca de milhas (BuscaMilhas) e a quebra de '
+        'trecho só disparam após sua escolha.</div>'
+        '</div>',
+        unsafe_allow_html=True,
+    )
+
+    chosen_iso = st.selectbox(
+        "Data da cotação completa",
+        options=options,
+        index=options.index(default_iso) if default_iso in options else 0,
+        format_func=_fmt_option,
+        key="smart_date_picker",
+        label_visibility="collapsed",
+    )
+
+    col_b1, col_b2 = st.columns(2, gap="small")
+    with col_b1:
+        miles_clicked = st.button(
+            "💎 Buscar milhas para esta data",
+            type="primary",
+            key="smart_quote_btn",
+            use_container_width=True,
+        )
+    with col_b2:
+        split_clicked = st.button(
+            "✂️ Quebrar trecho nesta data",
+            key="split_btn",
+            use_container_width=True,
+        )
+
+    with_baggage_chk = st.checkbox(
+        "Considerar bagagem despachada (eleva a conexão mínima de 2h30m para 4h)",
+        value=st.session_state.get("split_with_baggage", False),
+        key="split_with_baggage",
+        help="Com bagagem despachada é preciso retirar e despachar de novo no hub.",
+    )
+
+    return {
+        "chosen_iso": chosen_iso,
+        "miles_clicked": bool(miles_clicked and chosen_iso),
+        "split_clicked": bool(split_clicked and chosen_iso),
+        "with_baggage": bool(with_baggage_chk),
+    }
+
+
+# ═══════════════════════════════════════════════════════════════
+# Quebra de Trecho — render (Fase 1 simplificada: hub fixo GRU)
+# ═══════════════════════════════════════════════════════════════
+_SPLIT_CSS = """
+<style>
+.split-header{background:linear-gradient(135deg,#c0392b 0%,#a93226 100%);
+    border-radius:14px;padding:18px 24px;display:flex;align-items:center;gap:18px;
+    margin:14px 0 18px 0;box-shadow:0 2px 8px rgba(192,57,43,.18);}
+.split-icon{font-size:42px;line-height:1;}
+.split-title{color:#fff;font-size:22px;font-weight:700;letter-spacing:.2px;}
+.split-sub{color:rgba(255,255,255,.82);font-size:12px;margin-top:3px;}
+
+.split-direct{background:#fff;border:1px solid #dde3ef;border-radius:12px;
+    padding:14px 20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;
+    box-shadow:0 1px 3px rgba(13,43,110,.04);}
+.split-direct .icon{font-size:24px;}
+.split-direct .label{font-size:11px;font-weight:700;color:#6b7a99;
+    text-transform:uppercase;letter-spacing:.06em;}
+.split-direct .price{font-size:22px;font-weight:800;color:#1a2236;line-height:1.1;}
+.split-direct .foot{font-size:11px;color:#6b7a99;margin-top:2px;}
+
+.split-leg-title{font-size:15px;font-weight:800;color:#1a2236;margin:18px 0 10px 0;
+    padding:10px 14px;border-left:4px solid #c0392b;background:#fdf6f5;
+    border-radius:6px;letter-spacing:.2px;}
+
+.split-offer{background:#fff;border:1px solid #dde3ef;border-radius:12px;
+    padding:14px 18px;margin-bottom:0px;
+    display:grid;grid-template-columns:1fr 130px;gap:16px;align-items:center;
+    box-shadow:0 1px 3px rgba(13,43,110,.04);transition:box-shadow .12s ease;}
+.split-offer:hover{box-shadow:0 4px 12px rgba(13,43,110,.10);}
+.split-offer .head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+    margin-bottom:6px;}
+.split-offer .chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:11px;
+    border-left:3px solid #1a56a0;background:#e8f0fb;color:#1a2236;}
+.split-offer .route{font-family:Menlo,monospace;font-weight:700;font-size:14px;
+    color:#1a2236;}
+.split-offer .times{font-size:14px;font-weight:600;color:#1a2236;margin-top:2px;}
+.split-offer .meta{font-size:12px;color:#6b7a99;margin-top:3px;}
+.split-offer .price{text-align:right;font-size:20px;font-weight:800;color:#1a2236;}
+.split-offer .price-foot{text-align:right;font-size:11px;color:#6b7a99;margin-top:2px;}
+.split-empty{padding:14px 18px;background:#fdf0f2;border:1px solid #f0c4c8;
+    border-radius:10px;color:#7a2418;font-size:13px;font-weight:600;
+    margin-bottom:10px;}
+.split-na{padding:18px 22px;background:#f0f6fc;border:1px solid #c8dcf0;
+    border-radius:12px;color:#1a4a7a;}
+.split-na .title{font-size:15px;font-weight:800;margin-bottom:6px;}
+.split-na .body{font-size:13px;line-height:1.5;}
+
+/* Encaixe doméstico (fase 2) */
+.split-fit-block{background:#f7faff;border:1px solid #c8dcf0;border-radius:10px;
+    padding:14px 16px;margin:0 0 14px 18px;}
+.split-fit-block .head{font-size:13px;font-weight:800;color:#1a4a7a;
+    display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.split-fit-block .meta{font-size:11px;color:#1a4a7a;margin-bottom:10px;
+    line-height:1.55;}
+.split-fit-offer{background:#fff;border:1px solid #d6def0;border-radius:10px;
+    padding:11px 14px;margin-bottom:8px;
+    display:grid;grid-template-columns:1fr 105px;gap:12px;align-items:center;
+    transition:box-shadow .12s,border-color .12s;}
+.split-fit-offer:hover{box-shadow:0 3px 9px rgba(13,43,110,.10);}
+.split-fit-offer.selected{border-color:#1a7a4a;background:#eaf4ef;
+    box-shadow:0 0 0 3px rgba(26,122,74,.18);}
+.split-fit-offer.dim{opacity:.55;background:#f5f6f9;}
+.split-fit-offer .head{display:flex;flex-wrap:wrap;align-items:center;gap:6px;
+    margin-bottom:4px;}
+.split-fit-offer .chip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:9px;
+    border-left:3px solid #1a56a0;background:#e8f0fb;color:#1a2236;}
+.split-fit-offer .route{font-family:Menlo,monospace;font-weight:700;font-size:13px;
+    color:#1a2236;}
+.split-fit-offer .times{font-size:13px;font-weight:600;color:#1a2236;margin-top:1px;}
+.split-fit-offer .meta{font-size:11px;color:#6b7a99;margin-top:2px;}
+.split-fit-offer .price{text-align:right;font-size:17px;font-weight:800;color:#1a2236;}
+.split-fit-offer .price-foot{text-align:right;font-size:10px;color:#6b7a99;margin-top:1px;}
+.split-fit-offer .layover{display:inline-block;font-size:11px;font-weight:700;
+    padding:2px 9px;border-radius:9px;margin-top:5px;}
+.split-fit-offer .layover.good{background:#eaf4ef;color:#1a7a4a;
+    border:1px solid #b8ddc8;}
+.split-fit-offer .layover.warn{background:#fff5e0;color:#e07b00;
+    border:1px solid #f0d68a;}
+.split-fit-offer .layover.bad{background:#fdf0f2;color:#7a2418;
+    border:1px solid #f0c4c8;text-decoration:line-through;}
+.split-fit-offer .layover.long{background:#ecedf3;color:#6b7a99;
+    border:1px solid #d6dae5;}
+.split-no-fit{padding:11px 14px;background:#fff7e0;border:1px solid #f0d68a;
+    border-radius:8px;color:#92660a;font-size:12px;margin-bottom:10px;}
+
+/* Resumo de combinações selecionadas */
+.split-combo-block{background:#fff;border:2px solid #1a7a4a;border-radius:14px;
+    padding:18px 22px;margin:24px 0 14px 0;
+    box-shadow:0 2px 10px rgba(26,122,74,.15);}
+.split-combo-block .title{font-size:18px;font-weight:800;color:#1a7a4a;
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;
+    padding-bottom:10px;border-bottom:1px dashed #b8ddc8;}
+.split-combo-card{background:#f7fbf9;border:1px solid #d8eadf;border-radius:10px;
+    padding:14px 18px;margin-bottom:12px;}
+.split-combo-card .ckhead{font-weight:800;color:#1a7a4a;font-size:13px;
+    margin-bottom:8px;}
+.split-combo-card .leg-line{font-size:13px;color:#1a2236;margin:4px 0;
+    display:flex;justify-content:space-between;gap:14px;}
+.split-combo-card .leg-line .price{font-weight:700;}
+.split-combo-card .conn{font-size:12px;color:#1a7a4a;margin:6px 0;font-weight:700;}
+.split-combo-card .conn.warn{color:#e07b00;}
+.split-combo-card .total{font-size:16px;font-weight:800;color:#1a2236;
+    margin-top:10px;padding-top:10px;border-top:1px solid #d8eadf;
+    display:flex;justify-content:space-between;align-items:center;}
+.split-combo-card .savings{font-size:13px;font-weight:700;color:#1a7a4a;}
+.split-combo-card .nosavings{font-size:13px;color:#92660a;}
+
+/* Cotação em milhas (fase 3) */
+.miles-match-block{background:#fdfbf6;border:2px solid #1a56a0;border-radius:14px;
+    padding:18px 22px;margin:8px 0 18px 0;box-shadow:0 2px 10px rgba(26,86,160,.12);}
+.miles-match-block .mtitle{font-size:16px;font-weight:800;color:#1a56a0;
+    display:flex;align-items:center;gap:10px;margin-bottom:8px;
+    padding-bottom:8px;border-bottom:1px dashed #c8dcf0;}
+.miles-match-leg{margin:14px 0;}
+.miles-match-leg .lhead{font-size:14px;font-weight:800;color:#1a2236;
+    margin-bottom:4px;}
+.miles-match-leg .lprog{font-size:11px;color:#6b7a99;margin-bottom:10px;
+    font-style:italic;}
+.miles-option{background:#fff;border:1px solid #dde3ef;border-radius:10px;
+    padding:11px 14px;margin-bottom:8px;
+    display:grid;grid-template-columns:1fr 130px;gap:14px;align-items:center;}
+.miles-option.exact{border-color:#1a7a4a;background:#f7fbf9;
+    box-shadow:0 0 0 2px rgba(26,122,74,.18);}
+.miles-option.dim{opacity:.78;}
+.miles-option .head{display:flex;flex-wrap:wrap;align-items:center;gap:6px;
+    font-size:13px;font-weight:700;color:#1a2236;margin-bottom:2px;}
+.miles-option .badge-exact{background:#1a7a4a;color:#fff;font-size:10px;
+    font-weight:800;padding:2px 7px;border-radius:8px;letter-spacing:.4px;}
+.miles-option .badge-prog{background:#e8f0fb;color:#1a2236;font-size:10px;
+    font-weight:700;padding:2px 7px;border-radius:8px;
+    border-left:3px solid #1a56a0;}
+.miles-option .meta{font-size:12px;color:#6b7a99;margin-top:2px;}
+.miles-option .miles-line{font-size:13px;color:#1a2236;margin-top:4px;}
+.miles-option .miles-line strong{color:#1a4a7a;}
+.miles-option .compare{font-size:12px;margin-top:3px;font-weight:700;}
+.miles-option .compare.savings{color:#1a7a4a;}
+.miles-option .compare.warn{color:#e07b00;}
+.miles-option .right{text-align:right;}
+.miles-option .right .real{font-size:18px;font-weight:800;color:#1a2236;}
+.miles-option .right .label{font-size:10px;color:#6b7a99;
+    text-transform:uppercase;letter-spacing:.05em;}
+.miles-empty{padding:11px 14px;background:#fdf0f2;border:1px solid #f0c4c8;
+    border-radius:8px;color:#7a2418;font-size:12px;font-weight:600;
+    margin-bottom:8px;}
+.miles-info-note{padding:11px 14px;background:#fff7e0;border:1px solid #f0d68a;
+    border-radius:8px;color:#92660a;font-size:12px;margin-bottom:8px;}
+.miles-secondary-title{font-size:12px;font-weight:700;color:#6b7a99;
+    margin:8px 0 6px 0;}
+.miles-summary{background:#f7fbf9;border:1px solid #d8eadf;border-radius:10px;
+    padding:14px 18px;margin-top:14px;}
+.miles-summary .stitle{font-size:14px;font-weight:800;color:#1a4a7a;
+    margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.miles-summary .row{display:flex;justify-content:space-between;
+    align-items:flex-start;font-size:13px;margin:5px 0;color:#1a2236;}
+.miles-summary .row .v{font-weight:700;font-family:Menlo,monospace;}
+.miles-summary .total-row{font-size:15px;font-weight:800;color:#1a2236;
+    margin-top:10px;padding-top:10px;border-top:1px solid #d8eadf;
+    display:flex;justify-content:space-between;align-items:center;}
+.miles-summary .savings-line{font-size:13px;font-weight:700;margin-top:6px;}
+.miles-summary .savings-line.good{color:#1a7a4a;}
+.miles-summary .savings-line.bad{color:#92660a;}
+</style>
+"""
+
+
+def _fmt_hm(minutes: int) -> str:
+    h, m = divmod(int(minutes), 60)
+    if h <= 0:
+        return f"{m}m"
+    if m == 0:
+        return f"{h}h"
+    return f"{h}h{m:02d}m"
+
+
+def _fmt_clock(dt) -> str:
+    if dt is None:
+        return "—"
+    try:
+        return dt.strftime("%H:%M")
+    except Exception:
+        return "—"
+
+
+def _fmt_arrival_with_offset(dep_dt, arr_dt) -> str:
+    """Formata HH:MM e adiciona '(+1)' se o voo aterrissa em outro dia."""
+    if dep_dt is None or arr_dt is None:
+        return _fmt_clock(arr_dt)
+    base = _fmt_clock(arr_dt)
+    try:
+        diff = (arr_dt.date() - dep_dt.date()).days
+        if diff > 0:
+            return f"{base} (+{diff})"
+    except Exception:
+        pass
+    return base
+
+
+# Extensão local de AIRLINE_DISPLAY (smart_quote.py é proibido pelo spec).
+# Cobre companhias internacionais que aparecem em rotas atendidas pelo
+# Kayak mas ainda não estão na tabela central — evita exibir só a sigla
+# IATA crua (ex: "AT" virava texto bruto sem nome).
+_AIRLINE_DISPLAY_EXTRA: dict[str, dict[str, str]] = {
+    "AT": {"name": "Air Tahiti Nui",        "color": "#003D7C", "bg": "#f0f4fa"},
+    "AV": {"name": "Avianca",               "color": "#E2231A", "bg": "#fdf0f2"},
+    "AM": {"name": "Aeroméxico",            "color": "#0033A0", "bg": "#f0f3ff"},
+    "AR": {"name": "Aerolíneas Argentinas", "color": "#0093D0", "bg": "#f0f9ff"},
+    "EI": {"name": "Aer Lingus",            "color": "#00824A", "bg": "#f0faf6"},
+    "AY": {"name": "Finnair",               "color": "#1B355E", "bg": "#f0f3fa"},
+    "SQ": {"name": "Singapore Airlines",    "color": "#003876", "bg": "#f0f3fa"},
+    "QF": {"name": "Qantas",                "color": "#E40000", "bg": "#fdf0f0"},
+    "G3": {"name": "GOL",                   "color": "#FF5B00", "bg": "#fff4f0"},
+    "AD": {"name": "Azul",                  "color": "#0032A0", "bg": "#f0f3ff"},
+    "LA": {"name": "LATAM Airlines",        "color": "#E31837", "bg": "#fdf0f2"},
+}
+
+
+def _airline_display_ext(iata: str) -> dict[str, str]:
+    """`airline_display` com fallback para a extensão local.
+
+    Lookup ordenado:
+      1) tabela central em pcd.agents.smart_quote.AIRLINE_DISPLAY
+      2) tabela local _AIRLINE_DISPLAY_EXTRA acima
+      3) fallback genérico (cor azul PcD, nome = IATA cru)
+    """
+    code = (iata or "").upper().strip()
+    if not code:
+        return {"name": "—", "color": "#1a56a0", "bg": "#e8f0fb"}
+    try:
+        from pcd.agents.smart_quote import AIRLINE_DISPLAY as _CENTRAL
+        if code in _CENTRAL:
+            return _CENTRAL[code]
+    except Exception:
+        pass
+    if code in _AIRLINE_DISPLAY_EXTRA:
+        return _AIRLINE_DISPLAY_EXTRA[code]
+    return {"name": code, "color": "#1a56a0", "bg": "#e8f0fb"}
+
+
+def _airline_full_name(iata: str) -> str:
+    """Retorna o nome completo da companhia (ex: 'Air Tahiti Nui') a partir
+    do IATA. Cai para o próprio código se a companhia não está cadastrada."""
+    return _airline_display_ext(iata).get("name", iata)
+
+
+def _airline_names_pretty(iata_codes: list[str], names_fallback: list[str]) -> str:
+    """Lista limpa de nomes para exibição em cards/resumos. Ex:
+       ['LA', 'AT'] → 'LATAM Airlines, Air Tahiti Nui'"""
+    if iata_codes:
+        return ", ".join(_airline_full_name(c) for c in iata_codes)
+    return ", ".join(names_fallback[:2]) if names_fallback else "—"
+
+
+def _split_offer_id(off) -> str:
+    """Versão local de `offer_id` para evitar dependência do módulo do agente
+    em runtime — Streamlit mantém imports em sys.modules entre rerodadas e
+    pode servir uma versão antiga se o agente for editado com o app rodando.
+    Manter o id estável aqui também garante consistência entre chaves de
+    session_state ao longo das rerodadas, mesmo quando o agente é recarregado.
+    """
+    raw = getattr(off, "raw", None) or {}
+    leg = raw.get("leg_id") or raw.get("out_leg_id")
+    if isinstance(leg, str) and leg:
+        return f"{off.origin}-{off.destination}-{leg}"
+    dep = off.departure_dt.isoformat() if getattr(off, "departure_dt", None) else "no-dep"
+    iata = list(getattr(off, "airlines_iata", []) or [])
+    names = list(getattr(off, "airlines", []) or [])
+    cias = ",".join(iata) if iata else (",".join(names[:2]) if names else "")
+    return f"{off.origin}-{off.destination}-{dep}-{off.price_brl:.0f}-{cias}"
+
+
+def _split_airline_chips(iata_codes: list[str], airline_names: list[str]) -> str:
+    """Renderiza chips coloridos com NOME COMPLETO da companhia
+    (ex: 'Air Tahiti Nui' em vez de 'AT'). Usa a tabela estendida
+    `_airline_display_ext` para cobrir companhias que ainda não estão
+    cadastradas em pcd.agents.smart_quote.AIRLINE_DISPLAY."""
+    if iata_codes:
+        chips = []
+        for code in iata_codes:
+            d = _airline_display_ext(code)
+            chips.append(
+                f'<span class="chip" style="border-left-color:{d["color"]};'
+                f'background:{d["bg"]}">{d["name"]}</span>'
+            )
+        return "".join(chips)
+    if airline_names:
+        return "".join(f'<span class="chip">{n}</span>' for n in airline_names[:3])
+    return ""
+
+
+def _render_offer_card(offer) -> str:
+    """Monta um card HTML para uma oferta (KayakOffer)."""
+    chips_html = _split_airline_chips(offer.airlines_iata, offer.airlines)
+    dep = _fmt_clock(offer.departure_dt)
+    arr = _fmt_arrival_with_offset(offer.departure_dt, offer.arrival_dt)
+    dur = _fmt_hm(offer.duration_min) if offer.duration_min else "—"
+    stops_label = "Direto" if offer.stops == 0 else (
+        f"{offer.stops} escala" if offer.stops == 1 else f"{offer.stops} escalas"
+    )
+    return f"""
+<div class="split-offer">
+  <div>
+    <div class="head">{chips_html}</div>
+    <div class="route">{offer.origin} → {offer.destination}</div>
+    <div class="times">{dep} → {arr}</div>
+    <div class="meta">{dur} · {stops_label}</div>
+  </div>
+  <div>
+    <div class="price">R$ {offer.price_brl:,.2f}</div>
+    <div class="price-foot">por adulto</div>
+  </div>
+</div>"""
+
+
+# ── Encaixe (fase 2) ───────────────────────────────────────────
+def _layover_kind(layover_min: int, with_baggage: bool) -> tuple[str, str]:
+    """Retorna (classe_css, rótulo_curto) para um valor de layover."""
+    min_conn = 240 if with_baggage else 150
+    max_conn = 720
+    if layover_min < min_conn:
+        return ("bad", "✗ muito curta")
+    if layover_min < min_conn + 30:
+        return ("warn", "⚠ no limite")
+    if layover_min > max_conn:
+        return ("long", "ⓘ pernoite")
+    if layover_min > min_conn + 360:
+        return ("warn", "⚠ longa")
+    return ("good", "✓")
+
+
+def _render_fit_offer_card(dom, with_baggage: bool, *, dim: bool = False, selected: bool = False) -> str:
+    chips_html = _split_airline_chips(dom.airlines_iata, dom.airlines)
+    dep = _fmt_clock(dom.departure_dt)
+    arr = _fmt_arrival_with_offset(dom.departure_dt, dom.arrival_dt)
+    dur = _fmt_hm(dom.duration_min) if dom.duration_min else "—"
+    stops_label = "Direto" if dom.stops == 0 else (
+        f"{dom.stops} escala" if dom.stops == 1 else f"{dom.stops} escalas"
+    )
+    cls, label = _layover_kind(int(dom.layover_minutes or 0), with_baggage)
+    layover_html = (
+        f'<span class="layover {cls}">⏱️ Conexão em GRU: '
+        f'{_fmt_hm(int(dom.layover_minutes or 0))} {label}</span>'
+    )
+    css_extra = ""
+    if selected:
+        css_extra += " selected"
+    if dim:
+        css_extra += " dim"
+    return f"""
+<div class="split-fit-offer{css_extra}">
+  <div>
+    <div class="head">{chips_html}</div>
+    <div class="route">{dom.origin} → {dom.destination}</div>
+    <div class="times">{dep} → {arr}</div>
+    <div class="meta">{dur} · {stops_label}</div>
+    {layover_html}
+  </div>
+  <div>
+    <div class="price">R$ {dom.price_brl:,.2f}</div>
+    <div class="price-foot">por adulto</div>
+  </div>
+</div>"""
+
+
+def _fmt_dt_dmy(d) -> str:
+    """ISO yyyy-mm-dd → 'dd/mm/yyyy'."""
+    if not d:
+        return "—"
+    try:
+        from datetime import date as _d
+        return _d.fromisoformat(d).strftime("%d/%m/%Y")
+    except Exception:
+        return str(d)
+
+
+_OFFSET_LABEL = {
+    "same_day": "no mesmo dia",
+    "day_before": "no dia anterior",
+    "day_after": "no dia seguinte",
+}
+
+
+def _trigger_fit(off, *, intl_direction: str, other_endpoint: str,
+                 adults: int, with_baggage: bool):
+    """Roda fit_domestic_leg() e armazena no session_state, com cache por
+    (offer_id, other_endpoint, with_baggage). Idempotente — chamadas
+    repetidas com mesma chave reusam o resultado."""
+    from pcd.agents.segment_split import SegmentSplitAgent
+
+    oid = _split_offer_id(off)
+    cache_key = f"fit_{oid}_{other_endpoint}_{with_baggage}"
+    fits = st.session_state.setdefault("split_fits", {})
+    keys = st.session_state.setdefault("split_fit_cache_keys", {})
+
+    if keys.get(oid) == cache_key:
+        return  # já cacheado para esta combinação
+
+    leg_label = (
+        f"{other_endpoint} → GRU" if intl_direction == "from_gru"
+        else f"GRU → {other_endpoint}"
+    )
+    with st.spinner(f"🔍 Encaixando voo doméstico ({leg_label})..."):
+        fit = SegmentSplitAgent().fit_domestic_leg(
+            intl_offer=off,
+            other_endpoint=other_endpoint,
+            intl_direction=intl_direction,
+            adults=adults,
+            with_baggage=with_baggage,
+        )
+    fits[oid] = fit
+    keys[oid] = cache_key
+
+
+def _render_fit_section(fit, oid: str, with_baggage: bool):
+    """Renderiza o bloco do encaixe (sob um card de oferta). Mostra a janela,
+    a lista de compatíveis selecionáveis e (em expander) os incompatíveis.
+
+    Reage ao toggle de bagagem em tempo real via rebucket_fit() — não chama
+    Kayak novamente. Apenas atualiza compatíveis/incompatíveis com base nas
+    ofertas já em cache."""
+    # Ajusta buckets para o with_baggage atual sem nova chamada Kayak.
+    # rebucket_fit é importado aqui (lazy) — falha graciosa se não estiver
+    # disponível (ex: agente em versão antiga ainda em sys.modules).
+    if fit.with_baggage != with_baggage and fit.all_offers:
+        try:
+            from pcd.agents.segment_split import rebucket_fit
+            fit = rebucket_fit(fit, with_baggage)
+            st.session_state["split_fits"][oid] = fit
+        except ImportError:
+            st.info(
+                "ℹ️ Para refiltrar com a nova bagagem, reinicie o Streamlit "
+                "(o módulo do agente em memória está desatualizado)."
+            )
+
+    direction_label = (
+        f"{fit.intl_offer.origin if fit.intl_direction == 'to_gru' else '?'} → GRU"
+        if fit.intl_direction == "to_gru" else
+        f"GRU → {fit.intl_offer.destination if fit.intl_direction == 'from_gru' else '?'}"
+    )
+    # Determina o aeroporto "outro" de forma consistente
+    if fit.intl_direction == "from_gru":
+        # intl é GRU→X; doméstico é Y→GRU
+        if fit.compatible_offers:
+            other = fit.compatible_offers[0].origin
+        elif fit.incompatible_offers:
+            other = fit.incompatible_offers[0].origin
+        elif fit.all_offers:
+            other = fit.all_offers[0].origin
+        else:
+            other = "?"
+        direction_label = f"{other} → GRU"
+    else:
+        if fit.compatible_offers:
+            other = fit.compatible_offers[0].destination
+        elif fit.incompatible_offers:
+            other = fit.incompatible_offers[0].destination
+        elif fit.all_offers:
+            other = fit.all_offers[0].destination
+        else:
+            other = "?"
+        direction_label = f"GRU → {other}"
+
+    win_start = _fmt_clock(fit.target_window_start) if fit.target_window_start else "—"
+    win_end = _fmt_clock(fit.target_window_end) if fit.target_window_end else "—"
+    offset_lbl = _OFFSET_LABEL.get(fit.search_date_offset, fit.search_date_offset or "")
+    date_lbl = _fmt_dt_dmy(fit.search_date)
+    window_kind_lbl = "chegada" if fit.intl_direction == "from_gru" else "partida"
+
+    st.markdown(f"""
+<div class="split-fit-block">
+  <div class="head">🔍 Encaixe {direction_label}</div>
+  <div class="meta">
+    Pesquisa em <strong>{date_lbl}</strong>{f' ({offset_lbl})' if offset_lbl else ''}<br/>
+    Janela de {window_kind_lbl}: <strong>{win_start} às {win_end}</strong>
+  </div>
+</div>""", unsafe_allow_html=True)
+
+    # Notas / avisos do agente (janela apertada, etc.)
+    for note in fit.notes:
+        st.markdown(
+            f'<div class="split-no-fit" style="margin-left:18px">{note}</div>',
+            unsafe_allow_html=True,
+        )
+
+    if fit.no_results:
+        return
+
+    # Seleção atual para este voo internacional
+    sel_map = st.session_state.setdefault("split_fitted_combinations", {})
+    selected_dom = sel_map.get(oid)
+    selected_dom_id = _split_offer_id(selected_dom) if selected_dom is not None else None
+
+    # Renderiza compatíveis com botão "Selecionar"
+    if not fit.compatible_offers:
+        st.markdown(
+            '<div class="split-no-fit" style="margin-left:18px">'
+            'Nenhum voo compatível com a janela. Considere outra opção internacional '
+            'ou veja as opções fora da janela abaixo.</div>',
+            unsafe_allow_html=True,
+        )
+
+    for dom in fit.compatible_offers:
+        dom_id = _split_offer_id(dom)
+        is_selected = (dom_id == selected_dom_id)
+        st.markdown(
+            f'<div style="margin-left:18px">'
+            f'{_render_fit_offer_card(dom, with_baggage, selected=is_selected)}'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
+        cols = st.columns([3, 1])
+        with cols[1]:
+            btn_label = "✓ Selecionada" if is_selected else "Selecionar"
+            btn_type = "primary" if is_selected else "secondary"
+            if st.button(
+                btn_label,
+                key=f"fit_pick_{oid}_{dom_id}",
+                type=btn_type,
+                use_container_width=True,
+            ):
+                if is_selected:
+                    sel_map.pop(oid, None)
                 else:
-                    raw = offer.get("raw") or {}
-                    n_trechos = len((raw.get("Trechos") or []))
-                    st.write(f"Resposta da API recebida — {n_trechos} bloco(s) de trechos.")
-                    st.caption("Ofertas detalhadas aparecem nas tabs normais abaixo, na coluna do programa correspondente.")
+                    sel_map[oid] = dom
+                # Força nova rerodada para que o card fique verde, a seção
+                # 🎯 COMBINAÇÕES SELECIONADAS apareça e o botão de cotar em
+                # milhas seja exibido — tudo na mesma interação do clique.
+                # Sem o rerun explícito, dependeríamos de uma segunda
+                # interação do vendedor para a UI atualizar.
+                st.rerun()
 
-    st.divider()
+    # Incompatíveis em expander
+    if fit.incompatible_offers:
+        with st.expander(
+            f"▾ Mostrar {len(fit.incompatible_offers)} opções fora da janela (acinzentadas)"
+        ):
+            for dom in fit.incompatible_offers:
+                st.markdown(
+                    f'<div style="margin-left:0px">'
+                    f'{_render_fit_offer_card(dom, with_baggage, dim=True)}'
+                    f'</div>',
+                    unsafe_allow_html=True,
+                )
 
 
-_render_smart_quote_section()
+def _render_offer_list_section(
+    title: str,
+    offers,
+    *,
+    intl_direction: str | None = None,
+    other_endpoint: str | None = None,
+    adults: int = 1,
+    with_baggage: bool = False,
+    empty_msg: str | None = None,
+):
+    """Renderiza a lista de ofertas de uma perna. Quando `intl_direction` e
+    `other_endpoint` são fornecidos, cada card recebe um botão "Encaixar voo
+    nacional" e exibe a seção do encaixe inline."""
+    st.markdown(f'<div class="split-leg-title">{title}</div>', unsafe_allow_html=True)
+    if not offers:
+        msg = empty_msg or "Não foi possível buscar essa perna no momento."
+        st.markdown(f'<div class="split-empty">{msg}</div>', unsafe_allow_html=True)
+        return
+
+    fit_enabled = (intl_direction is not None) and (other_endpoint is not None)
+
+    for off in offers:
+        st.markdown(_render_offer_card(off), unsafe_allow_html=True)
+
+        if not fit_enabled or intl_direction is None or other_endpoint is None:
+            continue
+
+        oid = _split_offer_id(off)
+        fits = st.session_state.get("split_fits", {})
+        has_fit = oid in fits
+
+        cols = st.columns([1.4, 4])
+        with cols[0]:
+            btn_label = "✓ Encaixe carregado" if has_fit else "➕ Encaixar voo nacional"
+            clicked = st.button(
+                btn_label,
+                key=f"split_fit_btn_{oid}",
+                use_container_width=True,
+                type="secondary",
+            )
+
+        if clicked:
+            _trigger_fit(
+                off,
+                intl_direction=intl_direction,
+                other_endpoint=other_endpoint,
+                adults=adults,
+                with_baggage=with_baggage,
+            )
+
+        # Render fit se já carregado
+        fit = st.session_state.get("split_fits", {}).get(oid)
+        if fit is not None:
+            _render_fit_section(fit, oid, with_baggage=with_baggage)
+        else:
+            # Espaço entre cards quando não há encaixe ainda carregado
+            st.markdown('<div style="height:8px"></div>', unsafe_allow_html=True)
+
+
+_PROGRAM_LABELS: dict[str, str] = {
+    "SMILES": "Smiles (GOL)",
+    "LATAM_PASS": "LATAM Pass",
+    "AZUL_FIDELIDADE": "TudoAzul",
+    "AZUL_INTERLINE": "TudoAzul Pelo Mundo",
+    "COPA": "ConnectMiles (Copa)",
+    "IBERIA": "Iberia Plus",
+    "BRITISH": "Avios (British)",
+}
+
+
+def _provider_normalized() -> str:
+    """Lê o provider escolhido no popover ⚙️ e devolve no formato aceito
+    pelo MilesMatchAgent ('buscamilhas' | 'economilhas')."""
+    raw = (st.session_state.get("miles_provider") or "BuscaMilhas").lower()
+    return "economilhas" if "econom" in raw else "buscamilhas"
+
+
+def _build_combo_card_html(idx: int, intl, dom, direction: str,
+                           with_baggage: bool, direct_price: float) -> tuple[str, float]:
+    """Constrói o HTML de um card de combinação Kayak (cinza) e devolve
+    (html, total_kayak_brl)."""
+    if direction == "from_gru":
+        first, second = dom, intl
+    else:
+        first, second = intl, dom
+
+    layover_min = int(dom.layover_minutes or 0)
+    layover_kind, layover_lbl = _layover_kind(layover_min, with_baggage)
+    conn_class = "" if layover_kind == "good" else " warn"
+
+    first_date = first.departure_dt.strftime("%d/%m") if first.departure_dt else ""
+    first_dep = _fmt_clock(first.departure_dt)
+    first_arr = _fmt_arrival_with_offset(first.departure_dt, first.arrival_dt)
+    second_date = second.departure_dt.strftime("%d/%m") if second.departure_dt else ""
+    second_dep = _fmt_clock(second.departure_dt)
+    second_arr = _fmt_arrival_with_offset(second.departure_dt, second.arrival_dt)
+
+    first_cias = _airline_names_pretty(
+        list(first.airlines_iata or []), list(first.airlines or []),
+    )
+    second_cias = _airline_names_pretty(
+        list(second.airlines_iata or []), list(second.airlines or []),
+    )
+
+    total = float(intl.price_brl) + float(dom.price_brl)
+    if direct_price and direct_price > 0:
+        savings = direct_price - total
+        if savings > 0:
+            pct = (savings / direct_price) * 100.0
+            savings_html = (
+                f'<span class="savings">Economia vs direto '
+                f'(R$ {direct_price:,.2f}): R$ {savings:,.2f} ({pct:.0f}%) ✅</span>'
+            )
+        else:
+            savings_html = (
+                f'<span class="nosavings">Sem economia vs direto '
+                f'(direto R$ {direct_price:,.2f})</span>'
+            )
+    else:
+        savings_html = '<span class="nosavings">Direto sem referência de preço</span>'
+
+    html = f"""
+<div class="split-combo-card">
+  <div class="ckhead">Combinação {idx}</div>
+  <div class="leg-line">
+    <span>✈️ {first.origin} → {first.destination} ({first_cias or '—'}) · {first_date} {first_dep}→{first_arr}</span>
+    <span class="price">R$ {first.price_brl:,.2f}</span>
+  </div>
+  <div class="conn{conn_class}">⏱️ Conexão em GRU: {_fmt_hm(layover_min)} {layover_lbl}</div>
+  <div class="leg-line">
+    <span>✈️ {second.origin} → {second.destination} ({second_cias or '—'}) · {second_date} {second_dep}→{second_arr}</span>
+    <span class="price">R$ {second.price_brl:,.2f}</span>
+  </div>
+  <div class="total">
+    <span>Total Kayak (dinheiro)</span>
+    <span>R$ {total:,.2f}</span>
+  </div>
+  <div style="margin-top:6px;text-align:right">{savings_html}</div>
+</div>"""
+    return html, total
+
+
+def _trigger_miles_match(combo_key: str, intl, dom, direction: str,
+                         adults: int, with_baggage: bool, provider: str):
+    """Roda match_domestic_leg + match_international_leg em paralelo e
+    cacheia em st.session_state[combo_key].
+
+    Idempotente — usa um sub-dict de chaves para detectar se a combinação
+    (intl_oid, dom_oid, provider) já foi consultada."""
+    from concurrent.futures import ThreadPoolExecutor
+    from pcd.agents.miles_match import MilesMatchAgent
+
+    intl_oid = _split_offer_id(intl)
+    dom_oid = _split_offer_id(dom)
+    cache_key = f"miles_match_cache_{combo_key}_{dom_oid}_{provider}"
+    keys = st.session_state.setdefault("miles_match_cache_keys", {})
+    if keys.get(combo_key) == cache_key:
+        return
+
+    # Direção do voo doméstico em relação ao internacional
+    if direction == "from_gru":
+        # Doméstica chega em GRU ANTES da partida intl.
+        # Para a busca da intl: a outra perna (doméstica) está antes → "before_intl"
+        # Para a busca da doméstica: a outra perna (intl) está depois → "after_intl"
+        intl_other_dt = dom.arrival_dt
+        intl_dir = "before_intl"
+        dom_other_dt = intl.departure_dt
+        dom_dir = "after_intl"
+    else:  # to_gru
+        # Internacional chega em GRU; doméstica decola depois.
+        intl_other_dt = dom.departure_dt
+        intl_dir = "after_intl"
+        dom_other_dt = intl.arrival_dt
+        dom_dir = "before_intl"
+
+    if intl_other_dt is None or dom_other_dt is None:
+        st.warning("Não foi possível cotar — voos sem horário definido.")
+        return
+
+    agent = MilesMatchAgent()
+    with st.spinner("💎 Consultando programas de milhas direcionados..."):
+        with ThreadPoolExecutor(max_workers=2) as ex:
+            f_dom = ex.submit(
+                agent.match_domestic_leg,
+                kayak_offer=dom, other_leg_dt=dom_other_dt,
+                other_leg_direction=dom_dir,
+                with_baggage=with_baggage, adults=adults, provider=provider,
+            )
+            f_intl = ex.submit(
+                agent.match_international_leg,
+                kayak_offer=intl, domestic_leg_dt=intl_other_dt,
+                domestic_leg_direction=intl_dir,
+                with_baggage=with_baggage, adults=adults, provider=provider,
+            )
+            dom_match = f_dom.result()
+            intl_match = f_intl.result()
+
+    st.session_state[combo_key] = {
+        "domestic": dom_match,
+        "international": intl_match,
+        "with_baggage": with_baggage,
+        "provider": provider,
+    }
+    keys[combo_key] = cache_key
+
+
+def _format_program_list(programs: list[str]) -> str:
+    if not programs:
+        return "—"
+    return ", ".join(_PROGRAM_LABELS.get(p, p) for p in programs)
+
+
+def _format_dt_long(dt) -> str:
+    if dt is None:
+        return "—"
+    try:
+        return dt.strftime("%d/%m %H:%M")
+    except Exception:
+        return "—"
+
+
+def _render_miles_option_card(opt, kayak_price: float, *, dim: bool = False) -> str:
+    """Card de uma opção de milhas. `dim=True` para opções secundárias
+    (não-exato, mas dentro da janela)."""
+    real = float(opt.total_real_cost_brl)
+    diff = kayak_price - real
+    if diff > 0:
+        compare_html = (
+            f'<div class="compare savings">Economia: R$ {diff:,.2f} ✅</div>'
+        )
+    elif diff < 0:
+        compare_html = (
+            f'<div class="compare warn">⚠ Milhas mais caras que dinheiro nesse voo '
+            f'(+R$ {abs(diff):,.2f})</div>'
+        )
+    else:
+        compare_html = '<div class="compare">Equivalente ao Kayak</div>'
+
+    badges = []
+    if opt.is_exact_match:
+        badges.append('<span class="badge-exact">✓ EXATO</span>')
+    badges.append(
+        f'<span class="badge-prog">{_PROGRAM_LABELS.get(opt.program, opt.program)}</span>'
+    )
+    if opt.carrier:
+        cd = _airline_display_ext(opt.carrier)
+        badges.append(
+            f'<span class="badge-prog" style="border-left-color:{cd["color"]};'
+            f'background:{cd["bg"]}">{cd["name"]}</span>'
+        )
+    badges_html = "".join(badges)
+
+    flight = opt.flight_number or "—"
+    if opt.carrier and opt.carrier not in flight.upper():
+        flight = f"{opt.carrier} {flight}"
+
+    times = ""
+    if opt.departure_dt is not None:
+        dep = opt.departure_dt.strftime("%d/%m %H:%M")
+        arr = opt.arrival_dt.strftime("%H:%M") if opt.arrival_dt else "—"
+        times = f"{dep} → {arr}"
+
+    classes = "miles-option"
+    if opt.is_exact_match:
+        classes += " exact"
+    if dim:
+        classes += " dim"
+
+    return f"""
+<div class="{classes}">
+  <div>
+    <div class="head">{badges_html} <span style="font-family:Menlo,monospace">{flight}</span></div>
+    <div class="meta">{times}</div>
+    <div class="miles-line">
+      <strong>{opt.miles:,}</strong> milhas + R$ {opt.taxes_brl:,.2f} taxas
+    </div>
+    {compare_html}
+  </div>
+  <div class="right">
+    <div class="real">R$ {real:,.2f}</div>
+    <div class="label">custo real</div>
+  </div>
+</div>"""
+
+
+def _render_miles_leg_block(match, kayak_offer, leg_label_emoji: str,
+                            leg_label_text: str) -> None:
+    """Renderiza a seção de uma perna no comparativo de milhas."""
+    from pcd.agents.miles_match import rebucket_match  # noqa: F401 (cache OK)
+
+    # Aplicar rebucket se with_baggage mudou — feito no caller.
+    # Mostra nome completo da companhia (ex: "Air Tahiti Nui") e não a sigla.
+    flight_disp = _airline_names_pretty(
+        list(kayak_offer.airlines_iata or []),
+        list(kayak_offer.airlines or []),
+    )
+
+    progs_label = _format_program_list(match.programs_searched)
+
+    st.markdown(f"""
+<div class="miles-match-leg">
+  <div class="lhead">{leg_label_emoji} {leg_label_text} — {kayak_offer.origin} → {kayak_offer.destination} ({flight_disp or '—'})</div>
+  <div class="lprog">Programas consultados: {progs_label}</div>
+</div>""", unsafe_allow_html=True)
+
+    for note in match.notes:
+        st.markdown(
+            f'<div class="miles-info-note">ℹ️ {note}</div>',
+            unsafe_allow_html=True,
+        )
+
+    if not match.options:
+        msg = match.no_results_reason or (
+            "Sem disponibilidade nesse programa para essa data/companhia."
+        )
+        st.markdown(
+            f'<div class="miles-empty">{msg}</div>',
+            unsafe_allow_html=True,
+        )
+        return
+
+    # Exact matches primeiro, depois secundários
+    exact_options = [o for o in match.options if o.is_exact_match]
+    other_options = [o for o in match.options if not o.is_exact_match]
+
+    kayak_price = float(kayak_offer.price_brl or 0.0)
+
+    cards = []
+    for opt in exact_options:
+        cards.append(_render_miles_option_card(opt, kayak_price))
+    if other_options:
+        if exact_options:
+            cards.append(
+                '<div class="miles-secondary-title">Outras opções compatíveis na janela:</div>'
+            )
+        for opt in other_options:
+            cards.append(_render_miles_option_card(opt, kayak_price, dim=True))
+
+    st.markdown("".join(cards), unsafe_allow_html=True)
+
+
+def _render_miles_match_block(payload: dict, intl, dom, direction: str,
+                              with_baggage: bool, kayak_total: float,
+                              direct_price: float, combo_idx: int) -> None:
+    """Renderiza o bloco completo de comparativo Kayak vs Milhas para
+    uma combinação. Aplica rebucket_match client-side se with_baggage
+    diferir do que foi cacheado."""
+    from pcd.agents.miles_match import rebucket_match
+
+    dom_match = payload.get("domestic")
+    intl_match = payload.get("international")
+    if dom_match is None or intl_match is None:
+        return
+
+    # Re-bucket client-side se a bagagem mudou
+    if payload.get("with_baggage") != with_baggage:
+        if dom_match.options:
+            dom_match = rebucket_match(dom_match, with_baggage)
+        if intl_match.options:
+            intl_match = rebucket_match(intl_match, with_baggage)
+        payload["domestic"] = dom_match
+        payload["international"] = intl_match
+        payload["with_baggage"] = with_baggage
+
+    # Cabeçalho
+    st.markdown(f"""
+<div class="miles-match-block">
+  <div class="mtitle">💎 COTAÇÃO EM MILHAS — Combinação {combo_idx}</div>
+</div>""", unsafe_allow_html=True)
+
+    # Perna doméstica
+    _render_miles_leg_block(
+        dom_match, dom,
+        leg_label_emoji="🇧🇷", leg_label_text="PERNA DOMÉSTICA",
+    )
+
+    # Perna internacional
+    _render_miles_leg_block(
+        intl_match, intl,
+        leg_label_emoji="🌎", leg_label_text="PERNA INTERNACIONAL",
+    )
+
+    # Resumo comparativo
+    _render_miles_match_summary(
+        intl_match=intl_match, dom_match=dom_match,
+        intl=intl, dom=dom,
+        kayak_total=kayak_total, direct_price=direct_price,
+    )
+
+
+def _render_miles_match_summary(intl_match, dom_match, intl, dom,
+                                kayak_total: float, direct_price: float) -> None:
+    """Bloco final: 'combinação ótima' = melhor opção de cada perna
+    (preferindo exact_match, depois preço)."""
+    def _best(options):
+        if not options:
+            return None
+        # Já vem ordenado por (not is_exact_match, total_real_cost_brl)
+        return options[0]
+
+    best_dom = _best(dom_match.options)
+    best_intl = _best(intl_match.options)
+
+    if best_dom is None and best_intl is None:
+        st.markdown("""
+<div class="miles-summary">
+  <div class="stitle">📊 RESUMO COMPARATIVO</div>
+  <div class="row">
+    <span>Sem opções de milhas válidas para nenhuma das pernas.</span>
+  </div>
+  <div class="row">
+    <span>Total Kayak (dinheiro)</span>
+    <span class="v">R$ """ + f"{kayak_total:,.2f}" + """</span>
+  </div>
+</div>""", unsafe_allow_html=True)
+        return
+
+    # Custos por perna
+    dom_real = float(best_dom.total_real_cost_brl) if best_dom else float(dom.price_brl)
+    intl_real = float(best_intl.total_real_cost_brl) if best_intl else float(intl.price_brl)
+    dom_label_origin = "Milhas" if best_dom else "Kayak"
+    intl_label_origin = "Milhas" if best_intl else "Kayak"
+
+    miles_total = dom_real + intl_real
+
+    dom_line = (
+        f"{dom.origin}→{dom.destination} ({dom_label_origin}"
+        + (f", {_PROGRAM_LABELS.get(best_dom.program, best_dom.program)}, {best_dom.flight_number}"
+           if best_dom else "") + f"): R$ {dom_real:,.2f}"
+    )
+    intl_line = (
+        f"{intl.origin}→{intl.destination} ({intl_label_origin}"
+        + (f", {_PROGRAM_LABELS.get(best_intl.program, best_intl.program)}, {best_intl.flight_number}"
+           if best_intl else "") + f"): R$ {intl_real:,.2f}"
+    )
+
+    diff_kayak = kayak_total - miles_total
+    if diff_kayak > 0:
+        pct = (diff_kayak / kayak_total) * 100.0 if kayak_total > 0 else 0.0
+        savings_milhas_html = (
+            f'<div class="savings-line good">Economia milhas vs Kayak: '
+            f'R$ {diff_kayak:,.2f} ({pct:.0f}%) ✅</div>'
+        )
+    elif diff_kayak < 0:
+        savings_milhas_html = (
+            f'<div class="savings-line bad">Milhas saíram mais caras que Kayak '
+            f'em R$ {abs(diff_kayak):,.2f} ⚠</div>'
+        )
+    else:
+        savings_milhas_html = (
+            '<div class="savings-line">Milhas e Kayak praticamente equivalentes.</div>'
+        )
+
+    direct_html = ""
+    if direct_price and direct_price > 0:
+        diff_direct = direct_price - miles_total
+        if diff_direct > 0:
+            pct_d = (diff_direct / direct_price) * 100.0
+            direct_html = (
+                f'<div class="savings-line good">Economia vs voo direto '
+                f'{intl.origin if dom_match.kayak_reference.origin == intl.origin else dom.origin}'
+                f'→{intl.destination if dom_match.kayak_reference.destination == intl.destination else dom.destination}'
+                f' (R$ {direct_price:,.2f}): R$ {diff_direct:,.2f} ({pct_d:.0f}%) ✅</div>'
+            )
+        else:
+            direct_html = (
+                f'<div class="savings-line bad">Combinação em milhas saiu '
+                f'R$ {abs(diff_direct):,.2f} mais cara que o voo direto '
+                f'(R$ {direct_price:,.2f}).</div>'
+            )
+
+    has_both_exact = (
+        best_dom is not None and best_dom.is_exact_match and
+        best_intl is not None and best_intl.is_exact_match
+    )
+    optimal_badge = (
+        '<span style="font-size:11px;background:#1a7a4a;color:#fff;'
+        'padding:2px 8px;border-radius:8px;font-weight:700;'
+        'margin-left:8px;">✓ COMBINAÇÃO ÓTIMA</span>'
+        if has_both_exact else ""
+    )
+
+    st.markdown(f"""
+<div class="miles-summary">
+  <div class="stitle">📊 RESUMO COMPARATIVO {optimal_badge}</div>
+  <div class="row"><span><strong>Kayak (dinheiro):</strong></span></div>
+  <div class="row">
+    <span>&nbsp;&nbsp;{dom.origin}→{dom.destination} R$ {dom.price_brl:,.2f} + {intl.origin}→{intl.destination} R$ {intl.price_brl:,.2f}</span>
+    <span class="v">R$ {kayak_total:,.2f}</span>
+  </div>
+  <div class="row" style="margin-top:8px"><span><strong>Milhas (combinação ótima):</strong></span></div>
+  <div class="row"><span>&nbsp;&nbsp;{dom_line}</span></div>
+  <div class="row"><span>&nbsp;&nbsp;{intl_line}</span></div>
+  <div class="total-row">
+    <span>Total milhas (custo real)</span>
+    <span>R$ {miles_total:,.2f}</span>
+  </div>
+  {savings_milhas_html}
+  {direct_html}
+</div>""", unsafe_allow_html=True)
+
+
+def _render_combinations_summary(direct_price: float, with_baggage: bool,
+                                 provider: str = "buscamilhas",
+                                 adults: int = 1):
+    """Mostra ao final um bloco com todas as combinações atualmente
+    selecionadas pelo vendedor (intl + doméstico encaixado), com botão
+    de cotação em milhas direcionada por combinação."""
+    sel_map = st.session_state.get("split_fitted_combinations") or {}
+    fits = st.session_state.get("split_fits") or {}
+    if not sel_map:
+        return
+
+    # Lista de combinações válidas (intl ainda existe em fits)
+    rows = []
+    for intl_oid, dom_offer in sel_map.items():
+        fit = fits.get(intl_oid)
+        if fit is None or dom_offer is None:
+            continue
+        intl = fit.intl_offer
+        rows.append((intl_oid, intl, dom_offer, fit.intl_direction))
+
+    if not rows:
+        return
+
+    # Cabeçalho do bloco verde (apenas o título, os cards são interleavados
+    # com botões — Streamlit não permite widgets dentro de st.markdown)
+    st.markdown(f"""
+<div class="split-combo-block" style="padding:14px 18px 4px 18px">
+  <div class="title">🎯 COMBINAÇÕES SELECIONADAS ({len(rows)})</div>
+</div>""", unsafe_allow_html=True)
+
+    for idx, (intl_oid, intl, dom, direction) in enumerate(rows, start=1):
+        card_html, kayak_total = _build_combo_card_html(
+            idx=idx, intl=intl, dom=dom, direction=direction,
+            with_baggage=with_baggage, direct_price=direct_price,
+        )
+        st.markdown(card_html, unsafe_allow_html=True)
+
+        combo_key = f"miles_match_{intl_oid}"
+        cached = st.session_state.get(combo_key)
+
+        # Botão "Cotar em milhas"
+        cols = st.columns([2, 5])
+        with cols[0]:
+            btn_label = (
+                "✓ Milhas cotadas" if cached is not None
+                else "💎 Cotar essa combinação em milhas"
+            )
+            clicked = st.button(
+                btn_label,
+                key=f"miles_match_btn_{intl_oid}",
+                use_container_width=True,
+                type="secondary",
+            )
+
+        if clicked:
+            _trigger_miles_match(
+                combo_key=combo_key, intl=intl, dom=dom, direction=direction,
+                adults=adults, with_baggage=with_baggage, provider=provider,
+            )
+
+        cached = st.session_state.get(combo_key)
+        if cached is not None:
+            _render_miles_match_block(
+                payload=cached, intl=intl, dom=dom, direction=direction,
+                with_baggage=with_baggage, kayak_total=kayak_total,
+                direct_price=direct_price, combo_idx=idx,
+            )
+
+
+def _render_split_section(result, with_baggage: bool = False, adults: int = 1):
+    """Renderiza a seção de Quebra de Trecho. Recebe SimpleSegmentResult.
+
+    Layout depende de result.route_type:
+      - not_applicable → mensagem informativa
+      - br_to_intl     → 1 lista (GRU → destino) com encaixe doméstico
+      - intl_to_br     → 1 lista (origem → GRU) com encaixe doméstico
+      - br_domestic    → 2 listas, ambas com encaixe doméstico
+    Ao final, sumário das combinações selecionadas (se houver).
+    """
+    if result is None:
+        return
+
+    st.markdown(_SPLIT_CSS, unsafe_allow_html=True)
+
+    # Header — sempre visível, mostra a estratégia
+    date_label = ""
+    if result.date:
+        try:
+            from datetime import date as _d
+            _dt = _d.fromisoformat(result.date)
+            date_label = f" · 📅 {_dt.strftime('%d/%m/%Y')}"
+        except Exception:
+            date_label = f" · 📅 {result.date}"
+
+    st.markdown(f"""
+<div class="split-header">
+  <div class="split-icon">✂️</div>
+  <div>
+    <div class="split-title">Quebra de Trecho — {result.origin} → {result.destination}{date_label}</div>
+    <div class="split-sub">Estratégia: quebra em São Paulo (GRU)</div>
+  </div>
+</div>""", unsafe_allow_html=True)
+
+    # Não aplicável: mensagem e fim
+    if result.route_type == "not_applicable":
+        reason = result.not_applicable_reason or "Rota não permite quebra em GRU."
+        st.markdown(f"""
+<div class="split-na">
+  <div class="title">ℹ️ Quebra de trecho não se aplica</div>
+  <div class="body">{reason}<br/>
+  A quebra de trecho é usada para rotas que não passam diretamente por São Paulo.</div>
+</div>""", unsafe_allow_html=True)
+        return
+
+    # Card de referência (preço direto)
+    direct_price = result.direct_offer.price_brl if result.direct_offer else 0.0
+    if result.direct_offer is not None:
+        st.markdown(f"""
+<div class="split-direct">
+  <div class="icon">💰</div>
+  <div>
+    <div class="label">Preço direto {result.origin} → {result.destination}</div>
+    <div class="price">R$ {direct_price:,.2f}</div>
+    <div class="foot">Referência: melhor tarifa direta retornada pelo Kayak</div>
+  </div>
+</div>""", unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+<div class="split-direct">
+  <div class="icon">💰</div>
+  <div>
+    <div class="label">Preço direto {result.origin} → {result.destination}</div>
+    <div class="price">—</div>
+    <div class="foot">Não foi possível buscar a rota direta para referência.</div>
+  </div>
+</div>""", unsafe_allow_html=True)
+
+    # Avisos parciais (falha em alguma perna, etc.)
+    for note in result.notes:
+        st.warning(note)
+
+    # Pernas conforme route_type — todas com encaixe habilitado
+    if result.route_type == "br_to_intl":
+        # Perna intl: GRU → destino. Encaixe: origem → GRU (from_gru direction).
+        _render_offer_list_section(
+            f"🌎 PERNA INTERNACIONAL — GRU → {result.destination}",
+            result.leg_from_gru,
+            intl_direction="from_gru",
+            other_endpoint=result.origin,
+            adults=adults,
+            with_baggage=with_baggage,
+        )
+
+    elif result.route_type == "intl_to_br":
+        # Perna intl: origem → GRU. Encaixe: GRU → destino (to_gru direction).
+        _render_offer_list_section(
+            f"🌎 PERNA INTERNACIONAL — {result.origin} → GRU",
+            result.leg_to_gru,
+            intl_direction="to_gru",
+            other_endpoint=result.destination,
+            adults=adults,
+            with_baggage=with_baggage,
+        )
+
+    else:  # br_domestic — duas pernas, ambas com encaixe independente
+        # Perna 1 (origem → GRU): chega em GRU → encaixe é GRU → destino.
+        _render_offer_list_section(
+            f"🇧🇷 PERNA 1 — {result.origin} → GRU",
+            result.leg_to_gru,
+            intl_direction="to_gru",
+            other_endpoint=result.destination,
+            adults=adults,
+            with_baggage=with_baggage,
+        )
+        # Perna 2 (GRU → destino): sai de GRU → encaixe é origem → GRU.
+        _render_offer_list_section(
+            f"🇧🇷 PERNA 2 — GRU → {result.destination}",
+            result.leg_from_gru,
+            intl_direction="from_gru",
+            other_endpoint=result.origin,
+            adults=adults,
+            with_baggage=with_baggage,
+        )
+
+    # Sumário das combinações selecionadas + comparativo Kayak vs Milhas
+    _render_combinations_summary(
+        direct_price=direct_price,
+        with_baggage=with_baggage,
+        provider=_provider_normalized(),
+        adults=adults,
+    )
+
+
+# ═══════════════════════════════════════════════════════════════
+# Cotação Inteligente — Etapa 1 (render) + Etapa 2 (Milhas / Quebra)
+# ═══════════════════════════════════════════════════════════════
+_smart_events: dict | None = None
+if st.session_state.get("smart_result") is not None:
+    _smart_events = _render_smart_quote_section()
+
+# ── Etapa 2A: Milhas (pipeline para data escolhida) ──
+if _smart_events and _smart_events.get("miles_clicked"):
+    _miles_iso = _smart_events.get("chosen_iso") or ""
+    pi_state = st.session_state.get("parsed_intent")
+    if pi_state is not None and isinstance(_miles_iso, str) and _miles_iso:
+        from datetime import date as _date_cls
+        try:
+            _chosen_date = _date_cls.fromisoformat(_miles_iso)
+        except ValueError:
+            _chosen_date = None
+        if _chosen_date is not None:
+            with st.spinner(f"Cotando milhas para {_fmt_date_long(_miles_iso)}..."):
+                if provider == "BuscaMilhas":
+                    _res2 = run_pipeline(
+                        prompt=st.session_state.get("prompt_input", ""),
+                        top_n=top_n, use_fixtures=use_fixtures,
+                        origin=pi_state.origin_iata,
+                        destination=pi_state.destination_iata,
+                        date_start=_chosen_date,
+                        date_end=None,
+                        date_return=pi_state.date_return,
+                        flex_mode="none",
+                        flex_days=0,
+                        flex_return=False,
+                        direct_only=getattr(pi_state, "direct_only", False),
+                        companhias=companhias_selecionadas if companhias_selecionadas else None,
+                    )
+                    st.session_state["pipeline_result"] = _res2
+                    st.session_state.pop("economilhas_partial", None)
+                else:
+                    from pcd.agents.economilhas_pipeline import run_pipeline_economilhas
+                    miles_airlines = []
+                    if e_smiles:   miles_airlines.append("SMILES")
+                    if e_latam_p:  miles_airlines.append("LATAM")
+                    if e_azul:     miles_airlines.append("AZUL")
+                    if e_azul_int: miles_airlines.append("AZUL_INTERLINE")
+                    if e_copa_e:   miles_airlines.append("COPA")
+                    if e_iberia:   miles_airlines.append("IBERIA")
+                    if e_british:  miles_airlines.append("BRITISH")
+                    try:
+                        _res2, _partial = run_pipeline_economilhas(
+                            prompt=st.session_state.get("prompt_input", ""),
+                            top_n=top_n, use_fixtures=use_fixtures,
+                            origin=pi_state.origin_iata,
+                            destination=pi_state.destination_iata,
+                            date_start=_chosen_date,
+                            date_end=None,
+                            date_return=pi_state.date_return,
+                            flex_mode="none",
+                            flex_days=0,
+                            flex_return=False,
+                            direct_only=getattr(pi_state, "direct_only", False),
+                            adults=getattr(pi_state, "adults", 1) or 1,
+                            miles_airlines=miles_airlines,
+                            use_kayak_cash=bool(e_money),
+                            debug=bool(e_debug),
+                        )
+                        st.session_state["pipeline_result"] = _res2
+                        st.session_state["economilhas_partial"] = _partial
+                    except Exception as _ex:
+                        st.session_state["economilhas_partial"] = [{
+                            "airline": "ALL",
+                            "message": f"Falha geral Economilhas: {str(_ex)[:200]}",
+                            "providerStatusCode": None, "fatal": True,
+                        }]
+            st.session_state["smart_selected_date"] = _miles_iso
+
+# ── Etapa 2B: Quebra de trecho (fase 1 hub fixo GRU + fase 2 encaixe) ──
+# Cache key: f"split_{ori}_{dst}_{data}_{provider}". Mudou data ou rota
+# → re-busca + reset dos encaixes (fase 2).
+if _smart_events:
+    from pcd.agents.segment_split import SegmentSplitAgent, SimpleSegmentResult
+
+    pi_state = st.session_state.get("parsed_intent")
+    _split_chosen_iso = _smart_events.get("chosen_iso") or ""
+    _split_with_bag = bool(_smart_events.get("with_baggage"))
+
+    # Invalida o render quando a data atualmente selecionada no select
+    # não corresponde mais à data em cache. Limpa também os encaixes (fase 2)
+    # — combinações antigas pertencem a outra data e não fazem mais sentido.
+    _split_cached = st.session_state.get("split_result")
+    _split_cached_date = (
+        getattr(_split_cached, "date", None) if _split_cached is not None else None
+    )
+    if _split_cached_date is not None and _split_cached_date != _split_chosen_iso:
+        st.session_state["split_active"] = False
+        st.session_state["split_fits"] = {}
+        st.session_state["split_fit_cache_keys"] = {}
+        st.session_state["split_fitted_combinations"] = {}
+        # Limpa também as cotações de milhas (fase 3) — a combinação não
+        # existe mais nesta data.
+        for _kk in list(st.session_state.keys()):
+            _ks = str(_kk)
+            if _ks.startswith("miles_match_") and not _ks.endswith("cache_keys"):
+                st.session_state.pop(_kk, None)
+        st.session_state["miles_match_cache_keys"] = {}
+
+    if (
+        _smart_events.get("split_clicked")
+        and pi_state is not None
+        and isinstance(_split_chosen_iso, str) and _split_chosen_iso
+    ):
+        _split_ori = (pi_state.origin_iata or "").upper()
+        _split_dst = (pi_state.destination_iata or "").upper()
+        _split_adults = int(getattr(pi_state, "adults", 1) or 1)
+        _split_ret_iso = pi_state.date_return.isoformat() if pi_state.date_return else None
+        _cache_key = (
+            f"split_{_split_ori}_{_split_dst}_{_split_chosen_iso}_{provider}"
+        )
+
+        if st.session_state.get("split_data_key") != _cache_key:
+            with st.spinner(
+                f"✂️ Quebrando trecho em GRU para {_fmt_date_long(_split_chosen_iso)}..."
+            ):
+                _split_result: SimpleSegmentResult = SegmentSplitAgent().run(
+                    origin=_split_ori, destination=_split_dst,
+                    date=_split_chosen_iso,
+                    adults=_split_adults,
+                    return_date=_split_ret_iso,
+                )
+            st.session_state["split_result"] = _split_result
+            st.session_state["split_data_key"] = _cache_key
+            # Mudou a chave da quebra → reset dos encaixes e cotações de
+            # milhas (rota/data novas).
+            st.session_state["split_fits"] = {}
+            st.session_state["split_fit_cache_keys"] = {}
+            st.session_state["split_fitted_combinations"] = {}
+            for _kk in list(st.session_state.keys()):
+                _ks = str(_kk)
+                if _ks.startswith("miles_match_") and not _ks.endswith("cache_keys"):
+                    st.session_state.pop(_kk, None)
+            st.session_state["miles_match_cache_keys"] = {}
+        st.session_state["split_active"] = True
+
+    _split_obj = st.session_state.get("split_result")
+    _split_obj_date = getattr(_split_obj, "date", None) if _split_obj is not None else None
+    if (
+        st.session_state.get("split_active")
+        and _split_obj is not None
+        and _split_obj_date == _split_chosen_iso
+    ):
+        _split_adults_render = int(
+            getattr(pi_state, "adults", 1) if pi_state is not None else 1
+        ) or 1
+        _render_split_section(
+            _split_obj,
+            with_baggage=_split_with_bag,
+            adults=_split_adults_render,
+        )
+
+# Sem pipeline_result até este ponto (smart-only): pára aqui.
+if "pipeline_result" not in st.session_state:
+    st.stop()
+
+res          = st.session_state["pipeline_result"]
+incluir_mala = st.session_state.get("v_bagagem", False)
+
+if getattr(res, "direct_filter_warning", None):
+    st.warning(res.direct_filter_warning)
+
+# ── Avisos do provedor Economilhas (falhas parciais / 402 / 401) ──
+_eco_partial = st.session_state.get("economilhas_partial") or []
+if _eco_partial:
+    _fatal_402 = next((p for p in _eco_partial if p.get("providerStatusCode") == 402), None)
+    _fatal_401 = next((p for p in _eco_partial if p.get("providerStatusCode") == 401), None)
+    if _fatal_402:
+        st.error(
+            "❌ Quota Economilhas esgotada. Verifique no popover de configurações ⚙️ "
+            "ou alterne o provedor para BuscaMilhas."
+        )
+    elif _fatal_401:
+        st.error(
+            "🔑 ECONOMILHAS_API_KEY inválida ou ausente. Defina-a no `.env` e reinicie o app."
+        )
+    else:
+        # Falhas parciais — mostra companhias que não vieram para o vendedor
+        # saber por que algum programa pode estar ausente nas tabs.
+        _msgs = []
+        for p in _eco_partial:
+            label = p.get("airline") or "—"
+            msg = p.get("message") or "falhou"
+            _msgs.append(f"**{label}**: {msg}")
+        if _msgs:
+            st.warning(
+                "⚠️ Alguns programas Economilhas não retornaram nesta busca:  \n"
+                + "  \n".join(f"• {m}" for m in _msgs)
+            )
+
+# Quando a Cotação Inteligente está ativa, o Veredito PcD aparece sob um
+# divisor visual com a data escolhida — deixa claro que a "cotação completa"
+# é da data selecionada, não da data original parseada.
+if st.session_state.get("smart_active") and st.session_state.get("smart_selected_date"):
+    _sel_iso = st.session_state["smart_selected_date"]
+    st.markdown("---")
+    st.markdown(f"### 💎 Cotação Completa para {_fmt_date_long(_sel_iso)}")
+
+COLS = ["ID", "Companhia", "Trecho", "Data",
+        "Milhas", "Custo Real (mi+taxas)", "Taxas", "Preço Final", "Valor c/ Mala",
+        "Duração", "Escalas", "Saída", "Chegada", "Local Escala"]
+
+if adults > 1:
+    COLS.insert(6, f"Total ({adults}pax)")
+
+
+# ─── Monta tabs dinamicamente ──────────────────────────────────
+# Ordem: Melhores Achados | Dinheiro | [nacionais] | [internacionais] | Ranking Geral
+
+def _has_result_for(cia: str) -> bool:
+    """True se a companhia está ativa E trouxe pelo menos uma oferta."""
+    active = _CIA_ACTIVE.get(cia.upper(), False)
+    if not active:
+        return False
+    src_name = f"buscamilhas_{cia.lower()}"
+    miles_ofs = getattr(res, "miles_offers", []) or []
+    return any(source_is(o, src_name) for o in miles_ofs)
+
+tab_specs = [("✨ O Veredito PcD", "verdito"), ("💵 Dinheiro (Kayak)", "dinheiro")]
+
+for cia in COMPANHIAS_NACIONAIS:
+    if _CIA_ACTIVE.get(cia, False):
+        meta = _CIA_META.get(cia, {"emoji": "✈️"})
+        tab_specs.append((f"{meta['emoji']} {cia}", f"cia_{cia.lower()}"))
+
+for cia in COMPANHIAS_INTERNACIONAIS:
+    if _CIA_ACTIVE.get(cia, False):
+        meta = _CIA_META.get(cia, {"emoji": "✈️"})
+        tab_specs.append((f"{meta['emoji']} {cia}", f"cia_{cia.lower()}"))
+
+tab_specs.append(("🌍 Internacional (MCP)", "mcp_award"))
+
+if s_qatar:
+    tab_specs.append(("🇶🇦 Qatar", "mcp_qatar"))
+
+tab_specs.append(("📊 Ranking Geral", "ranking"))
+
+tab_labels = [t[0] for t in tab_specs]
+tab_keys   = [t[1] for t in tab_specs]
 
 
 tabs = st.tabs(tab_labels)
@@ -871,7 +2656,16 @@ with tabs[tab_keys.index("verdito")]:
     def _best_for(cia_name: str):
         offers = getattr(res, "miles_offers", []) or []
         cands  = [o for o in offers if cia_name.upper() in str(getattr(o, "airline", "")).upper()]
-        return min(cands, key=lambda o: safe_int_miles(getattr(o, "miles", 0)) or 10**18) if cands else None
+        if not cands:
+            return None
+        def _real_cost(o):
+            m  = safe_int_miles(getattr(o, "miles", 0))
+            if m <= 0:
+                return 10**18
+            a  = str(getattr(o, "airline", ""))
+            pr = getattr(o, "miles_program", "")
+            return miles_to_brl(m, a, pr) + safe_float(getattr(o, "taxes_brl", 0))
+        return min(cands, key=_real_cost)
 
     def _rhtml(label: str, adults: int = 1):
         css   = _CIA_META.get(label.upper(), {}).get("css", "latam")
@@ -942,7 +2736,7 @@ with tabs[tab_keys.index("dinheiro")]:
         ofs_money = sorted(res.money_offers, key=lambda o: get_baggage_price(o, incluir_mala))
         rows = build_table_rows(ofs_money, incluir_mala, id_prefix="$")
         df   = pd.DataFrame(rows)
-        st.dataframe(df[[c for c in COLS if c in df.columns]], use_container_width=True, hide_index=True)
+        _render_selectable_offers_df(df, COLS, "dinheiro", "df_dinheiro")
     else:
         st.info("Sem resultados em dinheiro ou fonte desativada.")
 
@@ -962,7 +2756,7 @@ for cia in COMPANHIAS_NACIONAIS + COMPANHIAS_INTERNACIONAIS:
         ofs = sorted(ofs, key=lambda o: get_baggage_price(o, incluir_mala))
         rows = build_table_rows(ofs, incluir_mala, id_prefix=meta["prefix"])
         df   = pd.DataFrame(rows)
-        st.dataframe(df[[c for c in COLS if c in df.columns]], use_container_width=True, hide_index=True)
+        _render_selectable_offers_df(df, COLS, key, f"df_{key}")
 
 
 # ─── Tab MCP Award Travel Finder ─────────────────────────────
@@ -978,7 +2772,7 @@ with tabs[tab_keys.index("mcp_award")]:
         pipeline_mcp = sorted(pipeline_mcp, key=lambda o: get_baggage_price(o, incluir_mala))
         rows_mcp = build_table_rows(pipeline_mcp, incluir_mala, id_prefix="W")
         df_mcp = pd.DataFrame(rows_mcp)
-        st.dataframe(df_mcp[[c for c in COLS if c in df_mcp.columns]], use_container_width=True, hide_index=True)
+        _render_selectable_offers_df(df_mcp, COLS, "mcp_award", "df_mcp_award")
 
 
 # ─── Tab QATAR (MCP PRO) ─────────────────────────────────────
@@ -995,7 +2789,7 @@ if s_qatar:
             pipeline_qatar = sorted(pipeline_qatar, key=lambda o: get_baggage_price(o, incluir_mala))
             rows_qatar = build_table_rows(pipeline_qatar, incluir_mala, id_prefix="QR")
             df_qatar = pd.DataFrame(rows_qatar)
-            st.dataframe(df_qatar[[c for c in COLS if c in df_qatar.columns]], use_container_width=True, hide_index=True)
+            _render_selectable_offers_df(df_qatar, COLS, "mcp_qatar", "df_mcp_qatar")
 
 
 # ─── Tab Ranking Geral ────────────────────────────────────────
@@ -1005,7 +2799,7 @@ with tabs[tab_keys.index("ranking")]:
         rk   = sorted(rk, key=lambda o: get_baggage_price(o, incluir_mala))
         rows = build_table_rows(rk, incluir_mala)
         df   = pd.DataFrame(rows)
-        st.dataframe(df[[c for c in COLS if c in df.columns]], use_container_width=True, hide_index=True)
+        _render_selectable_offers_df(df, COLS, "ranking", "df_ranking")
     else:
         st.info("Sem dados de ranking.")
 
@@ -1013,8 +2807,13 @@ with tabs[tab_keys.index("ranking")]:
 # ═══════════════════════════════════════════════════════════════
 # ITINERÁRIO DETALHADO
 # ═══════════════════════════════════════════════════════════════
+# Âncora HTML usada pelo scroll automático após clique numa linha de tabela.
+st.markdown('<div id="itin-anchor"></div>', unsafe_allow_html=True)
 st.markdown("---")
-st.markdown("### ✈️ Itinerário Detalhado")
+
+active_tab = st.session_state.get("active_tab") or "verdito"
+itin_suffix = _TAB_ITIN_TITLE.get(active_tab, "Todos os voos")
+st.markdown(f"### ✈️ Itinerário Detalhado — {itin_suffix}")
 
 all_idx: dict    = {}
 pfx_count: dict  = {}
@@ -1051,12 +2850,58 @@ def _itin_lbl(fid, o):
     custo_real = eq + tx
     return f"{fid} — {a} | R$ {custo_real:,.2f} ({m:,} mi + R$ {tx:.2f} tx)"
 
+# Filtragem do selectbox por aba ativa (Problema 4).
+_allowed_prefixes = _TAB_PREFIXES.get(active_tab)  # None → libera tudo
+if _allowed_prefixes is None:
+    filtered_keys = list(all_idx.keys())
+else:
+    filtered_keys = [
+        fid for fid in all_idx.keys()
+        if _id_alpha_prefix(fid) in _allowed_prefixes
+    ]
+# Fallback: se o filtro zerar, libera tudo (evita selectbox vazio).
+if not filtered_keys:
+    filtered_keys = list(all_idx.keys())
+
+def _sort_fid(k):
+    pfx = _id_alpha_prefix(k)
+    try:
+        num = int(k[len(pfx):])
+    except Exception:
+        num = 0
+    return (pfx, num)
+
+options_sorted = sorted(filtered_keys, key=_sort_fid)
+
+# Pré-seleciona o voo clicado na tabela (Problema 3).
+# Streamlit persiste o valor do selectbox via `key`; aqui sincronizamos a
+# session_state ANTES do widget renderizar para que (a) o clique de linha
+# sobreponha a seleção anterior e (b) filtros de aba que escondem o valor
+# atual caiam de volta para o primeiro item válido.
+preselect = st.session_state.get("selected_flight_id")
+if st.session_state.get("_scroll_to_itin") and preselect in options_sorted:
+    st.session_state["itin_selectbox"] = preselect
+if st.session_state.get("itin_selectbox") not in options_sorted:
+    st.session_state["itin_selectbox"] = options_sorted[0] if options_sorted else None
+
 sel = st.selectbox(
     "Selecione o voo pelo ID",
-    options=sorted(all_idx.keys(), key=lambda k: (k.rstrip("0123456789"), int(k.lstrip("$LGABTIAPN") or 0) if k.lstrip("$LGABTIAPN").isdigit() else 0)),
+    options=options_sorted,
     format_func=lambda fid: _itin_lbl(fid, all_idx[fid]),
+    key="itin_selectbox",
 )
 off = all_idx[sel]
+
+# Scroll automático até o itinerário após clique numa linha de tabela.
+if st.session_state.pop("_scroll_to_itin", False):
+    from streamlit.components.v1 import html as _components_html
+    _components_html(
+        """<script>
+        window.parent.document.getElementById('itin-anchor')
+          ?.scrollIntoView({behavior:'smooth', block:'start'});
+        </script>""",
+        height=0,
+    )
 
 col_out, col_in = st.columns(2)
 with col_out:

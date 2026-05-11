@@ -1,0 +1,50 @@
+{
+  "timestamp": "2026-05-05T18:50:28",
+  "request": {
+    "endpoint": "https://api.economilha.com/quota",
+    "method": "GET",
+    "headers": {
+      "x-api-key": "eco_sk_l…EJGr",
+      "Accept": "application/vnd.economilha.v1+json"
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "elapsed_ms": 695.8,
+    "body": {
+      "limit": 2000,
+      "consumed": 13,
+      "remaining": 1987,
+      "usageByCompany": [
+        {
+          "airlineLoyalty": "AZUL",
+          "consumed": 3
+        },
+        {
+          "airlineLoyalty": "AZUL_INTERLINE",
+          "consumed": 1
+        },
+        {
+          "airlineLoyalty": "BRITISH",
+          "consumed": 1
+        },
+        {
+          "airlineLoyalty": "COPA",
+          "consumed": 1
+        },
+        {
+          "airlineLoyalty": "IBERIA",
+          "consumed": 1
+        },
+        {
+          "airlineLoyalty": "LATAM",
+          "consumed": 3
+        },
+        {
+          "airlineLoyalty": "SMILES",
+          "consumed": 3
+        }
+      ]
+    }
+  }
+}

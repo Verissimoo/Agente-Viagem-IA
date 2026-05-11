@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-05-05T18:52:07",
+  "program": "AZUL",
+  "route": {
+    "origin": "GRU",
+    "destination": "MIA",
+    "date": "2026-06-15",
+    "name": "internacional_GRU_MIA"
+  },
+  "request": {
+    "endpoint": "https://api.economilha.com/flights/search",
+    "method": "POST",
+    "headers": {
+      "x-api-key": "eco_sk_l…EJGr",
+      "Accept": "application/vnd.economilha.v1+json",
+      "Content-Type": "application/json"
+    },
+    "payload": {
+      "airlineLoyalty": [
+        "AZUL"
+      ],
+      "priceType": "MILES",
+      "tripType": "ONE_WAY",
+      "cabinType": "ECONOMY",
+      "origin": "GRU",
+      "destination": "MIA",
+      "departureDate": "2026-06-15",
+      "passengers": {
+        "adults": 1,
+        "children": 0,
+        "infants": 0
+      }
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "elapsed_ms": 7387.0,
+    "correlationId": null,
+    "body": {
+      "results": [
+        {
+          "airline": "AZUL",
+          "success": true,
+          "data": {
+            "data": {
+              "companionPass": false,
+              "flowNotifications": null,
+              "emergencyBanners": [],
+              "discountType": null,
+              "trips": [
+                {
+                  "departureStation": "GRU",
+                  "arrivalStation": "MIA",
+                  "std": "2026-06-15T00:00:00",
+                  "currencyCode": "BRL",
+                  "flightType": null,
+                  "region": null,
+                  "fareInformation": null,
+                  "journeys": null
+                }
+              ]
+            },
+            "notifications": []
+          }
+        }
+      ],
+      "summary": {
+        "totalAirlinesRequested": 1,
+        "successfulSearches": 1,
+        "failedSearches": 0
+      }
+    }
+  },
+  "diagnosis": "ok"
+}

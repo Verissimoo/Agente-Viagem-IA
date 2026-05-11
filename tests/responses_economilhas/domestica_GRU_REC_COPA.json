@@ -1,0 +1,1028 @@
+{
+  "timestamp": "2026-05-05T18:53:28",
+  "program": "COPA",
+  "route": {
+    "origin": "GRU",
+    "destination": "REC",
+    "date": "2026-06-15",
+    "name": "domestica_GRU_REC"
+  },
+  "request": {
+    "endpoint": "https://api.economilha.com/flights/search",
+    "method": "POST",
+    "headers": {
+      "x-api-key": "eco_sk_l…EJGr",
+      "Accept": "application/vnd.economilha.v1+json",
+      "Content-Type": "application/json"
+    },
+    "payload": {
+      "airlineLoyalty": [
+        "COPA"
+      ],
+      "priceType": "MILES",
+      "tripType": "ONE_WAY",
+      "cabinType": "ECONOMY",
+      "origin": "GRU",
+      "destination": "REC",
+      "departureDate": "2026-06-15",
+      "passengers": {
+        "adults": 1,
+        "children": 0,
+        "infants": 0
+      }
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "elapsed_ms": 4274.5,
+    "correlationId": null,
+    "body": {
+      "results": [
+        {
+          "airline": "COPA",
+          "success": true,
+          "data": {
+            "originDestinations": [
+              {
+                "originDestinationKey": "OD1",
+                "promoCodeApplied": false,
+                "discountType": null,
+                "origin": {
+                  "code": "GRU",
+                  "departureDate": "2026-06-15"
+                },
+                "destination": {
+                  "code": "REC",
+                  "destinationImageURL": "https://d3gwfrazxk4jnl.cloudfront.net/REC.jpg",
+                  "nearbyAirports": []
+                },
+                "currency": {
+                  "code": "USD",
+                  "decimals": 2
+                },
+                "priceCalendars": [
+                  {
+                    "date": "2026-06-12",
+                    "price": 12500.0
+                  },
+                  {
+                    "date": "2026-06-13",
+                    "price": 12500.0
+                  },
+                  {
+                    "date": "2026-06-14",
+                    "price": 12500.0
+                  },
+                  {
+                    "date": "2026-06-15",
+                    "price": 12500.0
+                  },
+                  {
+                    "date": "2026-06-16",
+                    "price": 12500.0
+                  },
+                  {
+                    "date": "2026-06-17",
+                    "price": 12500.0
+                  }
+                ],
+                "solutions": [
+                  {
+                    "key": "Iflt0b0040ffa66d8",
+                    "numberOfLayovers": 0,
+                    "journeyTime": "PT03H05M",
+                    "lowestPriceCoachCabin": {
+                      "miles": 12500,
+                      "taxes": 6.4
+                    },
+                    "lowestPriceBusinessCabin": {
+                      "miles": 0,
+                      "taxes": 0
+                    },
+                    "originalLowestPriceCoachCabin": 12500,
+                    "originalLowestPriceBusinessCabin": 0,
+                    "flights": [
+                      {
+                        "flightKey": "Isgm090040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h0m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Airbus A321neo",
+                        "marketingCarrier": {
+                          "flightNumber": "2922",
+                          "airlineCode": "AD",
+                          "airlineName": "Azul Airlines",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "REC",
+                          "airportName": "Recife, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "11:50",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "VCP",
+                          "airportName": "Sao Paulo Viracopos-Campinas Intl Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "08:45",
+                          "terminal": null
+                        },
+                        "onTimePerformance": {
+                          "cancellationPercentage": 0.0,
+                          "delayPercentage30Min": 0.0,
+                          "delayPercentage60Min": 0.0
+                        },
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      }
+                    ],
+                    "offers": [
+                      {
+                        "id": "XF4CEB014-B273-43FC-8BC9-2",
+                        "pricePerAdult": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareRefKey": [
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey"
+                        ],
+                        "totalPrice": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareFamily": {
+                          "id": "Xpc080040ffa66d8",
+                          "name": "Economy Saver",
+                          "code": "ESV",
+                          "isEconomyBasic": false,
+                          "subtitle": "Economy Saver",
+                          "descriptions": [
+                            {
+                              "code": "1",
+                              "text": "Booking changes allowed (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "1",
+                              "text": "Refundable Miles (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "2",
+                              "text": "For more details of your fare, visit the operating airline website",
+                              "key": null
+                            }
+                          ],
+                          "order": 1
+                        },
+                        "originalPricePerAdult": 12500,
+                        "classOfService": [
+                          "V"
+                        ],
+                        "fareBasisCodes": [
+                          "YPO24HA"
+                        ],
+                        "promoCodeApplied": false,
+                        "conventionCodeFlag": false
+                      }
+                    ]
+                  },
+                  {
+                    "key": "Iflt0f0040ffa66d8",
+                    "numberOfLayovers": 0,
+                    "journeyTime": "PT03H05M",
+                    "lowestPriceCoachCabin": {
+                      "miles": 12500,
+                      "taxes": 6.4
+                    },
+                    "lowestPriceBusinessCabin": {
+                      "miles": 0,
+                      "taxes": 0
+                    },
+                    "originalLowestPriceCoachCabin": 12500,
+                    "originalLowestPriceBusinessCabin": 0,
+                    "flights": [
+                      {
+                        "flightKey": "Isgm0d0040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h0m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Airbus A321neo",
+                        "marketingCarrier": {
+                          "flightNumber": "2805",
+                          "airlineCode": "AD",
+                          "airlineName": "Azul Airlines",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "REC",
+                          "airportName": "Recife, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "16:30",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "VCP",
+                          "airportName": "Sao Paulo Viracopos-Campinas Intl Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "13:25",
+                          "terminal": null
+                        },
+                        "onTimePerformance": {
+                          "cancellationPercentage": 0.0,
+                          "delayPercentage30Min": 0.0,
+                          "delayPercentage60Min": 0.0
+                        },
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      }
+                    ],
+                    "offers": [
+                      {
+                        "id": "XF4CEB014-B273-43FC-8BC9-3",
+                        "pricePerAdult": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareRefKey": [
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey"
+                        ],
+                        "totalPrice": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareFamily": {
+                          "id": "Xpc080040ffa66d8",
+                          "name": "Economy Saver",
+                          "code": "ESV",
+                          "isEconomyBasic": false,
+                          "subtitle": "Economy Saver",
+                          "descriptions": [
+                            {
+                              "code": "1",
+                              "text": "Booking changes allowed (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "1",
+                              "text": "Refundable Miles (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "2",
+                              "text": "For more details of your fare, visit the operating airline website",
+                              "key": null
+                            }
+                          ],
+                          "order": 1
+                        },
+                        "originalPricePerAdult": 12500,
+                        "classOfService": [
+                          "V"
+                        ],
+                        "fareBasisCodes": [
+                          "YPO24HA"
+                        ],
+                        "promoCodeApplied": false,
+                        "conventionCodeFlag": false
+                      }
+                    ]
+                  },
+                  {
+                    "key": "Iflt130040ffa66d8",
+                    "numberOfLayovers": 0,
+                    "journeyTime": "PT03H05M",
+                    "lowestPriceCoachCabin": {
+                      "miles": 12500,
+                      "taxes": 6.4
+                    },
+                    "lowestPriceBusinessCabin": {
+                      "miles": 0,
+                      "taxes": 0
+                    },
+                    "originalLowestPriceCoachCabin": 12500,
+                    "originalLowestPriceBusinessCabin": 0,
+                    "flights": [
+                      {
+                        "flightKey": "Isgm110040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h0m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Airbus A321neo",
+                        "marketingCarrier": {
+                          "flightNumber": "2810",
+                          "airlineCode": "AD",
+                          "airlineName": "Azul Airlines",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "REC",
+                          "airportName": "Recife, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "17:25",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "VCP",
+                          "airportName": "Sao Paulo Viracopos-Campinas Intl Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "14:20",
+                          "terminal": null
+                        },
+                        "onTimePerformance": {
+                          "cancellationPercentage": 0.0,
+                          "delayPercentage30Min": 0.0,
+                          "delayPercentage60Min": 0.0
+                        },
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      }
+                    ],
+                    "offers": [
+                      {
+                        "id": "XF4CEB014-B273-43FC-8BC9-4",
+                        "pricePerAdult": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareRefKey": [
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey"
+                        ],
+                        "totalPrice": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareFamily": {
+                          "id": "Xpc080040ffa66d8",
+                          "name": "Economy Saver",
+                          "code": "ESV",
+                          "isEconomyBasic": false,
+                          "subtitle": "Economy Saver",
+                          "descriptions": [
+                            {
+                              "code": "1",
+                              "text": "Booking changes allowed (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "1",
+                              "text": "Refundable Miles (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "2",
+                              "text": "For more details of your fare, visit the operating airline website",
+                              "key": null
+                            }
+                          ],
+                          "order": 1
+                        },
+                        "originalPricePerAdult": 12500,
+                        "classOfService": [
+                          "V"
+                        ],
+                        "fareBasisCodes": [
+                          "YPO24HA"
+                        ],
+                        "promoCodeApplied": false,
+                        "conventionCodeFlag": false
+                      }
+                    ]
+                  },
+                  {
+                    "key": "Iflt160040ffa66d8",
+                    "numberOfLayovers": 0,
+                    "journeyTime": "PT03H05M",
+                    "lowestPriceCoachCabin": {
+                      "miles": 12500,
+                      "taxes": 6.4
+                    },
+                    "lowestPriceBusinessCabin": {
+                      "miles": 0,
+                      "taxes": 0
+                    },
+                    "originalLowestPriceCoachCabin": 12500,
+                    "originalLowestPriceBusinessCabin": 0,
+                    "flights": [
+                      {
+                        "flightKey": "Isgm150040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h0m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Airbus A321neo",
+                        "marketingCarrier": {
+                          "flightNumber": "4400",
+                          "airlineCode": "AD",
+                          "airlineName": "Azul Airlines",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "REC",
+                          "airportName": "Recife, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "21:05",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "VCP",
+                          "airportName": "Sao Paulo Viracopos-Campinas Intl Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "18:00",
+                          "terminal": null
+                        },
+                        "onTimePerformance": null,
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      }
+                    ],
+                    "offers": [
+                      {
+                        "id": "XF4CEB014-B273-43FC-8BC9-5",
+                        "pricePerAdult": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareRefKey": [
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey"
+                        ],
+                        "totalPrice": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareFamily": {
+                          "id": "Xpc080040ffa66d8",
+                          "name": "Economy Saver",
+                          "code": "ESV",
+                          "isEconomyBasic": false,
+                          "subtitle": "Economy Saver",
+                          "descriptions": [
+                            {
+                              "code": "1",
+                              "text": "Booking changes allowed (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "1",
+                              "text": "Refundable Miles (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "2",
+                              "text": "For more details of your fare, visit the operating airline website",
+                              "key": null
+                            }
+                          ],
+                          "order": 1
+                        },
+                        "originalPricePerAdult": 12500,
+                        "classOfService": [
+                          "V"
+                        ],
+                        "fareBasisCodes": [
+                          "YPO24HA"
+                        ],
+                        "promoCodeApplied": false,
+                        "conventionCodeFlag": false
+                      }
+                    ]
+                  },
+                  {
+                    "key": "Iflt040040ffa66d8",
+                    "numberOfLayovers": 0,
+                    "journeyTime": "PT03H05M",
+                    "lowestPriceCoachCabin": {
+                      "miles": 12500,
+                      "taxes": 6.4
+                    },
+                    "lowestPriceBusinessCabin": {
+                      "miles": 0,
+                      "taxes": 0
+                    },
+                    "originalLowestPriceCoachCabin": 12500,
+                    "originalLowestPriceBusinessCabin": 0,
+                    "flights": [
+                      {
+                        "flightKey": "Isgm020040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h0m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Airbus A321neo",
+                        "marketingCarrier": {
+                          "flightNumber": "4079",
+                          "airlineCode": "AD",
+                          "airlineName": "Azul Airlines",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "REC",
+                          "airportName": "Recife, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "09:10",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "VCP",
+                          "airportName": "Sao Paulo Viracopos-Campinas Intl Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "06:05",
+                          "terminal": null
+                        },
+                        "onTimePerformance": {
+                          "cancellationPercentage": 0.0,
+                          "delayPercentage30Min": 0.0,
+                          "delayPercentage60Min": 0.0
+                        },
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      }
+                    ],
+                    "offers": [
+                      {
+                        "id": "XF4CEB014-B273-43FC-8BC9-1",
+                        "pricePerAdult": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareRefKey": [
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey"
+                        ],
+                        "totalPrice": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareFamily": {
+                          "id": "Xpc080040ffa66d8",
+                          "name": "Economy Saver",
+                          "code": "ESV",
+                          "isEconomyBasic": false,
+                          "subtitle": "Economy Saver",
+                          "descriptions": [
+                            {
+                              "code": "1",
+                              "text": "Booking changes allowed (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "1",
+                              "text": "Refundable Miles (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "2",
+                              "text": "For more details of your fare, visit the operating airline website",
+                              "key": null
+                            }
+                          ],
+                          "order": 1
+                        },
+                        "originalPricePerAdult": 12500,
+                        "classOfService": [
+                          "V"
+                        ],
+                        "fareBasisCodes": [
+                          "YPO24HA"
+                        ],
+                        "promoCodeApplied": false,
+                        "conventionCodeFlag": false
+                      }
+                    ]
+                  },
+                  {
+                    "key": "Iflt1c0040ffa66d8",
+                    "numberOfLayovers": 1,
+                    "journeyTime": "PT04H25M",
+                    "lowestPriceCoachCabin": {
+                      "miles": 12500,
+                      "taxes": 6.4
+                    },
+                    "lowestPriceBusinessCabin": {
+                      "miles": 0,
+                      "taxes": 0
+                    },
+                    "originalLowestPriceCoachCabin": 12500,
+                    "originalLowestPriceBusinessCabin": 0,
+                    "flights": [
+                      {
+                        "flightKey": "Isgm180040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h50m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Embraer 195 E2",
+                        "marketingCarrier": {
+                          "flightNumber": "4141",
+                          "airlineCode": "AD",
+                          "airlineName": "Azul Airlines",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "SSA",
+                          "airportName": "Salvador, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "18:40",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "VCP",
+                          "airportName": "Sao Paulo Viracopos-Campinas Intl Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "16:20",
+                          "terminal": null
+                        },
+                        "onTimePerformance": {
+                          "cancellationPercentage": 0.0,
+                          "delayPercentage30Min": 0.0,
+                          "delayPercentage60Min": 0.0
+                        },
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      },
+                      {
+                        "flightKey": "Isgm1a0040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h0m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Embraer 195 E2",
+                        "marketingCarrier": {
+                          "flightNumber": "5034",
+                          "airlineCode": "AD",
+                          "airlineName": "Azul Airlines",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "REC",
+                          "airportName": "Recife, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "20:45",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "SSA",
+                          "airportName": "Salvador, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "19:30",
+                          "terminal": null
+                        },
+                        "onTimePerformance": {
+                          "cancellationPercentage": 0.0,
+                          "delayPercentage30Min": 0.0,
+                          "delayPercentage60Min": 0.0
+                        },
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      }
+                    ],
+                    "offers": [
+                      {
+                        "id": "XF4CEB014-B273-43FC-8BC9-6",
+                        "pricePerAdult": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareRefKey": [
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey",
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey"
+                        ],
+                        "totalPrice": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareFamily": {
+                          "id": "Xpc080040ffa66d8",
+                          "name": "Economy Saver",
+                          "code": "ESV",
+                          "isEconomyBasic": false,
+                          "subtitle": "Economy Saver",
+                          "descriptions": [
+                            {
+                              "code": "1",
+                              "text": "Booking changes allowed (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "1",
+                              "text": "Refundable Miles (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "2",
+                              "text": "For more details of your fare, visit the operating airline website",
+                              "key": null
+                            }
+                          ],
+                          "order": 1
+                        },
+                        "originalPricePerAdult": 12500,
+                        "classOfService": [
+                          "V",
+                          "V"
+                        ],
+                        "fareBasisCodes": [
+                          "YPO24HA",
+                          "YPO24HA"
+                        ],
+                        "promoCodeApplied": false,
+                        "conventionCodeFlag": false
+                      }
+                    ]
+                  },
+                  {
+                    "key": "Iflt240040ffa66d8",
+                    "numberOfLayovers": 1,
+                    "journeyTime": "PT04H45M",
+                    "lowestPriceCoachCabin": {
+                      "miles": 12500,
+                      "taxes": 12.5
+                    },
+                    "lowestPriceBusinessCabin": {
+                      "miles": 0,
+                      "taxes": 0
+                    },
+                    "originalLowestPriceCoachCabin": 12500,
+                    "originalLowestPriceBusinessCabin": 0,
+                    "flights": [
+                      {
+                        "flightKey": "Isgm220040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "1h0m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Boeing 737-700",
+                        "marketingCarrier": {
+                          "flightNumber": "2140",
+                          "airlineCode": "G3",
+                          "airlineName": "Gol Linhas Aereas",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "SSA",
+                          "airportName": "Salvador, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "22:55",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "CGH",
+                          "airportName": "Sao Paulo Congonhas Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "20:30",
+                          "terminal": null
+                        },
+                        "onTimePerformance": null,
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      },
+                      {
+                        "flightKey": "Isgm230040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h0m",
+                        "changeOfDay": "1",
+                        "aircraftName": "Boeing 737-800",
+                        "marketingCarrier": {
+                          "flightNumber": "1924",
+                          "airlineCode": "G3",
+                          "airlineName": "Gol Linhas Aereas",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "REC",
+                          "airportName": "Recife, BR",
+                          "flightDate": "2026-06-16",
+                          "flightTime": "01:15",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "SSA",
+                          "airportName": "Salvador, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "23:55",
+                          "terminal": null
+                        },
+                        "onTimePerformance": null,
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      }
+                    ],
+                    "offers": [
+                      {
+                        "id": "XF4CEB014-B273-43FC-8BC9-8",
+                        "pricePerAdult": {
+                          "miles": 12500,
+                          "taxes": 12.5
+                        },
+                        "fareRefKey": [
+                          "NO8EJWK~MpB8BK~MpN8BEG~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey",
+                          "NO8EJWK~MpB8BK~MpN8BEG~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey"
+                        ],
+                        "totalPrice": {
+                          "miles": 12500,
+                          "taxes": 12.5
+                        },
+                        "fareFamily": {
+                          "id": "Xpc080040ffa66d8",
+                          "name": "Economy Saver",
+                          "code": "ESV",
+                          "isEconomyBasic": false,
+                          "subtitle": "Economy Saver",
+                          "descriptions": [
+                            {
+                              "code": "1",
+                              "text": "Booking changes allowed (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "1",
+                              "text": "Refundable Miles (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "2",
+                              "text": "For more details of your fare, visit the operating airline website",
+                              "key": null
+                            }
+                          ],
+                          "order": 1
+                        },
+                        "originalPricePerAdult": 12500,
+                        "classOfService": [
+                          "X",
+                          "X"
+                        ],
+                        "fareBasisCodes": [
+                          "YPO24HA",
+                          "YPO24HA"
+                        ],
+                        "promoCodeApplied": false,
+                        "conventionCodeFlag": false
+                      }
+                    ]
+                  },
+                  {
+                    "key": "Iflt200040ffa66d8",
+                    "numberOfLayovers": 1,
+                    "journeyTime": "PT05H30M",
+                    "lowestPriceCoachCabin": {
+                      "miles": 12500,
+                      "taxes": 6.4
+                    },
+                    "lowestPriceBusinessCabin": {
+                      "miles": 0,
+                      "taxes": 0
+                    },
+                    "originalLowestPriceCoachCabin": 12500,
+                    "originalLowestPriceBusinessCabin": 0,
+                    "flights": [
+                      {
+                        "flightKey": "Isgm1e0040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "1h35m",
+                        "changeOfDay": "0",
+                        "aircraftName": "Boeing 737-800",
+                        "marketingCarrier": {
+                          "flightNumber": "2097",
+                          "airlineCode": "G3",
+                          "airlineName": "Gol Linhas Aereas",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "GIG",
+                          "airportName": "Rio de Janeiro Galeao-A.C.Jobim Int Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "20:45",
+                          "terminal": "2"
+                        },
+                        "departure": {
+                          "airportCode": "VCP",
+                          "airportName": "Sao Paulo Viracopos-Campinas Intl Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "19:40",
+                          "terminal": null
+                        },
+                        "onTimePerformance": null,
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      },
+                      {
+                        "flightKey": "Isgm1f0040ffa66d8",
+                        "flightRefKey": "",
+                        "layoverTime": "0h0m",
+                        "changeOfDay": "1",
+                        "aircraftName": "Boeing 737-800",
+                        "marketingCarrier": {
+                          "flightNumber": "1884",
+                          "airlineCode": "G3",
+                          "airlineName": "Gol Linhas Aereas",
+                          "disclosure": null
+                        },
+                        "operatingCarrier": null,
+                        "arrival": {
+                          "airportCode": "REC",
+                          "airportName": "Recife, BR",
+                          "flightDate": "2026-06-16",
+                          "flightTime": "01:10",
+                          "terminal": null
+                        },
+                        "departure": {
+                          "airportCode": "GIG",
+                          "airportName": "Rio de Janeiro Galeao-A.C.Jobim Int Apt, BR",
+                          "flightDate": "2026-06-15",
+                          "flightTime": "22:20",
+                          "terminal": "2"
+                        },
+                        "onTimePerformance": null,
+                        "thruFlights": 0,
+                        "stops": [],
+                        "dreamsCabin": false
+                      }
+                    ],
+                    "offers": [
+                      {
+                        "id": "XF4CEB014-B273-43FC-8BC9-7",
+                        "pricePerAdult": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareRefKey": [
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey",
+                          "NO8EJWK~MpB8BK~MpN8UAO~MqB9PDA~MDB8XNN03F@~MOV9?CR~M?L8/~MBS9SRB*sOOgG4kO2xij*flxKey"
+                        ],
+                        "totalPrice": {
+                          "miles": 12500,
+                          "taxes": 6.4
+                        },
+                        "fareFamily": {
+                          "id": "Xpc080040ffa66d8",
+                          "name": "Economy Saver",
+                          "code": "ESV",
+                          "isEconomyBasic": false,
+                          "subtitle": "Economy Saver",
+                          "descriptions": [
+                            {
+                              "code": "1",
+                              "text": "Booking changes allowed (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "1",
+                              "text": "Refundable Miles (for a fee)",
+                              "key": null
+                            },
+                            {
+                              "code": "2",
+                              "text": "For more details of your fare, visit the operating airline website",
+                              "key": null
+                            }
+                          ],
+                          "order": 1
+                        },
+                        "originalPricePerAdult": 12500,
+                        "classOfService": [
+                          "X",
+                          "X"
+                        ],
+                        "fareBasisCodes": [
+                          "YPO24HA",
+                          "YPO24HA"
+                        ],
+                        "promoCodeApplied": false,
+                        "conventionCodeFlag": false
+                      }
+                    ]
+                  }
+                ],
+                "configuration": {
+                  "uplift": true
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "totalAirlinesRequested": 1,
+        "successfulSearches": 1,
+        "failedSearches": 0
+      }
+    }
+  },
+  "diagnosis": "ok"
+}

@@ -1,0 +1,2288 @@
+{
+  "timestamp": "2026-05-05T18:51:03",
+  "program": "AZUL",
+  "route": {
+    "origin": "BSB",
+    "destination": "LIS",
+    "date": "2026-06-15",
+    "name": "internacional_BSB_LIS"
+  },
+  "request": {
+    "endpoint": "https://api.economilha.com/flights/search",
+    "method": "POST",
+    "headers": {
+      "x-api-key": "eco_sk_l…EJGr",
+      "Accept": "application/vnd.economilha.v1+json",
+      "Content-Type": "application/json"
+    },
+    "payload": {
+      "airlineLoyalty": [
+        "AZUL"
+      ],
+      "priceType": "MILES",
+      "tripType": "ONE_WAY",
+      "cabinType": "ECONOMY",
+      "origin": "BSB",
+      "destination": "LIS",
+      "departureDate": "2026-06-15",
+      "passengers": {
+        "adults": 1,
+        "children": 0,
+        "infants": 0
+      }
+    }
+  },
+  "response": {
+    "status_code": 200,
+    "elapsed_ms": 10365.0,
+    "correlationId": null,
+    "body": {
+      "results": [
+        {
+          "airline": "AZUL",
+          "success": true,
+          "data": {
+            "data": {
+              "companionPass": false,
+              "flowNotifications": null,
+              "emergencyBanners": [
+                {
+                  "message": "O céu de Portugal está ainda mais Azul | Além de Lisboa, veja também voos para Porto."
+                }
+              ],
+              "discountType": "FareAndConvenienceFee",
+              "trips": [
+                {
+                  "departureStation": "BSB",
+                  "arrivalStation": "LIS",
+                  "std": "2026-06-15T00:00:00",
+                  "currencyCode": "BRL",
+                  "flightType": "International",
+                  "region": "International",
+                  "fareInformation": {
+                    "lowestPoints": 342000.0,
+                    "highestPoints": 900000.0
+                  },
+                  "journeys": [
+                    {
+                      "journeyKey": "QUR_NDA0OH4gfn5CU0J_MDYvMTUvMjAyNiAwODoxNX5WQ1B_MDYvMTUvMjAyNiAwOTo1NX5_XkFEfjg3NTB_IH5_VkNQfjA2LzE1LzIwMjYgMTc6MDB_TElTfjA2LzE2LzIwMjYgMDc6MDV_fg--",
+                      "journeySellKey": "AD~4048~ ~~BSB~06/15/2026 08:15~VCP~06/15/2026 09:55~~^AD~8750~ ~~VCP~06/15/2026 17:00~LIS~06/16/2026 07:05~~",
+                      "restrictions": null,
+                      "status": {
+                        "available": true,
+                        "reason": null
+                      },
+                      "fares": [
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZK",
+                            "category": "Economy",
+                            "name": "Economy"
+                          },
+                          "cabin": {
+                            "mixed": false,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDA0OH4gfn5CU0J_MDYvMTUvMjAyNiAwODoxNX5WQ1B_MDYvMTUvMjAyNiAwOTo1NX5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                                "type": "Economy"
+                              }
+                            ]
+                          },
+                          "classOfService": "M",
+                          "key": "MH5Nfn5BRH5NTEVaS1pEQn5LWERCfn4wfjE3fn5YITA-",
+                          "fareSellKey": "0~M~~AD~MLEZKZDB~KXDB~~0~17~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 342000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 3420.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 338580.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 3463.0,
+                                  "points": {
+                                    "amount": 23950.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 240.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 23710.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 3688.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2734.0,
+                                  "points": {
+                                    "amount": 92350.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 924.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 91426.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2959.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2370.0,
+                                  "points": {
+                                    "amount": 126550.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1266.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 125284.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2595.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2006.0,
+                                  "points": {
+                                    "amount": 160750.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1608.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 159142.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2231.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        },
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZE",
+                            "category": "Business",
+                            "name": "Business"
+                          },
+                          "cabin": {
+                            "mixed": true,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDA0OH4gfn5CU0J_MDYvMTUvMjAyNiAwODoxNX5WQ1B_MDYvMTUvMjAyNiAwOTo1NX5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                                "type": "Business"
+                              }
+                            ]
+                          },
+                          "classOfService": "C",
+                          "key": "MH5Dfn5BRH5DTEVaRVpEQn5FWERCfn4wfjMxfn5YITM-",
+                          "fareSellKey": "0~C~~AD~CLEZEZDB~EXDB~~0~31~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 900000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 9000.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 891000.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 23547.0,
+                                  "points": {
+                                    "amount": 45000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 450.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 44550.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 23772.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 18314.0,
+                                  "points": {
+                                    "amount": 270000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 2700.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 267300.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 18539.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 13082.0,
+                                  "points": {
+                                    "amount": 450000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 4500.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 445500.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 13307.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 10466.0,
+                                  "points": {
+                                    "amount": 540000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 5400.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 534600.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 10691.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        }
+                      ],
+                      "identifier": {
+                        "operatedBy": "AD",
+                        "carrierCode": "AD",
+                        "flightNumber": "4048",
+                        "opSuffix": null,
+                        "departureStation": "BSB",
+                        "arrivalStation": "LIS",
+                        "std": "2026-06-15T08:15:00",
+                        "sta": "2026-06-16T07:05:00",
+                        "duration": {
+                          "days": 0,
+                          "hours": 18,
+                          "minutes": 50
+                        },
+                        "connections": {
+                          "count": 1,
+                          "stationsInformation": [
+                            {
+                              "code": "VCP",
+                              "duration": "07:05:00"
+                            }
+                          ]
+                        }
+                      },
+                      "segments": [
+                        {
+                          "equipment": {
+                            "name": "Embraer 195-2",
+                            "suffix": "",
+                            "type": "295"
+                          },
+                          "segmentKey": "QUR_NDA0OH4gfn5CU0J_MDYvMTUvMjAyNiAwODoxNX5WQ1B_MDYvMTUvMjAyNiAwOTo1NX5_",
+                          "identifier": {
+                            "operatedBy": "AD",
+                            "carrierCode": "AD",
+                            "flightNumber": "4048",
+                            "opSuffix": null,
+                            "departureStation": "BSB",
+                            "arrivalStation": "VCP",
+                            "std": "2026-06-15T08:15:00",
+                            "sta": "2026-06-15T09:55:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxMDgxMDAwMDAwMDAwIUFEITQwNDghICFCU0IhVkNQITEzMjI2MjY2",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "4048",
+                                "opSuffix": null,
+                                "departureStation": "BSB",
+                                "arrivalStation": "VCP",
+                                "std": "2026-06-15T08:15:00",
+                                "sta": "2026-06-15T09:55:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 1,
+                                  "minutes": 40
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 136,
+                                "lid": 136,
+                                "sold": 41,
+                                "remainingSeats": 95
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "equipment": {
+                            "name": "Airbus A330 NEO",
+                            "suffix": "",
+                            "type": "339"
+                          },
+                          "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                          "identifier": {
+                            "operatedBy": "AD",
+                            "carrierCode": "AD",
+                            "flightNumber": "8750",
+                            "opSuffix": null,
+                            "departureStation": "VCP",
+                            "arrivalStation": "LIS",
+                            "std": "2026-06-15T17:00:00",
+                            "sta": "2026-06-16T07:05:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxMzk2MDAwMDAwMDAwIUFEITg3NTAhICFWQ1AhTElTITEzMjQzMjE5",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "8750",
+                                "opSuffix": null,
+                                "departureStation": "VCP",
+                                "arrivalStation": "LIS",
+                                "std": "2026-06-15T17:00:00",
+                                "sta": "2026-06-16T07:05:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 10,
+                                  "minutes": 5
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 298,
+                                "lid": 298,
+                                "sold": 211,
+                                "remainingSeats": 87
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "journeyKey": "QUR_NDM5NX4gfn5CU0J_MDYvMTUvMjAyNiAxMDoxMH5WQ1B_MDYvMTUvMjAyNiAxMTo1MH5_XkFEfjg3NTB_IH5_VkNQfjA2LzE1LzIwMjYgMTc6MDB_TElTfjA2LzE2LzIwMjYgMDc6MDV_fg--",
+                      "journeySellKey": "AD~4395~ ~~BSB~06/15/2026 10:10~VCP~06/15/2026 11:50~~^AD~8750~ ~~VCP~06/15/2026 17:00~LIS~06/16/2026 07:05~~",
+                      "restrictions": null,
+                      "status": {
+                        "available": true,
+                        "reason": null
+                      },
+                      "fares": [
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZK",
+                            "category": "Economy",
+                            "name": "Economy"
+                          },
+                          "cabin": {
+                            "mixed": false,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDM5NX4gfn5CU0J_MDYvMTUvMjAyNiAxMDoxMH5WQ1B_MDYvMTUvMjAyNiAxMTo1MH5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                                "type": "Economy"
+                              }
+                            ]
+                          },
+                          "classOfService": "M",
+                          "key": "MH5Nfn5BRH5NTEVaS1pEQn5LWERCfn4wfjE3fn5YITA-",
+                          "fareSellKey": "0~M~~AD~MLEZKZDB~KXDB~~0~17~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 342000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 3420.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 338580.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 3463.0,
+                                  "points": {
+                                    "amount": 23950.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 240.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 23710.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 3688.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2734.0,
+                                  "points": {
+                                    "amount": 92350.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 924.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 91426.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2959.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2370.0,
+                                  "points": {
+                                    "amount": 126550.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1266.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 125284.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2595.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2006.0,
+                                  "points": {
+                                    "amount": 160750.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1608.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 159142.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2231.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        },
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZE",
+                            "category": "Business",
+                            "name": "Business"
+                          },
+                          "cabin": {
+                            "mixed": true,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDM5NX4gfn5CU0J_MDYvMTUvMjAyNiAxMDoxMH5WQ1B_MDYvMTUvMjAyNiAxMTo1MH5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                                "type": "Business"
+                              }
+                            ]
+                          },
+                          "classOfService": "C",
+                          "key": "MH5Dfn5BRH5DTEVaRVpEQn5FWERCfn4wfjMxfn5YITM-",
+                          "fareSellKey": "0~C~~AD~CLEZEZDB~EXDB~~0~31~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 900000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 9000.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 891000.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 23547.0,
+                                  "points": {
+                                    "amount": 45000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 450.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 44550.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 23772.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 18314.0,
+                                  "points": {
+                                    "amount": 270000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 2700.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 267300.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 18539.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 13082.0,
+                                  "points": {
+                                    "amount": 450000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 4500.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 445500.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 13307.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 10466.0,
+                                  "points": {
+                                    "amount": 540000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 5400.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 534600.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 10691.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        }
+                      ],
+                      "identifier": {
+                        "operatedBy": "AD",
+                        "carrierCode": "AD",
+                        "flightNumber": "4395",
+                        "opSuffix": null,
+                        "departureStation": "BSB",
+                        "arrivalStation": "LIS",
+                        "std": "2026-06-15T10:10:00",
+                        "sta": "2026-06-16T07:05:00",
+                        "duration": {
+                          "days": 0,
+                          "hours": 16,
+                          "minutes": 55
+                        },
+                        "connections": {
+                          "count": 1,
+                          "stationsInformation": [
+                            {
+                              "code": "VCP",
+                              "duration": "05:10:00"
+                            }
+                          ]
+                        }
+                      },
+                      "segments": [
+                        {
+                          "equipment": {
+                            "name": "Embraer 195-2",
+                            "suffix": "",
+                            "type": "295"
+                          },
+                          "segmentKey": "QUR_NDM5NX4gfn5CU0J_MDYvMTUvMjAyNiAxMDoxMH5WQ1B_MDYvMTUvMjAyNiAxMTo1MH5_",
+                          "identifier": {
+                            "operatedBy": "AD",
+                            "carrierCode": "AD",
+                            "flightNumber": "4395",
+                            "opSuffix": null,
+                            "departureStation": "BSB",
+                            "arrivalStation": "VCP",
+                            "std": "2026-06-15T10:10:00",
+                            "sta": "2026-06-15T11:50:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxMTUwMDAwMDAwMDAwIUFEITQzOTUhICFCU0IhVkNQITEzMjMyNjg2",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "4395",
+                                "opSuffix": null,
+                                "departureStation": "BSB",
+                                "arrivalStation": "VCP",
+                                "std": "2026-06-15T10:10:00",
+                                "sta": "2026-06-15T11:50:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 1,
+                                  "minutes": 40
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 136,
+                                "lid": 136,
+                                "sold": 31,
+                                "remainingSeats": 105
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "equipment": {
+                            "name": "Airbus A330 NEO",
+                            "suffix": "",
+                            "type": "339"
+                          },
+                          "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                          "identifier": {
+                            "operatedBy": "AD",
+                            "carrierCode": "AD",
+                            "flightNumber": "8750",
+                            "opSuffix": null,
+                            "departureStation": "VCP",
+                            "arrivalStation": "LIS",
+                            "std": "2026-06-15T17:00:00",
+                            "sta": "2026-06-16T07:05:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxMzk2MDAwMDAwMDAwIUFEITg3NTAhICFWQ1AhTElTITEzMjQzMjE5",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "8750",
+                                "opSuffix": null,
+                                "departureStation": "VCP",
+                                "arrivalStation": "LIS",
+                                "std": "2026-06-15T17:00:00",
+                                "sta": "2026-06-16T07:05:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 10,
+                                  "minutes": 5
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 298,
+                                "lid": 298,
+                                "sold": 211,
+                                "remainingSeats": 87
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "journeyKey": "QUR_NDM5N34gfn5CU0J_MDYvMTUvMjAyNiAxMzowMH5WQ1B_MDYvMTUvMjAyNiAxNDo0MH5_XkFEfjg3NTB_IH5_VkNQfjA2LzE1LzIwMjYgMTc6MDB_TElTfjA2LzE2LzIwMjYgMDc6MDV_fg--",
+                      "journeySellKey": "AD~4397~ ~~BSB~06/15/2026 13:00~VCP~06/15/2026 14:40~~^AD~8750~ ~~VCP~06/15/2026 17:00~LIS~06/16/2026 07:05~~",
+                      "restrictions": null,
+                      "status": {
+                        "available": true,
+                        "reason": null
+                      },
+                      "fares": [
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZK",
+                            "category": "Economy",
+                            "name": "Economy"
+                          },
+                          "cabin": {
+                            "mixed": false,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDM5N34gfn5CU0J_MDYvMTUvMjAyNiAxMzowMH5WQ1B_MDYvMTUvMjAyNiAxNDo0MH5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                                "type": "Economy"
+                              }
+                            ]
+                          },
+                          "classOfService": "M",
+                          "key": "MH5Nfn5BRH5NTEVaS1pEQn5LWERCfn4wfjE3fn5YITg-",
+                          "fareSellKey": "0~M~~AD~MLEZKZDB~KXDB~~0~17~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 404000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 4040.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 399960.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 4087.0,
+                                  "points": {
+                                    "amount": 28300.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 283.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 28017.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 4312.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 3227.0,
+                                  "points": {
+                                    "amount": 109100.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1091.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 108009.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 3452.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2796.0,
+                                  "points": {
+                                    "amount": 149500.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1495.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 148005.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 3021.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2366.0,
+                                  "points": {
+                                    "amount": 189900.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1899.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 188001.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2591.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        },
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZE",
+                            "category": "Business",
+                            "name": "Business"
+                          },
+                          "cabin": {
+                            "mixed": true,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDM5N34gfn5CU0J_MDYvMTUvMjAyNiAxMzowMH5WQ1B_MDYvMTUvMjAyNiAxNDo0MH5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                                "type": "Business"
+                              }
+                            ]
+                          },
+                          "classOfService": "C",
+                          "key": "MH5Dfn5BRH5DTEVaRVpEQn5FWERCfn4wfjMxfn5YITM-",
+                          "fareSellKey": "0~C~~AD~CLEZEZDB~EXDB~~0~31~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 900000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 9000.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 891000.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 23547.0,
+                                  "points": {
+                                    "amount": 45000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 450.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 44550.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 23772.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 18314.0,
+                                  "points": {
+                                    "amount": 270000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 2700.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 267300.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 18539.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 13082.0,
+                                  "points": {
+                                    "amount": 450000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 4500.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 445500.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 13307.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 10466.0,
+                                  "points": {
+                                    "amount": 540000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 5400.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 534600.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 10691.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        }
+                      ],
+                      "identifier": {
+                        "operatedBy": "AD",
+                        "carrierCode": "AD",
+                        "flightNumber": "4397",
+                        "opSuffix": null,
+                        "departureStation": "BSB",
+                        "arrivalStation": "LIS",
+                        "std": "2026-06-15T13:00:00",
+                        "sta": "2026-06-16T07:05:00",
+                        "duration": {
+                          "days": 0,
+                          "hours": 14,
+                          "minutes": 5
+                        },
+                        "connections": {
+                          "count": 1,
+                          "stationsInformation": [
+                            {
+                              "code": "VCP",
+                              "duration": "02:20:00"
+                            }
+                          ]
+                        }
+                      },
+                      "segments": [
+                        {
+                          "equipment": {
+                            "name": "Embraer 195-2",
+                            "suffix": "",
+                            "type": "295"
+                          },
+                          "segmentKey": "QUR_NDM5N34gfn5CU0J_MDYvMTUvMjAyNiAxMzowMH5WQ1B_MDYvMTUvMjAyNiAxNDo0MH5_",
+                          "identifier": {
+                            "operatedBy": "AD",
+                            "carrierCode": "AD",
+                            "flightNumber": "4397",
+                            "opSuffix": null,
+                            "departureStation": "BSB",
+                            "arrivalStation": "VCP",
+                            "std": "2026-06-15T13:00:00",
+                            "sta": "2026-06-15T14:40:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxMjUyMDAwMDAwMDAwIUFEITQzOTchICFCU0IhVkNQITEzMjMyNzUx",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "4397",
+                                "opSuffix": null,
+                                "departureStation": "BSB",
+                                "arrivalStation": "VCP",
+                                "std": "2026-06-15T13:00:00",
+                                "sta": "2026-06-15T14:40:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 1,
+                                  "minutes": 40
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 136,
+                                "lid": 136,
+                                "sold": 43,
+                                "remainingSeats": 93
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "equipment": {
+                            "name": "Airbus A330 NEO",
+                            "suffix": "",
+                            "type": "339"
+                          },
+                          "segmentKey": "QUR_ODc1MH4gfn5WQ1B_MDYvMTUvMjAyNiAxNzowMH5MSVN_MDYvMTYvMjAyNiAwNzowNX5_",
+                          "identifier": {
+                            "operatedBy": "AD",
+                            "carrierCode": "AD",
+                            "flightNumber": "8750",
+                            "opSuffix": null,
+                            "departureStation": "VCP",
+                            "arrivalStation": "LIS",
+                            "std": "2026-06-15T17:00:00",
+                            "sta": "2026-06-16T07:05:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxMzk2MDAwMDAwMDAwIUFEITg3NTAhICFWQ1AhTElTITEzMjQzMjE5",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "8750",
+                                "opSuffix": null,
+                                "departureStation": "VCP",
+                                "arrivalStation": "LIS",
+                                "std": "2026-06-15T17:00:00",
+                                "sta": "2026-06-16T07:05:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 10,
+                                  "minutes": 5
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 298,
+                                "lid": 298,
+                                "sold": 211,
+                                "remainingSeats": 87
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "journeyKey": "QUR_NDM5N34gfn5CU0J_MDYvMTUvMjAyNiAxMzowMH5WQ1B_MDYvMTUvMjAyNiAxNDo0MH5_XkFEfjg5MDB_IH5_VkNQfjA2LzE1LzIwMjYgMjE6MjB_TElTfjA2LzE2LzIwMjYgMTE6MDB_fg--",
+                      "journeySellKey": "AD~4397~ ~~BSB~06/15/2026 13:00~VCP~06/15/2026 14:40~~^AD~8900~ ~~VCP~06/15/2026 21:20~LIS~06/16/2026 11:00~~",
+                      "restrictions": null,
+                      "status": {
+                        "available": true,
+                        "reason": null
+                      },
+                      "fares": [
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZK",
+                            "category": "Economy",
+                            "name": "Economy"
+                          },
+                          "cabin": {
+                            "mixed": false,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDM5N34gfn5CU0J_MDYvMTUvMjAyNiAxMzowMH5WQ1B_MDYvMTUvMjAyNiAxNDo0MH5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODkwMH4gfn5WQ1B_MDYvMTUvMjAyNiAyMToyMH5MSVN_MDYvMTYvMjAyNiAxMTowMH5_",
+                                "type": "Economy"
+                              }
+                            ]
+                          },
+                          "classOfService": "M",
+                          "key": "MH5Nfn5BRH5NTEVaS09EQn5LWURCfn4wfjJ_flghMTE-",
+                          "fareSellKey": "0~M~~AD~MLEZKODB~KYDB~~0~2~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 416000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 4160.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 411840.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 4198.0,
+                                  "points": {
+                                    "amount": 29150.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 292.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 28858.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 4423.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 3314.0,
+                                  "points": {
+                                    "amount": 112350.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1124.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 111226.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 3539.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2873.0,
+                                  "points": {
+                                    "amount": 153950.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1540.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 152410.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 3098.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2431.0,
+                                  "points": {
+                                    "amount": 195550.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1956.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 193594.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2656.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        },
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZE",
+                            "category": "Business",
+                            "name": "Business"
+                          },
+                          "cabin": {
+                            "mixed": true,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDM5N34gfn5CU0J_MDYvMTUvMjAyNiAxMzowMH5WQ1B_MDYvMTUvMjAyNiAxNDo0MH5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODkwMH4gfn5WQ1B_MDYvMTUvMjAyNiAyMToyMH5MSVN_MDYvMTYvMjAyNiAxMTowMH5_",
+                                "type": "Business"
+                              }
+                            ]
+                          },
+                          "classOfService": "J",
+                          "key": "MH5Kfn5BRH5KTEVaRU9EQn5FWURCfn4wfjR_flghMTQ-",
+                          "fareSellKey": "0~J~~AD~JLEZEODB~EYDB~~0~4~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 900000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 9000.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 891000.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 13349.0,
+                                  "points": {
+                                    "amount": 45000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 450.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 44550.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 13574.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 10383.0,
+                                  "points": {
+                                    "amount": 270000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 2700.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 267300.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 10608.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 7417.0,
+                                  "points": {
+                                    "amount": 450000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 4500.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 445500.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 7642.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 5934.0,
+                                  "points": {
+                                    "amount": 540000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 5400.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 534600.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 6159.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        }
+                      ],
+                      "identifier": {
+                        "operatedBy": "YU",
+                        "carrierCode": "AD",
+                        "flightNumber": "4397",
+                        "opSuffix": null,
+                        "departureStation": "BSB",
+                        "arrivalStation": "LIS",
+                        "std": "2026-06-15T13:00:00",
+                        "sta": "2026-06-16T11:00:00",
+                        "duration": {
+                          "days": 0,
+                          "hours": 18,
+                          "minutes": 0
+                        },
+                        "connections": {
+                          "count": 1,
+                          "stationsInformation": [
+                            {
+                              "code": "VCP",
+                              "duration": "06:40:00"
+                            }
+                          ]
+                        }
+                      },
+                      "segments": [
+                        {
+                          "equipment": {
+                            "name": "Embraer 195-2",
+                            "suffix": "",
+                            "type": "295"
+                          },
+                          "segmentKey": "QUR_NDM5N34gfn5CU0J_MDYvMTUvMjAyNiAxMzowMH5WQ1B_MDYvMTUvMjAyNiAxNDo0MH5_",
+                          "identifier": {
+                            "operatedBy": "AD",
+                            "carrierCode": "AD",
+                            "flightNumber": "4397",
+                            "opSuffix": null,
+                            "departureStation": "BSB",
+                            "arrivalStation": "VCP",
+                            "std": "2026-06-15T13:00:00",
+                            "sta": "2026-06-15T14:40:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxMjUyMDAwMDAwMDAwIUFEITQzOTchICFCU0IhVkNQITEzMjMyNzUx",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "4397",
+                                "opSuffix": null,
+                                "departureStation": "BSB",
+                                "arrivalStation": "VCP",
+                                "std": "2026-06-15T13:00:00",
+                                "sta": "2026-06-15T14:40:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 1,
+                                  "minutes": 40
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 136,
+                                "lid": 136,
+                                "sold": 43,
+                                "remainingSeats": 93
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "equipment": {
+                            "name": "Boeing 777-200",
+                            "suffix": "YU",
+                            "type": "777"
+                          },
+                          "segmentKey": "QUR_ODkwMH4gfn5WQ1B_MDYvMTUvMjAyNiAyMToyMH5MSVN_MDYvMTYvMjAyNiAxMTowMH5_",
+                          "identifier": {
+                            "operatedBy": "YU",
+                            "carrierCode": "AD",
+                            "flightNumber": "8900",
+                            "opSuffix": null,
+                            "departureStation": "VCP",
+                            "arrivalStation": "LIS",
+                            "std": "2026-06-15T21:20:00",
+                            "sta": "2026-06-16T11:00:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxNTUyMDAwMDAwMDAwIUFEITg5MDAhICFWQ1AhTElTITEzMjQzNDkw",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "8900",
+                                "opSuffix": null,
+                                "departureStation": "VCP",
+                                "arrivalStation": "LIS",
+                                "std": "2026-06-15T21:20:00",
+                                "sta": "2026-06-16T11:00:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 9,
+                                  "minutes": 40
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 293,
+                                "lid": 293,
+                                "sold": 203,
+                                "remainingSeats": 90
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "journeyKey": "QUR_NDY5Nn4gfn5CU0J_MDYvMTUvMjAyNiAxNTozMH5WQ1B_MDYvMTUvMjAyNiAxNzoxMH5_XkFEfjg5MDB_IH5_VkNQfjA2LzE1LzIwMjYgMjE6MjB_TElTfjA2LzE2LzIwMjYgMTE6MDB_fg--",
+                      "journeySellKey": "AD~4696~ ~~BSB~06/15/2026 15:30~VCP~06/15/2026 17:10~~^AD~8900~ ~~VCP~06/15/2026 21:20~LIS~06/16/2026 11:00~~",
+                      "restrictions": null,
+                      "status": {
+                        "available": true,
+                        "reason": null
+                      },
+                      "fares": [
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZK",
+                            "category": "Economy",
+                            "name": "Economy"
+                          },
+                          "cabin": {
+                            "mixed": false,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDY5Nn4gfn5CU0J_MDYvMTUvMjAyNiAxNTozMH5WQ1B_MDYvMTUvMjAyNiAxNzoxMH5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODkwMH4gfn5WQ1B_MDYvMTUvMjAyNiAyMToyMH5MSVN_MDYvMTYvMjAyNiAxMTowMH5_",
+                                "type": "Economy"
+                              }
+                            ]
+                          },
+                          "classOfService": "M",
+                          "key": "MH5Nfn5BRH5NTEVaS09EQn5LWURCfn4wfjJ_flghMTk-",
+                          "fareSellKey": "0~M~~AD~MLEZKODB~KYDB~~0~2~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 352000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 3520.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 348480.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 3558.0,
+                                  "points": {
+                                    "amount": 24650.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 246.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 24404.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 3783.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2809.0,
+                                  "points": {
+                                    "amount": 95050.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 950.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 94100.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 3034.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2434.0,
+                                  "points": {
+                                    "amount": 130250.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1302.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 128948.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2659.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 2060.0,
+                                  "points": {
+                                    "amount": 165450.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 1654.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 163796.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 2285.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        },
+                        {
+                          "available": true,
+                          "reason": null,
+                          "productClass": {
+                            "code": "ZE",
+                            "category": "Business",
+                            "name": "Business"
+                          },
+                          "cabin": {
+                            "mixed": true,
+                            "segmentsCabin": [
+                              {
+                                "segmentKey": "QUR_NDY5Nn4gfn5CU0J_MDYvMTUvMjAyNiAxNTozMH5WQ1B_MDYvMTUvMjAyNiAxNzoxMH5_",
+                                "type": "Economy"
+                              },
+                              {
+                                "segmentKey": "QUR_ODkwMH4gfn5WQ1B_MDYvMTUvMjAyNiAyMToyMH5MSVN_MDYvMTYvMjAyNiAxMTowMH5_",
+                                "type": "Business"
+                              }
+                            ]
+                          },
+                          "classOfService": "J",
+                          "key": "MH5Kfn5BRH5KTEVaRU9EQn5FWURCfn4wfjR_flghMTQ-",
+                          "fareSellKey": "0~J~~AD~JLEZEODB~EYDB~~0~4~~X",
+                          "paxPoints": [
+                            {
+                              "amountLevel": 1,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 0.0,
+                                  "points": {
+                                    "amount": 900000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 9000.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 891000.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 225.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 2,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 13349.0,
+                                  "points": {
+                                    "amount": 45000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 450.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 44550.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 13574.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 3,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 10383.0,
+                                  "points": {
+                                    "amount": 270000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 2700.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 267300.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 10608.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 4,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 7417.0,
+                                  "points": {
+                                    "amount": 450000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 4500.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 445500.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 7642.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            },
+                            {
+                              "amountLevel": 5,
+                              "levels": [
+                                {
+                                  "companionPass": false,
+                                  "paxType": "ADT",
+                                  "fareMoney": 5934.0,
+                                  "points": {
+                                    "amount": 540000.0,
+                                    "discount": {
+                                      "applied": true,
+                                      "amount": 5400.0,
+                                      "promotionCode": null,
+                                      "restriction": "DiscountForContactPax",
+                                      "discountRuleForContactPax": true
+                                    },
+                                    "discountedAmount": 534600.0
+                                  },
+                                  "taxesAndFees": 89.39,
+                                  "convenienceFee": 135.9,
+                                  "totalMoney": 6159.29,
+                                  "currencyCode": "BRL",
+                                  "hold": null
+                                }
+                              ]
+                            }
+                          ],
+                          "paxFares": null
+                        }
+                      ],
+                      "identifier": {
+                        "operatedBy": "YU",
+                        "carrierCode": "AD",
+                        "flightNumber": "4696",
+                        "opSuffix": null,
+                        "departureStation": "BSB",
+                        "arrivalStation": "LIS",
+                        "std": "2026-06-15T15:30:00",
+                        "sta": "2026-06-16T11:00:00",
+                        "duration": {
+                          "days": 0,
+                          "hours": 15,
+                          "minutes": 30
+                        },
+                        "connections": {
+                          "count": 1,
+                          "stationsInformation": [
+                            {
+                              "code": "VCP",
+                              "duration": "04:10:00"
+                            }
+                          ]
+                        }
+                      },
+                      "segments": [
+                        {
+                          "equipment": {
+                            "name": "Embraer 195-2",
+                            "suffix": "",
+                            "type": "295"
+                          },
+                          "segmentKey": "QUR_NDY5Nn4gfn5CU0J_MDYvMTUvMjAyNiAxNTozMH5WQ1B_MDYvMTUvMjAyNiAxNzoxMH5_",
+                          "identifier": {
+                            "operatedBy": "AD",
+                            "carrierCode": "AD",
+                            "flightNumber": "4696",
+                            "opSuffix": null,
+                            "departureStation": "BSB",
+                            "arrivalStation": "VCP",
+                            "std": "2026-06-15T15:30:00",
+                            "sta": "2026-06-15T17:10:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxMzQyMDAwMDAwMDAwIUFEITQ2OTYhICFCU0IhVkNQITEzMjM2MjUx",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "4696",
+                                "opSuffix": null,
+                                "departureStation": "BSB",
+                                "arrivalStation": "VCP",
+                                "std": "2026-06-15T15:30:00",
+                                "sta": "2026-06-15T17:10:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 1,
+                                  "minutes": 40
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 136,
+                                "lid": 136,
+                                "sold": 40,
+                                "remainingSeats": 96
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "equipment": {
+                            "name": "Boeing 777-200",
+                            "suffix": "YU",
+                            "type": "777"
+                          },
+                          "segmentKey": "QUR_ODkwMH4gfn5WQ1B_MDYvMTUvMjAyNiAyMToyMH5MSVN_MDYvMTYvMjAyNiAxMTowMH5_",
+                          "identifier": {
+                            "operatedBy": "YU",
+                            "carrierCode": "AD",
+                            "flightNumber": "8900",
+                            "opSuffix": null,
+                            "departureStation": "VCP",
+                            "arrivalStation": "LIS",
+                            "std": "2026-06-15T21:20:00",
+                            "sta": "2026-06-16T11:00:00",
+                            "stops": null
+                          },
+                          "legs": [
+                            {
+                              "legKey": "NjM5MTcxNTUyMDAwMDAwMDAwIUFEITg5MDAhICFWQ1AhTElTITEzMjQzNDkw",
+                              "identifier": {
+                                "carrierCode": "AD",
+                                "flightNumber": "8900",
+                                "opSuffix": null,
+                                "departureStation": "VCP",
+                                "arrivalStation": "LIS",
+                                "std": "2026-06-15T21:20:00",
+                                "sta": "2026-06-16T11:00:00",
+                                "duration": {
+                                  "days": 0,
+                                  "hours": 9,
+                                  "minutes": 40
+                                }
+                              },
+                              "legInfo": {
+                                "capacity": 293,
+                                "lid": 293,
+                                "sold": 203,
+                                "remainingSeats": 90
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "notifications": []
+          }
+        }
+      ],
+      "summary": {
+        "totalAirlinesRequested": 1,
+        "successfulSearches": 1,
+        "failedSearches": 0
+      }
+    }
+  },
+  "diagnosis": "ok"
+}

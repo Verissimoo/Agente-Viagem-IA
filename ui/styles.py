@@ -95,6 +95,37 @@ section[data-testid="stSidebarContent"]{display:none!important;}
 .seg-dur{font-size:11px;color:var(--pcd-muted);}
 .seg-carrier{font-size:11px;color:var(--pcd-muted);flex:1;}
 .layover-banner{background:#fff8e6;border:1px dashed #e59a00;color:#856404;border-radius:8px;padding:7px 14px;text-align:center;font-size:12px;font-weight:600;margin:6px 0;}
+/* Itinerário PRO — visual redesenhado por segmento */
+.itin-card-pro{background:#fff;border:1px solid var(--pcd-border);border-radius:14px;
+    box-shadow:0 2px 8px rgba(12,30,80,.06);overflow:hidden;margin-bottom:14px;}
+.itin-pro-head{padding:14px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+    border-bottom:1px solid var(--pcd-border);}
+.itin-pro-leg{font-size:11px;font-weight:700;letter-spacing:.08em;
+    background:rgba(255,255,255,.85);padding:3px 10px;border-radius:12px;
+    border:1px solid currentColor;}
+.itin-pro-route{display:flex;align-items:center;gap:10px;}
+.itin-pro-iata{font-size:24px;font-weight:800;letter-spacing:.02em;}
+.itin-pro-arrow{font-size:18px;opacity:.7;}
+.itin-pro-meta{margin-left:auto;font-size:12px;color:var(--pcd-muted);font-weight:500;
+    background:rgba(255,255,255,.9);padding:4px 10px;border-radius:8px;}
+.itin-pro-body{padding:14px 18px;display:flex;flex-direction:column;gap:8px;}
+.itin-pro-seg{display:flex;gap:14px;align-items:stretch;padding:10px 0;}
+.itin-pro-seg-airline{flex:0 0 170px;border-left:4px solid;background:#f5f7fb;
+    padding:10px 12px;border-radius:8px;display:flex;flex-direction:column;justify-content:center;}
+.itin-pro-airline-name{font-size:12px;font-weight:700;line-height:1.2;}
+.itin-pro-airline-flt{font-size:11px;opacity:.75;margin-top:3px;font-weight:600;letter-spacing:.04em;}
+.itin-pro-seg-cities{flex:1;display:flex;flex-direction:column;gap:4px;justify-content:center;}
+.itin-pro-cityline{display:flex;align-items:center;gap:8px;}
+.itin-pro-city{font-size:17px;font-weight:700;color:var(--pcd-text);}
+.itin-pro-sep{font-size:14px;color:var(--pcd-muted);}
+.itin-pro-times{font-size:14px;color:var(--pcd-blue);font-weight:700;letter-spacing:.02em;}
+.itin-pro-dur{font-size:11px;color:var(--pcd-muted);font-weight:500;}
+.itin-pro-layover{background:#fff8e6;border:1px dashed #e59a00;color:#856404;
+    border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;margin:2px 0;}
+.itin-pro-note{font-size:11px;color:var(--pcd-muted);font-style:italic;margin-top:4px;
+    padding:6px 10px;background:#f5f6fa;border-radius:6px;}
+/* Row selecionada na tabela (Problema 3) — destaque sutil */
+[data-testid="stDataFrame"] tr[aria-selected="true"] td{background:var(--pcd-blue-light)!important;}
 .sec-title{font-size:12px;font-weight:600;color:var(--pcd-muted);text-transform:uppercase;letter-spacing:.05em;padding-bottom:8px;border-bottom:1px solid var(--pcd-border);margin:16px 0 10px;}
 /* grupo de config */
 .cfg-group-label{font-size:11px;font-weight:700;color:var(--pcd-muted);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 4px;}

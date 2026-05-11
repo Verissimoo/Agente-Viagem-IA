@@ -1,11 +1,14 @@
 """
-Cotação Inteligente — 3 agentes sequenciais que coexistem com o pipeline
-normal sem alterá-lo.
+Cotação Inteligente — agentes que coexistem com o pipeline normal sem
+alterá-lo. O fluxo é em duas etapas (separadas por uma decisão humana):
 
-  Agente 1 (Explorador de Datas)  → Kayak em 9 datas (data ±4)
-  Agente 2 (Mapeador de Programas) → cruza carriers ↔ PROGRAM_PARTNERS
-  Agente 3 (Cotador de Milhas)    → BuscaMilhas só nos programas relevantes,
-                                    apenas na data âncora.
+  Etapa 1 — automática, em `run()`:
+    Agente 1 (Explorador de Datas)  → Kayak em (flex_days*2+1) datas
+    Agente 2 (Mapeador de Programas) → cruza carriers ↔ PROGRAM_PARTNERS
+
+  Etapa 2 — sob demanda, em `quote_miles_for_date()`:
+    Agente 3 (Cotador de Milhas)    → BuscaMilhas só nos programas relevantes,
+                                      na data escolhida pelo vendedor.
 
 Toda a UI consome `SmartQuoteResult`. Falhas individuais não derrubam o
 fluxo: Kayak indisponível devolve calendar vazio, Buscamilhas falho devolve
@@ -127,6 +130,7 @@ class SmartQuoteResult:
     date_requested: str = ""
     date_is_already_best: bool = False
     notes: list[str] = field(default_factory=list)
+    flex_days_used: int = 4
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -389,8 +393,15 @@ class SmartQuoteAgent:
         date_requested: date,
         adults: int = 1,
         return_date: Optional[date] = None,
+        flex_days: int = 4,
         progress_cb: Optional[Callable[[str], None]] = None,
     ) -> SmartQuoteResult:
+        """Etapa 1 da Cotação Inteligente: roda Agente 1 (Kayak) + Agente 2
+        (mapeamento). NÃO chama BuscaMilhas — Agente 3 é executado sob
+        demanda via `quote_miles_for_date()` quando o vendedor escolhe
+        explicitamente uma data para a cotação completa."""
+        self.flex_days = max(1, int(flex_days))
+
         def _progress(msg: str):
             if progress_cb:
                 try:
@@ -398,10 +409,14 @@ class SmartQuoteAgent:
                 except Exception:
                     pass
 
-        result = SmartQuoteResult(date_requested=date_requested.isoformat())
+        result = SmartQuoteResult(
+            date_requested=date_requested.isoformat(),
+            flex_days_used=self.flex_days,
+        )
 
         # Agente 1
-        _progress("🔍 Agente 1: Explorando preços em 9 datas via Kayak...")
+        total_dates = self.flex_days * 2 + 1
+        _progress(f"🔍 Agente 1: Explorando preços em {total_dates} datas via Kayak...")
         try:
             price_calendar, carriers_calendar = self._explore_dates(
                 origin, destination, date_requested, adults, return_date,
@@ -413,7 +428,9 @@ class SmartQuoteAgent:
             return result
 
         if not price_calendar:
-            result.notes.append("Kayak não retornou preços para nenhuma das 9 datas.")
+            result.notes.append(
+                f"Kayak não retornou preços para nenhuma das {total_dates} datas."
+            )
             return result
 
         # Análise do calendário
@@ -439,13 +456,22 @@ class SmartQuoteAgent:
                 "Nenhum programa de milhas cadastrado cobre as companhias disponíveis "
                 "nessa data. Considere emitir em dinheiro."
             )
-            return result
-
-        # Agente 3
-        _progress("💎 Agente 3: Cotando milhas na melhor data...")
-        result.miles_offers = self._quote_miles(
-            origin, destination, anchor_iso,
-            relevant_programs["relevant_programs"], adults, return_date,
-        )
 
         return result
+
+    # ── Agente 3 sob demanda ────────────────────────────────────
+    def quote_miles_for_date(
+        self,
+        origin: str,
+        destination: str,
+        date_iso: str,
+        relevant_programs: list[str],
+        adults: int = 1,
+        return_date: Optional[date] = None,
+    ) -> list[dict]:
+        """Etapa 2 — Agente 3: cotação BuscaMilhas para uma única data
+        escolhida pelo vendedor, restrita aos programas relevantes."""
+        return self._quote_miles(
+            origin, destination, date_iso, relevant_programs,
+            adults, return_date,
+        )
