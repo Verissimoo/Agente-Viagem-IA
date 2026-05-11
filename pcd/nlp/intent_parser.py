@@ -75,30 +75,51 @@ def parse_intent_regex(text: str) -> ParsedIntent:
     """Fallback usando Regex e heurísticas básicas"""
     text_clean = clean_text_ptbr(text)
     text_lower = text_clean.lower()
-    
+
     intent = ParsedIntent()
-    
-    # 1. Datas
-    intent.date_start, intent.date_return = _extract_dates(text_lower)
-    
+
+    # 1a. Detecta "flexibilidade até dia X" / "com flexibilidade até X" e
+    # REMOVE essa data do texto antes da extração geral — evita que ela seja
+    # confundida com data de volta na busca principal.
+    flex_until_pattern = (
+        r"(?:com\s+)?flex(?:ibilidade|[ií]vel)?\s+at[ée]\s+(?:o\s+)?(?:dia\s+)?"
+        r"(\d{1,2}(?:[/-]\d{1,2}(?:[/-]\d{2,4})?)?)"
+    )
+    flex_until_match = re.search(flex_until_pattern, text_lower)
+    flex_until_raw: Optional[str] = None
+    text_for_dates = text_lower
+    if flex_until_match:
+        flex_until_raw = flex_until_match.group(1)
+        text_for_dates = re.sub(flex_until_pattern, " ", text_lower)
+
+    # 1b. Datas (do texto limpo da janela "até X")
+    intent.date_start, intent.date_return = _extract_dates(text_for_dates)
+
     # 2. Trip Type
-    if any(k in text_lower for k in ["ida e volta", "volta dia", "retorno", "roundtrip"]):
+    is_oneway_explicit = any(k in text_lower for k in [
+        "apenas ida", "somente ida", "só ida", "so ida", "one way", "oneway",
+    ])
+    if any(k in text_lower for k in ["ida e volta", "volta dia", "retorno", "roundtrip"]) and not is_oneway_explicit:
         intent.trip_type = TripType.ROUNDTRIP
     else:
         intent.trip_type = TripType.ONEWAY
+        # "Apenas ida" → não usar 2a data como volta (vira janela de flex)
+        if is_oneway_explicit:
+            intent.date_return = None
         
     # 3. Origem / Destino (Regex com prioridade e lookahead)
     # Padrão 1: de <orig> para <dest> (com lookahead para descartar datas/flex)
     # Padrão 2: <orig> para <dest>
     # Padrão 3: <orig> -> <dest>
     
+    _STOP = r"dia|em|na|no|ida|volta|data|flex|±|com|para\s+o|as|às|apenas|somente"
     patterns = [
         # de X para Y
-        r"\bde\s+(?P<orig>.+?)\s+(?:para|pra|to)\s+(?P<dest>.+?)(?=\s+(?:dia|em|na|no|ida|volta|data|flex|±|com|para\s+o|as|às)\b|\s+\d+|$)",
+        rf"\bde\s+(?P<orig>.+?)\s+(?:para|pra|to)\s+(?P<dest>.+?)(?=\s+(?:{_STOP})\b|\s+\d+|$)",
         # X para Y (sem o 'de' inicial)
-        r"^(?P<orig>.+?)\s+(?:para|pra|to)\s+(?P<dest>.+?)(?=\s+(?:dia|em|na|no|ida|volta|data|flex|±|com|para\s+o|as|às)\b|\s+\d+|$)",
+        rf"^(?P<orig>.+?)\s+(?:para|pra|to)\s+(?P<dest>.+?)(?=\s+(?:{_STOP})\b|\s+\d+|$)",
         # X -> Y
-        r"(?P<orig>.+?)\s*(?:->|=>)\s*(?P<dest>.+?)(?=\s+(?:dia|em|na|no|ida|volta|data|flex|±|com|para\s+o|as|às)\b|\s+\d+|$)",
+        rf"(?P<orig>.+?)\s*(?:->|=>)\s*(?P<dest>.+?)(?=\s+(?:{_STOP})\b|\s+\d+|$)",
     ]
     
     extracted = False
@@ -149,6 +170,27 @@ def parse_intent_regex(text: str) -> ParsedIntent:
         intent.cabin = CabinClass.FIRST
         
     # 6. Flexibilidade
+    # Helper compartilhado para converter strings parciais de data
+    def _parse_partial_date(s: str, base_ref: Optional[date] = None) -> Optional[date]:
+        if s.isdigit():
+            day = int(s)
+            ref = base_ref or intent.date_start or date.today()
+            try: return date(ref.year, ref.month, day)
+            except: return None
+        m = re.match(r"(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?", s)
+        if m:
+            d, month, y = m.groups()
+            d, month = int(d), int(month)
+            if y:
+                y = int(y)
+                if y < 100: y += 2000
+            else:
+                ref = base_ref or intent.date_start or date.today()
+                y = ref.year
+            try: return date(y, month, d)
+            except: return None
+        return None
+
     # 6.1 Datas Próximas (±3 dias)
     flex_prox_patterns = [
         r"datas?\s+próximas?", r"datas?\s+proximas?", r"dias?\s+próximas?", r"dias?\s+proximas?",
@@ -157,9 +199,9 @@ def parse_intent_regex(text: str) -> ParsedIntent:
     if any(re.search(p, text_lower) for p in flex_prox_patterns):
         intent.flex_mode = "plusminus"
         intent.flex_days = 3
-    
+
     # 6.2 Flexibilidade por ±N dias (padrão antigo melhorado)
-    flex_match = re.search(r"(?:flex(?:ível)?|±|mais\s+ou\s+menos)\s*(\d+)\s*dia", text_lower) or \
+    flex_match = re.search(r"(?:flex(?:[ií]vel|ibilidade)?|±|mais\s+ou\s+menos)\s*(?:de\s+)?(\d+)\s*dia", text_lower) or \
                  re.search(r"(\d+)\s*dia(?:s)?\s*(?:de\s*)?flex", text_lower)
     if flex_match:
         intent.flex_mode = "plusminus"
@@ -168,41 +210,32 @@ def parse_intent_regex(text: str) -> ParsedIntent:
     # 6.3 Intervalo Explícito (Range)
     # Ex: "do dia 5 ao dia 15", "entre 05/03 e 15/03", "de 10/10 a 20/10"
     range_pattern = r"(?:do\s+dia\s+|entre\s+|de\s+)(\d{1,2}(?:[/-]\d{1,2}(?:[/-]\d{2,4})?)?)\s+(?:ao\s+dia\s+|a\s+|e\s+)(\d{1,2}(?:[/-]\d{1,2}(?:[/-]\d{2,4})?)?)"
-    range_match = re.search(range_pattern, text_lower)
+    range_match = re.search(range_pattern, text_for_dates)
     if range_match:
         from_str = range_match.group(1)
         to_str = range_match.group(2)
-        
-        # Helper para converter string parcial de data em date object
-        def parse_partial_date(s: str, base_ref: Optional[date] = None) -> Optional[date]:
-            # Se for apenas o dia
-            if s.isdigit():
-                day = int(s)
-                ref = base_ref or intent.date_start or date.today()
-                try: return date(ref.year, ref.month, day)
-                except: return None
-            # Se for DD/MM ou DD/MM/YYYY
-            m = re.match(r"(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?", s)
-            if m:
-                d, month, y = m.groups()
-                d, month = int(d), int(month)
-                if y:
-                    y = int(y)
-                    if y < 100: y += 2000
-                else:
-                    ref = base_ref or intent.date_start or date.today()
-                    y = ref.year
-                try: return date(y, month, d)
-                except: return None
-            return None
-
-        dt_from = parse_partial_date(from_str)
-        dt_to = parse_partial_date(to_str, base_ref=dt_from)
-        
+        dt_from = _parse_partial_date(from_str)
+        dt_to = _parse_partial_date(to_str, base_ref=dt_from)
         if dt_from and dt_to:
             intent.flex_mode = "range"
             intent.depart_date_from = dt_from
             intent.depart_date_to = dt_to
+
+    # 6.4 "flexibilidade até dia X" — captura range a partir de date_start
+    if flex_until_raw and intent.date_start:
+        dt_to = _parse_partial_date(flex_until_raw, base_ref=intent.date_start)
+        if dt_to and dt_to >= intent.date_start:
+            intent.flex_mode = "range"
+            intent.depart_date_from = intent.date_start
+            intent.depart_date_to = dt_to
+
+    # 6.5 "com flexibilidade" sem detalhar — default ±3 dias
+    if intent.flex_mode == "none":
+        has_generic_flex = re.search(r"\bcom\s+flex(?:ibilidade|[ií]vel)?\b", text_lower) \
+                          or re.search(r"\bflex(?:ibilidade|[ií]vel)\b(?!\s+(?:at[ée]|de|±|mais|do|para|entre))", text_lower)
+        if has_generic_flex:
+            intent.flex_mode = "plusminus"
+            intent.flex_days = 3
 
     # 7. Volta Flexível
     if "volta flex" in text_lower or "retorno flex" in text_lower:
@@ -262,7 +295,15 @@ def parse_intent_ptbr(text: str, use_llm: bool = False) -> ParsedIntent:
             REGRAS PARA FLEXIBILIDADE:
             1. Se o usuário pedir "datas próximas", "±3 dias" ou similar, use flex_mode="plusminus" e flex_days=3 (ou o número dito).
             2. Se o usuário der um intervalo (ex: "do dia 5 ao 15", "entre 10/10 e 20/10"), use flex_mode="range" e preencha depart_date_from/to.
-            3. Caso contrário, use flex_mode="none".
+            3. Se o usuário disser "flexibilidade até (o) dia X" ou "com flexibilidade até X/MM", use flex_mode="range", depart_date_from=date_start, depart_date_to=X. Não preencha date_return com essa data.
+            4. Se o usuário disser "flexibilidade de N dias" ou "± N dias", use flex_mode="plusminus" e flex_days=N.
+            5. Se disser apenas "com flexibilidade" sem detalhar, use flex_mode="plusminus" e flex_days=3.
+            6. Caso contrário, use flex_mode="none".
+
+            REGRA PARA TIPO DE VIAGEM:
+            - "apenas ida", "somente ida", "só ida", "one way", "oneway" → trip_type="oneway" e date_return=null.
+            - "ida e volta", "retorno", "roundtrip" → trip_type="roundtrip" e date_return preenchido.
+            - Nunca preencha date_return com a data de "flexibilidade até" — essa data é janela de busca, não de retorno.
 
             REGRAS ADICIONAIS:
             - Se o usuário disser "eu e mais 1" -> adults=2, "casal" -> adults=2, "família de 4" -> adults=4, "eu e esposa" -> adults=2. Assuma 1 como padrão. Limite máximo 9.

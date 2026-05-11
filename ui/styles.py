@@ -6,11 +6,52 @@ _CSS = """
 :root{--pcd-blue:#1a56a0;--pcd-blue-dark:#0d2b6e;--pcd-blue-light:#e8f0fb;
       --pcd-red:#c0392b;--pcd-gray:#f5f6fa;--pcd-border:#dde3ef;
       --pcd-text:#1a2236;--pcd-muted:#6b7a99;
-      --pcd-green:#1a7a4a;--pcd-green-light:#eaf4ef;}
+      --pcd-green:#1a7a4a;--pcd-green-light:#eaf4ef;
+      color-scheme:light!important;}
+/* Força tema claro independente da preferência do navegador/SO.
+   Streamlit aplica algumas variáveis de dark mode automaticamente que
+   resultam em texto invisível (branco sobre branco) no PcD. */
+html, body, [data-testid="stAppViewContainer"]{color-scheme:light!important;}
 [data-testid="stSidebar"]{display:none!important;}
 section[data-testid="stSidebarContent"]{display:none!important;}
 .block-container{padding-top:0!important;padding-bottom:2rem!important;}
-.stApp{background-color:var(--pcd-gray)!important;}
+.stApp{background-color:var(--pcd-gray)!important;color:var(--pcd-text)!important;}
+/* Containers padrão herdam a cor de texto PcD */
+[data-testid="stVerticalBlock"],
+[data-testid="stHorizontalBlock"],
+[data-testid="stExpander"],
+[data-testid="stMarkdownContainer"],
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li,
+[data-testid="stMarkdownContainer"] span:not([class]),
+[data-testid="stMarkdownContainer"] div:not([class]){color:var(--pcd-text);}
+/* Inputs/widgets — força contraste legível independente do tema do navegador */
+.stTextInput input,
+.stTextArea textarea,
+.stNumberInput input,
+.stDateInput input,
+.stSelectbox [data-baseweb="select"],
+.stMultiSelect [data-baseweb="select"]{
+    background:#fff!important;color:var(--pcd-text)!important;
+    -webkit-text-fill-color:var(--pcd-text)!important;}
+.stRadio label, .stCheckbox label, .stSlider label,
+.stSelectbox label, .stTextInput label, .stTextArea label,
+.stNumberInput label, .stDateInput label, .stMultiSelect label{
+    color:var(--pcd-text)!important;}
+/* Dropdown/menu popover de selects */
+[data-baseweb="popover"] *, [data-baseweb="menu"] *{color:var(--pcd-text);}
+[data-baseweb="popover"], [data-baseweb="menu"]{background:#fff!important;}
+/* DataFrames legíveis em dark mode */
+[data-testid="stDataFrame"], [data-testid="stDataFrame"] *{color:var(--pcd-text);}
+[data-testid="stDataFrame"]{background:#fff!important;}
+/* Popover ⚙️ de configurações */
+[data-testid="stPopover"]{background:#fff!important;color:var(--pcd-text)!important;}
+[data-testid="stPopover"] *{color:var(--pcd-text);}
+/* Expander */
+[data-testid="stExpander"]{background:#fff!important;border-color:var(--pcd-border)!important;}
+[data-testid="stExpander"] summary{color:var(--pcd-text)!important;}
+/* Tabs body */
+.stTabs [data-baseweb="tab-panel"]{color:var(--pcd-text);}
 .pcd-topbar{background:var(--pcd-blue-dark);padding:0 24px;height:56px;
     display:flex;align-items:center;justify-content:space-between;
     margin:-1rem -4rem 1.5rem -4rem;position:sticky;top:0;z-index:100;}
@@ -46,7 +87,7 @@ section[data-testid="stSidebarContent"]{display:none!important;}
 .bm-detail{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
 /* ranking dinâmico */
 .rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:1rem;}
-.rank-card{background:white;border-radius:10px;border:1px solid var(--pcd-border);padding:14px 16px;position:relative;overflow:hidden;}
+.rank-card{background:#fff!important;color:var(--pcd-text)!important;border-radius:10px;border:1px solid var(--pcd-border);padding:14px 16px;position:relative;overflow:hidden;}
 .rank-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;}
 .rank-card.latam::before{background:var(--pcd-red);}
 .rank-card.gol::before{background:#ff6b00;}
@@ -65,12 +106,14 @@ section[data-testid="stSidebarContent"]{display:none!important;}
 .rc-detail{font-size:11px;color:var(--pcd-muted);margin-top:4px;}
 .rank-card.empty .rc-brl{color:#ccc;}
 /* chips */
-.parsed-wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0 4px;}
-.p-chip{background:white;border:1px solid var(--pcd-border);border-radius:20px;padding:4px 12px;font-size:12px;display:inline-flex;align-items:center;gap:4px;}
-.p-chip b{color:var(--pcd-blue);}
-.p-badge-rt{background:var(--pcd-blue);color:white;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600;}
-.p-badge-ow{background:var(--pcd-blue-light);color:var(--pcd-blue);border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600;}
-.p-badge-dir{background:var(--pcd-green-light);color:var(--pcd-green);border-radius:20px;padding:3px 12px;font-size:11px;border:1px solid #b8ddc8;}
+.parsed-wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0 4px;color:var(--pcd-text)!important;}
+.p-chip{background:#fff!important;color:var(--pcd-text)!important;
+    border:1px solid var(--pcd-border)!important;border-radius:20px;padding:4px 12px;
+    font-size:12px;display:inline-flex;align-items:center;gap:4px;}
+.p-chip b{color:var(--pcd-blue)!important;}
+.p-badge-rt{background:var(--pcd-blue)!important;color:#fff!important;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600;}
+.p-badge-ow{background:var(--pcd-blue-light)!important;color:var(--pcd-blue)!important;border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600;}
+.p-badge-dir{background:var(--pcd-green-light)!important;color:var(--pcd-green)!important;border-radius:20px;padding:3px 12px;font-size:11px;border:1px solid #b8ddc8;}
 /* itinerário */
 .itin-card{background:white;border-radius:12px;border:1px solid var(--pcd-border);overflow:hidden;margin-bottom:12px;}
 .itin-header{background:var(--pcd-blue-dark);color:white;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;}

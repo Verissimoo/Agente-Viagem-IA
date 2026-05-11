@@ -20,12 +20,42 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 # Reusa os clientes existentes — não os modifica.
 from kayak_client import search_flights as kayak_search
 from offer_parser import extract_offers as kayak_extract
 from miles_app.buscamilhas_client import search_flights_buscamilhas
+
+
+# Markup aplicado ao preço bruto do Kayak para exibição comercial (10%).
+KAYAK_MARKUP = 1.10
+
+
+@dataclass
+class FlightOptionLite:
+    """Resumo enxuto de uma oferta Kayak — usado pela Cotação Inteligente
+    para mostrar opções por data e pelo handler de milhas para reaproveitar
+    o preço Kayak exato sem refazer a busca."""
+    iso_date: str
+    price_brl: float
+    carriers_iata: list[str] = field(default_factory=list)
+    carriers_names: list[str] = field(default_factory=list)
+    departure_time: Optional[str] = None
+    arrival_time: Optional[str] = None
+    duration_min: Optional[int] = None
+    stops: Optional[int] = None
+    leg_id: Optional[str] = None
+    flight_number: Optional[str] = None
+    raw: dict = field(default_factory=dict)
+
+    @property
+    def price_with_markup(self) -> float:
+        return round(self.price_brl * KAYAK_MARKUP, 2)
+
+    @property
+    def main_carrier_iata(self) -> str:
+        return self.carriers_iata[0] if self.carriers_iata else ""
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -120,8 +150,12 @@ PROGRAM_PARTNERS: dict[str, dict] = {
 # ──────────────────────────────────────────────────────────────────
 @dataclass
 class SmartQuoteResult:
-    price_calendar: dict[str, float] = field(default_factory=dict)   # ISO date → BRL
-    calendar_carriers: dict[str, list[str]] = field(default_factory=dict)  # ISO date → [IATA]
+    price_calendar: dict[str, float] = field(default_factory=dict)   # ISO date → BRL (melhor oferta da data)
+    calendar_carriers: dict[str, list[str]] = field(default_factory=dict)  # ISO date → [IATA] (todos da data)
+    # Novos campos: lista completa de ofertas por data + melhor oferta detalhada.
+    daily_offers: dict[str, list[FlightOptionLite]] = field(default_factory=dict)
+    best_offer_per_date: dict[str, FlightOptionLite] = field(default_factory=dict)
+    airline_per_date: dict[str, str] = field(default_factory=dict)  # ISO date → IATA principal da melhor oferta
     anchor_date: Optional[str] = None
     anchor_carriers: list[str] = field(default_factory=list)
     savings_vs_requested: float = 0.0
@@ -131,6 +165,17 @@ class SmartQuoteResult:
     date_is_already_best: bool = False
     notes: list[str] = field(default_factory=list)
     flex_days_used: int = 4
+
+    def get_full_options_for_date(self, date_iso: str) -> list[dict]:
+        """Lista de ofertas Kayak da data com os programas que emitem cada uma.
+        Cada item: {"option": FlightOptionLite, "programs": [prog_key, ...]}.
+        Ordenado por preço (mais barato primeiro)."""
+        offers = self.daily_offers.get(date_iso) or []
+        out: list[dict] = []
+        for opt in offers:
+            programs = SmartQuoteAgent.map_programs_for_carrier(opt.main_carrier_iata)
+            out.append({"option": opt, "programs": programs})
+        return out
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -157,31 +202,88 @@ def _carriers_iata_from_kayak_raw(raw: dict) -> list[str]:
     return seen
 
 
+def _to_brl(amt, ccy: Optional[str]) -> Optional[float]:
+    """Converte um par (valor, moeda) para BRL. USD/EUR convertidos via
+    fx_rates quando disponível; senão fallback grosseiro 5.0×."""
+    if amt is None:
+        return None
+    try:
+        amt_f = float(amt)
+    except (TypeError, ValueError):
+        return None
+    cu = (ccy or "BRL").upper()
+    if cu == "BRL":
+        return amt_f
+    try:
+        import fx_rates
+        return fx_rates.convert(amt_f, cu, "BRL")
+    except Exception:
+        return amt_f * 5.0
+
+
+def _leg_iata_codes(raw: dict, leg_id: Optional[str]) -> tuple[list[str], Optional[str]]:
+    """Extrai códigos IATA das companhias e o primeiro flight_number do leg.
+    Retorna (codes, flight_number) — codes deduplicado preservando ordem."""
+    if not isinstance(leg_id, str) or not isinstance(raw, dict):
+        return [], None
+    data = raw.get("data") or {}
+    legs = data.get("legs") or {}
+    segments = data.get("segments") or {}
+    leg = legs.get(leg_id)
+    if not isinstance(leg, dict):
+        return [], None
+    seg_refs = leg.get("segments") or []
+    codes: list[str] = []
+    first_flight: Optional[str] = None
+    for sr in seg_refs:
+        sid = sr.get("id") if isinstance(sr, dict) else (sr if isinstance(sr, str) else None)
+        if not isinstance(sid, str) or sid not in segments:
+            continue
+        seg = segments[sid]
+        code = seg.get("airline")
+        if isinstance(code, str) and 2 <= len(code) <= 3:
+            up = code.upper()
+            if up not in codes:
+                codes.append(up)
+        if first_flight is None:
+            fnum = seg.get("flightNumber") or seg.get("flight_number")
+            if fnum is not None:
+                first_flight = f"{codes[0] if codes else ''}{fnum}".strip()
+    return codes, first_flight
+
+
+def _parsed_offer_to_lite(
+    parsed: dict, raw: dict, iso_date: str,
+) -> Optional[FlightOptionLite]:
+    price_brl = _to_brl(parsed.get("price"), parsed.get("currency"))
+    if price_brl is None:
+        return None
+    leg_id = parsed.get("leg_id") or parsed.get("out_leg_id")
+    codes, flight_num = _leg_iata_codes(raw, leg_id if isinstance(leg_id, str) else None)
+    return FlightOptionLite(
+        iso_date=iso_date,
+        price_brl=float(price_brl),
+        carriers_iata=codes,
+        carriers_names=list(parsed.get("airlines") or []),
+        departure_time=parsed.get("departure_time") or parsed.get("out_departure_time"),
+        arrival_time=parsed.get("arrival_time") or parsed.get("out_arrival_time"),
+        duration_min=parsed.get("duration_min") or parsed.get("out_duration_min"),
+        stops=parsed.get("stops") if parsed.get("stops") is not None else parsed.get("out_stops"),
+        leg_id=leg_id if isinstance(leg_id, str) else None,
+        flight_number=flight_num,
+        raw=dict(parsed),
+    )
+
+
 def _min_brl_price(parsed_offers: list[dict]) -> Optional[float]:
-    """Retorna o menor preço em BRL entre as ofertas. USD/EUR convertidos
-    grosseiramente via fx_rates apenas se disponível (reusa o módulo
-    existente sem alterá-lo)."""
+    """Compat: retorna o menor preço BRL — preservada para chamadas antigas."""
     if not parsed_offers:
         return None
     best: Optional[float] = None
     for o in parsed_offers:
-        amt = o.get("price")
-        ccy = (o.get("currency") or "BRL").upper()
-        if amt is None:
+        brl = _to_brl(o.get("price"), o.get("currency"))
+        if brl is None:
             continue
-        try:
-            amt_f = float(amt)
-        except (TypeError, ValueError):
-            continue
-        if ccy == "BRL":
-            brl = amt_f
-        else:
-            try:
-                import fx_rates  # tipo USD/EUR → BRL
-                brl = fx_rates.convert(amt_f, ccy, "BRL")
-            except Exception:
-                # Fallback grosseiro: ~5.0 USD→BRL para não descartar a oferta
-                brl = amt_f * 5.0
         if best is None or brl < best:
             best = brl
     return best
@@ -205,14 +307,34 @@ class SmartQuoteAgent:
         date_requested: date,
         adults: int,
         return_date: Optional[date],
-    ) -> tuple[dict[str, float], dict[str, list[str]]]:
-        """Retorna (price_calendar, carriers_calendar) — 9 entradas no
-        feliz caso. Datas que falharem são omitidas."""
+    ) -> tuple[
+        dict[str, float], dict[str, list[str]],
+        dict[str, list[FlightOptionLite]], dict[str, FlightOptionLite],
+        dict[str, str],
+    ]:
+        """Para cada data no range, faz uma chamada Kayak e captura TODAS as
+        ofertas (ordenadas por preço) — não só o preço mínimo.
+
+        Retorna 5 dicts indexados por ISO date:
+          price_calendar      — preço da melhor oferta
+          carriers_calendar   — todas as companhias retornadas naquela data
+          daily_offers        — lista completa de FlightOptionLite por data
+          best_offer_per_date — melhor FlightOptionLite por data (com leg_id)
+          airline_per_date    — IATA principal da melhor oferta por data
+        """
         spans = list(range(-self.flex_days, self.flex_days + 1))
         target_dates = [date_requested + timedelta(days=d) for d in spans]
 
         price_calendar: dict[str, float] = {}
         carriers_calendar: dict[str, list[str]] = {}
+        daily_offers: dict[str, list[FlightOptionLite]] = {}
+        best_offer_per_date: dict[str, FlightOptionLite] = {}
+        airline_per_date: dict[str, str] = {}
+
+        # MAX_OFFERS_PER_DATE limita o que armazenamos por data para não
+        # inflar st.session_state — 10 cobre o "top 5 mais baratos + 5 alternativas"
+        # que a UI mostra.
+        MAX_OFFERS_PER_DATE = 10
 
         def _one(d: date):
             try:
@@ -224,23 +346,37 @@ class SmartQuoteAgent:
                     adults=adults,
                     cabin="e",
                 )
-                parsed = kayak_extract(raw)
-                price = _min_brl_price(parsed)
+                parsed = kayak_extract(raw) or []
+                lites: list[FlightOptionLite] = []
+                iso = d.isoformat()
+                for p in parsed:
+                    lite = _parsed_offer_to_lite(p, raw, iso)
+                    if lite is not None:
+                        lites.append(lite)
+                lites.sort(key=lambda x: x.price_brl)
+                lites = lites[:MAX_OFFERS_PER_DATE]
                 carriers = _carriers_iata_from_kayak_raw(raw)
-                return d.isoformat(), price, carriers, None
+                return iso, lites, carriers, None
             except Exception as e:
-                return d.isoformat(), None, [], str(e)[:200]
+                return d.isoformat(), [], [], str(e)[:200]
 
         with ThreadPoolExecutor(max_workers=self.max_workers) as ex:
             futures = [ex.submit(_one, d) for d in target_dates]
             for f in as_completed(futures):
-                iso, price, carriers, err = f.result()
-                if price is not None:
-                    price_calendar[iso] = price
+                iso, lites, carriers, err = f.result()
+                if lites:
+                    daily_offers[iso] = lites
+                    best = lites[0]
+                    best_offer_per_date[iso] = best
+                    price_calendar[iso] = best.price_brl
+                    airline_per_date[iso] = best.main_carrier_iata
                 if carriers:
                     carriers_calendar[iso] = carriers
 
-        return price_calendar, carriers_calendar
+        return (
+            price_calendar, carriers_calendar,
+            daily_offers, best_offer_per_date, airline_per_date,
+        )
 
     # ── Análise — encontra a data âncora ────────────────────────
     @staticmethod
@@ -272,6 +408,37 @@ class SmartQuoteAgent:
         )
 
     # ── Agente 2 ────────────────────────────────────────────────
+    @staticmethod
+    def map_programs_for_carrier(carrier: str) -> list[dict]:
+        """Para um IATA específico, devolve os programas que emitem essa
+        companhia, com flags 'own_carrier' e 'award_partner'.
+
+        Uso típico: o vendedor seleciona o voo mais barato de uma data
+        (operado por X) — chamamos isso e mostramos só os programas que
+        cobrem X (não a interseção genérica da rota inteira)."""
+        if not carrier:
+            return []
+        carrier_up = carrier.upper()
+        out: list[dict] = []
+        for prog_key, info in PROGRAM_PARTNERS.items():
+            if carrier_up not in info["airlines"]:
+                continue
+            is_own = info.get("own_carrier") == carrier_up
+            is_award = carrier_up in (info.get("award_partners") or [])
+            out.append({
+                "program": prog_key,
+                "label": info["label"],
+                "rate_brl_per_mile": info.get("rate_brl_per_mile"),
+                "own_carrier": is_own,
+                "award_partner": is_award,
+                "buscamilhas_key": info.get("buscamilhas_key"),
+            })
+        # Prioridade: programa próprio > award partner > parceiro interline.
+        out.sort(key=lambda p: (
+            -3 if p["own_carrier"] else (-2 if p["award_partner"] else -1)
+        ))
+        return out
+
     @staticmethod
     def _map_programs(carriers: list[str]) -> dict:
         """Cruza os carriers (IATA) da data âncora com PROGRAM_PARTNERS.
@@ -418,11 +585,17 @@ class SmartQuoteAgent:
         total_dates = self.flex_days * 2 + 1
         _progress(f"🔍 Agente 1: Explorando preços em {total_dates} datas via Kayak...")
         try:
-            price_calendar, carriers_calendar = self._explore_dates(
+            (
+                price_calendar, carriers_calendar,
+                daily_offers, best_offer_per_date, airline_per_date,
+            ) = self._explore_dates(
                 origin, destination, date_requested, adults, return_date,
             )
             result.price_calendar = price_calendar
             result.calendar_carriers = carriers_calendar
+            result.daily_offers = daily_offers
+            result.best_offer_per_date = best_offer_per_date
+            result.airline_per_date = airline_per_date
         except Exception as e:
             result.notes.append(f"Kayak indisponível: {str(e)[:160]}")
             return result

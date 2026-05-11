@@ -54,6 +54,12 @@ def _parse_iatas_from_prompt(prompt: str) -> Tuple[str, str]:
     return origin, destination
 
 
+# Limite de dias para flex_mode="range" na busca principal. BuscaMilhas/
+# Economilhas não suportam range nativo; fazemos N chamadas em paralelo.
+# Acima de 7 datas estoura quota rápido — limite imposto aqui.
+MAX_FLEX_RANGE_DAYS = 7
+
+
 def _build_search_request(
     prompt: str,
     *,
@@ -66,6 +72,7 @@ def _build_search_request(
     flex_days: int,
     flex_return: bool,
     flex_mode: str,
+    trip_type_override: Optional[TripType] = None,
 ) -> SearchRequest:
     """Monta o SearchRequest. UI passa todos os campos; CLI cai no parser
     de IATAs e em datas default (hoje + 30 dias)."""
@@ -79,14 +86,25 @@ def _build_search_request(
 
     final_end = date_end if (flex_mode == "range" and date_end) else date_start
 
+    # Cap explícito do range para preservar quota das APIs de milhas.
+    if flex_mode == "range" and final_end and final_end > date_start:
+        max_end = date_start + timedelta(days=MAX_FLEX_RANGE_DAYS - 1)
+        if final_end > max_end:
+            final_end = max_end
+
+    if trip_type_override is not None:
+        trip_type_final = trip_type_override
+    else:
+        trip_type_final = TripType.ROUNDTRIP if date_return else TripType.ONEWAY
+
     return SearchRequest(
         origin=[origin.upper()],
         destination=[destination.upper()],
         date_start=date_start,
         date_end=final_end,
-        return_start=date_return,
-        return_end=date_return,
-        trip_type=TripType.ROUNDTRIP if date_return else TripType.ONEWAY,
+        return_start=date_return if trip_type_final == TripType.ROUNDTRIP else None,
+        return_end=date_return if trip_type_final == TripType.ROUNDTRIP else None,
+        trip_type=trip_type_final,
         adults=1,
         cabin=CabinClass.ECONOMY,
         baggage_checked=False,
@@ -184,6 +202,7 @@ def run_pipeline(
     flex_mode: str = "none",
     date_end: Optional[date] = None,
     companhias: Optional[list] = None,
+    trip_type: Optional[TripType] = None,
 ) -> PipelineResult:
     request_id = str(uuid.uuid4())[:8]
     tracer = PipelineTracer(request_id)
@@ -204,6 +223,7 @@ def run_pipeline(
                 flex_days=flex_days,
                 flex_return=flex_return,
                 flex_mode=flex_mode,
+                trip_type_override=trip_type,
             )
 
         # 2. Stage: date_planning

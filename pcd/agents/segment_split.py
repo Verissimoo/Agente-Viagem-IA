@@ -29,16 +29,32 @@ from kayak_client import search_flights as kayak_search
 from offer_parser import extract_offers as kayak_extract
 
 
-HUB_FIXO = "GRU"
+HUB_FIXO = "GRU"  # mantido como default; vendedor pode escolher outro via UI
+
+# Códigos metropolitanos (cobrem múltiplos aeroportos da mesma região)
+METRO_CODES: dict[str, str] = {
+    "SAO": "GRU",  # São Paulo → GRU (cobre GRU/CGH/VCP)
+    "RIO": "GIG",  # Rio de Janeiro → GIG (cobre GIG/SDU)
+    "BHZ": "CNF",  # Belo Horizonte → CNF (cobre CNF/PLU)
+}
 
 BR_AIRPORTS: set[str] = {
+    # Aeroportos individuais
     "GRU", "CGH", "VCP", "GIG", "SDU", "BSB", "CNF", "PLU", "CWB",
     "POA", "FLN", "NVT", "JOI", "FOR", "REC", "SSA", "MCZ", "AJU",
     "JPA", "NAT", "THE", "SLZ", "BEL", "MAO", "PVH", "BVB", "RBR",
     "MCP", "PMW", "GYN", "CGR", "CGB", "VIX", "MGF", "LDB", "UDI",
     "IGU", "RAO", "CXJ", "GVR", "JDO", "PNZ", "VDC", "IOS", "BPS",
     "TBT", "STM", "CKS", "MAB", "CAY", "BVH", "FEN", "JTC",
+    # Códigos metropolitanos (Kayak/IATA city codes)
+    "SAO", "RIO", "BHZ",
 }
+
+
+def resolve_metro_to_airport(code: str) -> str:
+    """Converte código metropolitano para aeroporto principal (RIO→GIG, SAO→GRU, BHZ→CNF).
+    Se já for um aeroporto individual, devolve sem alterar."""
+    return METRO_CODES.get((code or "").upper(), (code or "").upper())
 
 
 # ──────────────────────────────────────────────────────────────────
@@ -73,6 +89,9 @@ class SimpleSegmentResult:
     direct_offer: Optional[KayakOffer] = None
     not_applicable_reason: Optional[str] = None
     notes: list[str] = field(default_factory=list)
+    # Hub efetivamente usado nesta busca (GRU, GIG, CNF, ...).
+    # Permite que a UI exiba a estratégia correta nos cards das pernas.
+    hub: str = HUB_FIXO
 
 
 @dataclass
@@ -289,9 +308,19 @@ class SegmentSplitAgent:
         date: str,
         adults: int = 1,
         return_date: Optional[str] = None,
+        hub: str = HUB_FIXO,
     ) -> SimpleSegmentResult:
-        ori = (origin or "").upper()
-        dst = (destination or "").upper()
+        # Normaliza origem/destino: metrópole (SAO/RIO/BHZ) → aeroporto principal.
+        ori_raw = (origin or "").upper()
+        dst_raw = (destination or "").upper()
+        ori = resolve_metro_to_airport(ori_raw)
+        dst = resolve_metro_to_airport(dst_raw)
+
+        # Valida hub: 3 letras maiúsculas; cai no padrão se inválido.
+        hub_up = (hub or HUB_FIXO).upper().strip()
+        if not (len(hub_up) == 3 and hub_up.isalpha()):
+            hub_up = HUB_FIXO
+        hub_up = resolve_metro_to_airport(hub_up)
 
         # 1. Casos de não aplicabilidade
         if ori == dst:
@@ -299,12 +328,14 @@ class SegmentSplitAgent:
                 origin=ori, destination=dst, date=date,
                 route_type="not_applicable",
                 not_applicable_reason="Origem e destino são iguais.",
+                hub=hub_up,
             )
-        if ori == HUB_FIXO or dst == HUB_FIXO:
+        if ori == hub_up or dst == hub_up:
             return SimpleSegmentResult(
                 origin=ori, destination=dst, date=date,
                 route_type="not_applicable",
-                not_applicable_reason="Origem ou destino já é São Paulo (GRU).",
+                not_applicable_reason=f"Origem ou destino já é o hub selecionado ({hub_up}). Escolha outro hub.",
+                hub=hub_up,
             )
 
         ori_br = ori in BR_AIRPORTS
@@ -314,27 +345,28 @@ class SegmentSplitAgent:
             return SimpleSegmentResult(
                 origin=ori, destination=dst, date=date,
                 route_type="not_applicable",
-                not_applicable_reason="Rota não passa pelo Brasil — quebra em GRU não se aplica.",
+                not_applicable_reason=f"Rota não passa pelo Brasil — quebra em {hub_up} não se aplica.",
+                hub=hub_up,
             )
 
         # 2. Determinar tipo de rota e tarefas a executar
         if ori_br and not dst_br:
             route_type = "br_to_intl"
             tasks = [
-                ("leg_from_gru", HUB_FIXO, dst),
+                ("leg_from_gru", hub_up, dst),
                 ("direct", ori, dst),
             ]
         elif not ori_br and dst_br:
             route_type = "intl_to_br"
             tasks = [
-                ("leg_to_gru", ori, HUB_FIXO),
+                ("leg_to_gru", ori, hub_up),
                 ("direct", ori, dst),
             ]
-        else:  # both BR, neither GRU
+        else:  # both BR, neither is hub
             route_type = "br_domestic"
             tasks = [
-                ("leg_to_gru", ori, HUB_FIXO),
-                ("leg_from_gru", HUB_FIXO, dst),
+                ("leg_to_gru", ori, hub_up),
+                ("leg_from_gru", hub_up, dst),
                 ("direct", ori, dst),
             ]
 
@@ -381,20 +413,20 @@ class SegmentSplitAgent:
         notes: list[str] = []
         if route_type == "br_to_intl" and not leg_from_gru:
             notes.append(
-                f"Não foi possível buscar a perna {HUB_FIXO} → {dst} no momento."
+                f"Não foi possível buscar a perna {hub_up} → {dst} no momento."
             )
         if route_type == "intl_to_br" and not leg_to_gru:
             notes.append(
-                f"Não foi possível buscar a perna {ori} → {HUB_FIXO} no momento."
+                f"Não foi possível buscar a perna {ori} → {hub_up} no momento."
             )
         if route_type == "br_domestic":
             if not leg_to_gru:
                 notes.append(
-                    f"Não foi possível buscar a perna 1 ({ori} → {HUB_FIXO}) no momento."
+                    f"Não foi possível buscar a perna 1 ({ori} → {hub_up}) no momento."
                 )
             if not leg_from_gru:
                 notes.append(
-                    f"Não foi possível buscar a perna 2 ({HUB_FIXO} → {dst}) no momento."
+                    f"Não foi possível buscar a perna 2 ({hub_up} → {dst}) no momento."
                 )
 
         return SimpleSegmentResult(
@@ -404,6 +436,7 @@ class SegmentSplitAgent:
             leg_from_gru=leg_from_gru,
             direct_offer=direct_offer,
             notes=notes,
+            hub=hub_up,
         )
 
     # ── Fase 2: encaixe do voo doméstico ────────────────────────

@@ -43,6 +43,61 @@ def build_table_rows(offers, include_baggage=False, id_prefix=""):
     return _build_table_rows_core(offers, include_baggage, id_prefix, adults=adults)
 
 
+def _synthesize_kayak_offer_from_cache(
+    cached, origin_iata: str, destination_iata: str,
+):
+    """Constrói um UnifiedOffer mínimo a partir de um FlightOptionLite cacheado
+    pela Cotação Inteligente. Usado para injetar no pipeline_result o EXATO
+    preço Kayak mostrado no gráfico, evitando divergência com nova chamada Kayak.
+
+    Aplica o markup de 10% no price_brl (regra comercial do PcD)."""
+    if cached is None:
+        return None
+    from datetime import datetime as _dt
+    from pcd.core.schema import (
+        UnifiedOffer, Itinerary, Segment, SourceType, TripType, LayoverCategory,
+    )
+
+    def _parse_dt(s):
+        if not isinstance(s, str) or not s:
+            return None
+        s2 = s.replace("Z", "+00:00") if s.endswith("Z") else s
+        try:
+            return _dt.fromisoformat(s2)
+        except Exception:
+            return None
+
+    dep_dt = _parse_dt(getattr(cached, "departure_time", None))
+    arr_dt = _parse_dt(getattr(cached, "arrival_time", None))
+    if dep_dt is None or arr_dt is None:
+        return None
+
+    carrier = (getattr(cached, "main_carrier_iata", "") or "").upper() or "XX"
+    seg = Segment(
+        origin=origin_iata.upper(), destination=destination_iata.upper(),
+        departure_dt=dep_dt, arrival_dt=arr_dt, carrier=carrier,
+    )
+    itin = Itinerary(
+        segments=[seg], duration_min=getattr(cached, "duration_min", None) or None,
+    )
+    raw_price = float(getattr(cached, "price_brl", 0.0))
+    # Markup 10% aplicado conforme regra comercial do PcD.
+    price_with_markup = round(raw_price * 1.10, 2)
+    return UnifiedOffer(
+        source=SourceType.KAYAK,
+        airline=carrier,
+        trip_type=TripType.ONEWAY,
+        outbound=itin,
+        price_brl=price_with_markup,
+        price_amount=price_with_markup,
+        price_currency="BRL",
+        equivalent_brl=price_with_markup,
+        stops_out=int(getattr(cached, "stops", 0) or 0),
+        layover_out=LayoverCategory.DIRECT if (getattr(cached, "stops", 0) or 0) == 0 else LayoverCategory.CONNECTION,
+        deeplink=None,
+    )
+
+
 # ──────────────────────────────────────────────────────────────
 # Click-to-select nas tabelas (Problemas 3 e 4)
 #
@@ -416,7 +471,19 @@ if buscar and prompt_text:
         st.session_state["smart_active"] = False
         st.session_state.pop("economilhas_partial", None)
         if provider == "BuscaMilhas":
-            with st.spinner("Buscando voos (BuscaMilhas)..."):
+            _spinner_msg = "Buscando voos (BuscaMilhas)..."
+            if intent.flex_mode == "range" and intent.depart_date_from and intent.depart_date_to:
+                _n_days = (intent.depart_date_to - intent.depart_date_from).days + 1
+                _n_days_capped = min(_n_days, 7)
+                if _n_days > 7:
+                    st.info(
+                        "Flexibilidade limitada a 7 dias para preservar quota da API. "
+                        "Use a Cotação Inteligente para análises mais amplas."
+                    )
+                _spinner_msg = f"Buscando voos com flexibilidade ({_n_days_capped} dias)..."
+            elif intent.flex_mode == "plusminus" and (intent.flex_days or 0) > 0:
+                _spinner_msg = f"Buscando voos com flexibilidade ±{intent.flex_days} dias..."
+            with st.spinner(_spinner_msg):
                 res = run_pipeline(
                     prompt=prompt_text, top_n=top_n, use_fixtures=use_fixtures,
                     origin=intent.origin_iata, destination=intent.destination_iata,
@@ -428,6 +495,7 @@ if buscar and prompt_text:
                     flex_return=intent.flex_return or False,
                     direct_only=intent.direct_only,
                     companhias=companhias_selecionadas if companhias_selecionadas else None,
+                    trip_type=intent.trip_type,
                 )
                 st.session_state["pipeline_result"] = res
         else:
@@ -443,7 +511,19 @@ if buscar and prompt_text:
             if e_iberia:   miles_airlines.append("IBERIA")
             if e_british:  miles_airlines.append("BRITISH")
 
-            with st.spinner("Buscando voos (Economilhas)..."):
+            _spinner_msg_eco = "Buscando voos (Economilhas)..."
+            if intent.flex_mode == "range" and intent.depart_date_from and intent.depart_date_to:
+                _n_days = (intent.depart_date_to - intent.depart_date_from).days + 1
+                _n_days_capped = min(_n_days, 7)
+                if _n_days > 7:
+                    st.info(
+                        "Flexibilidade limitada a 7 dias para preservar quota da API. "
+                        "Use a Cotação Inteligente para análises mais amplas."
+                    )
+                _spinner_msg_eco = f"Buscando voos com flexibilidade ({_n_days_capped} dias)..."
+            elif intent.flex_mode == "plusminus" and (intent.flex_days or 0) > 0:
+                _spinner_msg_eco = f"Buscando voos com flexibilidade ±{intent.flex_days} dias..."
+            with st.spinner(_spinner_msg_eco):
                 try:
                     res, partial_failures = run_pipeline_economilhas(
                         prompt=prompt_text, top_n=top_n, use_fixtures=use_fixtures,
@@ -459,6 +539,7 @@ if buscar and prompt_text:
                         miles_airlines=miles_airlines,
                         use_kayak_cash=bool(e_money),
                         debug=bool(e_debug),
+                        trip_type=intent.trip_type,
                     )
                 except Exception as ex_call:
                     res = None
@@ -537,8 +618,10 @@ _SMART_CSS = """
 .smart-title{color:#fff;font-size:22px;font-weight:700;letter-spacing:.2px;}
 .smart-sub{color:rgba(255,255,255,.78);font-size:12px;margin-top:3px;}
 
-.smart-card{background:#fff;border:1px solid #dde3ef;border-radius:12px;
+.smart-card{background:#fff!important;color:#1a2236!important;border:1px solid #dde3ef;border-radius:12px;
     padding:18px 22px;box-shadow:0 1px 3px rgba(13,43,110,.04);margin-bottom:16px;}
+.smart-card *{color:#1a2236;}
+.smart-card .smart-card-title{color:#6b7a99!important;}
 .smart-card-title{font-size:13px;font-weight:600;color:#6b7a99;
     text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;}
 
@@ -546,7 +629,9 @@ _SMART_CSS = """
 .price-calendar{display:flex;align-items:flex-end;justify-content:space-between;
     gap:8px;padding:10px 4px 0 4px;min-height:240px;}
 .cal-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
-    cursor:default;position:relative;}
+    cursor:default;position:relative;padding:4px 2px;border-radius:8px;
+    transition:background .12s ease;}
+.cal-col.selected{background:rgba(26,86,160,.10);box-shadow:0 0 0 2px #1a56a0 inset;}
 .cal-badge{font-size:10px;font-weight:700;color:#1a7a4a;background:#eaf4ef;
     border:1px solid #b8ddc8;padding:2px 8px;border-radius:10px;margin-bottom:4px;
     white-space:nowrap;}
@@ -680,7 +765,11 @@ def _is_calendar_uniform(prices: list, threshold: float = 0.03) -> bool:
     return (pmax - pmin) / pmin < threshold
 
 
-def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, requested_iso: str, flex_days: int = 4) -> str:
+def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, requested_iso: str,
+                          flex_days: int = 4, selected_iso: str = "") -> str:
+    """Renderiza o gráfico de barras com a data selecionada destacada.
+    O clique é tratado pelo bloco de botões logo abaixo do gráfico
+    (não pelo HTML, que não permite onclick nativo no Streamlit)."""
     if not cal:
         return ""
     items = sorted(cal.items())
@@ -703,11 +792,12 @@ def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, reques
     cols_html = []
     for iso, price in items:
         if uniform:
-            # Barras uniformes (~70% da altura máxima) — evita ilusão de variação
-            # quando a normalização amplificaria diferenças de centavos.
             h = 110.0
         else:
             h = H_MIN + (price - pmin) / span * (H_MAX - H_MIN)
+        # A "data ativa" (clicada/selecionada pelo vendedor) ganha destaque
+        # adicional além das marcações de âncora/solicitada.
+        is_selected = (iso == selected_iso)
         kind = "normal"
         badge_html = '<div class="cal-badge spacer">·</div>'
         if iso == anchor_iso:
@@ -717,13 +807,15 @@ def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, reques
             kind = "req"
             badge_html = '<div class="cal-badge req">Sua data</div>'
 
+        col_extra = " selected" if is_selected else ""
+
         from pcd.agents.smart_quote import airline_display
         carriers_for_day = carriers_cal.get(iso) or []
         carriers_str = ", ".join(airline_display(c)["name"] for c in carriers_for_day) or "—"
         tooltip = f"R$ {price:,.2f} · {carriers_str}".replace(",", "X").replace(".", ",").replace("X", ".")
 
         cols_html.append(f"""
-<div class="cal-col">
+<div class="cal-col{col_extra}">
   <span class="cal-tooltip">{tooltip}</span>
   {badge_html}
   <div class="cal-bar-wrap"><div class="cal-bar {kind}" style="height:{h:.0f}px"></div></div>
@@ -736,6 +828,9 @@ def _render_calendar_html(cal: dict, carriers_cal: dict, anchor_iso: str, reques
   <div class="smart-card-title">📅 Calendário de preços (±{flex_days} dias)</div>
   {uniform_banner}
   <div class="price-calendar">{''.join(cols_html)}</div>
+  <div style="text-align:center;font-size:11px;color:#6b7a99;margin-top:8px;">
+    💡 Clique em uma data abaixo para ver os voos disponíveis daquele dia
+  </div>
 </div>"""
 
 
@@ -869,8 +964,176 @@ _DATE_PICKER_CSS = """
 div[data-testid="stButton"] button[kind="primary"][data-smart="miles"]{
     background:#c0392b !important;border-color:#a8311e !important;
 }
+
+/* Painel "Melhor oferta na data selecionada" */
+.best-offer-card{background:#fff!important;color:#1a2236!important;
+    border:2px solid #1a7a4a;border-radius:12px;
+    padding:18px 22px;margin-bottom:14px;box-shadow:0 2px 6px rgba(26,122,74,.10);}
+.best-offer-card *{color:#1a2236;}
+.bo-head{font-size:11px;font-weight:700;color:#1a7a4a!important;
+    text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.bo-title{font-size:18px;font-weight:800;margin-bottom:6px;}
+.bo-flight{font-size:14px;color:#1a2236;margin-bottom:4px;}
+.bo-times{font-size:13px;color:#6b7a99!important;margin-bottom:10px;}
+.bo-price{font-size:26px;font-weight:800;color:#c0392b!important;margin-bottom:4px;}
+.bo-markup{font-size:12px;color:#6b7a99!important;margin-bottom:12px;}
+.bo-programs-head{font-size:12px;font-weight:700;color:#1a2236;margin:8px 0 6px;}
+.bo-program{display:inline-block;font-size:12px;padding:5px 12px;border-radius:14px;
+    margin-right:6px;margin-bottom:4px;background:#e8f0fb!important;color:#1a2236!important;
+    border-left:3px solid #1a56a0;}
+.bo-program.own{border-left-color:#1a7a4a;background:#eaf4ef!important;}
+.bo-program.award{border-left-color:#e07b00;background:#fff8e6!important;}
+.bo-no-program{font-size:12px;color:#6b7a99!important;font-style:italic;}
+
+/* Lista compacta "Outras opções na data" */
+.alt-list-card{background:#fff!important;color:#1a2236!important;
+    border:1px solid #dde3ef;border-radius:12px;padding:14px 18px;margin-bottom:14px;}
+.alt-list-head{font-size:13px;font-weight:700;color:#6b7a99!important;
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+.alt-row{display:grid;grid-template-columns:1fr 130px;gap:14px;align-items:center;
+    padding:10px 12px;border-radius:8px;border:1px solid #f0f2f8;margin-bottom:6px;
+    transition:box-shadow .12s,background .12s;}
+.alt-row:hover{background:#f5f7fb;box-shadow:0 2px 5px rgba(13,43,110,.06);}
+.alt-row.is-best{border-color:#1a7a4a;background:#f0f9f4;}
+.alt-line1{font-size:13px;font-weight:700;color:#1a2236;}
+.alt-line2{font-size:12px;color:#6b7a99!important;margin-top:2px;}
+.alt-progs{font-size:11px;color:#1a56a0!important;margin-top:3px;font-weight:600;}
+.alt-price{text-align:right;font-size:18px;font-weight:800;color:#c0392b!important;}
+.alt-price-foot{text-align:right;font-size:11px;color:#6b7a99!important;}
 </style>
 """
+
+_PROGRAM_NICE_NAME = {
+    "SMILES":          "Smiles (GOL)",
+    "LATAM_PASS":      "LATAM Pass",
+    "AZUL_FIDELIDADE": "Azul Fidelidade",
+}
+
+
+def _render_program_chip(prog: dict) -> str:
+    """Chip de programa para um voo específico (com flags own/award)."""
+    label = _PROGRAM_NICE_NAME.get(prog["program"], prog.get("label", prog["program"]))
+    suffix = ""
+    css = ""
+    if prog.get("own_carrier"):
+        suffix = " · próprio"
+        css = "own"
+    elif prog.get("award_partner"):
+        suffix = " · Award"
+        css = "award"
+    else:
+        suffix = " · parceiro"
+    return f'<span class="bo-program {css}">{label}{suffix}</span>'
+
+
+def _fmt_clock_iso(s: str | None) -> str:
+    if not s:
+        return "—"
+    try:
+        from datetime import datetime as _dt
+        s2 = s.replace("Z", "+00:00") if s.endswith("Z") else s
+        return _dt.fromisoformat(s2).strftime("%H:%M")
+    except Exception:
+        return s[-8:-3] if isinstance(s, str) and len(s) >= 8 else s
+
+
+def _fmt_duration_min(m: int | None) -> str:
+    if not m:
+        return "—"
+    h, mm = divmod(int(m), 60)
+    return f"{h}h{mm:02d}m" if mm else f"{h}h"
+
+
+def _fmt_brl(v: float) -> str:
+    return ("R$ " + f"{v:,.2f}").replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def _render_best_offer_card(option, programs: list[dict], iso_date: str) -> str:
+    """Card grande verde da melhor oferta Kayak da data selecionada.
+    `option` é um FlightOptionLite; `programs` é a lista de programas que
+    emitem a companhia daquela oferta especificamente."""
+    from pcd.agents.smart_quote import airline_display
+    main = option.main_carrier_iata or "—"
+    disp = airline_display(main)
+    flight_lbl = option.flight_number or main
+    cias = option.carriers_names or []
+    cias_str = " / ".join(cias) if cias else disp["name"]
+    dep = _fmt_clock_iso(option.departure_time)
+    arr = _fmt_clock_iso(option.arrival_time)
+    dur = _fmt_duration_min(option.duration_min)
+    stops = option.stops or 0
+    stops_lbl = "Direto" if stops == 0 else (
+        f"{stops} escala" if stops == 1 else f"{stops} escalas"
+    )
+    pretty_date = _fmt_date_long(iso_date)
+    price = float(option.price_brl)
+    markup = round(price * 1.10, 2)
+
+    if programs:
+        chips = "".join(_render_program_chip(p) for p in programs)
+        progs_html = (
+            f'<div class="bo-programs-head">💎 Programas que emitem essa companhia ({disp["name"]}):</div>'
+            f'{chips}'
+        )
+    else:
+        progs_html = (
+            '<div class="bo-programs-head">💎 Programas que emitem essa companhia:</div>'
+            f'<div class="bo-no-program">Nenhum programa brasileiro cadastrado emite {disp["name"]} '
+            f'nesse trecho. Considere emissão em dinheiro.</div>'
+        )
+
+    return f"""
+<div class="best-offer-card">
+  <div class="bo-head">✈️ Melhor oferta na data selecionada — {pretty_date}</div>
+  <div class="bo-title" style="color:{disp['color']}">✈️ {disp['name']}</div>
+  <div class="bo-flight">{flight_lbl} · {cias_str}</div>
+  <div class="bo-times">{dep} → {arr} · {stops_lbl} · {dur}</div>
+  <div class="bo-price">💰 {_fmt_brl(price)}</div>
+  <div class="bo-markup">Kayak (sem markup): {_fmt_brl(price)} · Com markup de 10%: <b>{_fmt_brl(markup)}</b></div>
+  {progs_html}
+</div>"""
+
+
+def _render_alt_options_list(options_with_programs: list[dict], best_iso_index: int = 0) -> str:
+    """Lista compacta das demais ofertas da data — radio nada (Streamlit fará
+    via botões abaixo). O primeiro item recebe o highlight 'is-best'."""
+    if not options_with_programs:
+        return ""
+    rows = []
+    from pcd.agents.smart_quote import airline_display
+    for idx, item in enumerate(options_with_programs):
+        opt = item["option"]
+        progs = item["programs"] or []
+        main = opt.main_carrier_iata or "—"
+        disp = airline_display(main)
+        flight_lbl = opt.flight_number or main
+        dep = _fmt_clock_iso(opt.departure_time)
+        arr = _fmt_clock_iso(opt.arrival_time)
+        dur = _fmt_duration_min(opt.duration_min)
+        stops = opt.stops or 0
+        stops_lbl = "Direto" if stops == 0 else (
+            f"{stops} escala" if stops == 1 else f"{stops} escalas"
+        )
+        progs_str = ", ".join(str(_PROGRAM_NICE_NAME.get(p["program"], p["program"])) for p in progs) or "—"
+        is_best_cls = " is-best" if idx == best_iso_index else ""
+        rows.append(f"""
+<div class="alt-row{is_best_cls}">
+  <div>
+    <div class="alt-line1" style="color:{disp['color']}">✈️ {disp['name']} · {flight_lbl}</div>
+    <div class="alt-line2">{dep} → {arr} · {stops_lbl} · {dur}</div>
+    <div class="alt-progs">Programas: {progs_str}</div>
+  </div>
+  <div>
+    <div class="alt-price">{_fmt_brl(float(opt.price_brl))}</div>
+    <div class="alt-price-foot">c/ markup: {_fmt_brl(round(float(opt.price_brl) * 1.10, 2))}</div>
+  </div>
+</div>""")
+    return (
+        '<div class="alt-list-card">'
+        '<div class="alt-list-head">📋 Outras opções na data (Kayak)</div>'
+        + "".join(rows) +
+        '</div>'
+    )
 
 
 def _render_smart_quote_section():
@@ -909,12 +1172,47 @@ def _render_smart_quote_section():
     carriers_cal = smart_result.calendar_carriers or {}
     total_dates = flex_days_used * 2 + 1
 
+    # A "data ativa" — fonte da verdade compartilhada entre gráfico e dropdown.
+    # Inicializa com a melhor data (mais barata), respeitando qualquer escolha
+    # já feita pelo vendedor em runs anteriores.
+    options = sorted(cal.keys())
+    if not options:
+        # sem dados → não há nada para selecionar
+        selected_iso = ""
+    else:
+        prev_sel = st.session_state.get("smart_selected_date")
+        if prev_sel in options:
+            selected_iso = prev_sel
+        elif anchor_iso in options:
+            selected_iso = anchor_iso
+        else:
+            selected_iso = options[0]
+        st.session_state["smart_selected_date"] = selected_iso
+
     # ── Calendário de preços ──
     if cal:
         st.markdown(
-            _render_calendar_html(cal, carriers_cal, anchor_iso, requested_iso, flex_days_used),
+            _render_calendar_html(
+                cal, carriers_cal, anchor_iso, requested_iso, flex_days_used,
+                selected_iso=selected_iso or "",
+            ),
             unsafe_allow_html=True,
         )
+
+        # Linha de botões clicáveis — uma coluna por data, cada coluna abriga
+        # um botão com a data abreviada que dispara a seleção daquela data.
+        # Streamlit não permite onclick em HTML, então usamos botões reais.
+        _date_buttons_cols = st.columns(len(options))
+        for _idx, _iso in enumerate(options):
+            with _date_buttons_cols[_idx]:
+                _label = _fmt_date_short(_iso)
+                _is_sel = _iso == selected_iso
+                _btn_type = "primary" if _is_sel else "secondary"
+                if st.button(_label, key=f"smart_pick_{_iso}", type=_btn_type, use_container_width=True):
+                    if st.session_state.get("smart_selected_date") != _iso:
+                        st.session_state["smart_selected_date"] = _iso
+                        st.rerun()
+
         # Cards de métricas
         st.markdown(
             _render_metrics_cards_html(
@@ -948,34 +1246,36 @@ def _render_smart_quote_section():
             unsafe_allow_html=True,
         )
 
-    # ── Companhias na data âncora (chips) ──
-    if smart_result.anchor_carriers:
-        st.markdown(f"""
-<div class="smart-card">
-  <div class="smart-card-title">✈️ Companhias na data âncora</div>
-  {_render_carrier_chips(smart_result.anchor_carriers)}
-</div>""", unsafe_allow_html=True)
+    # ── Painel "Melhor oferta na data selecionada" + lista de alternativas ──
+    # Substitui o antigo bloco genérico "Programas relevantes para essa rota":
+    # mostra somente os programas que cobrem a companhia do voo mais barato
+    # da data ativa, e expõe top-5 alternativas com seus próprios programas.
+    if cal and selected_iso:
+        best_offer = (smart_result.best_offer_per_date or {}).get(selected_iso)
+        full_options = smart_result.get_full_options_for_date(selected_iso) if smart_result.daily_offers else []
+        if best_offer is not None:
+            from pcd.agents.smart_quote import SmartQuoteAgent
+            programs_for_best = SmartQuoteAgent.map_programs_for_carrier(best_offer.main_carrier_iata)
+            st.markdown(
+                _render_best_offer_card(best_offer, programs_for_best, selected_iso),
+                unsafe_allow_html=True,
+            )
 
-    # ── Programas relevantes (cards) ──
-    rp = smart_result.relevant_programs or {}
-    has_any_coverage = any(rp.get(k) for k in ("SMILES", "LATAM_PASS", "AZUL_FIDELIDADE"))
-    if has_any_coverage:
-        st.markdown(f"""
-<div class="smart-card">
-  <div class="smart-card-title">💎 Programas relevantes para essa rota</div>
-  {_render_programs_cards_html(rp)}
-</div>""", unsafe_allow_html=True)
+            # Outras opções: top 5 (excluindo a já destacada como melhor)
+            alt_opts = full_options[1:6]  # do 2º até o 6º — 5 alternativas
+            if alt_opts:
+                with st.expander(f"📋 Outras opções na data {_fmt_date_short(selected_iso)} (Kayak)", expanded=False):
+                    st.markdown(
+                        _render_alt_options_list(alt_opts, best_iso_index=-1),
+                        unsafe_allow_html=True,
+                    )
 
     # ── Etapa 2 — Seletor de data + botão de cotação completa ──
     if not cal:
         return None
 
-    options = sorted(cal.keys())
-    default_iso = anchor_iso if anchor_iso in options else (
-        st.session_state.get("smart_selected_date") or options[0]
-    )
-    if st.session_state.get("smart_selected_date") in options:
-        default_iso = st.session_state["smart_selected_date"]
+    # Default do dropdown vem do smart_selected_date (sincronizado com o gráfico).
+    default_iso = selected_iso or anchor_iso or options[0]
 
     def _fmt_option(iso: str) -> str:
         pretty = _fmt_date_short(iso)
@@ -996,14 +1296,29 @@ def _render_smart_quote_section():
         unsafe_allow_html=True,
     )
 
+    # O dropdown e o gráfico são duas vias equivalentes — qualquer mudança
+    # aqui propaga para `smart_selected_date` (fonte da verdade).
+    # Para evitar conflito Streamlit (key existente com 'index' explícito),
+    # populamos o estado antes de renderizar.
+    if st.session_state.get("smart_date_picker") not in options:
+        st.session_state["smart_date_picker"] = default_iso
+
+    def _on_dropdown_change():
+        _new = st.session_state.get("smart_date_picker")
+        if _new and _new != st.session_state.get("smart_selected_date"):
+            st.session_state["smart_selected_date"] = _new
+
     chosen_iso = st.selectbox(
         "Data da cotação completa",
         options=options,
-        index=options.index(default_iso) if default_iso in options else 0,
         format_func=_fmt_option,
         key="smart_date_picker",
         label_visibility="collapsed",
+        on_change=_on_dropdown_change,
     )
+    # Garante que selected_date reflete a data atual do dropdown
+    if chosen_iso and chosen_iso != st.session_state.get("smart_selected_date"):
+        st.session_state["smart_selected_date"] = chosen_iso
 
     col_b1, col_b2 = st.columns(2, gap="small")
     with col_b1:
@@ -1020,6 +1335,52 @@ def _render_smart_quote_section():
             use_container_width=True,
         )
 
+    # Hub da quebra — vendedor pode escolher manualmente
+    _hub_options = {
+        "GRU - São Paulo (padrão recomendado)": "GRU",
+        "GIG - Rio de Janeiro": "GIG",
+        "CNF - Belo Horizonte": "CNF",
+        "FOR - Fortaleza": "FOR",
+        "REC - Recife": "REC",
+        "BSB - Brasília": "BSB",
+        "Outro... (IATA personalizado)": "__custom__",
+    }
+    _hub_keys = list(_hub_options.keys())
+    _current_hub = st.session_state.get("split_hub", "GRU")
+    _default_label = next(
+        (k for k, v in _hub_options.items() if v == _current_hub), _hub_keys[0]
+    )
+    if _current_hub not in _hub_options.values():
+        _default_label = "Outro... (IATA personalizado)"
+
+    _hub_label = st.selectbox(
+        "Hub de conexão",
+        options=_hub_keys,
+        index=_hub_keys.index(_default_label),
+        key="split_hub_select",
+        help="Aeroporto onde a viagem será quebrada em duas pernas.",
+    )
+    _hub_chosen = _hub_options[_hub_label]
+    if _hub_chosen == "__custom__":
+        _hub_custom = st.text_input(
+            "Hub personalizado (IATA 3 letras)",
+            value=_current_hub if _current_hub not in {"GRU","GIG","CNF","FOR","REC","BSB"} else "",
+            max_chars=3, key="split_hub_custom",
+        )
+        _hub_chosen = (_hub_custom or "GRU").upper().strip()
+
+    if not (len(_hub_chosen) == 3 and _hub_chosen.isalpha()):
+        st.warning("Hub inválido — usando GRU.")
+        _hub_chosen = "GRU"
+
+    # Invalida cache da quebra anterior se o hub mudou
+    if st.session_state.get("split_hub") != _hub_chosen:
+        st.session_state["split_hub"] = _hub_chosen
+        # Limpa cache para forçar nova busca com o novo hub
+        for _k in ("split_result", "split_data_key", "split_active",
+                   "split_fits", "split_fit_cache_keys", "split_fitted_combinations"):
+            st.session_state.pop(_k, None)
+
     with_baggage_chk = st.checkbox(
         "Considerar bagagem despachada (eleva a conexão mínima de 2h30m para 4h)",
         value=st.session_state.get("split_with_baggage", False),
@@ -1032,6 +1393,7 @@ def _render_smart_quote_section():
         "miles_clicked": bool(miles_clicked and chosen_iso),
         "split_clicked": bool(split_clicked and chosen_iso),
         "with_baggage": bool(with_baggage_chk),
+        "hub": _hub_chosen,
     }
 
 
@@ -1047,9 +1409,12 @@ _SPLIT_CSS = """
 .split-title{color:#fff;font-size:22px;font-weight:700;letter-spacing:.2px;}
 .split-sub{color:rgba(255,255,255,.82);font-size:12px;margin-top:3px;}
 
-.split-direct{background:#fff;border:1px solid #dde3ef;border-radius:12px;
+.split-direct{background:#fff!important;color:#1a2236!important;border:1px solid #dde3ef;border-radius:12px;
     padding:14px 20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;
     box-shadow:0 1px 3px rgba(13,43,110,.04);}
+.split-direct *{color:#1a2236;}
+.split-direct .label{color:#6b7a99!important;}
+.split-direct .foot{color:#6b7a99!important;}
 .split-direct .icon{font-size:24px;}
 .split-direct .label{font-size:11px;font-weight:700;color:#6b7a99;
     text-transform:uppercase;letter-spacing:.06em;}
@@ -1374,8 +1739,9 @@ def _render_fit_offer_card(dom, with_baggage: bool, *, dim: bool = False, select
         f"{dom.stops} escala" if dom.stops == 1 else f"{dom.stops} escalas"
     )
     cls, label = _layover_kind(int(dom.layover_minutes or 0), with_baggage)
+    _hub_lbl = st.session_state.get("split_hub", "GRU")
     layover_html = (
-        f'<span class="layover {cls}">⏱️ Conexão em GRU: '
+        f'<span class="layover {cls}">⏱️ Conexão em {_hub_lbl}: '
         f'{_fmt_hm(int(dom.layover_minutes or 0))} {label}</span>'
     )
     css_extra = ""
@@ -1432,9 +1798,10 @@ def _trigger_fit(off, *, intl_direction: str, other_endpoint: str,
     if keys.get(oid) == cache_key:
         return  # já cacheado para esta combinação
 
+    _hub_lbl = st.session_state.get("split_hub", "GRU")
     leg_label = (
-        f"{other_endpoint} → GRU" if intl_direction == "from_gru"
-        else f"GRU → {other_endpoint}"
+        f"{other_endpoint} → {_hub_lbl}" if intl_direction == "from_gru"
+        else f"{_hub_lbl} → {other_endpoint}"
     )
     with st.spinner(f"🔍 Encaixando voo doméstico ({leg_label})..."):
         fit = SegmentSplitAgent().fit_domestic_leg(
@@ -1469,14 +1836,15 @@ def _render_fit_section(fit, oid: str, with_baggage: bool):
                 "(o módulo do agente em memória está desatualizado)."
             )
 
+    _hub_lbl = st.session_state.get("split_hub", "GRU")
     direction_label = (
-        f"{fit.intl_offer.origin if fit.intl_direction == 'to_gru' else '?'} → GRU"
+        f"{fit.intl_offer.origin if fit.intl_direction == 'to_gru' else '?'} → {_hub_lbl}"
         if fit.intl_direction == "to_gru" else
-        f"GRU → {fit.intl_offer.destination if fit.intl_direction == 'from_gru' else '?'}"
+        f"{_hub_lbl} → {fit.intl_offer.destination if fit.intl_direction == 'from_gru' else '?'}"
     )
     # Determina o aeroporto "outro" de forma consistente
     if fit.intl_direction == "from_gru":
-        # intl é GRU→X; doméstico é Y→GRU
+        # intl é hub→X; doméstico é Y→hub
         if fit.compatible_offers:
             other = fit.compatible_offers[0].origin
         elif fit.incompatible_offers:
@@ -1485,7 +1853,7 @@ def _render_fit_section(fit, oid: str, with_baggage: bool):
             other = fit.all_offers[0].origin
         else:
             other = "?"
-        direction_label = f"{other} → GRU"
+        direction_label = f"{other} → {_hub_lbl}"
     else:
         if fit.compatible_offers:
             other = fit.compatible_offers[0].destination
@@ -1495,7 +1863,7 @@ def _render_fit_section(fit, oid: str, with_baggage: bool):
             other = fit.all_offers[0].destination
         else:
             other = "?"
-        direction_label = f"GRU → {other}"
+        direction_label = f"{_hub_lbl} → {other}"
 
     win_start = _fmt_clock(fit.target_window_start) if fit.target_window_start else "—"
     win_end = _fmt_clock(fit.target_window_end) if fit.target_window_end else "—"
@@ -1708,7 +2076,7 @@ def _build_combo_card_html(idx: int, intl, dom, direction: str,
     <span>✈️ {first.origin} → {first.destination} ({first_cias or '—'}) · {first_date} {first_dep}→{first_arr}</span>
     <span class="price">R$ {first.price_brl:,.2f}</span>
   </div>
-  <div class="conn{conn_class}">⏱️ Conexão em GRU: {_fmt_hm(layover_min)} {layover_lbl}</div>
+  <div class="conn{conn_class}">⏱️ Conexão em {st.session_state.get("split_hub", "GRU")}: {_fmt_hm(layover_min)} {layover_lbl}</div>
   <div class="leg-line">
     <span>✈️ {second.origin} → {second.destination} ({second_cias or '—'}) · {second_date} {second_dep}→{second_arr}</span>
     <span class="price">R$ {second.price_brl:,.2f}</span>
@@ -2176,12 +2544,19 @@ def _render_split_section(result, with_baggage: bool = False, adults: int = 1):
         except Exception:
             date_label = f" · 📅 {result.date}"
 
+    _hub_used = getattr(result, "hub", "GRU") or "GRU"
+    _hub_name_map = {
+        "GRU": "São Paulo", "GIG": "Rio de Janeiro", "CNF": "Belo Horizonte",
+        "FOR": "Fortaleza", "REC": "Recife", "BSB": "Brasília",
+        "POA": "Porto Alegre", "CWB": "Curitiba", "SSA": "Salvador",
+    }
+    _hub_full = _hub_name_map.get(_hub_used, _hub_used)
     st.markdown(f"""
 <div class="split-header">
   <div class="split-icon">✂️</div>
   <div>
     <div class="split-title">Quebra de Trecho — {result.origin} → {result.destination}{date_label}</div>
-    <div class="split-sub">Estratégia: quebra em São Paulo (GRU)</div>
+    <div class="split-sub">Estratégia: quebra em {_hub_full} ({_hub_used})</div>
   </div>
 </div>""", unsafe_allow_html=True)
 
@@ -2225,9 +2600,9 @@ def _render_split_section(result, with_baggage: bool = False, adults: int = 1):
 
     # Pernas conforme route_type — todas com encaixe habilitado
     if result.route_type == "br_to_intl":
-        # Perna intl: GRU → destino. Encaixe: origem → GRU (from_gru direction).
+        # Perna intl: hub → destino. Encaixe: origem → hub (from_gru direction).
         _render_offer_list_section(
-            f"🌎 PERNA INTERNACIONAL — GRU → {result.destination}",
+            f"🌎 PERNA INTERNACIONAL — {_hub_used} → {result.destination}",
             result.leg_from_gru,
             intl_direction="from_gru",
             other_endpoint=result.origin,
@@ -2236,9 +2611,9 @@ def _render_split_section(result, with_baggage: bool = False, adults: int = 1):
         )
 
     elif result.route_type == "intl_to_br":
-        # Perna intl: origem → GRU. Encaixe: GRU → destino (to_gru direction).
+        # Perna intl: origem → hub. Encaixe: hub → destino (to_gru direction).
         _render_offer_list_section(
-            f"🌎 PERNA INTERNACIONAL — {result.origin} → GRU",
+            f"🌎 PERNA INTERNACIONAL — {result.origin} → {_hub_used}",
             result.leg_to_gru,
             intl_direction="to_gru",
             other_endpoint=result.destination,
@@ -2247,18 +2622,18 @@ def _render_split_section(result, with_baggage: bool = False, adults: int = 1):
         )
 
     else:  # br_domestic — duas pernas, ambas com encaixe independente
-        # Perna 1 (origem → GRU): chega em GRU → encaixe é GRU → destino.
+        # Perna 1 (origem → hub): chega no hub → encaixe é hub → destino.
         _render_offer_list_section(
-            f"🇧🇷 PERNA 1 — {result.origin} → GRU",
+            f"🇧🇷 PERNA 1 — {result.origin} → {_hub_used}",
             result.leg_to_gru,
             intl_direction="to_gru",
             other_endpoint=result.destination,
             adults=adults,
             with_baggage=with_baggage,
         )
-        # Perna 2 (GRU → destino): sai de GRU → encaixe é origem → GRU.
+        # Perna 2 (hub → destino): sai do hub → encaixe é origem → hub.
         _render_offer_list_section(
-            f"🇧🇷 PERNA 2 — GRU → {result.destination}",
+            f"🇧🇷 PERNA 2 — {_hub_used} → {result.destination}",
             result.leg_from_gru,
             intl_direction="from_gru",
             other_endpoint=result.origin,
@@ -2292,6 +2667,18 @@ if _smart_events and _smart_events.get("miles_clicked"):
             _chosen_date = _date_cls.fromisoformat(_miles_iso)
         except ValueError:
             _chosen_date = None
+
+        # Reaproveita a oferta cacheada da Cotação Inteligente — evita nova
+        # chamada Kayak e garante que o preço do gráfico bate com o do Veredito.
+        _smart_res = st.session_state.get("smart_result")
+        _cached_kayak = None
+        if _smart_res is not None:
+            _cached_kayak = (getattr(_smart_res, "best_offer_per_date", None) or {}).get(_miles_iso)
+
+        # Lista de companhias para o run_pipeline: REMOVE 'KAYAK' para não
+        # refazer a chamada de dinheiro (vamos injetar a cacheada abaixo).
+        _smart_companhias = [c for c in (companhias_selecionadas or []) if c.upper() != "KAYAK"]
+
         if _chosen_date is not None:
             with st.spinner(f"Cotando milhas para {_fmt_date_long(_miles_iso)}..."):
                 if provider == "BuscaMilhas":
@@ -2307,7 +2694,7 @@ if _smart_events and _smart_events.get("miles_clicked"):
                         flex_days=0,
                         flex_return=False,
                         direct_only=getattr(pi_state, "direct_only", False),
-                        companhias=companhias_selecionadas if companhias_selecionadas else None,
+                        companhias=_smart_companhias if _smart_companhias else None,
                     )
                     st.session_state["pipeline_result"] = _res2
                     st.session_state.pop("economilhas_partial", None)
@@ -2336,7 +2723,8 @@ if _smart_events and _smart_events.get("miles_clicked"):
                             direct_only=getattr(pi_state, "direct_only", False),
                             adults=getattr(pi_state, "adults", 1) or 1,
                             miles_airlines=miles_airlines,
-                            use_kayak_cash=bool(e_money),
+                            # Skip Kayak cash — injetamos a oferta cacheada do Smart Quote
+                            use_kayak_cash=False,
                             debug=bool(e_debug),
                         )
                         st.session_state["pipeline_result"] = _res2
@@ -2347,6 +2735,25 @@ if _smart_events and _smart_events.get("miles_clicked"):
                             "message": f"Falha geral Economilhas: {str(_ex)[:200]}",
                             "providerStatusCode": None, "fatal": True,
                         }]
+
+            # Injetar a oferta Kayak cacheada no pipeline_result para que o
+            # Veredito PcD mostre o MESMO preço do gráfico (com markup 10%).
+            _pr_obj = st.session_state.get("pipeline_result")
+            if _pr_obj is not None and _cached_kayak is not None:
+                _synth = _synthesize_kayak_offer_from_cache(
+                    _cached_kayak,
+                    origin_iata=pi_state.origin_iata or "",
+                    destination_iata=pi_state.destination_iata or "",
+                )
+                if _synth is not None:
+                    # Substitui qualquer money_offer existente (já não deveria ter
+                    # nenhum porque pulamos Kayak, mas seguros)
+                    _pr_obj.money_offers = [_synth]
+                    _pr_obj.best_money = _synth
+                    # Recompute best_overall se ainda não houver
+                    if getattr(_pr_obj, "best_overall", None) is None:
+                        _pr_obj.best_overall = _synth
+
             st.session_state["smart_selected_date"] = _miles_iso
 
 # ── Etapa 2B: Quebra de trecho (fase 1 hub fixo GRU + fase 2 encaixe) ──
@@ -2388,19 +2795,21 @@ if _smart_events:
         _split_dst = (pi_state.destination_iata or "").upper()
         _split_adults = int(getattr(pi_state, "adults", 1) or 1)
         _split_ret_iso = pi_state.date_return.isoformat() if pi_state.date_return else None
+        _split_hub = (_smart_events.get("hub") or st.session_state.get("split_hub") or "GRU").upper()
         _cache_key = (
-            f"split_{_split_ori}_{_split_dst}_{_split_chosen_iso}_{provider}"
+            f"split_{_split_ori}_{_split_dst}_{_split_chosen_iso}_{_split_hub}_{provider}"
         )
 
         if st.session_state.get("split_data_key") != _cache_key:
             with st.spinner(
-                f"✂️ Quebrando trecho em GRU para {_fmt_date_long(_split_chosen_iso)}..."
+                f"✂️ Quebrando trecho em {_split_hub} para {_fmt_date_long(_split_chosen_iso)}..."
             ):
                 _split_result: SimpleSegmentResult = SegmentSplitAgent().run(
                     origin=_split_ori, destination=_split_dst,
                     date=_split_chosen_iso,
                     adults=_split_adults,
                     return_date=_split_ret_iso,
+                    hub=_split_hub,
                 )
             st.session_state["split_result"] = _split_result
             st.session_state["split_data_key"] = _cache_key

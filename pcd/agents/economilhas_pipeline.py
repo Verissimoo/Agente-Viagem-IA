@@ -67,12 +67,16 @@ PROGRAM_TO_SOURCE: Dict[str, Tuple[SourceType, str, Optional[str]]] = {
 # ──────────────────────────────────────────────────────────────────
 # SearchRequest builder (lógica equivalente a pcd.run)
 # ──────────────────────────────────────────────────────────────────
+MAX_FLEX_RANGE_DAYS_ECO = 7  # cap espelhando pcd/run.py
+
+
 def _build_search_request(
     *,
     origin: Optional[str], destination: Optional[str],
     date_start: Optional[date], date_end: Optional[date], date_return: Optional[date],
     direct_only: bool, flex_days: int, flex_return: bool, flex_mode: str,
     adults: int = 1,
+    trip_type_override: Optional[TripType] = None,
 ) -> SearchRequest:
     if not origin or not destination:
         raise RuntimeError("origin e destination são obrigatórios na pipeline Economilhas.")
@@ -80,11 +84,24 @@ def _build_search_request(
         from datetime import timedelta
         date_start = date.today() + timedelta(days=30)
     final_end = date_end if (flex_mode == "range" and date_end) else date_start
+
+    if flex_mode == "range" and final_end and final_end > date_start:
+        from datetime import timedelta as _td
+        max_end = date_start + _td(days=MAX_FLEX_RANGE_DAYS_ECO - 1)
+        if final_end > max_end:
+            final_end = max_end
+
+    if trip_type_override is not None:
+        trip_type_final = trip_type_override
+    else:
+        trip_type_final = TripType.ROUNDTRIP if date_return else TripType.ONEWAY
+
     return SearchRequest(
         origin=[origin.upper()], destination=[destination.upper()],
         date_start=date_start, date_end=final_end,
-        return_start=date_return, return_end=date_return,
-        trip_type=TripType.ROUNDTRIP if date_return else TripType.ONEWAY,
+        return_start=date_return if trip_type_final == TripType.ROUNDTRIP else None,
+        return_end=date_return if trip_type_final == TripType.ROUNDTRIP else None,
+        trip_type=trip_type_final,
         adults=adults, cabin=CabinClass.ECONOMY,
         baggage_checked=False, direct_only=direct_only,
         flex_days=flex_days, flex_return=flex_return, flex_mode=flex_mode,
@@ -261,6 +278,7 @@ def run_pipeline_economilhas(
     use_kayak_cash: bool = True,
     cabin: str = "ECONOMY",
     debug: bool = False,
+    trip_type: Optional[TripType] = None,
 ) -> Tuple[PipelineResult, List[Dict[str, Any]]]:
     """Roda o pipeline com provedor Economilhas para milhas e Kayak para cash.
 
@@ -281,6 +299,7 @@ def run_pipeline_economilhas(
             direct_only=direct_only, flex_days=flex_days,
             flex_return=flex_return, flex_mode=flex_mode,
             adults=max(1, int(adults or 1)),
+            trip_type_override=trip_type,
         )
 
     # 2. Stage: date_planning
