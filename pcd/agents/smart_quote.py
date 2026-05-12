@@ -360,6 +360,7 @@ class SmartQuoteAgent:
             except Exception as e:
                 return d.isoformat(), [], [], str(e)[:200]
 
+        _t0 = time.perf_counter()
         with ThreadPoolExecutor(max_workers=self.max_workers) as ex:
             futures = [ex.submit(_one, d) for d in target_dates]
             for f in as_completed(futures):
@@ -372,6 +373,13 @@ class SmartQuoteAgent:
                     airline_per_date[iso] = best.main_carrier_iata
                 if carriers:
                     carriers_calendar[iso] = carriers
+        _t_elapsed = time.perf_counter() - _t0
+        # TEMP_PERF — remover após validar
+        print(
+            f"⏱ TEMP_PERF smart_quote _explore_dates: "
+            f"{len(target_dates)} datas Kayak em paralelo (max={self.max_workers}) → "
+            f"{_t_elapsed:.1f}s, {len(price_calendar)} datas com preço"
+        )
 
         return (
             price_calendar, carriers_calendar,
@@ -546,10 +554,18 @@ class SmartQuoteAgent:
                 }
 
         out = []
+        _t0 = time.perf_counter()
         with ThreadPoolExecutor(max_workers=min(3, len(relevant_programs))) as ex:
             futures = [ex.submit(_one, p) for p in relevant_programs]
             for f in as_completed(futures):
                 out.append(f.result())
+        _t_elapsed = time.perf_counter() - _t0
+        # TEMP_PERF — remover após validar
+        print(
+            f"⏱ TEMP_PERF smart_quote _quote_miles: "
+            f"{len(relevant_programs)} programas BuscaMilhas em paralelo → "
+            f"{_t_elapsed:.1f}s"
+        )
         return out
 
     # ── Orquestrador ────────────────────────────────────────────
@@ -596,6 +612,15 @@ class SmartQuoteAgent:
             result.daily_offers = daily_offers
             result.best_offer_per_date = best_offer_per_date
             result.airline_per_date = airline_per_date
+            # TEMP_LOG_SMART_QUOTE — diagnóstico para a investigação do AttributeError.
+            # Remover após validar end-to-end no Streamlit Cloud.
+            print(
+                f"[smart_quote] price_calendar={len(price_calendar)} "
+                f"daily_offers={len(daily_offers)} "
+                f"best_offer_per_date={len(best_offer_per_date)} "
+                f"airline_per_date={len(airline_per_date)} "
+                f"sample_best={ {k: (v.main_carrier_iata, v.price_brl) for k, v in list(best_offer_per_date.items())[:2]} }"
+            )
         except Exception as e:
             result.notes.append(f"Kayak indisponível: {str(e)[:160]}")
             return result
@@ -623,6 +648,12 @@ class SmartQuoteAgent:
         _progress("🗺️ Agente 2: Mapeando programas de milhas para a rota...")
         relevant_programs = self._map_programs(anchor_carriers)
         result.relevant_programs = relevant_programs
+        # TEMP_LOG_SMART_QUOTE
+        print(
+            f"[smart_quote] anchor_date={anchor_iso} anchor_carriers={anchor_carriers} "
+            f"savings={savings:.2f} already_best={already_best} "
+            f"relevant_programs={relevant_programs.get('relevant_programs')}"
+        )
 
         if not relevant_programs.get("relevant_programs"):
             result.notes.append(

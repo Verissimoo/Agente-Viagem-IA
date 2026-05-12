@@ -4,9 +4,14 @@ import random
 import requests
 from dotenv import load_dotenv
 
+from pcd.cache import (
+    SEM_KAYAK, make_key, get as _cache_get, set_ as _cache_set,
+)
+
 load_dotenv()
 
 RETRY_STATUS_CODES = {408, 429, 500, 502, 503, 504}
+_CACHE_PREFIX = "kayak"
 
 
 def _compute_wait_seconds(attempt: int, retry_after_header: str | None) -> float:
@@ -67,6 +72,38 @@ def _poll_search_results(base_url: str, headers: dict, search_url: str, timeout_
 
 
 def search_flights(
+    origin: str,
+    destination: str,
+    departure_date: str,
+    return_date: str | None = None,
+    adults: int = 1,
+    cabin: str = "e",
+    page: int = 1,
+    sort_mode: str = "price_a",
+):
+    # Cache antes do semáforo: hits não consomem slot de concorrência nem
+    # quota de RapidAPI. A chave omite api_key e timeouts (não-funcionais).
+    _ck_params = {
+        "o": origin, "d": destination, "dd": departure_date,
+        "rd": return_date or "", "ad": adults, "c": cabin,
+        "p": page, "s": sort_mode,
+    }
+    _ck = make_key(_CACHE_PREFIX, _ck_params)
+    _hit = _cache_get(_ck)
+    if _hit is not None:
+        return _hit
+
+    with SEM_KAYAK:
+        _result = _search_flights_uncached(
+            origin=origin, destination=destination,
+            departure_date=departure_date, return_date=return_date,
+            adults=adults, cabin=cabin, page=page, sort_mode=sort_mode,
+        )
+    _cache_set(_ck, _result)
+    return _result
+
+
+def _search_flights_uncached(
     origin: str,
     destination: str,
     departure_date: str,

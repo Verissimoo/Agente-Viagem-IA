@@ -8,6 +8,12 @@ from typing import Any, Dict, List, Optional
 import requests
 from dotenv import load_dotenv
 
+from pcd.cache import (
+    SEM_BUSCAMILHAS, make_key, get as _cache_get, set_ as _cache_set,
+)
+
+_CACHE_PREFIX = "buscamilhas"
+
 
 def _env(key: str, default: Optional[str] = None) -> Optional[str]:
     v = os.getenv(key)
@@ -75,6 +81,8 @@ class BuscaMilhasClient:
                 )
 
                 if r.status_code == 429:
+                    # Backoff explícito 2s/4s (a defesa-em-profundidade soma ao
+                    # semáforo cross-call em pcd/cache.SEM_BUSCAMILHAS).
                     raise RuntimeError(f"BuscaMilhas HTTP 429 (rate limit). Body: {r.text[:2000]}")
 
                 if r.status_code >= 500:
@@ -87,7 +95,9 @@ class BuscaMilhasClient:
 
             except Exception as e:
                 last_err = e
-                time.sleep(min(1.5 * attempt, 6.0))
+                # 429 → 2s, 4s, 8s. Outros erros mantém o 1.5*attempt antigo.
+                wait_s = (2.0 ** attempt) if "429" in str(e) else min(1.5 * attempt, 6.0)
+                time.sleep(wait_s)
 
         raise RuntimeError(f"Falha BuscaMilhas após {self.max_attempts} tentativas: {last_err}")
 
@@ -158,6 +168,20 @@ def search_flights_buscamilhas(
     Realiza uma busca na API Busca Milhas para UMA companhia.
     Credenciais lidas do .env: BUSCAMILHAS_CHAVE e BUSCAMILHAS_SENHA.
     """
+    # Cache antes de semáforo / credenciais: a chave omite chave/senha (não
+    # alteram a resposta, só autenticam) e flags equivalentes.
+    _ck_params = {
+        "cia": companhia.upper(), "o": origem.upper(), "d": destino.upper(),
+        "di": data_ida, "dv": data_volta or "",
+        "ad": adultos, "ch": criancas, "be": bebes, "cl": classe.lower(),
+        "sm": bool(somente_milhas), "sp": bool(somente_pagante),
+        "intl": bool(internacional),
+    }
+    _ck = make_key(_CACHE_PREFIX, _ck_params)
+    _hit = _cache_get(_ck)
+    if _hit is not None:
+        return _hit
+
     load_dotenv(override=False)
 
     chave = _env("BUSCAMILHAS_CHAVE", "") or ""
@@ -195,7 +219,10 @@ def search_flights_buscamilhas(
         senha=senha,
     )
 
-    return client.search(payload)
+    with SEM_BUSCAMILHAS:
+        _result = client.search(payload)
+    _cache_set(_ck, _result)
+    return _result
 
 
 

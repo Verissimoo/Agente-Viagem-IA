@@ -133,19 +133,32 @@ def _run_one_adapter(cia_up, adapter_cls, req, use_fixtures, debug_dump):
         return cia_up, [], e, elapsed_ms
 
 
-def _execute_adapters_parallel(
-    companhias_ativas, req_i, use_fixtures, debug_dump, tracer, date_trace_id
+def _execute_dates_x_adapters_parallel(
+    search_plan, companhias_ativas,
+    use_fixtures, debug_dump, tracer,
 ):
-    """Dispara todos os adapters em paralelo para um req_i e devolve as
-    ofertas agregadas. Cada adapter vira um evento no tracer."""
+    """Dispara TODAS as combinações (data × adapter) num único pool.
+
+    Mantém o tracer com o mesmo formato por-adapter-por-data que o pipeline
+    sequencial usava (mesmo `stage_name`, mesma latência); a UI consome o
+    tracer agnóstico a como o pool foi montado.
+
+    Cap defensivo de workers em 10: o gargalo passa a ser o semáforo de
+    cada cliente (SEM_KAYAK=5, SEM_BUSCAMILHAS=3, SEM_ECONOMILHAS=5) — e
+    não a contagem de tasks.
+    """
     tasks = []
-    for cia in companhias_ativas:
-        cia_up = cia.upper()
-        adapter_cls = _ADAPTER_MAP.get(cia_up)
-        if not adapter_cls:
-            print(f"[!] Companhia '{cia_up}' sem adapter registrado — ignorada.")
-            continue
-        tasks.append((cia_up, adapter_cls))
+    for req_i in search_plan:
+        date_trace_id = f"_{req_i.date_start.isoformat()}"
+        if req_i.return_start:
+            date_trace_id += f"_ret_{req_i.return_start.isoformat()}"
+        for cia in companhias_ativas:
+            cia_up = cia.upper()
+            adapter_cls = _ADAPTER_MAP.get(cia_up)
+            if adapter_cls is None:
+                print(f"[!] Companhia '{cia_up}' sem adapter — ignorada.")
+                continue
+            tasks.append((cia_up, adapter_cls, req_i, date_trace_id))
 
     if not tasks:
         return []
@@ -154,33 +167,31 @@ def _execute_adapters_parallel(
     workers = min(_MAX_PARALLEL_ADAPTERS, len(tasks))
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futures = {
-            ex.submit(_run_one_adapter, cia_up, cls, req_i, use_fixtures, debug_dump): cia_up
-            for cia_up, cls in tasks
+            ex.submit(
+                _run_one_adapter, cia_up, cls, req_i, use_fixtures, debug_dump,
+            ): (cia_up, req_i, dt_id)
+            for cia_up, cls, req_i, dt_id in tasks
         }
         for fut in as_completed(futures):
+            _cia_meta, req_meta, dt_id = futures[fut]
             cia_up, offers, error, elapsed_ms = fut.result()
-            stage_name = f"adapter_search_{cia_up.lower()}{date_trace_id}"
+            stage_name = f"adapter_search_{cia_up.lower()}{dt_id}"
             if error is not None:
                 tracer.log_event(
-                    stage=stage_name,
-                    status="error",
-                    latency_ms=elapsed_ms,
-                    offers_count=0,
-                    error=str(error),
+                    stage=stage_name, status="error",
+                    latency_ms=elapsed_ms, offers_count=0, error=str(error),
                 )
-                print(f"[!] Adapter {cia_up} failed for {req_i.date_start}: {error}")
+                print(f"[!] Adapter {cia_up} failed for {req_meta.date_start}: {error}")
             else:
                 tracer.log_event(
-                    stage=stage_name,
-                    status="end",
-                    latency_ms=elapsed_ms,
-                    offers_count=len(offers),
-                    message=req_i.date_start.isoformat(),
+                    stage=stage_name, status="end",
+                    latency_ms=elapsed_ms, offers_count=len(offers),
+                    message=req_meta.date_start.isoformat(),
                 )
                 aggregated.extend(offers)
                 print(
                     f"DEBUG: Adapter {cia_up} retornou {len(offers)} ofertas "
-                    f"para {req_i.date_start} em {elapsed_ms:.0f}ms"
+                    f"para {req_meta.date_start} em {elapsed_ms:.0f}ms"
                 )
 
     return aggregated
@@ -234,33 +245,31 @@ def run_pipeline(
 
         companhias_ativas = companhias if companhias else COMPANHIAS_NACIONAIS
 
-        # 3. Stage: busca paralela por adapter, sequencial por data
-        for req_i in search_plan:
-            print(f"DEBUG: Pesquisando data {req_i.date_start}")
-            date_trace_id = f"_{req_i.date_start.isoformat()}"
-            if req_i.return_start:
-                date_trace_id += f"_ret_{req_i.return_start.isoformat()}"
-
-            batch_stage = f"adapters_parallel{date_trace_id}"
-            t0 = time.perf_counter()
-            offers = _execute_adapters_parallel(
-                companhias_ativas, req_i,
-                use_fixtures, debug_dump_buscamilhas,
-                tracer, date_trace_id,
-            )
-            elapsed_ms = (time.perf_counter() - t0) * 1000.0
-            tracer.log_event(
-                stage=batch_stage,
-                status="end",
-                latency_ms=elapsed_ms,
-                offers_count=len(offers),
-                message=f"{len(companhias_ativas)} adapters x 1 data",
-            )
-            all_offers.extend(offers)
-            print(
-                f"DEBUG: data {req_i.date_start} consolidou {len(offers)} ofertas "
-                f"em {elapsed_ms:.0f}ms (paralelo). Total: {len(all_offers)}"
-            )
+        # 3. Stage: produto cartesiano (datas × adapters) num único pool.
+        # Antes: loop sequencial de datas × pool paralelo de adapters →
+        # N_datas chamadas em série de ~10s cada.
+        # Agora: 1 pool de tamanho 10 com todas as combinações date×adapter →
+        # tempo total ≈ chamada mais lenta + overhead.
+        t_cart = time.perf_counter()
+        offers = _execute_dates_x_adapters_parallel(
+            search_plan, companhias_ativas,
+            use_fixtures, debug_dump_buscamilhas, tracer,
+        )
+        cart_elapsed_ms = (time.perf_counter() - t_cart) * 1000.0
+        tracer.log_event(
+            stage="adapters_x_dates_parallel",
+            status="end",
+            latency_ms=cart_elapsed_ms,
+            offers_count=len(offers),
+            message=f"{len(companhias_ativas)} adapters x {len(search_plan)} datas",
+        )
+        all_offers.extend(offers)
+        # TEMP_PERF — remover após validar ganho no Streamlit Cloud
+        print(
+            f"⏱ TEMP_PERF run_pipeline cartesiano: {len(companhias_ativas)} adapters × "
+            f"{len(search_plan)} datas = {len(companhias_ativas) * len(search_plan)} tasks → "
+            f"{cart_elapsed_ms/1000.0:.1f}s, {len(offers)} ofertas"
+        )
 
         if not all_offers:
             print("DEBUG: Nenhuma oferta encontrada em nenhuma data.")

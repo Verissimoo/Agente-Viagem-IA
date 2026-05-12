@@ -426,6 +426,18 @@ if buscar and prompt_text:
     ):
         st.session_state.pop(_k, None)
 
+    # Invalida o cache HTTP — nova busca pode ter mudado rota/data principal,
+    # então respostas anteriores não devem ser reutilizadas. O TTL de 10 min
+    # ainda protege a janela "vendedor clicou várias vezes na mesma rota",
+    # mas nova busca é o sinal explícito de invalidação.
+    try:
+        from pcd.cache import invalidate as _cache_invalidate, stats as _cache_stats
+        _dropped = _cache_invalidate()  # limpa tudo (kayak + buscamilhas + economilhas)
+        # TEMP_PERF — remover após validar
+        print(f"⏱ TEMP_PERF cache invalidado: {_dropped} entradas | stats anteriores: {_cache_stats()}")
+    except Exception:
+        pass
+
     flex_smart_days = int(st.session_state.get("smart_flex_days", 4))
 
     with st.spinner("Analisando pedido..."):
@@ -1147,6 +1159,17 @@ def _render_smart_quote_section():
     if smart_result is None and not smart_progress_msgs:
         return None
 
+    # Guarda anti-staleness: se o objeto cacheado vem de uma versão antiga da
+    # dataclass (deploy anterior, antes dos campos daily_offers / best_offer_per_date),
+    # invalida silenciosamente — a UI ficará só com a barra de progresso até a
+    # próxima busca.
+    if smart_result is not None and not hasattr(smart_result, "best_offer_per_date"):
+        st.session_state.pop("smart_result", None)
+        smart_result = None
+        st.warning(
+            "Cotação Inteligente desatualizada por mudança de versão — refaça a busca."
+        )
+
     flex_days_used = getattr(smart_result, "flex_days_used", 4) if smart_result else int(st.session_state.get("smart_flex_days", 4))
 
     st.markdown(_SMART_CSS, unsafe_allow_html=True)
@@ -1162,14 +1185,16 @@ def _render_smart_quote_section():
         st.warning("A Cotação Inteligente não pôde ser concluída. Tente novamente ou desligue o toggle 🧠 e refaça a busca.")
         return None
 
-    if smart_result.notes:
-        for note in smart_result.notes:
-            st.info(note)
+    _notes = getattr(smart_result, "notes", None) or []
+    for note in _notes:
+        st.info(note)
 
-    cal = smart_result.price_calendar or {}
-    anchor_iso = smart_result.anchor_date or ""
-    requested_iso = smart_result.date_requested or ""
-    carriers_cal = smart_result.calendar_carriers or {}
+    cal = getattr(smart_result, "price_calendar", None) or {}
+    anchor_iso = getattr(smart_result, "anchor_date", "") or ""
+    requested_iso = getattr(smart_result, "date_requested", "") or ""
+    carriers_cal = getattr(smart_result, "calendar_carriers", None) or {}
+    _savings = float(getattr(smart_result, "savings_vs_requested", 0.0) or 0.0)
+    _already_best = bool(getattr(smart_result, "date_is_already_best", False))
     total_dates = flex_days_used * 2 + 1
 
     # A "data ativa" — fonte da verdade compartilhada entre gráfico e dropdown.
@@ -1217,8 +1242,8 @@ def _render_smart_quote_section():
         st.markdown(
             _render_metrics_cards_html(
                 cal, anchor_iso, requested_iso,
-                smart_result.savings_vs_requested,
-                smart_result.date_is_already_best,
+                _savings,
+                _already_best,
             ),
             unsafe_allow_html=True,
         )
@@ -1232,16 +1257,16 @@ def _render_smart_quote_section():
             f'manter {_fmt_date_long(requested_iso)} sem perda financeira.</div>',
             unsafe_allow_html=True,
         )
-    elif smart_result.date_is_already_best:
+    elif _already_best:
         st.markdown(
             f'<div class="smart-message green">✅ <b>Ótima escolha!</b> A data solicitada '
             f'({_fmt_date_long(requested_iso)}) já é a mais barata do período analisado.</div>',
             unsafe_allow_html=True,
         )
-    elif anchor_iso and smart_result.savings_vs_requested > 0:
+    elif anchor_iso and _savings > 0:
         st.markdown(
             f'<div class="smart-message green">✅ <b>Melhor dia: {_fmt_date_long(anchor_iso)}</b> — '
-            f'R$ {smart_result.savings_vs_requested:,.2f} mais barato que '
+            f'R$ {_savings:,.2f} mais barato que '
             f'{_fmt_date_long(requested_iso)} solicitado.</div>',
             unsafe_allow_html=True,
         )
@@ -1251,8 +1276,16 @@ def _render_smart_quote_section():
     # mostra somente os programas que cobrem a companhia do voo mais barato
     # da data ativa, e expõe top-5 alternativas com seus próprios programas.
     if cal and selected_iso:
-        best_offer = (smart_result.best_offer_per_date or {}).get(selected_iso)
-        full_options = smart_result.get_full_options_for_date(selected_iso) if smart_result.daily_offers else []
+        _best_map = getattr(smart_result, "best_offer_per_date", None) or {}
+        _daily_map = getattr(smart_result, "daily_offers", None) or {}
+        best_offer = _best_map.get(selected_iso)
+        if _daily_map and hasattr(smart_result, "get_full_options_for_date"):
+            try:
+                full_options = smart_result.get_full_options_for_date(selected_iso)
+            except Exception:
+                full_options = []
+        else:
+            full_options = []
         if best_offer is not None:
             from pcd.agents.smart_quote import SmartQuoteAgent
             programs_for_best = SmartQuoteAgent.map_programs_for_carrier(best_offer.main_carrier_iata)

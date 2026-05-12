@@ -310,46 +310,61 @@ def run_pipeline_economilhas(
     miles_airlines = [a.upper() for a in (miles_airlines or [])]
     trip_type_str = "RT" if request.return_start else "OW"
 
-    # 3. Stage: para cada data planejada, dispara Kayak (cash) e Economilhas (milhas) em paralelo
+    # 3. Stage: dispara TODAS as combinações (data × {kayak_cash, economilhas_miles})
+    # num único pool — antes o loop de datas era sequencial. Para flex ±N dias o
+    # tempo passa de N×max(t_kayak, t_eco) para ~max(t_kayak, t_eco).
     all_offers: List[UnifiedOffer] = []
+    tasks: List[tuple] = []  # (kind, req_i, date_trace_id)
     for req_i in search_plan:
         date_trace_id = f"_{req_i.date_start.isoformat()}"
         if req_i.return_start:
             date_trace_id += f"_ret_{req_i.return_start.isoformat()}"
-
-        tasks = []
         if use_kayak_cash:
-            tasks.append(("kayak_cash", req_i))
+            tasks.append(("kayak_cash", req_i, date_trace_id))
         if miles_airlines:
-            tasks.append(("economilhas_miles", req_i))
+            tasks.append(("economilhas_miles", req_i, date_trace_id))
 
-        if not tasks:
-            continue
-
-        offers_for_day: List[UnifiedOffer] = []
-        with ThreadPoolExecutor(max_workers=min(4, len(tasks))) as ex:
-            futs = []
-            for kind, _ in tasks:
+    if tasks:
+        # Cap em 8 — Kayak/Economilhas têm semáforos próprios (5/5) então o
+        # pool maior só ajuda a saturar os dois canais simultaneamente.
+        workers = min(8, len(tasks))
+        t_cart = time.perf_counter()
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            future_meta = {}
+            for kind, req_i, dt_id in tasks:
                 if kind == "kayak_cash":
-                    futs.append(ex.submit(_run_kayak_cash, req_i, use_fixtures))
-                elif kind == "economilhas_miles":
-                    futs.append(ex.submit(
+                    f = ex.submit(_run_kayak_cash, req_i, use_fixtures)
+                else:  # economilhas_miles
+                    f = ex.submit(
                         _run_economilhas_miles,
                         req_i, miles_airlines, cabin, trip_type_str, debug,
-                    ))
-            for f in as_completed(futs):
+                    )
+                future_meta[f] = (kind, req_i, dt_id)
+
+            for f in as_completed(future_meta):
+                kind_meta, req_meta, dt_id = future_meta[f]
                 kind2, day_offers, kind_failures, elapsed_ms = f.result()
-                stage_name = f"{kind2}{date_trace_id}"
+                stage_name = f"{kind2}{dt_id}"
                 tracer.log_event(
                     stage=stage_name, status="end",
                     latency_ms=elapsed_ms, offers_count=len(day_offers),
-                    message=req_i.date_start.isoformat(),
+                    message=req_meta.date_start.isoformat(),
                 )
-                offers_for_day.extend(day_offers)
+                all_offers.extend(day_offers)
                 if kind_failures:
                     partial_failures.extend(kind_failures)
 
-        all_offers.extend(offers_for_day)
+        cart_elapsed_ms = (time.perf_counter() - t_cart) * 1000.0
+        tracer.log_event(
+            stage="economilhas_x_dates_parallel", status="end",
+            latency_ms=cart_elapsed_ms, offers_count=len(all_offers),
+            message=f"{len(tasks)} tasks ({len(search_plan)} datas × kayak+eco)",
+        )
+        # TEMP_PERF — remover após validar
+        print(
+            f"⏱ TEMP_PERF economilhas_pipeline cartesiano: {len(tasks)} tasks → "
+            f"{cart_elapsed_ms/1000.0:.1f}s, {len(all_offers)} ofertas"
+        )
 
     if not all_offers:
         result.justification = ["Nenhuma oferta encontrada (Economilhas)."]

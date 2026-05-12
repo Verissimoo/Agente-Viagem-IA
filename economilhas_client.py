@@ -28,6 +28,12 @@ from typing import Any, Dict, List, Optional
 import requests
 from dotenv import load_dotenv
 
+from pcd.cache import (
+    SEM_ECONOMILHAS, make_key, get as _cache_get, set_ as _cache_set,
+)
+
+_CACHE_PREFIX = "economilhas"
+
 
 # ──────────────────────────────────────────────────────────────────
 # Constantes / metadados
@@ -164,7 +170,10 @@ class EconomilhasClient:
             except Exception as e:
                 last_err = e
                 if attempt < self.max_attempts:
-                    time.sleep(min(1.5 * attempt, 6.0))
+                    # 429 → backoff exponencial 2s/4s/8s (defesa-em-profundidade
+                    # ao SEM_ECONOMILHAS). Outros transientes mantêm o 1.5*attempt.
+                    wait_s = (2.0 ** attempt) if "429" in str(e) else min(1.5 * attempt, 6.0)
+                    time.sleep(wait_s)
         raise EconomilhasError(
             f"Falha Economilhas após {self.max_attempts} tentativas: {last_err}"
         )
@@ -280,6 +289,20 @@ def search_flights_economilhas(
     Devolve o JSON original da API (com `results[]` e `summary`). O parser
     em economilhas_offer_parser.py é quem normaliza para rows.
     """
+    # Cache antes do semáforo / cliente: airlines normalizado + ordenado para
+    # bater entre chamadas equivalentes.
+    _ck_params = {
+        "ai": sorted(a.upper() for a in (airlines or [])),
+        "o": origin.upper(), "d": destination.upper(),
+        "dd": departure_date, "rd": return_date or "",
+        "ad": adults, "ch": children, "in": infants,
+        "cab": cabin.upper(), "pt": price_type.upper(),
+    }
+    _ck = make_key(_CACHE_PREFIX, _ck_params)
+    _hit = _cache_get(_ck)
+    if _hit is not None:
+        return _hit
+
     client = _make_client_from_env()
     payload = build_payload_economilhas(
         airlines=airlines,
@@ -288,7 +311,10 @@ def search_flights_economilhas(
         adults=adults, children=children, infants=infants,
         cabin=cabin, price_type=price_type,
     )
-    return client.search(payload)
+    with SEM_ECONOMILHAS:
+        _result = client.search(payload)
+    _cache_set(_ck, _result)
+    return _result
 
 
 # ──────────────────────────────────────────────────────────────────
