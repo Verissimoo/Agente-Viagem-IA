@@ -1,9 +1,17 @@
-crewai
-crewai-tools
-litellm
-streamlit
-requests
-python-dotenv
-pydantic
-tenacity
-PyYAML
+# ──────────────────────────────────────────────────────────────────
+# Dependências do Agente de Cotação PcD (versões fixas para deploy)
+# ──────────────────────────────────────────────────────────────────
+# Versões alinhadas com o ambiente local validado (Python 3.12).
+# Use >= para permitir patches; pinar com == em deploy crítico.
+
+# UI
+streamlit>=1.54.0,<2.0
+
+# Dados / utilitários
+pandas>=2.3.0,<3.0
+requests>=2.32.0,<3.0
+python-dotenv>=1.1.0,<2.0
+pydantic>=2.11.0,<3.0
+
+# LLM (intent parser via Groq)
+litellm>=1.75.0,<2.0

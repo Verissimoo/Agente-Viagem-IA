@@ -3,6 +3,10 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
 *.log
 
 # Ambiente virtual
@@ -10,15 +14,19 @@ __pycache__/
 venv/
 env/
 
-# Streamlit cache
-.streamlit/
+# Streamlit (secrets locais, NÃO commitar)
+.streamlit/secrets.toml
 
 # IDEs
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # Arquivos sensíveis
 .env
+.env.local
+.env.*.local
 *.env
 
 # OS
@@ -40,6 +48,12 @@ stdout*.txt
 rank_error.txt
 verification_output.txt
 test_out*.txt
+tests/responses_economilhas/
+tests/responses_buscamilhas/
+
+# Cache local
+.cache/
+*.cache
 
 # Pacotes Node (não usado no projeto principal)
 node_modules/
