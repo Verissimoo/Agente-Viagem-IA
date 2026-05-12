@@ -2,7 +2,7 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "streamlit run streamlit_app_multiagent.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true"
+startCommand = "streamlit run streamlit_app_multiagent.py --server.port=$PORT --server.address=0.0.0.0 --server.headless=true --server.enableCORS=false --server.enableXsrfProtection=false"
 healthcheckPath = "/_stcore/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"

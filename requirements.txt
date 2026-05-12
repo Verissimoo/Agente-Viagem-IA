@@ -1,7 +1,7 @@
 # ──────────────────────────────────────────────────────────────────
 # Dependências do Agente de Cotação PcD (versões fixas para deploy)
 # ──────────────────────────────────────────────────────────────────
-# Versões alinhadas com o ambiente local validado (Python 3.12).
+# Target: Python 3.11 (Railway via runtime.txt) — compatível com venv local 3.12.
 # Use >= para permitir patches; pinar com == em deploy crítico.
 
 # UI
