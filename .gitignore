@@ -55,8 +55,16 @@ tests/responses_buscamilhas/
 .cache/
 *.cache
 
-# Pacotes Node (não usado no projeto principal)
+# Node.js — NÃO usamos. Bloqueado para evitar que o Nixpacks/Railway
+# detecte o projeto como Node em vez de Python (já aconteceu uma vez:
+# package.json vazio fazia o Railway rodar `npm ci` em vez de pip).
 node_modules/
+package.json
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.nvmrc
+tsconfig.json
 
 # Claude Code (config local do agente)
 .claude/
