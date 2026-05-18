@@ -18,14 +18,14 @@ from pcd.core.schema import SourceType, UnifiedOffer
 # A chave reservada "DEFAULT" é o fallback global (a UI pode editá-la).
 RATES_BRL_PER_MILE: dict[str, float] = {
     # Buscamilhas — nacionais
-    "LATAM":     0.0285,
+    "LATAM":     0.0290,
     "GOL":       0.0200,
-    "AZUL":      0.0200,
+    "AZUL":      0.0160,
     # Buscamilhas — internacionais
-    "TAP":               0.0220,
+    "TAP":               0.0520,
     "AMERICAN AIRLINES": 0.0220,
-    "INTERLINE":         0.0200,
-    "COPA":              0.0200,
+    "INTERLINE":         0.0180,
+    "COPA":              0.0720,
     "IBERIA":            0.0700,  # Avios
     # MCP Award Travel Finder — programas
     "AVIOS":      0.0700,  # British Airways / Qatar / Iberia

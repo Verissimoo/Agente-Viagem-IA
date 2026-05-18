@@ -13,6 +13,14 @@ load_dotenv()
 RETRY_STATUS_CODES = {408, 429, 500, 502, 503, 504}
 _CACHE_PREFIX = "kayak"
 
+# Quando o upstream do provedor RapidAPI está fora, ele devolve a página HTML
+# 503 do Google Frontend ("The service you requested is not available yet").
+# Nesse cenário não adianta retentar 6× × 11 datas em paralelo (~120s cada):
+# encurtamos para `_UPSTREAM_DOWN_MAX_ATTEMPTS` para falhar rápido e deixar a
+# UI sinalizar outage do provedor em vez de travar a Cotação Inteligente.
+_UPSTREAM_DOWN_SIGNATURE = "the service you requested is not available yet"
+_UPSTREAM_DOWN_MAX_ATTEMPTS = 2
+
 
 def _compute_wait_seconds(attempt: int, retry_after_header: str | None) -> float:
     if retry_after_header:
@@ -182,10 +190,26 @@ def _search_flights_uncached(
                     dbg = _extract_rate_headers(r.headers)
                     print(f"[429] Rate headers: {dbg}")
 
+                upstream_down = (
+                    r.status_code == 503
+                    and _UPSTREAM_DOWN_SIGNATURE in (r.text or "").lower()
+                )
+                effective_max = (
+                    _UPSTREAM_DOWN_MAX_ATTEMPTS if upstream_down else max_attempts
+                )
+
                 retry_after = r.headers.get("Retry-After")
                 wait_s = _compute_wait_seconds(attempt, retry_after)
 
-                if attempt == max_attempts:
+                if attempt >= effective_max:
+                    if upstream_down:
+                        raise RuntimeError(
+                            f"Kayak (RapidAPI) upstream indisponível: HTTP 503 "
+                            f"persistente após {attempt} tentativas. "
+                            f"O provedor 'kayak-api.p.rapidapi.com' está retornando "
+                            f"a página de outage do Google Frontend — não é problema "
+                            f"de auth nem de quota."
+                        )
                     try:
                         body = r.json()
                     except Exception:

@@ -111,7 +111,7 @@ PROGRAM_PARTNERS: dict[str, dict] = {
             "MH", "GA", "VN", "OZ", "CI", "BR",
             "NZ", "QF",
         ],
-        "rate_brl_per_mile": 0.0200,
+        "rate_brl_per_mile": 0.0200,  # GOL
         "label": "Smiles (GOL)",
         "own_carrier": "G3",
         "buscamilhas_key": "GOL",
@@ -123,7 +123,7 @@ PROGRAM_PARTNERS: dict[str, dict] = {
             "AS", "BA", "IB", "CX", "AY",
             "RJ", "LH", "LX", "OS", "AM", "AR",
         ],
-        "rate_brl_per_mile": 0.0285,
+        "rate_brl_per_mile": 0.0290,  # LATAM
         "label": "LATAM Pass",
         "own_carrier": "LA",
         "buscamilhas_key": "LATAM",
@@ -137,7 +137,7 @@ PROGRAM_PARTNERS: dict[str, dict] = {
             "AM", "AR", "AV", "LA",
         ],
         "award_partners": ["AC", "CM", "EK", "TP", "TK", "UA"],
-        "rate_brl_per_mile": 0.0200,
+        "rate_brl_per_mile": 0.0160,  # AZUL
         "label": "Azul Fidelidade",
         "own_carrier": "AD",
         "buscamilhas_key": "AZUL",
@@ -307,6 +307,7 @@ class SmartQuoteAgent:
         date_requested: date,
         adults: int,
         return_date: Optional[date],
+        errors_out: Optional[list[str]] = None,
     ) -> tuple[
         dict[str, float], dict[str, list[str]],
         dict[str, list[FlightOptionLite]], dict[str, FlightOptionLite],
@@ -373,6 +374,8 @@ class SmartQuoteAgent:
                     airline_per_date[iso] = best.main_carrier_iata
                 if carriers:
                     carriers_calendar[iso] = carriers
+                if err and errors_out is not None:
+                    errors_out.append(err)
         _t_elapsed = time.perf_counter() - _t0
         # TEMP_PERF — remover após validar
         print(
@@ -600,12 +603,14 @@ class SmartQuoteAgent:
         # Agente 1
         total_dates = self.flex_days * 2 + 1
         _progress(f"🔍 Agente 1: Explorando preços em {total_dates} datas via Kayak...")
+        kayak_errors: list[str] = []
         try:
             (
                 price_calendar, carriers_calendar,
                 daily_offers, best_offer_per_date, airline_per_date,
             ) = self._explore_dates(
                 origin, destination, date_requested, adults, return_date,
+                errors_out=kayak_errors,
             )
             result.price_calendar = price_calendar
             result.calendar_carriers = carriers_calendar
@@ -626,9 +631,35 @@ class SmartQuoteAgent:
             return result
 
         if not price_calendar:
-            result.notes.append(
-                f"Kayak não retornou preços para nenhuma das {total_dates} datas."
-            )
+            # Tenta surfar o motivo dominante das falhas para o vendedor saber
+            # que é um problema upstream (provedor RapidAPI) e não bug do app.
+            top_err: Optional[str] = None
+            if kayak_errors:
+                from collections import Counter
+                signatures = []
+                for e in kayak_errors:
+                    el = e.lower()
+                    if "upstream indispon" in el or "status 503" in el or "503" in el:
+                        signatures.append("HTTP 503 (upstream do RapidAPI fora do ar)")
+                    elif "timeout" in el or "timed out" in el:
+                        signatures.append("timeout de rede")
+                    elif "429" in el:
+                        signatures.append("HTTP 429 (rate limit)")
+                    elif "401" in el or "403" in el:
+                        signatures.append("HTTP 401/403 (auth)")
+                    else:
+                        signatures.append("erro genérico")
+                top_err = Counter(signatures).most_common(1)[0][0]
+            if top_err:
+                result.notes.append(
+                    f"Kayak não retornou preços para nenhuma das {total_dates} datas. "
+                    f"Motivo dominante: {top_err} "
+                    f"({len(kayak_errors)}/{total_dates} chamadas falharam)."
+                )
+            else:
+                result.notes.append(
+                    f"Kayak não retornou preços para nenhuma das {total_dates} datas."
+                )
             return result
 
         # Análise do calendário

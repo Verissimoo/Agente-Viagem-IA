@@ -1,0 +1,312 @@
+{
+  "timestamp": "2026-05-15T21:32:37.156040",
+  "env_vars": {
+    "RAPIDAPI_KEY": true,
+    "RAPIDAPI_HOST": true,
+    "KAYAK_BASE_URL": true,
+    "BUSCAMILHAS_CHAVE": true,
+    "BUSCAMILHAS_SENHA": true,
+    "ECONOMILHAS_API_KEY": true,
+    "GROQ_API_KEY": true
+  },
+  "kayak": [
+    {
+      "route": "BR_to_INTL_BSB_MAD",
+      "iso": "2026-06-14",
+      "status": "ERROR",
+      "elapsed_s": 4.75,
+      "error": "Kayak (RapidAPI) upstream indisponível: HTTP 503 persistente após 2 tentativas. O provedor 'kayak-api.p.rapidapi.com' está retornando a página de outage do Google Frontend — não é problema de auth nem de quota."
+    },
+    {
+      "route": "BR_to_USA_GRU_MIA",
+      "iso": "2026-06-29",
+      "status": "ERROR",
+      "elapsed_s": 4.47,
+      "error": "Kayak (RapidAPI) upstream indisponível: HTTP 503 persistente após 2 tentativas. O provedor 'kayak-api.p.rapidapi.com' está retornando a página de outage do Google Frontend — não é problema de auth nem de quota."
+    },
+    {
+      "route": "domestica_GRU_REC",
+      "iso": "2026-06-04",
+      "status": "ERROR",
+      "elapsed_s": 4.42,
+      "error": "Kayak (RapidAPI) upstream indisponível: HTTP 503 persistente após 2 tentativas. O provedor 'kayak-api.p.rapidapi.com' está retornando a página de outage do Google Frontend — não é problema de auth nem de quota."
+    },
+    {
+      "route": "INTL_to_BR_LIS_GRU",
+      "iso": "2026-07-14",
+      "status": "ERROR",
+      "elapsed_s": 4.92,
+      "error": "Kayak (RapidAPI) upstream indisponível: HTTP 503 persistente após 2 tentativas. O provedor 'kayak-api.p.rapidapi.com' está retornando a página de outage do Google Frontend — não é problema de auth nem de quota."
+    }
+  ],
+  "buscamilhas": [
+    {
+      "route": "BR_to_INTL_BSB_MAD",
+      "company": "LATAM",
+      "elapsed_s": 4.4,
+      "offers_count": 43,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 191107,
+      "best_taxa_brl": 97.43
+    },
+    {
+      "route": "BR_to_INTL_BSB_MAD",
+      "company": "GOL",
+      "elapsed_s": 14.58,
+      "offers_count": 64,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 250400,
+      "best_taxa_brl": 373.05
+    },
+    {
+      "route": "BR_to_INTL_BSB_MAD",
+      "company": "AZUL",
+      "elapsed_s": 5.5,
+      "offers_count": 10,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 242000,
+      "best_taxa_brl": 269.39
+    },
+    {
+      "route": "BR_to_USA_GRU_MIA",
+      "company": "LATAM",
+      "elapsed_s": 5.23,
+      "offers_count": 50,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 55647,
+      "best_taxa_brl": 155.34
+    },
+    {
+      "route": "BR_to_USA_GRU_MIA",
+      "company": "GOL",
+      "elapsed_s": 32.47,
+      "offers_count": 55,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 210400,
+      "best_taxa_brl": 271.89
+    },
+    {
+      "route": "BR_to_USA_GRU_MIA",
+      "company": "AZUL",
+      "elapsed_s": 12.59,
+      "offers_count": 0,
+      "api_alert": null,
+      "status": "EMPTY"
+    },
+    {
+      "route": "domestica_GRU_REC",
+      "company": "LATAM",
+      "elapsed_s": 2.9,
+      "offers_count": 50,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 22164,
+      "best_taxa_brl": 33.64
+    },
+    {
+      "route": "domestica_GRU_REC",
+      "company": "GOL",
+      "elapsed_s": 6.65,
+      "offers_count": 9,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 39500,
+      "best_taxa_brl": 33.64
+    },
+    {
+      "route": "domestica_GRU_REC",
+      "company": "AZUL",
+      "elapsed_s": 4.91,
+      "offers_count": 6,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 100000,
+      "best_taxa_brl": 73.53999999999999
+    },
+    {
+      "route": "INTL_to_BR_LIS_GRU",
+      "company": "LATAM",
+      "elapsed_s": 3.4,
+      "offers_count": 18,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 195457,
+      "best_taxa_brl": 284.1
+    },
+    {
+      "route": "INTL_to_BR_LIS_GRU",
+      "company": "GOL",
+      "elapsed_s": 18.44,
+      "offers_count": 50,
+      "api_alert": null,
+      "status": "OK",
+      "best_miles": 256600,
+      "best_taxa_brl": 1404.37
+    },
+    {
+      "route": "INTL_to_BR_LIS_GRU",
+      "company": "AZUL",
+      "elapsed_s": 3.98,
+      "offers_count": 0,
+      "api_alert": null,
+      "status": "EMPTY"
+    }
+  ],
+  "economilhas": [
+    {
+      "route": "BR_to_INTL_BSB_MAD",
+      "elapsed_s": 14.51,
+      "offers_count": 78,
+      "per_airline": {
+        "SMILES": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        },
+        "LATAM": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        },
+        "AZUL": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        }
+      },
+      "status": "OK",
+      "best_miles": 191107,
+      "best_taxa_brl": 97.43
+    },
+    {
+      "route": "BR_to_USA_GRU_MIA",
+      "elapsed_s": 15.34,
+      "offers_count": 77,
+      "per_airline": {
+        "SMILES": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        },
+        "LATAM": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        },
+        "AZUL": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        }
+      },
+      "status": "OK",
+      "best_miles": 55647,
+      "best_taxa_brl": 155.34
+    },
+    {
+      "route": "domestica_GRU_REC",
+      "elapsed_s": 12.09,
+      "offers_count": 59,
+      "per_airline": {
+        "SMILES": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        },
+        "LATAM": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        },
+        "AZUL": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        }
+      },
+      "status": "OK",
+      "best_miles": 22164,
+      "best_taxa_brl": 33.64
+    },
+    {
+      "route": "INTL_to_BR_LIS_GRU",
+      "elapsed_s": 11.55,
+      "offers_count": 33,
+      "per_airline": {
+        "SMILES": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        },
+        "LATAM": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        },
+        "AZUL": {
+          "success": true,
+          "providerStatusCode": null,
+          "message": ""
+        }
+      },
+      "status": "OK",
+      "best_miles": 195457,
+      "best_taxa_brl": 284.1
+    }
+  ],
+  "groq": [
+    {
+      "prompt": "quero um voo de Brasilia para Madrid dia 15/06",
+      "status": "OK",
+      "elapsed_s": 2.54,
+      "parsed": {
+        "origin": "BSB",
+        "destination": "MAD",
+        "date_start": "2026-06-15",
+        "date_return": "None",
+        "adults": 1,
+        "direct_only": false,
+        "trip_type": "TripType.ONEWAY",
+        "confidence": 0.95,
+        "notes": "Extraído via Groq IA"
+      }
+    },
+    {
+      "prompt": "preciso de 2 passagens de Sao Paulo para Lisboa direto 20/07",
+      "status": "OK",
+      "elapsed_s": 0.57,
+      "parsed": {
+        "origin": "SAO",
+        "destination": "LIS",
+        "date_start": "2026-07-20",
+        "date_return": "None",
+        "adults": 2,
+        "direct_only": true,
+        "trip_type": "TripType.ONEWAY",
+        "confidence": 0.95,
+        "notes": "Extraído via Groq IA"
+      }
+    },
+    {
+      "prompt": "voo Rio de Janeiro para Miami ida 10/08 volta 25/08",
+      "status": "OK",
+      "elapsed_s": 0.66,
+      "parsed": {
+        "origin": "RIO",
+        "destination": "MIA",
+        "date_start": "2026-08-10",
+        "date_return": "2026-08-25",
+        "adults": 1,
+        "direct_only": false,
+        "trip_type": "TripType.ROUNDTRIP",
+        "confidence": 0.95,
+        "notes": "Extraído via Groq IA"
+      }
+    }
+  ]
+}

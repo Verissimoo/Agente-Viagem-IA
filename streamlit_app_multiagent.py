@@ -43,6 +43,34 @@ def build_table_rows(offers, include_baggage=False, id_prefix=""):
     return _build_table_rows_core(offers, include_baggage, id_prefix, adults=adults)
 
 
+# ──────────────────────────────────────────────────────────────
+# Markup Kayak — preço de venda
+#
+# Convenção em todo o app:
+#   - offer.equivalent_brl / offer.price_brl = PREÇO DE MERCADO (sem markup)
+#     Valor cru do Kayak, é o que o cliente vê na pesquisa pública.
+#   - kayak_sell_price(offer) = PREÇO DE VENDA (com markup aplicado)
+#     É o que a agência cobra. Aplica-se SÓ no momento da exibição —
+#     nas tabelas operacionais a referência é o mercado.
+# ──────────────────────────────────────────────────────────────
+def kayak_markup_pct() -> float:
+    """Percentual de markup do Kayak (0.10 = 10%) — configurável via session_state."""
+    try:
+        return float(st.session_state.get("kayak_markup_pct", 0.10))
+    except (TypeError, ValueError):
+        return 0.10
+
+
+def kayak_sell_price(offer_or_value) -> float:
+    """Preço de venda (mercado × (1+markup)). Aceita um UnifiedOffer ou
+    um número de preço de mercado."""
+    if isinstance(offer_or_value, (int, float)):
+        market = float(offer_or_value)
+    else:
+        market = safe_float(getattr(offer_or_value, "equivalent_brl", 0))
+    return round(market * (1.0 + kayak_markup_pct()), 2)
+
+
 def _synthesize_kayak_offer_from_cache(
     cached, origin_iata: str, destination_iata: str,
 ):
@@ -50,7 +78,8 @@ def _synthesize_kayak_offer_from_cache(
     pela Cotação Inteligente. Usado para injetar no pipeline_result o EXATO
     preço Kayak mostrado no gráfico, evitando divergência com nova chamada Kayak.
 
-    Aplica o markup de 10% no price_brl (regra comercial do PcD)."""
+    IMPORTANTE: armazena o PREÇO DE MERCADO (sem markup) — markup é aplicado
+    só no momento da exibição via kayak_sell_price()."""
     if cached is None:
         return None
     from datetime import datetime as _dt
@@ -80,18 +109,16 @@ def _synthesize_kayak_offer_from_cache(
     itin = Itinerary(
         segments=[seg], duration_min=getattr(cached, "duration_min", None) or None,
     )
-    raw_price = float(getattr(cached, "price_brl", 0.0))
-    # Markup 10% aplicado conforme regra comercial do PcD.
-    price_with_markup = round(raw_price * 1.10, 2)
+    market_price = round(float(getattr(cached, "price_brl", 0.0)), 2)
     return UnifiedOffer(
         source=SourceType.KAYAK,
         airline=carrier,
         trip_type=TripType.ONEWAY,
         outbound=itin,
-        price_brl=price_with_markup,
-        price_amount=price_with_markup,
+        price_brl=market_price,
+        price_amount=market_price,
         price_currency="BRL",
-        equivalent_brl=price_with_markup,
+        equivalent_brl=market_price,
         stops_out=int(getattr(cached, "stops", 0) or 0),
         layover_out=LayoverCategory.DIRECT if (getattr(cached, "stops", 0) or 0) == 0 else LayoverCategory.CONNECTION,
         deeplink=None,
@@ -1079,7 +1106,8 @@ def _render_best_offer_card(option, programs: list[dict], iso_date: str) -> str:
     )
     pretty_date = _fmt_date_long(iso_date)
     price = float(option.price_brl)
-    markup = round(price * 1.10, 2)
+    markup = kayak_sell_price(price)
+    markup_lbl = f"{int(round(kayak_markup_pct() * 100))}%"
 
     if programs:
         chips = "".join(_render_program_chip(p) for p in programs)
@@ -1100,8 +1128,8 @@ def _render_best_offer_card(option, programs: list[dict], iso_date: str) -> str:
   <div class="bo-title" style="color:{disp['color']}">✈️ {disp['name']}</div>
   <div class="bo-flight">{flight_lbl} · {cias_str}</div>
   <div class="bo-times">{dep} → {arr} · {stops_lbl} · {dur}</div>
-  <div class="bo-price">💰 {_fmt_brl(price)}</div>
-  <div class="bo-markup">Kayak (sem markup): {_fmt_brl(price)} · Com markup de 10%: <b>{_fmt_brl(markup)}</b></div>
+  <div class="bo-price">💰 {_fmt_brl(price)} <span style="font-size:12px;color:#6b7a99;font-weight:500">(mercado Kayak)</span></div>
+  <div class="bo-markup">📈 Preço de venda (com markup {markup_lbl}): <b>{_fmt_brl(markup)}</b></div>
   {progs_html}
 </div>"""
 
@@ -1137,7 +1165,7 @@ def _render_alt_options_list(options_with_programs: list[dict], best_iso_index: 
   </div>
   <div>
     <div class="alt-price">{_fmt_brl(float(opt.price_brl))}</div>
-    <div class="alt-price-foot">c/ markup: {_fmt_brl(round(float(opt.price_brl) * 1.10, 2))}</div>
+    <div class="alt-price-foot">mercado · venda {_fmt_brl(kayak_sell_price(float(opt.price_brl)))}</div>
   </div>
 </div>""")
     return (
@@ -1236,6 +1264,12 @@ def _render_smart_quote_section():
                 if st.button(_label, key=f"smart_pick_{_iso}", type=_btn_type, use_container_width=True):
                     if st.session_state.get("smart_selected_date") != _iso:
                         st.session_state["smart_selected_date"] = _iso
+                        # Invalida a Cotação Completa anterior — ela pertencia
+                        # à data antiga. Vendedor precisa clicar de novo em
+                        # "Buscar milhas para esta data" para a nova data.
+                        st.session_state.pop("pipeline_result", None)
+                        st.session_state.pop("economilhas_partial", None)
+                        st.session_state["smart_stale_quote"] = True
                         st.rerun()
 
         # Cards de métricas
@@ -1340,6 +1374,10 @@ def _render_smart_quote_section():
         _new = st.session_state.get("smart_date_picker")
         if _new and _new != st.session_state.get("smart_selected_date"):
             st.session_state["smart_selected_date"] = _new
+            # Invalida a Cotação Completa anterior — pertencia à data antiga.
+            st.session_state.pop("pipeline_result", None)
+            st.session_state.pop("economilhas_partial", None)
+            st.session_state["smart_stale_quote"] = True
 
     chosen_iso = st.selectbox(
         "Data da cotação completa",
@@ -1352,6 +1390,18 @@ def _render_smart_quote_section():
     # Garante que selected_date reflete a data atual do dropdown
     if chosen_iso and chosen_iso != st.session_state.get("smart_selected_date"):
         st.session_state["smart_selected_date"] = chosen_iso
+        st.session_state.pop("pipeline_result", None)
+        st.session_state.pop("economilhas_partial", None)
+        st.session_state["smart_stale_quote"] = True
+
+    # Aviso visual quando a Cotação Completa atual não corresponde mais à
+    # data selecionada (vendedor mudou de data depois de já ter cotado).
+    if st.session_state.get("smart_stale_quote") and "pipeline_result" not in st.session_state:
+        _stale_iso = chosen_iso or selected_iso or ""
+        st.warning(
+            "↻ Dados desatualizados — clique em **Buscar milhas para esta data** "
+            f"para gerar a Cotação Completa de {_fmt_date_long(_stale_iso)}."
+        )
 
     col_b1, col_b2 = st.columns(2, gap="small")
     with col_b1:
@@ -2701,12 +2751,21 @@ if _smart_events and _smart_events.get("miles_clicked"):
         except ValueError:
             _chosen_date = None
 
-        # Reaproveita a oferta cacheada da Cotação Inteligente — evita nova
-        # chamada Kayak e garante que o preço do gráfico bate com o do Veredito.
+        # Reaproveita TODAS as ofertas cacheadas da Cotação Inteligente para a
+        # data selecionada — evita nova chamada Kayak e garante que o gráfico,
+        # tabela e Veredito mostrem dados consistentes da MESMA data.
         _smart_res = st.session_state.get("smart_result")
         _cached_kayak = None
+        _cached_kayak_list = []
         if _smart_res is not None:
             _cached_kayak = (getattr(_smart_res, "best_offer_per_date", None) or {}).get(_miles_iso)
+            _cached_kayak_list = (getattr(_smart_res, "daily_offers", None) or {}).get(_miles_iso) or []
+        # TEMP_LOG — diagnóstico Smart Quote → Cotação Completa (remover após validar)
+        print(
+            f"[COTACAO_COMPLETA] data_smart={_miles_iso} "
+            f"ofertas_cacheadas={len(_cached_kayak_list)} "
+            f"best_carrier={getattr(_cached_kayak, 'main_carrier_iata', None) if _cached_kayak else None}"
+        )
 
         # Lista de companhias para o run_pipeline: REMOVE 'KAYAK' para não
         # refazer a chamada de dinheiro (vamos injetar a cacheada abaixo).
@@ -2769,25 +2828,53 @@ if _smart_events and _smart_events.get("miles_clicked"):
                             "providerStatusCode": None, "fatal": True,
                         }]
 
-            # Injetar a oferta Kayak cacheada no pipeline_result para que o
-            # Veredito PcD mostre o MESMO preço do gráfico (com markup 10%).
+            # Injetar TODAS as ofertas Kayak cacheadas no pipeline_result —
+            # garante que a tabela Dinheiro mostra múltiplas linhas, todas da
+            # data selecionada na Cotação Inteligente, e com o MESMO preço do
+            # gráfico. Sem markup aqui (preço de mercado) — markup é aplicado
+            # apenas na exibição via kayak_sell_price().
             _pr_obj = st.session_state.get("pipeline_result")
-            if _pr_obj is not None and _cached_kayak is not None:
-                _synth = _synthesize_kayak_offer_from_cache(
-                    _cached_kayak,
-                    origin_iata=pi_state.origin_iata or "",
-                    destination_iata=pi_state.destination_iata or "",
+            if _pr_obj is not None:
+                _synth_offers = []
+                # Itera sobre todas as ofertas da data; fallback para
+                # best_offer_per_date quando daily_offers não veio (cache antigo).
+                _sources = _cached_kayak_list or (
+                    [_cached_kayak] if _cached_kayak is not None else []
                 )
-                if _synth is not None:
+                for _lite in _sources:
+                    if _lite is None:
+                        continue
+                    _s = _synthesize_kayak_offer_from_cache(
+                        _lite,
+                        origin_iata=pi_state.origin_iata or "",
+                        destination_iata=pi_state.destination_iata or "",
+                    )
+                    if _s is not None:
+                        _synth_offers.append(_s)
+                # Ordena por preço de mercado crescente e limita ao top_n configurado
+                _synth_offers.sort(key=lambda o: safe_float(o.equivalent_brl))
+                try:
+                    _top_n_cap = int(top_n) if top_n else 10
+                except (TypeError, ValueError):
+                    _top_n_cap = 10
+                _synth_offers = _synth_offers[: max(_top_n_cap, 1)]
+                if _synth_offers:
                     # Substitui qualquer money_offer existente (já não deveria ter
-                    # nenhum porque pulamos Kayak, mas seguros)
-                    _pr_obj.money_offers = [_synth]
-                    _pr_obj.best_money = _synth
+                    # nenhum porque pulamos Kayak no _smart_companhias, mas seguros)
+                    _pr_obj.money_offers = _synth_offers
+                    _pr_obj.best_money = _synth_offers[0]
                     # Recompute best_overall se ainda não houver
                     if getattr(_pr_obj, "best_overall", None) is None:
-                        _pr_obj.best_overall = _synth
+                        _pr_obj.best_overall = _synth_offers[0]
+                # TEMP_LOG — diagnóstico (remover após validar)
+                print(
+                    f"[COTACAO_COMPLETA] sintetizadas={len(_synth_offers)} ofertas Kayak "
+                    f"para data={_miles_iso} | preços={[o.equivalent_brl for o in _synth_offers[:5]]}"
+                )
 
             st.session_state["smart_selected_date"] = _miles_iso
+            # Cotação Completa gerada para a data atual — limpa flag de stale.
+            st.session_state.pop("smart_stale_quote", None)
 
 # ── Etapa 2B: Quebra de trecho (fase 1 hub fixo GRU + fase 2 encaixe) ──
 # Cache key: f"split_{ori}_{dst}_{data}_{provider}". Mudou data ou rota
@@ -2919,6 +3006,7 @@ if st.session_state.get("smart_active") and st.session_state.get("smart_selected
     _sel_iso = st.session_state["smart_selected_date"]
     st.markdown("---")
     st.markdown(f"### 💎 Cotação Completa para {_fmt_date_long(_sel_iso)}")
+    st.caption(f"Baseado na data selecionada na Cotação Inteligente: **{_sel_iso}**")
 
 COLS = ["ID", "Companhia", "Trecho", "Data",
         "Milhas", "Custo Real (mi+taxas)", "Taxas", "Preço Final", "Valor c/ Mala",
@@ -2980,12 +3068,29 @@ def _offer_main_display(offer, adults=1):
         if dt: dt_str = f"📅 Partida: {dt.strftime('%d/%m')} · "
 
     if _is_money_offer(offer):
-        unit_price = safe_float(getattr(offer, "equivalent_brl", 0))
-        total_price = unit_price * adults
+        # Preço de MERCADO = valor cru Kayak (sem markup).
+        # Preço de VENDA = mercado × (1+markup) — é o que a agência cobra.
+        market_unit = safe_float(getattr(offer, "equivalent_brl", 0))
+        sell_unit = kayak_sell_price(offer)
+        markup_lbl = f"{int(round(kayak_markup_pct() * 100))}%"
         if adults > 1:
-            return f"R$ {total_price:,.2f}", f"Total para {adults} passageiros", f"Por passageiro: R$ {unit_price:,.2f} · {dt_str}{airline} Kayak"
+            sell_total = sell_unit * adults
+            market_total = market_unit * adults
+            return (
+                f"R$ {sell_total:,.2f}",
+                f"Preço de venda — Total para {adults} pax (markup {markup_lbl})",
+                (
+                    f"Por passageiro: R$ {sell_unit:,.2f} · "
+                    f"Mercado: R$ {market_total:,.2f} (R$ {market_unit:,.2f}/pax) · "
+                    f"{dt_str}{airline} Kayak"
+                ),
+            )
         else:
-            return f"R$ {unit_price:,.2f}", f"{airline} · Kayak · em dinheiro", f"{dt_str}Valor s/ taxa pode variar"
+            return (
+                f"R$ {sell_unit:,.2f}",
+                f"{airline} · Kayak · preço de venda (markup {markup_lbl})",
+                f"{dt_str}Mercado: R$ {market_unit:,.2f} · sem taxas embarque",
+            )
     else:
         m  = safe_int_miles(getattr(offer, "miles", 0))
         prog = getattr(offer, "miles_program", "")
@@ -3025,19 +3130,32 @@ def _miles_mini_display(offer, adults=1):
                 f"{dt_str}{m:,} mi (≈ R$ {eq:,.2f}) + R$ {tx:.2f} taxas · {a}")
 
 def _money_mini_display(offer, adults=1):
+    """Card mini do Veredito 'Melhor em Dinheiro'.
+
+    Exibe PREÇO DE VENDA (com markup) em destaque, com PREÇO DE MERCADO
+    no subtítulo para o vendedor ter ambas as referências."""
     if offer is None: return "—", "—"
     a = str(getattr(offer, "airline", ""))
-    p = safe_float(getattr(offer, "equivalent_brl", 0))
+    market_unit = safe_float(getattr(offer, "equivalent_brl", 0))
+    sell_unit = kayak_sell_price(offer)
+    markup_lbl = f"{int(round(kayak_markup_pct() * 100))}%"
     dt_str = ""
     if getattr(offer, "outbound", None) and getattr(offer.outbound, "segments", []):
         dt = offer.outbound.segments[0].departure_dt
         if dt: dt_str = f"📅 Partida: {dt.strftime('%d/%m')} · "
-        
+
     if adults > 1:
-        tot_p = p * adults
-        return f"R$ {tot_p:,.2f}", f"Para {adults} pax (Unit: R$ {p:,.2f})"
+        sell_tot = sell_unit * adults
+        market_tot = market_unit * adults
+        return (
+            f"R$ {sell_tot:,.2f}",
+            f"Para {adults} pax · Mercado: R$ {market_tot:,.2f} · Markup {markup_lbl}",
+        )
     else:
-        return f"R$ {p:,.2f}", f"{dt_str}{a} · Kayak"
+        return (
+            f"R$ {sell_unit:,.2f}",
+            f"{dt_str}{a} · Kayak · Mercado: R$ {market_unit:,.2f} (markup {markup_lbl})",
+        )
 
 
 # ─── Tab 0 — Melhores Achados ─────────────────────────────────
@@ -3155,16 +3273,28 @@ with tabs[tab_keys.index("verdito")]:
     if bo:
         a_bo = str(getattr(bo, "airline", "—"))
         if _is_money_offer(bo):
-            p = safe_float(getattr(bo, "equivalent_brl", 0))
-            st.info(f"A melhor opção encontrada foi **{a_bo}** em dinheiro por **R$ {p:,.2f}**.")
+            market_bo = safe_float(getattr(bo, "equivalent_brl", 0))
+            sell_bo = kayak_sell_price(bo)
+            _markup_lbl = f"{int(round(kayak_markup_pct() * 100))}%"
+            st.info(
+                f"A melhor opção encontrada foi **{a_bo}** em dinheiro. "
+                f"Preço de venda: **R$ {sell_bo:,.2f}** (mercado Kayak: R$ {market_bo:,.2f} + markup {_markup_lbl})."
+            )
         else:
             m_bo  = safe_int_miles(getattr(bo, "miles", 0))
             prog_bo = getattr(bo, "miles_program", "")
             eq_bo = miles_to_brl(m_bo, a_bo, prog_bo); tx_bo = safe_float(getattr(bo, "taxes_brl", 0))
             custo_real_bo = eq_bo + tx_bo
-            bdo_p = safe_float(getattr(bd, "equivalent_brl", 0)) if bd else 0
-            eco   = bdo_p - custo_real_bo
-            eco_t = f" Comparado ao melhor em dinheiro (R$ {bdo_p:,.2f}), economia real de R$ {eco:,.2f}." if eco > 0 else ""
+            # Comparação justa: milhas vs PREÇO DE VENDA Kayak (com markup) —
+            # é o valor que a agência cobraria do cliente em dinheiro.
+            sell_bd = kayak_sell_price(bd) if bd else 0
+            market_bd = safe_float(getattr(bd, "equivalent_brl", 0)) if bd else 0
+            eco = sell_bd - custo_real_bo
+            eco_t = (
+                f" Comparado ao preço de venda Kayak (R$ {sell_bd:,.2f}; mercado R$ {market_bd:,.2f}), "
+                f"milhas economizam R$ {eco:,.2f}."
+                if eco > 0 else ""
+            )
             if adults > 1:
                 tot_real = custo_real_bo * adults
                 st.info(f"A melhor opção foi **{a_bo}** em milhas. Custo real total ({adults} pax): **R$ {tot_real:,.2f}** — composto por {m_bo * adults:,} mi (≈ R$ {eq_bo * adults:,.2f}) + R$ {tx_bo * adults:.2f} taxas. (Unitário: R$ {custo_real_bo:,.2f}).{eco_t}")
@@ -3179,6 +3309,11 @@ with tabs[tab_keys.index("dinheiro")]:
         rows = build_table_rows(ofs_money, incluir_mala, id_prefix="$")
         df   = pd.DataFrame(rows)
         _render_selectable_offers_df(df, COLS, "dinheiro", "df_dinheiro")
+        _markup_lbl = f"{int(round(kayak_markup_pct() * 100))}%"
+        st.caption(
+            f"Preços de **mercado Kayak** (sem markup) — é o que o cliente vê na pesquisa pública. "
+            f"O **preço de venda** com markup de {_markup_lbl} aparece no Veredito PcD."
+        )
     else:
         st.info("Sem resultados em dinheiro ou fonte desativada.")
 
