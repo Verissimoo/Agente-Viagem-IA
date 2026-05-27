@@ -1,12 +1,17 @@
-# Python
+# ── Python ──────────────────────────────────────────────────────
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
 *.egg-info/
+*.egg
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+htmlcov/
 *.log
 
 # Ambiente virtual
@@ -14,60 +19,38 @@ __pycache__/
 venv/
 env/
 
-# Streamlit (secrets locais, NÃO commitar)
-.streamlit/secrets.toml
+# ── Node / Angular ──────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/coverage/
+*.tsbuildinfo
 
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Arquivos sensíveis
+# ── Variáveis sensíveis ─────────────────────────────────────────
 .env
 .env.local
 .env.*.local
 *.env
+!.env.example
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Artefatos de execução / debug
+# ── Artefatos de runtime ────────────────────────────────────────
+debug/
 debug_dumps/
 trace_ui_*.jsonl
 trace*.jsonl
 run_trace.jsonl
-out.txt
-out_e.txt
-output.txt
-output_*.txt
-report_*.txt
-stderr.txt
-stdout*.txt
-rank_error.txt
-verification_output.txt
-test_out*.txt
-tests/responses_economilhas/
-tests/responses_buscamilhas/
+tests/responses_*/
+tests/snapshots/fixtures/*.json
+!tests/snapshots/fixtures/.gitkeep
 
-# Cache local
-.cache/
-*.cache
+# ── IDEs / OS ───────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
 
-# Node.js — NÃO usamos. Bloqueado para evitar que o Nixpacks/Railway
-# detecte o projeto como Node em vez de Python (já aconteceu uma vez:
-# package.json vazio fazia o Railway rodar `npm ci` em vez de pip).
-node_modules/
-package.json
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-.nvmrc
-tsconfig.json
-
-# Claude Code (config local do agente)
+# ── Claude Code ─────────────────────────────────────────────────
 .claude/
-
-# Scratch (experimentos isolados, fora do app)
-scratch/

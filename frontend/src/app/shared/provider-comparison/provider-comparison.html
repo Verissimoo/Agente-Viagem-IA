@@ -1,0 +1,65 @@
+<section class="comparison" *ngIf="rows().length">
+  <header>
+    <div>
+      <h3>Comparativo por programa</h3>
+      <p>Mesma rota, três fontes — escolha onde fechar.</p>
+    </div>
+    <button type="button" class="ghost" (click)="toggle()">
+      {{ expanded() ? 'Ocultar' : 'Ver tabela' }}
+    </button>
+  </header>
+
+  <p class="disclaimer" *ngIf="expanded()">
+    ⓘ Valores podem divergir entre fontes por causa de tarifas promocionais e disponibilidade
+    em tempo real. <strong>Confirme sempre direto na cia</strong> antes de fechar a venda.
+  </p>
+
+  <table *ngIf="expanded()">
+    <thead>
+      <tr>
+        <th>Cia</th>
+        <th class="num">Economilhas (milhas)</th>
+        <th class="num">BuscaMilhas (milhas)</th>
+        <th class="num">Kayak (cash)</th>
+        <th>Melhor</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of rows()">
+        <td class="cia">{{ r.airlineLabel }}</td>
+
+        <td class="num" [class.winner]="r.bestSource === 'econ'">
+          <ng-container *ngIf="r.econ; else dash">
+            {{ formatBRL(r.econ.miles) }} mi
+            <ng-container *ngIf="r.econ.taxes"> + R$ {{ formatBRL(r.econ.taxes) }}</ng-container>
+            <div class="equiv">≈ R$ {{ formatBRL(r.econ.equivalentBRL) }}</div>
+          </ng-container>
+        </td>
+
+        <td class="num" [class.winner]="r.bestSource === 'bm'">
+          <ng-container *ngIf="r.bm; else dash">
+            {{ formatBRL(r.bm.miles) }} mi
+            <ng-container *ngIf="r.bm.taxes"> + R$ {{ formatBRL(r.bm.taxes) }}</ng-container>
+            <div class="equiv">≈ R$ {{ formatBRL(r.bm.equivalentBRL) }}</div>
+          </ng-container>
+        </td>
+
+        <td class="num" [class.winner]="r.bestSource === 'cash'">
+          <ng-container *ngIf="r.cash; else dash">
+            R$ {{ formatBRL(r.cash.cashBRL) }}
+          </ng-container>
+        </td>
+
+        <td>
+          <span class="badge" *ngIf="r.bestSource === 'econ'">Economilhas</span>
+          <span class="badge" *ngIf="r.bestSource === 'bm'">BuscaMilhas</span>
+          <span class="badge" *ngIf="r.bestSource === 'cash'">Kayak</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #dash>
+    <span class="dash">—</span>
+  </ng-template>
+</section>

@@ -1,0 +1,326 @@
+<div class="page">
+  <header class="app-header">
+    <div class="brand">
+      <a class="brand-mark" href="/" aria-label="Passagens com Desconto">
+        <span class="brand-logo-wrap">
+          <img
+            class="brand-logo"
+            src="/logo-pcd.png"
+            alt="Passagens com Desconto"
+          />
+        </span>
+      </a>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="ghost-btn" (click)="ratesDrawerOpen.set(true)" title="Configurações (tarifas, fontes, avançado)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Configurações
+      </button>
+      <button
+        type="button"
+        class="theme-toggle"
+        (click)="theme.toggle()"
+        [title]="theme.theme() === 'dark' ? 'Alternar para tema claro' : 'Alternar para tema escuro'"
+        [attr.aria-label]="theme.theme() === 'dark' ? 'Tema escuro ativo' : 'Tema claro ativo'"
+      >
+        <svg *ngIf="theme.theme() === 'light'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg *ngIf="theme.theme() === 'dark'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <app-rates-editor
+    *ngIf="ratesDrawerOpen()"
+    (close)="ratesDrawerOpen.set(false)"
+  ></app-rates-editor>
+
+  <section class="chat-card">
+    <label for="chat" class="hint">O que você está procurando?</label>
+    <div class="chat-input">
+      <textarea
+        id="chat"
+        rows="2"
+        [ngModel]="chatInput()"
+        (ngModelChange)="chatInput.set($event)"
+        placeholder="Ex: Brasília para Fortaleza dia 30/10/2026, volta 15/11, voo direto..."
+        (keydown.enter)="$event.preventDefault(); onChatSubmit()"
+      ></textarea>
+    </div>
+    <div class="smart-bar">
+      <label class="smart-toggle" title="Explora Kayak em várias datas primeiro; cota milhas só depois que você escolher o melhor dia">
+        <input
+          type="checkbox"
+          [ngModel]="smartMode()"
+          (ngModelChange)="onSmartToggle($event)"
+          name="smart_mode_top"
+        />
+        <span>Cotação Inteligente</span>
+      </label>
+      <div class="smart-flex" *ngIf="smartMode()">
+        <label for="flex_days_smart">± dias</label>
+        <input
+          id="flex_days_smart"
+          type="number"
+          min="1"
+          max="7"
+          [ngModel]="form.flex_days || 4"
+          (ngModelChange)="onFlexChange($event)"
+          name="flex_days_smart"
+        />
+      </div>
+      <button type="button" class="link-toggle" (click)="toggleForm()">
+        {{ formExpanded() ? 'Ocultar busca manual' : 'Ou preencher manualmente' }}
+      </button>
+      <button
+        type="button"
+        class="send"
+        (click)="onChatSubmit()"
+        [disabled]="parsing() || loading()"
+        [title]="parsing() ? 'Interpretando...' : 'Buscar'"
+      >
+        {{ parsing() ? 'Interpretando' : 'Buscar' }}
+      </button>
+    </div>
+
+    <form *ngIf="formExpanded()" class="manual-form" (ngSubmit)="onManualSubmit()" autocomplete="off">
+      <div class="field">
+        <label for="origin">Origem (IATA)</label>
+        <input id="origin" type="text" [(ngModel)]="form.origin" name="origin" maxlength="3" required />
+      </div>
+      <button type="button" class="swap" (click)="swapOriginDestination()" title="Inverter">⇄</button>
+      <div class="field">
+        <label for="destination">Destino (IATA)</label>
+        <input id="destination" type="text" [(ngModel)]="form.destination" name="destination" maxlength="3" required />
+      </div>
+      <div class="field">
+        <label for="date_start">Ida</label>
+        <input id="date_start" type="date" [(ngModel)]="form.date_start" name="date_start" required />
+      </div>
+      <div class="field">
+        <label for="date_return">Volta</label>
+        <input id="date_return" type="date" [(ngModel)]="form.date_return" name="date_return" />
+      </div>
+      <div class="field narrow">
+        <label for="adults">Adultos</label>
+        <input id="adults" type="number" [(ngModel)]="form.adults" name="adults" min="1" max="9" />
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" [(ngModel)]="form.direct_only" name="direct_only" />
+        <span>Apenas direto</span>
+      </label>
+      <div class="field narrow">
+        <label for="flex_days">± dias</label>
+        <input
+          id="flex_days"
+          type="number"
+          min="0"
+          max="7"
+          [ngModel]="form.flex_days"
+          (ngModelChange)="onFlexChange($event)"
+          name="flex_days"
+          title="Buscar também em datas próximas"
+        />
+      </div>
+      <button type="submit" class="submit" [disabled]="loading() || exploreLoading()">Buscar manual</button>
+    </form>
+  </section>
+
+  <section *ngIf="parsedIntent() as intent" class="intent-chips">
+    <span class="intent-label">Entendi:</span>
+    <span class="chip" *ngIf="intent.origin_iata">Origem · <strong>{{ intent.origin_iata }}</strong></span>
+    <span class="chip" *ngIf="intent.destination_iata">Destino · <strong>{{ intent.destination_iata }}</strong></span>
+    <span class="chip" *ngIf="intent.date_start">Ida · <strong>{{ intent.date_start }}</strong></span>
+    <span class="chip" *ngIf="intent.date_return">Volta · <strong>{{ intent.date_return }}</strong></span>
+    <span class="chip" *ngIf="intent.adults && intent.adults > 1">{{ intent.adults }} adultos</span>
+    <span class="chip" *ngIf="intent.direct_only">Apenas direto</span>
+    <span class="chip" *ngIf="intent.cabin && intent.cabin !== 'economy'">{{ intent.cabin }}</span>
+    <button type="button" class="edit-link" (click)="toggleForm()">Editar</button>
+  </section>
+
+  <section *ngIf="loading()" class="status loading">
+    <div class="spinner"></div>
+    <p>Consultando provedores (Kayak, BuscaMilhas, MCP, Economilhas, Skiplagged) em paralelo...</p>
+  </section>
+
+  <section *ngIf="error()" class="status error">
+    {{ error() }}
+  </section>
+
+  <!-- Cotação Inteligente: substitui completamente a busca normal quando ativa -->
+  <app-smart-explore
+    *ngIf="smartMode() && (exploreLoading() || exploreResult() || exploreError())"
+    [result]="exploreResult()"
+    [loading]="exploreLoading()"
+    [error]="exploreError()"
+    [quoteResult]="quoteForDateResult()"
+    [quoting]="quoteForDateLoading()"
+    [quoteError]="quoteForDateError()"
+    [quoteStale]="smartQuoteStale()"
+    [selectedDate]="smartSelectedDate()"
+    [splitOpened]="!!smartSplitRequest()"
+    (selectDate)="onSmartDatePicked($event)"
+    (runQuote)="runSmartQuoteForDate($event)"
+    (retryExplore)="runSmartExplore()"
+    (runSplit)="onSmartSplitRequested($event)"
+  ></app-smart-explore>
+
+  <app-split-section
+    *ngIf="smartMode() && smartSplitRequest() as splitReq"
+    [origin]="form.origin"
+    [destination]="form.destination"
+    [date]="splitReq.date"
+    [adults]="form.adults || 1"
+    [autoLoad]="true"
+  ></app-split-section>
+
+  <ng-container *ngIf="!smartMode() && response() as resp">
+    <app-best-banner
+      [bestOverall]="resp.best_overall"
+      [bestMiles]="resp.best_miles"
+      [bestMoney]="resp.best_money"
+    ></app-best-banner>
+
+    <section *ngIf="airlineRanking().length > 0" class="airline-ranking">
+      <header class="ar-header">
+        <h3>Ranking por companhia</h3>
+        <span class="ar-hint">Melhor oferta de cada cia BR doméstica</span>
+      </header>
+      <div class="ar-grid">
+        <article
+          *ngFor="let r of airlineRanking(); let i = index"
+          class="ar-card"
+          [class.top]="i === 0"
+          [attr.data-carrier]="r.code"
+        >
+          <header>
+            <span class="ar-airline">{{ r.name }}</span>
+            <span class="ar-badge" *ngIf="i === 0">Melhor geral</span>
+          </header>
+          <div class="ar-price" *ngIf="r.best.miles == null">R$ <strong>{{ r.best.price_brl | number : '1.0-0' }}</strong></div>
+          <div class="ar-price miles" *ngIf="r.best.miles != null">
+            <strong>{{ r.best.miles | number : '1.0-0' }}</strong> milhas
+            <span *ngIf="r.best.taxes_brl"> + R$ {{ r.best.taxes_brl | number : '1.0-0' }} taxas</span>
+          </div>
+          <div class="ar-equiv" *ngIf="r.best.equivalent_brl != null">
+            ≈ R$ {{ r.best.equivalent_brl | number : '1.0-0' }} total estimado
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section *ngIf="hiddenCityRoundtripWarning()" class="alert info">
+      <strong>Você pediu ida + volta.</strong>
+      As opções de <em>Hidden City</em> abaixo são <strong>apenas para a ida</strong> — esse tipo de bilhete só funciona se você descer na conexão e descartar o resto do PNR. Para a volta, compre um bilhete separado (cash direto, milhas ou outra hidden city no sentido contrário).
+    </section>
+
+    <section *ngIf="multiPaxHiddenWarning()" class="alert warn">
+      <strong>Múltiplos passageiros + Hidden City:</strong>
+      bilhetes hidden city com mais de 1 pessoa no mesmo PNR aumentam o risco de auditoria pela companhia. Considere comprar PNRs separados por pessoa.
+    </section>
+
+    <section *ngIf="resp.summary" class="ai-summary">
+      <div class="ai-label">Resumo</div>
+      <p>{{ resp.summary }}</p>
+    </section>
+
+    <app-price-calendar
+      *ngIf="resp.date_best_map && (resp.date_best_map | keyvalue).length > 1"
+      [priceMap]="resp.date_best_map"
+      [requestedDate]="form.date_start"
+      [bestDate]="resp.best_depart_date || null"
+      (select)="onCalendarDateSelected($event)"
+    ></app-price-calendar>
+
+    <app-provider-comparison [response]="resp"></app-provider-comparison>
+
+    <app-smart-quote
+      [origin]="form.origin"
+      [destination]="form.destination"
+      [date]="form.date_start"
+      [estimatedPriceBrl]="cheapestCashPrice()"
+      [carriersSeen]="carriersSeen()"
+    ></app-smart-quote>
+
+    <app-split-section
+      [origin]="form.origin"
+      [destination]="form.destination"
+      [date]="form.date_start"
+      [adults]="form.adults || 1"
+    ></app-split-section>
+
+    <nav class="tabs" *ngIf="airlineTabs().length > 1">
+      <button
+        type="button"
+        *ngFor="let t of airlineTabs()"
+        [class.active]="activeTab() === t.key"
+        [attr.data-carrier]="t.key"
+        (click)="activeTab.set(t.key)"
+      >
+        {{ t.label }}
+        <span class="count">{{ t.count }}</span>
+      </button>
+    </nav>
+
+    <section class="results-toolbar" *ngIf="totalOffers() > 0">
+      <div class="meta">
+        <strong>{{ currentTabOffers().length }}</strong> ofertas exibidas
+        <span class="cache-hint">·  preços podem variar em minutos</span>
+      </div>
+      <div class="toolbar-actions">
+        <button
+          type="button"
+          class="refresh"
+          (click)="refreshPrices()"
+          [disabled]="loading()"
+          title="Refaz a busca ignorando o cache (use antes de fechar venda)"
+        >
+          Atualizar preços
+        </button>
+        <div class="sort">
+          <span>Ordenar:</span>
+          <button type="button" [class.active]="sortMode() === 'price'" (click)="sortMode.set('price')">Preço</button>
+          <button type="button" [class.active]="sortMode() === 'duration'" (click)="sortMode.set('duration')">Duração</button>
+        </div>
+      </div>
+    </section>
+
+    <ng-container *ngIf="activeTab() === 'all'">
+      <section *ngFor="let group of scenariosForRender()" class="scenario-section">
+        <header class="scenario-header">
+          <h2>{{ group.meta.label }}</h2>
+          <span class="count">{{ group.offers.length }} oferta{{ group.offers.length > 1 ? 's' : '' }}</span>
+        </header>
+        <p class="scenario-desc">{{ group.meta.description }}</p>
+        <div class="grid">
+          <app-flight-card
+            *ngFor="let offer of group.offers; let i = index"
+            [offer]="offer"
+            [showValidation]="i < 3"
+          ></app-flight-card>
+        </div>
+      </section>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab() !== 'all'">
+      <div class="grid">
+        <app-flight-card
+          *ngFor="let offer of currentTabOffers(); let i = index"
+          [offer]="offer"
+          [showValidation]="i < 3"
+        ></app-flight-card>
+      </div>
+    </ng-container>
+
+    <section *ngIf="totalOffers() === 0" class="status empty">
+      Nenhuma oferta encontrada para essa rota.
+    </section>
+  </ng-container>
+</div>

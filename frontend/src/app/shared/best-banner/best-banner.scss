@@ -1,0 +1,58 @@
+.best-banner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin: 20px 0 24px;
+}
+
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s ease;
+
+  &:hover { border-color: var(--border-strong); }
+
+  &.featured {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent-soft);
+  }
+
+  .label {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .primary {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.2;
+    margin-top: 4px;
+  }
+
+  .equivalent {
+    font-size: 0.85rem;
+    color: var(--success);
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .secondary {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+  }
+
+  .tertiary {
+    font-size: 0.78rem;
+    color: var(--text-disabled);
+  }
+}

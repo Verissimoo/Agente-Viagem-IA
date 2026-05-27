@@ -1,0 +1,580 @@
+<section class="quote-complete" *ngIf="result as r">
+  <header class="qc-header">
+    <h2>💎 Cotação Completa para {{ longDate(r.date) }}</h2>
+    <p class="qc-sub">Baseado na data selecionada na Cotação Inteligente: <strong>{{ r.date }}</strong>
+      <span *ngIf="r.return_date">· volta <strong>{{ r.return_date }}</strong></span>
+    </p>
+  </header>
+
+  <!-- ── Tabs ── -->
+  <nav class="qc-tabs">
+    <button
+      type="button"
+      *ngFor="let t of tabs(); trackBy: trackTab"
+      [class.active]="activeTab() === t.key"
+      [class.empty]="!t.hasResults && t.key !== 'VERDICT'"
+      (click)="setTab(t.key)"
+    >
+      {{ t.label }}
+      <span class="count" *ngIf="t.key !== 'VERDICT'">{{ t.count }}</span>
+    </button>
+  </nav>
+
+  <!-- ── Aba VEREDITO PcD ── -->
+  <ng-container *ngIf="activeTab() === 'VERDICT'">
+    <div class="verdict-cards">
+      <article
+        *ngFor="let v of r.verdict; trackBy: trackVerdict"
+        class="verdict-card"
+        [class.primary]="v.kind === 'overall'"
+        [class.empty]="!v.row"
+      >
+        <header>
+          <span class="vc-label">{{ v.label }}</span>
+          <span *ngIf="v.kind === 'overall' && v.row" class="vc-star">★</span>
+        </header>
+        <ng-container *ngIf="v.row as row; else noResult">
+          <strong class="vc-airline">{{ row.companhia_label }}</strong>
+          <div class="vc-price" *ngIf="row.miles == null">R$ {{ formatBRL(row.real_cost_brl) }}</div>
+          <div class="vc-price miles" *ngIf="row.miles != null">
+            R$ {{ formatBRL(row.real_cost_brl) }}
+          </div>
+          <div class="vc-detail">
+            <span *ngIf="row.miles != null">
+              {{ formatBRL(row.miles) }} mi
+              <span *ngIf="row.taxes_brl"> + R$ {{ formatBRL(row.taxes_brl) }} taxas</span>
+            </span>
+            <span *ngIf="row.miles == null && row.price_with_markup_brl">
+              mercado R$ {{ formatBRL(row.price_brl) }} · venda R$ {{ formatBRL(row.price_with_markup_brl) }}
+            </span>
+            <div class="vc-when">📅 Partida {{ row.date }} · {{ row.departure_time }} → {{ row.arrival_time }} · {{ row.layover_city }}</div>
+          </div>
+        </ng-container>
+        <ng-template #noResult>
+          <div class="vc-empty">Sem resultado</div>
+          <p class="vc-empty-msg">{{ v.description }}</p>
+        </ng-template>
+      </article>
+    </div>
+
+    <!-- Ranking por Companhia -->
+    <section class="airline-ranking">
+      <h3>Ranking por Companhia</h3>
+      <div class="ar-grid">
+        <article
+          *ngFor="let b of r.airline_ranking; let i = index; trackBy: trackBucket"
+          class="ar-card"
+          [class.top]="b.best && b.code === r.verdict[0]?.row?.carrier_iata"
+          [attr.data-carrier]="b.code"
+        >
+          <header>
+            <span class="ar-airline">{{ b.label }}</span>
+            <span class="ar-badge" *ngIf="b.best && r.verdict[0]?.row?.id === b.best.id">Melhor geral</span>
+          </header>
+          <ng-container *ngIf="b.best as best; else noResultMini">
+            <div class="ar-price" *ngIf="best.miles == null">R$ {{ formatBRL(best.real_cost_brl) }}</div>
+            <div class="ar-price miles" *ngIf="best.miles != null">R$ {{ formatBRL(best.real_cost_brl) }}</div>
+            <div class="ar-sub" *ngIf="best.miles != null">
+              {{ formatBRL(best.miles) }} milhas (custo real)
+            </div>
+            <div class="ar-when">
+              📅 {{ best.date }} · {{ best.layover_city === 'Direto' ? 'Direto' : best.stops + ' parada(s)' }} · {{ best.duration_str }}
+            </div>
+          </ng-container>
+          <ng-template #noResultMini>
+            <div class="ar-empty">—</div>
+            <div class="ar-sub muted">Sem resultado</div>
+          </ng-template>
+        </article>
+      </div>
+    </section>
+
+    <!-- Banner explicativo cash-com-markup vs milhas-sem-markup -->
+    <section *ngIf="r.comparison_note" class="qc-comparison-note">
+      <span class="cn-icon">ℹ</span>
+      <p>{{ r.comparison_note }}</p>
+    </section>
+
+    <!-- Summary textual -->
+    <section class="qc-summary" *ngIf="r.summary">
+      <p>{{ r.summary }}</p>
+    </section>
+  </ng-container>
+
+  <!-- ── Aba TABELA (qualquer bucket) ── -->
+  <ng-container *ngIf="currentBucket() as bucket">
+    <div *ngIf="!bucket.has_results" class="qc-empty-state">
+      <strong>Sem resultado</strong>
+      <p>Nenhuma oferta encontrada nesta companhia para a data selecionada.</p>
+    </div>
+
+    <div *ngIf="bucket.has_results" class="qc-toolbar">
+      <label class="qc-validated-toggle" *ngIf="bucket.code !== 'KAYAK' && bucket.code !== 'SKIPLAGGED'">
+        <input type="checkbox" [checked]="onlyValidated()" (change)="onlyValidated.set($any($event.target).checked)" />
+        <span>
+          <strong>Somente voos validados</strong> — só ofertas que aparecem no <em>Economilhas</em> (fonte de verdade). BuscaMilhas sozinho fica como fonte única.
+        </span>
+      </label>
+    </div>
+
+    <div *ngIf="bucket.has_results" class="qc-table-block">
+      <div class="qc-table-wrap">
+      <table class="qc-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th title="Validado em 2+ fontes">✓</th>
+            <th>Cenário</th>
+            <th>ID</th>
+            <th>Companhia</th>
+            <th>Trecho</th>
+            <th>Data</th>
+            <th>Milhas</th>
+            <th>Custo Real <small>(mi+taxas)</small></th>
+            <th>Taxas</th>
+            <th>Preço Final</th>
+            <th>Valor c/ Mala</th>
+            <th>Duração</th>
+            <th>Escalas</th>
+            <th>Saída</th>
+            <th>Chegada</th>
+            <th>Local Escala</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let row of filteredRows(); trackBy: trackRow"
+            [class.best-row]="isBestRow(row, bucket)"
+            [class.row-hidden]="row.scenario === 'hidden_city'"
+            [class.row-split]="row.scenario === 'split_cash'"
+            [class.row-unvalidated]="row.miles != null && !row.is_validated"
+            (click)="selectOffer(row.offer_index)"
+          >
+            <td><input type="checkbox" [checked]="row.offer_index === selectedOfferIndex()" (click)="selectOffer(row.offer_index); $event.stopPropagation()" /></td>
+            <td class="valid-cell">
+              <span
+                *ngIf="row.miles != null && row.is_validated"
+                class="val-badge ok"
+                [title]="'Validado pelo Economilhas. Fontes que retornaram este voo: ' + row.validation_sources.join(' + ')"
+              >✓</span>
+              <span
+                *ngIf="row.miles != null && !row.is_validated"
+                class="val-badge warn"
+                [title]="'Fonte única (' + row.validation_sources.join(', ') + ') — Economilhas não devolveu este voo. Confirme na cia antes de fechar.'"
+              >⚠</span>
+              <span
+                *ngIf="row.miles == null"
+                class="val-badge neutral"
+                title="Tarifa cash — fonte única é definitiva."
+              >—</span>
+            </td>
+            <td class="scenario-cell">
+              <span
+                *ngIf="row.scenario === 'hidden_city'"
+                class="scen-badge hidden"
+                [title]="row.risk_notes || 'Hidden city — bagagem só de mão, ida só.'"
+              >⚠ Hidden</span>
+              <span
+                *ngIf="row.scenario === 'split_cash'"
+                class="scen-badge split"
+                title="Split: dois bilhetes cash mais baratos que um direto"
+              >🔀 Split</span>
+              <span
+                *ngIf="row.scenario === 'split_miles'"
+                class="scen-badge split"
+                title="Split em milhas: combinação de pernas em programas diferentes"
+              >🔀 Split (mi)</span>
+            </td>
+            <td class="mono">{{ row.id }}</td>
+            <td>{{ row.companhia_label }}</td>
+            <td>{{ row.leg }}</td>
+            <td>{{ row.date }}</td>
+            <td class="num">{{ row.miles ? formatBRL(row.miles) : '—' }}</td>
+            <td class="num">{{ row.real_cost_brl != null ? 'R$ ' + formatBRL(row.real_cost_brl) : '—' }}</td>
+            <td class="num">{{ row.taxes_brl != null ? 'R$ ' + formatBRL(row.taxes_brl) : 'R$ 0,00' }}</td>
+            <td class="num">{{ row.price_brl != null ? 'R$ ' + formatBRL(row.price_brl) : '—' }}</td>
+            <td class="num">{{ row.price_with_baggage_brl != null ? 'R$ ' + formatBRL(row.price_with_baggage_brl) : '—' }}</td>
+            <td>{{ row.duration_str }}</td>
+            <td class="num">{{ row.stops }}</td>
+            <td>{{ row.departure_time || '—' }}</td>
+            <td>{{ row.arrival_time || '—' }}</td>
+            <td>{{ row.layover_city }}</td>
+          </tr>
+        </tbody>
+      </table>
+      </div><!-- /.qc-table-wrap -->
+
+      <div class="qc-pagination" *ngIf="allFilteredRows().length > PAGE_SIZE">
+        <span class="qc-page-info">
+          Mostrando <strong>{{ filteredRows().length }}</strong> de
+          <strong>{{ allFilteredRows().length }}</strong> resultados
+        </span>
+        <button
+          *ngIf="hasMoreRows()"
+          type="button"
+          class="qc-load-more"
+          (click)="loadMoreRows()"
+        >
+          Mostrar mais {{ PAGE_SIZE }}
+        </button>
+        <button
+          *ngIf="!hasMoreRows() && currentPage() > 1"
+          type="button"
+          class="qc-load-more subtle"
+          (click)="resetPagination()"
+        >
+          Mostrar menos
+        </button>
+      </div>
+
+      <p class="qc-table-hint" *ngIf="bucket.code === 'KAYAK'">
+        Preços de <strong>mercado Kayak</strong> (sem markup) — é o que o cliente vê na pesquisa pública.
+        O <strong>preço de venda</strong> com markup de 10% aparece no Veredito PcD.
+      </p>
+    </div><!-- /.qc-table-block -->
+  </ng-container>
+
+  <!-- ── Itinerário Detalhado (sempre visível embaixo) ── -->
+  <section class="qc-itinerary" *ngIf="r.flat_offers.length">
+    <h3>✈️ Itinerário Detalhado — Todos os voos</h3>
+    <label for="offer-pick" class="qc-label">Selecione o voo pelo ID</label>
+    <select
+      id="offer-pick"
+      [ngModel]="selectedOfferIndex()"
+      (ngModelChange)="selectOffer($event)"
+    >
+      <option *ngFor="let opt of offerOptions(); trackBy: trackOption" [ngValue]="opt.index">
+        {{ opt.label }}
+      </option>
+    </select>
+
+    <ng-container *ngIf="selectedOffer() as offer">
+      <div
+        *ngIf="offer.scenario === 'hidden_city'"
+        class="hidden-warn"
+      >
+        <strong>⚠ Hidden City — só ida.</strong>
+        Você desembarca na conexão e descarta os trechos restantes. A companhia
+        cancela automaticamente o resto do PNR (incluindo qualquer volta).
+        <strong>Sem bagagem despachada</strong> — vai para o destino oficial do
+        bilhete. Use só com bagagem de mão e <strong>fora de programa de milhagem</strong>.
+        <span *ngIf="offer.layover_city"> Você desce em: <strong>{{ offer.layover_city }}</strong>.</span>
+      </div>
+
+      <!-- Alternativa em MILHAS para o itinerário oficial completo do hidden city -->
+      <section *ngIf="offer.scenario === 'hidden_city'" class="hidden-miles-panel">
+        <ng-container *ngIf="hiddenCityMilesLoading() && !selectedHiddenCityMiles()">
+          <div class="hmp-loading">
+            <span class="hmp-spinner"></span>
+            Cotando milhas para o itinerário oficial...
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="selectedHiddenCityMiles() as hcm">
+          <header>
+            <strong>🎯 Mesmo bilhete em milhas</strong>
+            <span class="hmp-route">
+              Cotação para o itinerário oficial
+              <strong>{{ hcm.official_origin }} → {{ hcm.official_destination }}</strong>
+              pela <strong>{{ hcm.carrier_label }}</strong>
+              <em>(passageiro desce em {{ hcm.passenger_destination }})</em>
+            </span>
+          </header>
+
+          <!-- Banner de recomendação cash vs milhas vs voo direto -->
+          <div *ngIf="hcm.recommendation !== 'unknown' && hcm.cash_reference_brl != null" class="hmp-recommendation"
+               [class.cash-wins]="hcm.recommendation === 'cash_cheaper'"
+               [class.miles-wins]="hcm.recommendation === 'miles_cheaper'"
+               [class.similar]="hcm.recommendation === 'similar'"
+               [class.direct-wins]="hcm.recommendation === 'direct_better'">
+            <ng-container [ngSwitch]="hcm.recommendation">
+              <div *ngSwitchCase="'cash_cheaper'">
+                <strong>💵 Cash é a melhor opção neste bilhete</strong>
+                <p>
+                  Skiplagged cash: <strong>R$ {{ formatBRL(hcm.cash_reference_brl) }}</strong> ·
+                  Mesmo bilhete em milhas (mais barato): R$ {{ formatBRL(hcm.cheapest_miles_real_cost_brl) }}.
+                  Pagando em dinheiro você economiza <strong>R$ {{ formatBRL(-hcm.savings_brl!) }}</strong>
+                  vs. usar milhas neste PNR.
+                </p>
+              </div>
+              <div *ngSwitchCase="'miles_cheaper'">
+                <strong>✈ Milhas vale mais a pena neste bilhete</strong>
+                <p>
+                  Skiplagged cash: R$ {{ formatBRL(hcm.cash_reference_brl) }} ·
+                  Mesmo bilhete em milhas: <strong>R$ {{ formatBRL(hcm.cheapest_miles_real_cost_brl) }}</strong>.
+                  Usando milhas você economiza <strong>R$ {{ formatBRL(hcm.savings_brl!) }}</strong>.
+                </p>
+              </div>
+              <div *ngSwitchCase="'similar'">
+                <strong>≈ Cash e milhas em paridade</strong>
+                <p>
+                  Skiplagged cash: R$ {{ formatBRL(hcm.cash_reference_brl) }} ·
+                  Mesmo bilhete em milhas: R$ {{ formatBRL(hcm.cheapest_miles_real_cost_brl) }}.
+                  Diferença pequena — escolha a forma que faz mais sentido pro cliente.
+                </p>
+              </div>
+              <div *ngSwitchCase="'direct_better'">
+                <strong>🛑 Hidden city NÃO compensa — voo direto é mais barato</strong>
+                <p *ngIf="hcm.direct_flight as df">
+                  Voo direto <strong>{{ df.origin }} → {{ df.passenger_destination }}</strong>:
+                  <strong>R$ {{ formatBRL(df.direct_min_price_brl) }}</strong> ·
+                  Hidden city Skiplagged: R$ {{ formatBRL(hcm.cash_reference_brl) }}.
+                  Comprando o voo direto pro destino real do cliente você economiza
+                  <strong>R$ {{ formatBRL(df.savings_vs_hidden_brl ? -df.savings_vs_hidden_brl : 0) }}</strong>
+                  e evita os riscos do hidden city (sem bagagem despachada, sem milhagem, PNR sob risco).
+                </p>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Bloco de validação contra voo direto -->
+          <div *ngIf="hcm.direct_flight as df" class="hmp-direct-check"
+               [class.warning]="!df.is_hidden_worth_it && df.found_any">
+            <div class="dc-line">
+              <strong>📍 Voo direto pro destino real ({{ df.origin }} → {{ df.passenger_destination }}):</strong>
+              <span *ngIf="df.found_any">
+                cash a partir de <strong>R$ {{ formatBRL(df.direct_min_price_brl) }}</strong>
+                <span *ngIf="df.direct_carrier_iata"> ({{ airlineName(df.direct_carrier_iata) }})</span>
+              </span>
+              <span *ngIf="!df.found_any" class="dc-none">não encontramos cash direto disponível</span>
+            </div>
+            <div class="dc-verdict" *ngIf="df.found_any && hcm.cash_reference_brl != null">
+              <ng-container *ngIf="df.is_hidden_worth_it; else hiddenNotWorth">
+                ✓ Hidden city economiza <strong>R$ {{ formatBRL(df.savings_vs_hidden_brl) }}</strong>
+                vs voo direto — pode valer a pena.
+              </ng-container>
+              <ng-template #hiddenNotWorth>
+                ⚠ Hidden city economiza pouco ou nada vs voo direto. Considere ofertar o voo direto.
+              </ng-template>
+            </div>
+          </div>
+
+          <ng-container *ngIf="hcm.alternatives.length; else noAlts">
+            <p class="hmp-explain">
+              Você compra o bilhete oficial até <strong>{{ hcm.official_destination }}</strong>,
+              mas desembarca na escala em <strong>{{ hcm.passenger_destination }}</strong>.
+              Abaixo o preço EM MILHAS desse mesmo PNR, se preferir emitir em vez de cash:
+            </p>
+            <table class="hmp-table">
+              <thead>
+                <tr>
+                  <th>Programa</th>
+                  <th>Voo</th>
+                  <th>Saída</th>
+                  <th class="num">Milhas</th>
+                  <th class="num">Taxas</th>
+                  <th class="num">Custo Real</th>
+                  <th>Fonte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let alt of hcm.alternatives">
+                  <td><strong>{{ alt.program_label }}</strong></td>
+                  <td>{{ alt.flight_number || '—' }}</td>
+                  <td>{{ alt.departure_time || '—' }}{{ alt.arrival_time ? ' → ' + alt.arrival_time : '' }}</td>
+                  <td class="num">{{ formatBRL(alt.miles) }}</td>
+                  <td class="num">R$ {{ formatBRL(alt.taxes_brl) }}</td>
+                  <td class="num"><strong>R$ {{ formatBRL(alt.real_cost_brl) }}</strong></td>
+                  <td>
+                    <span class="src-tag" [class.validated]="alt.source === 'economilhas'">
+                      {{ alt.source === 'economilhas' ? '✓ Economilhas' : alt.source }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="hmp-footer">
+              {{ hcm.has_validated
+                ? '✓ Esta rota está confirmada pelo Economilhas.'
+                : '⚠ Só BuscaMilhas devolveu essa rota — confirme na cia antes de fechar.' }}
+            </p>
+          </ng-container>
+
+          <ng-template #noAlts>
+            <p class="hmp-empty">
+              Não encontramos cotação em milhas para o itinerário
+              <strong>{{ hcm.official_origin }} → {{ hcm.official_destination }}</strong>
+              pela {{ hcm.carrier_label }} nesta data. A rota pode estar fora do inventário de milhas
+              hoje — vale conferir direto na cia.
+            </p>
+          </ng-template>
+        </ng-container>
+      </section>
+      <div
+        *ngIf="offer.scenario === 'split_cash' || offer.scenario === 'split_miles'"
+        class="split-warn"
+      >
+        <strong>🔀 Split — dois bilhetes separados.</strong>
+        Esta combinação envolve PNRs independentes. Bagagem despachada não é
+        transferida automaticamente entre os trechos — confirme retirada/check-in
+        no hub antes de fechar.
+      </div>
+
+      <!-- Validação Split em milhas: cada perna validada na cia operadora -->
+      <section
+        *ngIf="offer.scenario === 'split_cash' || offer.scenario === 'split_miles'"
+        class="split-miles-panel"
+      >
+        <header class="smp-header">
+          <h4>🔍 Validação em milhas — cada trecho do split</h4>
+          <p>
+            Conferimos se cada voo deste split existe nos programas da cia operadora
+            (BuscaMilhas + Economilhas). <strong>Não fazemos encaixe alternativo</strong>
+            — apenas validamos os trechos que o Skiplagged identificou.
+          </p>
+        </header>
+
+        <div *ngIf="splitMilesLoading()" class="smp-status">
+          <span class="smp-spinner"></span>
+          Validando cada perna em milhas...
+        </div>
+
+        <ng-container *ngIf="selectedSplitMilesValidation() as smv">
+          <!-- Resumo agregado (recomendação) -->
+          <div
+            class="smp-summary"
+            [class.ok]="smv.recommendation === 'miles_cheaper'"
+            [class.warn]="smv.recommendation === 'incomplete'"
+            [class.neutral]="smv.recommendation === 'similar' || smv.recommendation === 'cash_cheaper'"
+          >
+            <div class="smp-summary-head" [ngSwitch]="smv.recommendation">
+              <strong *ngSwitchCase="'miles_cheaper'">✓ Milhas economiza neste split</strong>
+              <strong *ngSwitchCase="'cash_cheaper'">⚠ Cash sai mais barato — não vale milhas aqui</strong>
+              <strong *ngSwitchCase="'similar'">≈ Valores parecidos cash vs milhas</strong>
+              <strong *ngSwitchCase="'incomplete'">⚠ Validação incompleta</strong>
+              <strong *ngSwitchDefault>Validação processada</strong>
+            </div>
+            <p *ngIf="smv.summary_note" class="smp-summary-note">{{ smv.summary_note }}</p>
+            <div class="smp-summary-totals" *ngIf="smv.total_cheapest_miles_brl != null">
+              <div>
+                <span class="smp-label">Soma milhas (mais baratas por perna):</span>
+                <strong>R$ {{ formatBRL(smv.total_cheapest_miles_brl) }}</strong>
+              </div>
+              <div *ngIf="smv.cash_reference_brl != null">
+                <span class="smp-label">Cash Skiplagged:</span>
+                <strong>R$ {{ formatBRL(smv.cash_reference_brl) }}</strong>
+              </div>
+              <div
+                *ngIf="smv.savings_brl != null"
+                class="smp-savings"
+                [class.positive]="smv.savings_brl > 0"
+                [class.negative]="smv.savings_brl <= 0"
+              >
+                <span class="smp-label">Diferença:</span>
+                <strong>
+                  {{ smv.savings_brl > 0 ? '+' : '' }}R$ {{ formatBRL(smv.savings_brl) }}
+                  <ng-container *ngIf="smv.savings_brl > 0"> (milhas economiza)</ng-container>
+                  <ng-container *ngIf="smv.savings_brl <= 0"> (cash mais barato)</ng-container>
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card por perna -->
+          <article
+            *ngFor="let leg of smv.legs; let i = index"
+            class="smp-leg"
+            [class.found]="leg.found_in_miles"
+            [class.exact]="leg.found_exact_flight"
+            [class.missing]="!leg.found_in_miles"
+          >
+            <header class="smp-leg-head">
+              <span class="smp-leg-num">Trecho {{ i + 1 }}</span>
+              <strong>{{ leg.origin }} → {{ leg.destination }}</strong>
+              <span class="smp-leg-meta">
+                {{ leg.carrier_label }}
+                <span *ngIf="leg.flight_number"> · voo {{ leg.flight_number }}</span>
+                <span *ngIf="leg.departure_dt"> · {{ leg.departure_dt | date:'dd/MM HH:mm' }}</span>
+              </span>
+              <span class="smp-leg-badge">
+                <ng-container *ngIf="leg.found_exact_flight">✓ Voo confirmado em milhas</ng-container>
+                <ng-container *ngIf="leg.found_in_miles && !leg.found_exact_flight">⚠ Cia tem voos, mas não no horário exato</ng-container>
+                <ng-container *ngIf="!leg.found_in_miles">✗ Sem disponibilidade em milhas</ng-container>
+              </span>
+            </header>
+
+            <p *ngIf="leg.note" class="smp-leg-note">{{ leg.note }}</p>
+
+            <div *ngIf="leg.alternatives.length" class="smp-alts">
+              <table class="smp-alts-table">
+                <thead>
+                  <tr>
+                    <th>Fonte</th>
+                    <th>Programa</th>
+                    <th>Voo</th>
+                    <th>Horário</th>
+                    <th>Milhas</th>
+                    <th>Taxas</th>
+                    <th>Custo total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let alt of leg.alternatives">
+                    <td>{{ alt.source }}</td>
+                    <td>{{ alt.program_label }}</td>
+                    <td class="mono">{{ alt.flight_number || '—' }}</td>
+                    <td>{{ alt.departure_time || '—' }} → {{ alt.arrival_time || '—' }}</td>
+                    <td class="num">{{ formatBRL(alt.miles) }}</td>
+                    <td class="num">R$ {{ formatBRL(alt.taxes_brl) }}</td>
+                    <td class="num"><strong>R$ {{ formatBRL(alt.real_cost_brl) }}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </ng-container>
+
+        <p *ngIf="!splitMilesLoading() && !selectedSplitMilesValidation()" class="smp-empty">
+          Selecione esta oferta no dropdown acima para disparar a validação em milhas.
+        </p>
+      </section>
+      <article class="leg-block">
+        <header class="leg-head">
+          <span class="leg-tag">IDA</span>
+          <strong>{{ offer.outbound.segments[0]?.origin }} → {{ offer.outbound.segments[offer.outbound.segments.length - 1]?.destination }}</strong>
+          <span class="leg-meta">
+            {{ offer.outbound.segments[0]?.departure_dt | date:'dd/MM/yyyy' }}
+            · {{ offer.outbound.segments.length === 1 ? 'Direto' : (offer.outbound.segments.length - 1) + ' escala(s)' }}
+            · {{ formatDuration(offer.outbound.duration_min) }}
+          </span>
+        </header>
+        <ol class="seg-list">
+          <li *ngFor="let s of offer.outbound.segments">
+            <div class="seg-row">
+              <span class="seg-time">{{ formatTime(s.departure_dt) }}</span>
+              <span class="seg-iata">{{ s.origin }}</span>
+              <span class="seg-arrow">→</span>
+              <span class="seg-time">{{ formatTime(s.arrival_dt) }}</span>
+              <span class="seg-iata">{{ s.destination }}</span>
+              <span class="seg-carrier">{{ airlineName(s.carrier) }} {{ s.flight_number || '' }}</span>
+            </div>
+          </li>
+        </ol>
+      </article>
+
+      <article *ngIf="offer.inbound" class="leg-block">
+        <header class="leg-head">
+          <span class="leg-tag volta">VOLTA</span>
+          <strong>{{ offer.inbound.segments[0]?.origin }} → {{ offer.inbound.segments[offer.inbound.segments.length - 1]?.destination }}</strong>
+          <span class="leg-meta">
+            {{ offer.inbound.segments[0]?.departure_dt | date:'dd/MM/yyyy' }}
+            · {{ offer.inbound.segments.length === 1 ? 'Direto' : (offer.inbound.segments.length - 1) + ' escala(s)' }}
+            · {{ formatDuration(offer.inbound.duration_min) }}
+          </span>
+        </header>
+        <ol class="seg-list">
+          <li *ngFor="let s of offer.inbound.segments">
+            <div class="seg-row">
+              <span class="seg-time">{{ formatTime(s.departure_dt) }}</span>
+              <span class="seg-iata">{{ s.origin }}</span>
+              <span class="seg-arrow">→</span>
+              <span class="seg-time">{{ formatTime(s.arrival_dt) }}</span>
+              <span class="seg-iata">{{ s.destination }}</span>
+              <span class="seg-carrier">{{ airlineName(s.carrier) }} {{ s.flight_number || '' }}</span>
+            </div>
+          </li>
+        </ol>
+      </article>
+    </ng-container>
+  </section>
+</section>

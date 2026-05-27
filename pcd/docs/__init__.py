@@ -1,3 +1,0 @@
-"""
-Docs module for pcd.
-"""

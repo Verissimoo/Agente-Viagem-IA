@@ -1,0 +1,150 @@
+.price-chart {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 16px 0 24px;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    p {
+      margin: 2px 0 0;
+      font-size: 0.78rem;
+      color: var(--text-disabled);
+    }
+
+    .stats {
+      display: flex;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      align-items: center;
+      flex-wrap: wrap;
+      font-variant-numeric: tabular-nums;
+
+      .dot {
+        display: inline-block;
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        margin-right: 4px;
+        vertical-align: middle;
+        &.min { background: var(--success); }
+        &.avg { background: var(--accent); }
+        &.max { background: var(--danger); }
+      }
+    }
+  }
+
+  .chart-area {
+    display: grid;
+    grid-template-columns: repeat(var(--max-bars), 1fr);
+    gap: 6px;
+    align-items: end;
+    height: 220px;
+    padding: 0 4px;
+    position: relative;
+  }
+
+  .grid-lines {
+    position: absolute;
+    inset: 30px 0 30px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 0;
+
+    .grid-line {
+      border-top: 1px dashed var(--border-subtle);
+      height: 0;
+    }
+  }
+
+  .bar-col {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    gap: 4px;
+    align-items: end;
+    cursor: pointer;
+    padding: 4px 2px 2px;
+    border-radius: 6px;
+    transition: background 0.12s ease;
+    min-width: 0;
+
+    &:hover {
+      background: var(--bg-subtle);
+      .bar { background: linear-gradient(180deg, var(--accent), var(--accent-strong)); }
+    }
+
+    .bar-value {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bar-wrap {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .bar {
+      width: 72%;
+      background: linear-gradient(180deg, var(--success), color-mix(in srgb, var(--success) 70%, transparent));
+      border-radius: 4px 4px 0 0;
+      transition: height 0.3s ease, background 0.15s ease;
+      min-height: 4px;
+    }
+
+    .bar-label {
+      font-size: 0.7rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .bar-markers {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      min-height: 14px;
+      font-size: 0.72rem;
+    }
+    .best-marker  { color: var(--success); }
+    .req-marker   { color: var(--accent);  }
+
+    &.best .bar {
+      background: linear-gradient(180deg, var(--success), color-mix(in srgb, var(--success) 90%, transparent));
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--success) 30%, transparent);
+    }
+    &.requested .bar-label {
+      color: var(--accent);
+      font-weight: 600;
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .price-chart .chart-area { height: 180px; }
+  .price-chart .bar-value { font-size: 0.65rem; }
+}

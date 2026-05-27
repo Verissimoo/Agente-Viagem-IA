@@ -1,0 +1,38 @@
+<section class="price-chart" *ngIf="cells.length">
+  <header>
+    <div>
+      <h3>Preços nos próximos dias</h3>
+      <p>Clique em uma barra para refazer a busca naquela data.</p>
+    </div>
+    <div class="stats" *ngIf="stats">
+      <div><span class="dot avg"></span>média R$ {{ formatPrice(stats.avg) }}</div>
+      <div><span class="dot min"></span>mín R$ {{ formatPrice(stats.min) }}</div>
+      <div><span class="dot max"></span>máx R$ {{ formatPrice(stats.max) }}</div>
+    </div>
+  </header>
+
+  <div class="chart-area" [style.--max-bars]="cells.length">
+    <div class="grid-lines">
+      <div class="grid-line" *ngFor="let _ of [0,1,2,3]"></div>
+    </div>
+
+    <div
+      class="bar-col"
+      *ngFor="let cell of cells; let i = index"
+      [class.best]="cell.isBest"
+      [class.requested]="cell.isRequested"
+      [title]="cell.label + ' · R$ ' + formatPrice(cell.price)"
+      (click)="onClick(cell.iso)"
+    >
+      <div class="bar-value">R$ {{ formatPrice(cell.price) }}</div>
+      <div class="bar-wrap">
+        <div class="bar" [style.height.%]="cell.barPct"></div>
+      </div>
+      <div class="bar-label">{{ cell.shortLabel }}</div>
+      <div class="bar-markers">
+        <span *ngIf="cell.isBest" class="marker best-marker" title="Mais barato">★</span>
+        <span *ngIf="cell.isRequested" class="marker req-marker" title="Data solicitada">●</span>
+      </div>
+    </div>
+  </div>
+</section>

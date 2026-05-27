@@ -1,0 +1,160 @@
+<article class="card" [class.hidden-city]="isHidden">
+  <header>
+    <span class="badge">{{ scenarioMeta.label }}</span>
+    <span class="source">{{ sourceLabel }}</span>
+    <span class="freshness" *ngIf="offer.captured_at" [class.stale]="isStale" [title]="'Capturado em ' + offer.captured_at">
+      {{ freshnessLabel }}
+    </span>
+  </header>
+
+  <section class="route">
+    <div class="endpoint">
+      <span class="time">{{ depTime }}</span>
+      <span class="iata">{{ firstSegment.origin }}</span>
+    </div>
+
+    <div class="track">
+      <span class="track-line"></span>
+      <span class="track-meta">
+        <span class="duration">{{ totalDuration }}</span>
+        <span class="stops">{{ stopsLabel }}</span>
+      </span>
+    </div>
+
+    <div class="endpoint right">
+      <span class="time">{{ arrTime }}</span>
+      <span class="iata">{{ lastSegment.destination }}</span>
+    </div>
+  </section>
+
+  <div class="airlines">{{ airlinesDisplay }}</div>
+
+  <section class="price-area">
+    <div class="price-block">
+      <ng-container *ngIf="!isMiles">
+        <div class="price-main">R$ <strong>{{ priceBRL }}</strong></div>
+        <div class="miles-chip" *ngIf="hasMilesEstimate" [title]="'Estimativa baseada no valor do milheiro do programa ' + (offer.miles_equivalent_program || '')">
+          {{ milesEstimateLabel }}
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isMiles">
+        <div class="price-main">
+          <strong>{{ miles }}</strong>
+          <span class="unit">milhas{{ milesProgramLabel ? ' · ' + milesProgramLabel : '' }}</span>
+        </div>
+        <div class="price-sub" *ngIf="offer.taxes_brl">+ R$ {{ taxes }} taxas</div>
+        <div class="price-equivalent" *ngIf="hasEquivalentBRL" title="Milhas × valor do milheiro + taxas">
+          ≈ R$ <strong>{{ equivalentBRL }}</strong> total estimado
+        </div>
+      </ng-container>
+    </div>
+
+    <button type="button" class="toggle" (click)="toggle()">
+      {{ expanded() ? 'Ocultar detalhes' : 'Ver detalhes' }}
+    </button>
+  </section>
+
+  <div class="risk" *ngIf="offer.risk_notes" [class.severe]="isHidden">
+    <strong>{{ isHidden ? 'Importante' : 'Atenção' }}:</strong>
+    {{ offer.risk_notes }}
+  </div>
+
+  <section class="details" *ngIf="expanded()">
+    <ol class="segments">
+      <li *ngFor="let seg of offer.outbound.segments; let i = index">
+        <div class="seg-row">
+          <span class="seg-time">{{ formatTime(seg.departure_dt) }}</span>
+          <span class="seg-iata">{{ seg.origin }}</span>
+          <span class="seg-arrow">→</span>
+          <span class="seg-time">{{ formatTime(seg.arrival_dt) }}</span>
+          <span class="seg-iata">{{ seg.destination }}</span>
+          <span class="seg-carrier">{{ airlineName(seg.carrier) }} {{ seg.flight_number || '' }}</span>
+        </div>
+        <div class="seg-layover" *ngIf="i < offer.outbound.segments.length - 1">
+          Conexão em {{ seg.destination }} · {{ layoverDuration(i) }}
+        </div>
+      </li>
+    </ol>
+
+    <div *ngIf="isPartnerAward" class="partner-warn">
+      <strong>⚠ Voo parceiro Smiles:</strong>
+      ofertas via parceiro (KLM, Air France, Iberia, ...) podem não aparecer em buscas
+      tradicionais como Google Flights. Confirme disponibilidade direto no site da cia
+      <strong>antes</strong> de fechar a venda.
+    </div>
+
+    <div class="cta-row">
+      <a class="cta" *ngIf="offer.deeplink" [href]="offer.deeplink" target="_blank" rel="noopener">
+        {{ isHidden ? 'Abrir no Skiplagged' : 'Abrir reserva' }}
+      </a>
+      <button
+        type="button"
+        class="cta secondary"
+        *ngIf="canRunBuscamilhasValidation"
+        (click)="runValidation()"
+        [disabled]="validating()"
+        title="Confere se o voo existe e tem disponibilidade no BuscaMilhas (G3/LA/AD)"
+      >
+        {{ validating() ? 'Validando...' : '✓ Validar voo' }}
+      </button>
+      <a
+        class="cta tertiary"
+        *ngIf="shouldShowValidation && validationUrl"
+        [href]="validationUrl"
+        target="_blank"
+        rel="noopener"
+        [title]="isHidden ? 'Hidden city: validamos só o segmento operado pela cia, não a rota inteira' : 'Abre a busca direta no site da cia (formato pode variar)'"
+      >
+        ↗ {{ validationLabel }}
+      </a>
+      <a
+        class="cta tertiary"
+        *ngIf="shouldShowValidation && googleFlightsUrl"
+        [href]="googleFlightsUrl"
+        target="_blank"
+        rel="noopener"
+        title="Benchmark da rota completa no Google Flights"
+      >
+        ↗ Google Flights
+      </a>
+    </div>
+
+    <div
+      class="validation-panel"
+      *ngIf="validationBadge as badge"
+      [class.ok]="badge.kind === 'ok'"
+      [class.warn]="badge.kind === 'warn'"
+      [class.err]="badge.kind === 'err'"
+    >
+      <div class="badge-line">
+        <strong>{{ badge.label }}</strong>
+        <span *ngIf="validationResult()?.program as p"> · {{ p }}</span>
+      </div>
+      <p class="badge-msg">{{ validationResult()?.message }}</p>
+
+      <ng-container *ngIf="validationResult() as v">
+        <p class="price-cmp" *ngIf="v.price_comparison">{{ v.price_comparison }}</p>
+
+        <div class="match-list" *ngIf="v.matches.length">
+          <div class="match-label">Voos compatíveis no BuscaMilhas:</div>
+          <div class="match-row" *ngFor="let m of v.matches">
+            <span class="m-flight">{{ m.flight_number || (m.carrier + ' ' + (m.departure_dt | slice:11:16)) }}</span>
+            <span class="m-miles">{{ formatBRL(m.miles) }} mi + R$ {{ formatBRL(m.taxes_brl) }}</span>
+          </div>
+        </div>
+
+        <div class="match-list nearby" *ngIf="!v.matches.length && v.nearby.length">
+          <div class="match-label">Outros voos no mesmo dia:</div>
+          <div class="match-row" *ngFor="let m of v.nearby">
+            <span class="m-flight">{{ m.flight_number || 'voo' }} · {{ m.departure_dt | slice:11:16 }}</span>
+            <span class="m-miles">{{ formatBRL(m.miles) }} mi + R$ {{ formatBRL(m.taxes_brl) }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="validation-panel err" *ngIf="validationError() as e">
+      <strong>Erro:</strong> {{ e }}
+    </div>
+  </section>
+</article>

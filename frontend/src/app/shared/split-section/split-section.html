@@ -1,0 +1,733 @@
+<section class="split">
+  <header>
+    <div>
+      <h3>Quebra de trecho</h3>
+      <p>Analisa se vale comprar dois bilhetes via hub (<strong>{{ hub }}</strong>) em vez de um direto.</p>
+    </div>
+    <button type="button" class="run" (click)="load()" [disabled]="loading()">
+      {{ loading() ? 'Analisando...' : (result() ? 'Refazer análise' : 'Analisar quebra') }}
+    </button>
+  </header>
+
+  <!-- Config: hub de conexão + bagagem. Hub muda → refaz a análise; bagagem
+       muda → recalcula a janela de encaixe sem nova chamada Kayak. -->
+  <div class="split-config">
+    <div class="sc-section">
+      <label class="sc-label">Hub de conexão</label>
+      <div class="sc-chips">
+        <button
+          *ngFor="let h of HUB_CHIPS"
+          type="button"
+          class="sc-chip"
+          [class.active]="hub === h.code"
+          (click)="setHub(h.code)"
+        >
+          <strong>{{ h.code }}</strong>
+          <span>{{ h.name.split('·')[1].trim() }}</span>
+          <small *ngIf="h.recommended">recomendado</small>
+        </button>
+        <select
+          class="sc-more"
+          [value]="hub"
+          (change)="setHub($any($event.target).value)"
+          title="Outros hubs"
+        >
+          <option *ngFor="let h of HUB_FULL" [value]="h.code">{{ h.name }}</option>
+        </select>
+      </div>
+    </div>
+    <label class="sc-baggage" title="Bagagem despachada eleva a conexão mínima de 2h30 para 4h">
+      <input
+        type="checkbox"
+        [checked]="withBaggage()"
+        (change)="setBaggage($any($event.target).checked)"
+      />
+      <span>
+        <strong>Considerar bagagem despachada</strong>
+        <small>conexão mínima 2h30 → 4h</small>
+      </span>
+    </label>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────────────
+       FLUXO PRIMÁRIO — Cotação direta em milhas hub → destino.
+       Mostra ofertas REAIS de programas (Smiles/LATAM Pass/etc), sem
+       precisar achar um voo Kayak específico antes. Cada oferta abre
+       o encaixe do voo doméstico em cash.
+       ───────────────────────────────────────────────────────────── -->
+  <section class="miles-direct">
+    <header class="md-header">
+      <div>
+        <h4>Cotação em milhas · {{ hub }} → {{ destination }}</h4>
+        <p>
+          Ofertas reais de milhas pra perna internacional. Escolha uma e a gente
+          encaixa o voo doméstico ({{ origin }} → {{ hub }}) na janela de conexão.
+        </p>
+      </div>
+    </header>
+
+    <div *ngIf="milesSearchLoading()" class="md-status">
+      <span class="md-spinner"></span>
+      Consultando programas de milhas...
+    </div>
+
+    <div *ngIf="milesSearchError() as err" class="alert error">{{ err }}</div>
+
+    <ng-container *ngIf="milesSearchResult() as ms">
+      <div *ngIf="!ms.offers.length && !milesSearchLoading()" class="alert info">
+        Nenhum programa retornou disponibilidade pra {{ hub }} → {{ destination }} em {{ date }}.
+        <span *ngFor="let n of ms.notes"> · {{ n }}</span>
+      </div>
+
+      <div *ngIf="ms.offers.length" class="md-summary">
+        <strong>{{ ms.offers.length }} opção{{ ms.offers.length > 1 ? 'ões' : '' }} em milhas</strong>
+        <span *ngIf="ms.carriers_seen.length"> · companhias: {{ ms.carriers_seen.join(', ') }}</span>
+        <span *ngIf="ms.programs_seen.length"> · programas: {{ ms.programs_seen.join(', ') }}</span>
+      </div>
+
+      <article
+        *ngFor="let offer of ms.offers"
+        class="md-card"
+        [class.expanded]="milesOfferFitState(offer.id)"
+      >
+        <div class="md-card-body">
+          <div class="md-carrier">
+            <strong>{{ offer.carrier_name || airlineName(offer.carrier) }}</strong>
+            <span class="md-flight" *ngIf="offer.flight_number">· {{ offer.flight_number }}</span>
+          </div>
+          <div class="md-times" *ngIf="offer.departure_dt">
+            {{ formatTime(offer.departure_dt) }} → {{ formatTime(offer.arrival_dt) }}
+            <span *ngIf="offer.duration_min"> · {{ formatDuration(offer.duration_min) }}</span>
+            <span *ngIf="offer.stops != null">
+              · {{ offer.stops === 0 ? 'Direto' : offer.stops + ' parada' + (offer.stops > 1 ? 's' : '') }}
+            </span>
+          </div>
+          <div class="md-program" *ngIf="offer.program">
+            Programa: <strong>{{ programLabel(offer.program) }}</strong>
+            <span class="md-source"> · fonte {{ offer.source }}</span>
+          </div>
+        </div>
+
+        <div class="md-cost">
+          <div class="md-miles">
+            <strong>{{ formatBRL(offer.miles) }}</strong> milhas
+            <span *ngIf="offer.taxes_brl"> + R$ {{ formatBRL(offer.taxes_brl) }} taxas</span>
+          </div>
+          <div class="md-equiv">≈ R$ {{ formatBRL(offer.equivalent_brl) }}</div>
+        </div>
+
+        <div class="md-actions">
+          <button
+            type="button"
+            class="md-fit-btn"
+            (click)="toggleFitForMilesOffer(offer)"
+          >
+            {{ milesOfferFitState(offer.id) ? 'Fechar encaixe doméstico' : 'Encaixar voo nacional' }}
+          </button>
+        </div>
+
+        <!-- Painel de encaixe do voo doméstico pra essa oferta de milhas -->
+        <div
+          class="fit-panel md-fit-panel"
+          *ngIf="milesOfferFitState(offer.id) as fit"
+        >
+          <div *ngIf="fit.loading" class="muted">Buscando voos domésticos compatíveis...</div>
+          <div *ngIf="fit.error" class="muted error">{{ fit.error }}</div>
+          <ng-container *ngIf="fit.result as fr">
+            <div class="fit-header">
+              <strong>Encaixe {{ origin }} → {{ hub }}</strong>
+              <span class="fit-meta">
+                Pesquisa em <strong>{{ fr.search_date }}</strong>
+                <span class="fit-offset" *ngIf="fr.search_date_offset !== 'same_day'">
+                  ({{ fr.search_date_offset === 'day_before' ? 'dia anterior' : 'dia seguinte' }})
+                </span>
+                <span class="fit-bag-info">
+                  · janela {{ withBaggage() ? '4h (com bagagem)' : '2h30 (sem bagagem)' }}
+                </span>
+              </span>
+            </div>
+            <div *ngIf="fr.no_results" class="muted">Nenhum voo encontrado na janela necessária.</div>
+            <div *ngFor="let n of fr.notes" class="fit-note">{{ n }}</div>
+
+            <article
+              *ngFor="let f of fr.compatible_offers"
+              class="fit-offer"
+              [class.selected]="isDomesticSelectedForMilesOffer(offer.id, f.id)"
+            >
+              <input
+                type="radio"
+                [name]="'md_fit_' + offer.id"
+                [checked]="isDomesticSelectedForMilesOffer(offer.id, f.id)"
+                (change)="selectDomesticForMilesOffer(offer.id, f)"
+              />
+              <div class="fit-info">
+                <div class="fit-row">
+                  <strong>{{ airlineName(f.airline) }}</strong>
+                  <span class="fit-time">{{ formatTime(f.departure_dt) }} → {{ formatTime(f.arrival_dt) }}</span>
+                  <span class="fit-stops">{{ f.stops === 0 ? 'Direto' : f.stops + ' parada(s)' }}</span>
+                  <span class="fit-dur" *ngIf="f.duration_min">{{ formatDuration(f.duration_min) }}</span>
+                </div>
+                <div class="fit-row sub">
+                  <span class="layover-badge" [ngClass]="layoverBadgeClass(f.layover_status)">
+                    <ng-container [ngSwitch]="f.layover_status">
+                      <span *ngSwitchCase="'ok'">Conexão {{ formatLayover(f.layover_minutes) }}</span>
+                      <span *ngSwitchCase="'tight'">Conexão {{ formatLayover(f.layover_minutes) }} · no limite</span>
+                      <span *ngSwitchCase="'long'">Conexão {{ formatLayover(f.layover_minutes) }} · pernoite</span>
+                      <span *ngSwitchCase="'invalid'">Conexão {{ formatLayover(f.layover_minutes) }} · inviável</span>
+                    </ng-container>
+                  </span>
+                  <span class="fit-price">R$ {{ formatBRL(f.price_brl) }}</span>
+                </div>
+              </div>
+            </article>
+
+            <button
+              *ngIf="fr.incompatible_offers.length"
+              type="button"
+              class="fit-toggle-incomp"
+              (click)="toggleMilesOfferIncompatible(offer.id)"
+            >
+              {{ fit.showIncompatible ? 'Ocultar' : 'Mostrar' }}
+              {{ fr.incompatible_offers.length }} opção{{ fr.incompatible_offers.length > 1 ? 'ões' : '' }} fora da janela
+            </button>
+
+            <!-- Resumo da combinação ESCOLHIDA: milhas (intl) + cash (doméstico) -->
+            <div
+              *ngIf="selectedDomesticForMilesOffer(offer.id) as selDom"
+              class="md-combo-summary"
+            >
+              <h5>Combinação fechada</h5>
+              <div class="cs-line">
+                <span>Internacional ({{ offer.carrier_name }}, milhas):</span>
+                <strong>R$ {{ formatBRL(offer.equivalent_brl) }}</strong>
+              </div>
+              <div class="cs-line">
+                <span>Doméstico ({{ airlineName(selDom.airline) }}, cash):</span>
+                <strong>R$ {{ formatBRL(selDom.price_brl) }}</strong>
+              </div>
+              <div class="cs-total">
+                <span>Total estimado:</span>
+                <strong>R$ {{ formatBRL(milesOfferCombinationTotal(offer, selDom)) }}</strong>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </article>
+    </ng-container>
+  </section>
+
+  <div *ngIf="error()" class="alert error">{{ error() }}</div>
+
+  <ng-container *ngIf="result() as r">
+    <div *ngIf="r.route_type === 'not_applicable'" class="alert info">
+      Não aplicável para essa rota{{ r.not_applicable_reason ? ': ' + r.not_applicable_reason : '.' }}
+    </div>
+
+    <ng-container *ngIf="r.route_type !== 'not_applicable'">
+      <div *ngIf="savings(r) !== null" class="savings" [class.positive]="savings(r)! > 0" [class.negative]="savings(r)! <= 0">
+        <ng-container *ngIf="savings(r)! > 0">
+          <strong>Economia de R$ {{ formatBRL(savings(r)) }}</strong> ao comprar separado
+          (combinado R$ {{ formatBRL(bestCombinedPrice(r)) }} vs direto R$ {{ formatBRL(r.direct?.price_brl) }})
+        </ng-container>
+        <ng-container *ngIf="savings(r)! <= 0">
+          Direto é mais barato: R$ {{ formatBRL(r.direct?.price_brl) }}
+          (combinação ficaria em R$ {{ formatBRL(bestCombinedPrice(r)) }})
+        </ng-container>
+      </div>
+
+      <div class="legs">
+        <!-- Helper: define leg_type and the pair leg for miles-match -->
+        <div class="leg-column" *ngIf="r.leg_to_hub.length">
+          <h4>{{ r.origin }} → {{ r.hub }}</h4>
+          <ng-container *ngFor="let l of r.leg_to_hub.slice(0, 5)">
+            <article class="leg">
+              <div class="leg-times">
+                <span>{{ formatTime(l.departure_dt) }}</span>
+                <span class="leg-arrow">→</span>
+                <span>{{ formatTime(l.arrival_dt) }}</span>
+              </div>
+              <div class="leg-airline">{{ airlineName(l.airline) }}</div>
+              <div class="leg-meta">
+                <span>{{ l.stops === 0 ? 'Direto' : l.stops + ' parada' + (l.stops > 1 ? 's' : '') }}</span>
+                <span *ngIf="l.duration_min">{{ formatDuration(l.duration_min) }}</span>
+              </div>
+              <div class="leg-price">R$ {{ formatBRL(l.price_brl) }}</div>
+              <div class="leg-actions" [class.intl]="intlColumn(r) === 'leg_to_hub'">
+                <!-- Passo 1 — sempre prioritário: validar perna em milhas -->
+                <div class="step-group" *ngIf="intlColumn(r) === 'leg_to_hub'">
+                  <span class="step-label">Passo 1 · validar em milhas</span>
+                </div>
+                <button
+                  type="button"
+                  class="quote-btn"
+                  [class.primary]="intlColumn(r) === 'leg_to_hub'"
+                  (click)="togglePanel(l, r.route_type === 'br_to_intl' ? 'domestic' : 'international')"
+                >
+                  {{ isPanelOpen(l.id) ? 'Fechar milhas' : 'Cotar em milhas' }}
+                </button>
+                <button
+                  type="button"
+                  class="validate-btn"
+                  (click)="runValidation(l)"
+                  [disabled]="validationStateFor(l.id)?.loading"
+                  title="Confere se o voo existe no BuscaMilhas (G3/LA/AD)"
+                >
+                  {{ validationStateFor(l.id)?.loading ? 'Validando...' : '✓ Validar voo' }}
+                </button>
+                <a
+                  *ngIf="validationFor(l) as url"
+                  class="leg-link"
+                  [href]="url"
+                  target="_blank"
+                  rel="noopener"
+                  [title]="'Abre a busca pré-filtrada de ' + l.origin + '→' + l.destination + ' no site da cia'"
+                >
+                  {{ validationLabelFor(l) }}
+                </a>
+                <!-- Passo 2 — Encaixar voo nacional só faz sentido na coluna INTERNACIONAL -->
+                <ng-container *ngIf="intlColumn(r) === 'leg_to_hub'">
+                  <div class="step-group step-2">
+                    <span class="step-label">Passo 2 · depois de validar</span>
+                  </div>
+                  <button
+                    type="button"
+                    class="fit-btn"
+                    (click)="toggleFit(l, r)"
+                  >
+                    {{ fitStateFor(l.id) ? 'Fechar encaixe' : 'Encaixar voo nacional' }}
+                  </button>
+                </ng-container>
+              </div>
+            </article>
+
+            <!-- Fase 2 — painel de encaixe doméstico (só na coluna intl) -->
+            <div
+              *ngIf="intlColumn(r) === 'leg_to_hub' && fitStateFor(l.id) as fit"
+              class="fit-panel"
+            >
+              <div *ngIf="fit.loading" class="muted">Buscando voos domésticos compatíveis...</div>
+              <div *ngIf="fit.error" class="muted error">{{ fit.error }}</div>
+              <ng-container *ngIf="fit.result as fr">
+                <div class="fit-header">
+                  <strong>Encaixe {{ r.origin }} → {{ r.hub }}</strong>
+                  <span class="fit-meta">
+                    Pesquisa em <strong>{{ fr.search_date }}</strong>
+                    <span class="fit-offset" *ngIf="fr.search_date_offset !== 'same_day'">
+                      ({{ fr.search_date_offset === 'day_before' ? 'dia anterior' : 'dia seguinte' }})
+                    </span>
+                    <span class="fit-bag-info">
+                      · janela {{ withBaggage() ? '4h (com bagagem)' : '2h30 (sem bagagem)' }}
+                    </span>
+                  </span>
+                </div>
+                <div *ngIf="fr.no_results" class="muted">Nenhum voo encontrado na janela necessária.</div>
+                <div *ngFor="let n of fr.notes" class="fit-note">{{ n }}</div>
+
+                <article *ngFor="let f of fr.compatible_offers" class="fit-offer" [class.selected]="isDomesticSelected(l.id, f.id)">
+                  <input
+                    type="radio"
+                    [name]="'fit_' + l.id"
+                    [checked]="isDomesticSelected(l.id, f.id)"
+                    (change)="selectDomesticFit(l.id, f)"
+                  />
+                  <div class="fit-info">
+                    <div class="fit-row">
+                      <strong>{{ airlineName(f.airline) }}</strong>
+                      <span class="fit-time">{{ formatTime(f.departure_dt) }} → {{ formatTime(f.arrival_dt) }}</span>
+                      <span class="fit-stops">{{ f.stops === 0 ? 'Direto' : f.stops + ' parada(s)' }}</span>
+                      <span class="fit-dur" *ngIf="f.duration_min">{{ formatDuration(f.duration_min) }}</span>
+                    </div>
+                    <div class="fit-row sub">
+                      <span class="layover-badge" [ngClass]="layoverBadgeClass(f.layover_status)">
+                        <ng-container [ngSwitch]="f.layover_status">
+                          <span *ngSwitchCase="'ok'">Conexão {{ formatLayover(f.layover_minutes) }}</span>
+                          <span *ngSwitchCase="'tight'">Conexão {{ formatLayover(f.layover_minutes) }} · no limite</span>
+                          <span *ngSwitchCase="'long'">Conexão {{ formatLayover(f.layover_minutes) }} · pernoite</span>
+                          <span *ngSwitchCase="'invalid'">Conexão {{ formatLayover(f.layover_minutes) }} · inviável</span>
+                        </ng-container>
+                      </span>
+                      <span class="fit-price">R$ {{ formatBRL(f.price_brl) }}</span>
+                    </div>
+                  </div>
+                </article>
+
+                <button
+                  *ngIf="fr.incompatible_offers.length"
+                  type="button"
+                  class="fit-toggle-incomp"
+                  (click)="toggleIncompatible(l.id)"
+                >
+                  {{ fit.showIncompatible ? 'Ocultar' : 'Mostrar' }}
+                  {{ fr.incompatible_offers.length }} opção{{ fr.incompatible_offers.length > 1 ? 'ões' : '' }} fora da janela
+                </button>
+                <article
+                  *ngFor="let f of fit.showIncompatible ? fr.incompatible_offers : []"
+                  class="fit-offer incompatible"
+                >
+                  <div class="fit-info">
+                    <div class="fit-row">
+                      <strong>{{ airlineName(f.airline) }}</strong>
+                      <span class="fit-time">{{ formatTime(f.departure_dt) }} → {{ formatTime(f.arrival_dt) }}</span>
+                    </div>
+                    <div class="fit-row sub">
+                      <span class="layover-badge badge-invalid">
+                        Conexão {{ formatLayover(f.layover_minutes) }} · inviável
+                      </span>
+                      <span class="fit-price">R$ {{ formatBRL(f.price_brl) }}</span>
+                    </div>
+                  </div>
+                </article>
+              </ng-container>
+            </div>
+
+            <div
+              class="validation-panel"
+              *ngIf="validationBadgeFor(l.id) as badge"
+              [class.ok]="badge.kind === 'ok'"
+              [class.warn]="badge.kind === 'warn'"
+              [class.err]="badge.kind === 'err'"
+            >
+              <div class="badge-line"><strong>{{ badge.label }}</strong></div>
+              <p class="badge-msg" *ngIf="validationStateFor(l.id)?.result?.message">
+                {{ validationStateFor(l.id)?.result?.message }}
+              </p>
+            </div>
+            <div class="validation-panel err" *ngIf="validationStateFor(l.id)?.error as e">
+              <strong>Erro:</strong> {{ e }}
+            </div>
+
+            <div class="miles-panel" *ngIf="panelFor(l.id) as panel">
+              <div *ngIf="panel.loading" class="muted">Cotando milhas...</div>
+              <div *ngIf="panel.error" class="muted error">{{ panel.error }}</div>
+              <ng-container *ngIf="panel.result as mm">
+                <div *ngIf="mm.no_results_reason" class="muted">{{ mm.no_results_reason }}</div>
+                <div class="programs" *ngIf="mm.options.length">
+                  <div class="program-row" *ngFor="let opt of mm.options.slice(0, 5)">
+                    <div class="badge" [class.exact]="opt.is_exact_match" [class.window]="!opt.is_exact_match && opt.is_in_window">
+                      {{ opt.is_exact_match ? 'Mesmo voo' : 'Janela compatível' }}
+                    </div>
+                    <div class="prog-name">{{ programLabel(opt.program) }}</div>
+                    <div class="flight">{{ opt.flight_number }} · {{ formatTime(opt.departure_dt) }}</div>
+                    <div class="miles">{{ formatBRL(opt.miles) }} milhas + R$ {{ formatBRL(opt.taxes_brl) }}</div>
+                    <div class="total">≈ R$ {{ formatBRL(opt.total_real_cost_brl) }}</div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="leg-column" *ngIf="r.leg_from_hub.length">
+          <h4>{{ r.hub }} → {{ r.destination }}</h4>
+          <ng-container *ngFor="let l of r.leg_from_hub.slice(0, 5)">
+            <article class="leg">
+              <div class="leg-times">
+                <span>{{ formatTime(l.departure_dt) }}</span>
+                <span class="leg-arrow">→</span>
+                <span>{{ formatTime(l.arrival_dt) }}</span>
+              </div>
+              <div class="leg-airline">{{ airlineName(l.airline) }}</div>
+              <div class="leg-meta">
+                <span>{{ l.stops === 0 ? 'Direto' : l.stops + ' parada' + (l.stops > 1 ? 's' : '') }}</span>
+                <span *ngIf="l.duration_min">{{ formatDuration(l.duration_min) }}</span>
+              </div>
+              <div class="leg-price">R$ {{ formatBRL(l.price_brl) }}</div>
+              <div class="leg-actions" [class.intl]="intlColumn(r) === 'leg_from_hub'">
+                <!-- Passo 1 — validar perna internacional em milhas primeiro -->
+                <div class="step-group" *ngIf="intlColumn(r) === 'leg_from_hub'">
+                  <span class="step-label">Passo 1 · validar em milhas</span>
+                </div>
+                <button
+                  type="button"
+                  class="quote-btn"
+                  [class.primary]="intlColumn(r) === 'leg_from_hub'"
+                  (click)="togglePanel(l, r.route_type === 'br_to_intl' ? 'international' : 'domestic')"
+                >
+                  {{ isPanelOpen(l.id) ? 'Fechar milhas' : 'Cotar em milhas' }}
+                </button>
+                <a
+                  *ngIf="validationFor(l) as url"
+                  class="leg-link"
+                  [href]="url"
+                  target="_blank"
+                  rel="noopener"
+                  [title]="'Abre a busca pré-filtrada de ' + l.origin + '→' + l.destination + ' no site da cia'"
+                >
+                  {{ validationLabelFor(l) }}
+                </a>
+                <!-- Passo 2 — só na coluna intl (br_to_intl: leg_from_hub é a internacional) -->
+                <ng-container *ngIf="intlColumn(r) === 'leg_from_hub'">
+                  <div class="step-group step-2">
+                    <span class="step-label">Passo 2 · depois de validar</span>
+                  </div>
+                  <button
+                    type="button"
+                    class="fit-btn"
+                    (click)="toggleFit(l, r)"
+                  >
+                    {{ fitStateFor(l.id) ? 'Fechar encaixe' : 'Encaixar voo nacional' }}
+                  </button>
+                </ng-container>
+              </div>
+            </article>
+
+            <!-- Fase 2 — painel de encaixe doméstico (versão br_to_intl) -->
+            <div
+              *ngIf="intlColumn(r) === 'leg_from_hub' && fitStateFor(l.id) as fit"
+              class="fit-panel"
+            >
+              <div *ngIf="fit.loading" class="muted">Buscando voos domésticos compatíveis...</div>
+              <div *ngIf="fit.error" class="muted error">{{ fit.error }}</div>
+              <ng-container *ngIf="fit.result as fr">
+                <div class="fit-header">
+                  <strong>Encaixe {{ r.origin }} → {{ r.hub }}</strong>
+                  <span class="fit-meta">
+                    Pesquisa em <strong>{{ fr.search_date }}</strong>
+                    <span class="fit-offset" *ngIf="fr.search_date_offset !== 'same_day'">
+                      ({{ fr.search_date_offset === 'day_before' ? 'dia anterior' : 'dia seguinte' }})
+                    </span>
+                    <span class="fit-bag-info">
+                      · janela {{ withBaggage() ? '4h (com bagagem)' : '2h30 (sem bagagem)' }}
+                    </span>
+                  </span>
+                </div>
+                <div *ngIf="fr.no_results" class="muted">Nenhum voo encontrado na janela necessária.</div>
+                <div *ngFor="let n of fr.notes" class="fit-note">{{ n }}</div>
+
+                <article *ngFor="let f of fr.compatible_offers" class="fit-offer" [class.selected]="isDomesticSelected(l.id, f.id)">
+                  <input
+                    type="radio"
+                    [name]="'fit_' + l.id"
+                    [checked]="isDomesticSelected(l.id, f.id)"
+                    (change)="selectDomesticFit(l.id, f)"
+                  />
+                  <div class="fit-info">
+                    <div class="fit-row">
+                      <strong>{{ airlineName(f.airline) }}</strong>
+                      <span class="fit-time">{{ formatTime(f.departure_dt) }} → {{ formatTime(f.arrival_dt) }}</span>
+                      <span class="fit-stops">{{ f.stops === 0 ? 'Direto' : f.stops + ' parada(s)' }}</span>
+                      <span class="fit-dur" *ngIf="f.duration_min">{{ formatDuration(f.duration_min) }}</span>
+                    </div>
+                    <div class="fit-row sub">
+                      <span class="layover-badge" [ngClass]="layoverBadgeClass(f.layover_status)">
+                        <ng-container [ngSwitch]="f.layover_status">
+                          <span *ngSwitchCase="'ok'">Conexão {{ formatLayover(f.layover_minutes) }}</span>
+                          <span *ngSwitchCase="'tight'">Conexão {{ formatLayover(f.layover_minutes) }} · no limite</span>
+                          <span *ngSwitchCase="'long'">Conexão {{ formatLayover(f.layover_minutes) }} · pernoite</span>
+                          <span *ngSwitchCase="'invalid'">Conexão {{ formatLayover(f.layover_minutes) }} · inviável</span>
+                        </ng-container>
+                      </span>
+                      <span class="fit-price">R$ {{ formatBRL(f.price_brl) }}</span>
+                    </div>
+                  </div>
+                </article>
+
+                <button
+                  *ngIf="fr.incompatible_offers.length"
+                  type="button"
+                  class="fit-toggle-incomp"
+                  (click)="toggleIncompatible(l.id)"
+                >
+                  {{ fit.showIncompatible ? 'Ocultar' : 'Mostrar' }}
+                  {{ fr.incompatible_offers.length }} opção{{ fr.incompatible_offers.length > 1 ? 'ões' : '' }} fora da janela
+                </button>
+              </ng-container>
+            </div>
+
+            <div class="miles-panel" *ngIf="panelFor(l.id) as panel">
+              <div *ngIf="panel.loading" class="muted">Cotando milhas...</div>
+              <div *ngIf="panel.error" class="muted error">{{ panel.error }}</div>
+              <ng-container *ngIf="panel.result as mm">
+                <div *ngIf="mm.no_results_reason" class="muted">{{ mm.no_results_reason }}</div>
+                <div class="programs" *ngIf="mm.options.length">
+                  <div class="program-row" *ngFor="let opt of mm.options.slice(0, 5)">
+                    <div class="badge" [class.exact]="opt.is_exact_match" [class.window]="!opt.is_exact_match && opt.is_in_window">
+                      {{ opt.is_exact_match ? 'Mesmo voo' : 'Janela compatível' }}
+                    </div>
+                    <div class="prog-name">{{ programLabel(opt.program) }}</div>
+                    <div class="flight">{{ opt.flight_number }} · {{ formatTime(opt.departure_dt) }}</div>
+                    <div class="miles">{{ formatBRL(opt.miles) }} milhas + R$ {{ formatBRL(opt.taxes_brl) }}</div>
+                    <div class="total">≈ R$ {{ formatBRL(opt.total_real_cost_brl) }}</div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <div *ngIf="r.notes.length" class="notes">
+        <strong>Notas:</strong>
+        <ul>
+          <li *ngFor="let n of r.notes">{{ n }}</li>
+        </ul>
+      </div>
+
+      <!-- Fase 3 — Combinações Selecionadas + Cotação em Milhas direcionada -->
+      <section *ngIf="selectedCombinationsList(r).length" class="combinations">
+        <header>
+          <h4>Combinações selecionadas <span class="count">{{ selectedCombinationsList(r).length }}</span></h4>
+          <p>Cotar em milhas dispara busca direcionada — doméstica via programa próprio da cia; internacional via programas que cobrem aquela cia.</p>
+        </header>
+
+        <article *ngFor="let combo of selectedCombinationsList(r); let i = index" class="combination">
+          <header class="combo-head">
+            <strong>Combinação {{ i + 1 }}</strong>
+            <span class="combo-total">
+              Total cash: <strong>R$ {{ formatBRL(combinationCashTotal(combo.intlLeg, combo.domesticLeg)) }}</strong>
+              <span class="combo-savings" *ngIf="combinationSavingsVsDirect(combo.intlLeg, combo.domesticLeg, r) as sav"
+                    [class.positive]="sav > 0" [class.negative]="sav <= 0">
+                <ng-container *ngIf="sav > 0">
+                  · economia <strong>R$ {{ formatBRL(sav) }}</strong> vs direto
+                </ng-container>
+                <ng-container *ngIf="sav <= 0">
+                  · direto economiza R$ {{ formatBRL(-sav) }}
+                </ng-container>
+              </span>
+            </span>
+            <a
+              class="combo-validate"
+              [href]="fullRouteGoogleFlights()"
+              target="_blank"
+              rel="noopener"
+              title="Abre Google Flights na rota completa para conferir preço de referência"
+            >
+              Comparar rota {{ r.origin }} → {{ r.destination }}
+            </a>
+          </header>
+
+          <div class="combo-legs">
+            <div class="combo-leg">
+              <span class="combo-leg-tag dom">Doméstica</span>
+              <span class="combo-leg-route">
+                {{ combo.domesticLeg.origin }} → {{ combo.domesticLeg.destination }}
+                · {{ airlineName(combo.domesticLeg.airline) }}
+                · {{ formatTime(combo.domesticLeg.departure_dt) }}–{{ formatTime(combo.domesticLeg.arrival_dt) }}
+                · R$ {{ formatBRL(combo.domesticLeg.price_brl) }}
+              </span>
+              <span class="combo-layover">Conexão {{ formatLayover(combo.domesticLeg.layover_minutes) }}</span>
+            </div>
+            <div class="combo-leg">
+              <span class="combo-leg-tag intl">Internacional</span>
+              <span class="combo-leg-route">
+                {{ combo.intlLeg.origin }} → {{ combo.intlLeg.destination }}
+                · {{ airlineName(combo.intlLeg.airline) }}
+                · {{ formatTime(combo.intlLeg.departure_dt) }}–{{ formatTime(combo.intlLeg.arrival_dt) }}
+                · R$ {{ formatBRL(combo.intlLeg.price_brl) }}
+              </span>
+            </div>
+          </div>
+
+          <button
+            *ngIf="!combo.milesState || (!combo.milesState.loading && (combo.milesState.domesticResult || combo.milesState.intlResult))"
+            type="button"
+            class="combo-miles-btn"
+            (click)="runCombinationMiles(combo.intlLeg, combo.domesticLeg, r)"
+          >
+            {{ combo.milesState ? 'Recotar em milhas' : 'Cotar essa combinação em milhas' }}
+          </button>
+
+          <ng-container *ngIf="combo.milesState as ms">
+            <div *ngIf="ms.loading" class="muted">Consultando programas de milhas direcionados...</div>
+            <div *ngIf="ms.error" class="muted error">{{ ms.error }}</div>
+
+            <!-- DOMÉSTICA: cotação em milhas -->
+            <div *ngIf="ms.domesticResult as dr" class="miles-result">
+              <h5>Perna doméstica em milhas</h5>
+              <p class="ms-info">
+                Programa consultado: <strong>{{ dr.programs_searched.join(', ') || '—' }}</strong>
+                (próprio da {{ airlineName(dr.target_carrier) }})
+              </p>
+              <div *ngIf="dr.no_results_reason" class="muted">{{ dr.no_results_reason }}</div>
+              <div *ngIf="!dr.options.length && !dr.no_results_reason" class="muted">
+                Sem disponibilidade em milhas para essa data/companhia.
+              </div>
+              <div class="programs">
+                <article *ngFor="let opt of dr.options.slice(0, 5)" class="ms-option"
+                         [class.exact]="opt.is_exact_match">
+                  <div class="ms-badge">
+                    <ng-container *ngIf="opt.is_exact_match">✓ EXATO</ng-container>
+                    <ng-container *ngIf="!opt.is_exact_match && opt.is_in_window">Janela compatível</ng-container>
+                  </div>
+                  <div class="ms-flight">
+                    <strong>{{ opt.flight_number }}</strong>
+                    · {{ formatTime(opt.departure_dt) }} → {{ formatTime(opt.arrival_dt) }}
+                  </div>
+                  <div class="ms-cost">
+                    <strong>{{ formatBRL(opt.miles) }} milhas</strong> + R$ {{ formatBRL(opt.taxes_brl) }}
+                    <span class="ms-equiv">≈ R$ {{ formatBRL(opt.total_real_cost_brl) }}</span>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <!-- INTERNACIONAL: cotação em milhas -->
+            <div *ngIf="ms.intlResult as ir" class="miles-result">
+              <h5>Perna internacional em milhas</h5>
+              <p class="ms-info">
+                Programas consultados: <strong>{{ ir.programs_searched.join(', ') || '—' }}</strong>
+                (cobrem voos da {{ airlineName(ir.target_carrier) }})
+              </p>
+              <div *ngIf="ir.no_results_reason" class="muted">{{ ir.no_results_reason }}</div>
+              <div *ngIf="!ir.options.length && !ir.no_results_reason" class="muted">
+                Nenhum programa retornou disponibilidade nesta companhia.
+              </div>
+              <div class="programs">
+                <article *ngFor="let opt of ir.options.slice(0, 6)" class="ms-option"
+                         [class.exact]="opt.is_exact_match">
+                  <div class="ms-badge">
+                    <ng-container *ngIf="opt.is_exact_match">✓ EXATO</ng-container>
+                    <ng-container *ngIf="!opt.is_exact_match && opt.is_in_window">Janela compatível</ng-container>
+                  </div>
+                  <div class="ms-program">{{ programLabel(opt.program) }}</div>
+                  <div class="ms-flight">
+                    <strong>{{ opt.flight_number }}</strong>
+                    · {{ formatTime(opt.departure_dt) }} → {{ formatTime(opt.arrival_dt) }}
+                  </div>
+                  <div class="ms-cost">
+                    <strong>{{ formatBRL(opt.miles) }} milhas</strong> + R$ {{ formatBRL(opt.taxes_brl) }}
+                    <span class="ms-equiv">≈ R$ {{ formatBRL(opt.total_real_cost_brl) }}</span>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <!-- Resumo comparativo Kayak vs Milhas -->
+            <div *ngIf="combinationMilesTotal(ms) as milesTotal" class="combo-summary">
+              <h5>Resumo comparativo</h5>
+              <div class="cs-line">
+                <span>Kayak (dinheiro):</span>
+                <strong>R$ {{ formatBRL(combinationCashTotal(combo.intlLeg, combo.domesticLeg)) }}</strong>
+              </div>
+              <div class="cs-line">
+                <span>Milhas (combinação ótima):</span>
+                <strong>R$ {{ formatBRL(milesTotal) }}</strong>
+              </div>
+              <div class="cs-savings"
+                   [class.positive]="combinationCashTotal(combo.intlLeg, combo.domesticLeg) - milesTotal > 0"
+                   [class.negative]="combinationCashTotal(combo.intlLeg, combo.domesticLeg) - milesTotal <= 0">
+                <ng-container *ngIf="combinationCashTotal(combo.intlLeg, combo.domesticLeg) - milesTotal > 0">
+                  Milhas economiza
+                  <strong>R$ {{ formatBRL(combinationCashTotal(combo.intlLeg, combo.domesticLeg) - milesTotal) }}</strong>
+                  vs cash da combinação
+                </ng-container>
+                <ng-container *ngIf="combinationCashTotal(combo.intlLeg, combo.domesticLeg) - milesTotal <= 0">
+                  Milhas saem mais caras
+                  (+R$ {{ formatBRL(milesTotal - combinationCashTotal(combo.intlLeg, combo.domesticLeg)) }})
+                  — emitir em cash é melhor
+                </ng-container>
+              </div>
+              <div class="cs-line" *ngIf="r.direct?.price_brl">
+                <span>vs voo direto ({{ r.origin }} → {{ r.destination }}):</span>
+                <strong>R$ {{ formatBRL(r.direct?.price_brl) }}</strong>
+                <span class="cs-vs-direct" *ngIf="(r.direct?.price_brl ?? 0) - milesTotal > 0">
+                  · economia <strong>R$ {{ formatBRL((r.direct?.price_brl ?? 0) - milesTotal) }}</strong>
+                </span>
+              </div>
+            </div>
+          </ng-container>
+        </article>
+      </section>
+    </ng-container>
+  </ng-container>
+</section>

@@ -4,8 +4,19 @@
 # Target: Python 3.11 (Railway via runtime.txt) — compatível com venv local 3.12.
 # Use >= para permitir patches; pinar com == em deploy crítico.
 
-# UI
+# UI (legacy — Streamlit fica vivo durante a migração para FastAPI+Angular)
 streamlit>=1.54.0,<2.0
+
+# Backend novo (FastAPI substituirá Streamlit em produção; sobe em paralelo)
+fastapi>=0.115.0,<1.0
+uvicorn[standard]>=0.30.0,<1.0
+pydantic-settings>=2.5.0,<3.0
+
+# HTTP cliente assíncrono (Skiplagged via MCP/REST; clientes futuros migrarão de requests)
+httpx>=0.27.0,<1.0
+
+# Scraping headless (Skiplagged — fallback quando MCP/httpx não basta)
+playwright>=1.48.0,<2.0
 
 # Dados / utilitários
 pandas>=2.3.0,<3.0
@@ -13,5 +24,5 @@ requests>=2.32.0,<3.0
 python-dotenv>=1.1.0,<2.0
 pydantic>=2.11.0,<3.0
 
-# LLM (intent parser via Groq)
+# LLM (mantido apenas para summarizer final via Groq)
 litellm>=1.75.0,<2.0

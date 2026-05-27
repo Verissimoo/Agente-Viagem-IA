@@ -1,0 +1,9 @@
+<section class="best-banner" *ngIf="cards().length">
+  <div class="card" *ngFor="let c of cards()" [class.featured]="c.featured">
+    <div class="label">{{ c.label }}</div>
+    <div class="primary">{{ c.primary }}</div>
+    <div class="equivalent" *ngIf="c.equivalent">{{ c.equivalent }}</div>
+    <div class="secondary">{{ c.secondary }}</div>
+    <div class="tertiary">{{ c.tertiary }}</div>
+  </div>
+</section>

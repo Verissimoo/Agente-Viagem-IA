@@ -1,118 +1,141 @@
-# Agente de Cotação PcD (Multiagente)
+# Agente Viagem IA
 
-Aplicação Streamlit que orquestra agentes de busca de tarifas em **dinheiro**
-(Kayak via RapidAPI) e **milhas** (BuscaMilhas, Economilhas, MCP Award) para
-produzir cotações comparativas em BRL.
+Sistema de busca inteligente de passagens aéreas que combina:
+
+- **Provedores de milhas**: BuscaMilhas (LATAM, GOL, AZUL, TAP, IBERIA, AMERICAN, INTERLINE, COPA), MCP Award Finder (genérico + Qatar), Economilhas.
+- **Provedor de cash**: Kayak (via RapidAPI).
+- **Skiplagged**: fonte complementar gratuita que descobre **hidden-city flights** (passageiro desembarca na conexão) e **quebra de trecho em cash** que os provedores tradicionais não exploram.
+- **IA pós-ranking**: resumo em PT-BR gerado por Groq via `litellm` (apenas no resultado final — não em coleta nem parsing).
+
+Arquitetura: **FastAPI** (backend) + **Angular** (frontend). Streamlit antigo permanece em `legacy_streamlit/` apenas para validação manual durante a transição.
 
 ## Stack
 
-- **Frontend / UI**: Streamlit
-- **Linguagem**: Python 3.12
-- **LLM** (intent parser): Groq Cloud via `litellm`
-- **Fontes de dados**: Kayak (RapidAPI), BuscaMilhas, Economilhas, MCP Award
+| Camada | Tecnologia |
+|---|---|
+| Backend | Python 3.11 · FastAPI · uvicorn · pydantic v2 |
+| Frontend | Angular 21 · TypeScript · SCSS |
+| Scraping Skiplagged | Playwright + httpx (cascata) |
+| LLM (summarizer) | Groq via `litellm` (claude/llama 3.3 70B) |
+| Cache | In-memory TTL 10min com semáforos por provedor |
+
+## Estrutura do repositório
+
+```
+backend/app/
+├── main.py                              # FastAPI entry
+├── api/v1/                              # Routes + DTOs HTTP
+├── domain/                              # Tipos puros (UnifiedOffer, Segment, ...)
+├── services/                            # Lógica de negócio (orchestrator, ranking, segment_split, ...)
+├── providers/                           # 1 pasta por fonte externa
+│   ├── kayak/{adapter,client,parser}.py
+│   ├── buscamilhas/{adapter,client,parser,iata_resolver}.py
+│   ├── mcp_award/{adapter,client,parser}.py
+│   ├── economilhas/{client,parser}.py
+│   └── skiplagged/{adapter,client,parser}.py
+├── infrastructure/                      # Cache, FX rates, tracer, config
+├── ai/summarizer.py                     # LLM apenas no resumo final
+└── nlp/intent_parser.py                 # Regex/heurísticas PT-BR (LLM desabilitado)
+
+frontend/                                # Angular app
+├── src/app/features/search-page/        # Form + render dos resultados
+├── src/app/shared/flight-card/          # Card de cada oferta
+├── src/app/core/api.service.ts          # HttpClient → /api/v1
+└── src/app/models/flight.ts             # Espelha os DTOs do backend
+
+legacy_streamlit/                        # UI antiga em Streamlit (DEPRECATED)
+pcd/, miles_app/, *_client.py, *_parser.py   # Shims de re-export (compat)
+docs/                                    # Arquitetura + provider docs
+tests/, pcd/tests/                       # Testes unitários
+```
 
 ## Rodar localmente
 
-```bash
-# 1. Criar e ativar virtualenv
+### Backend (FastAPI)
+
+```powershell
+# 1. Virtualenv
 python -m venv .venv
-.venv\Scripts\activate         # Windows
-# source .venv/bin/activate    # macOS/Linux
+.\.venv\Scripts\activate           # Windows
+# source .venv/bin/activate         # macOS/Linux
 
-# 2. Instalar dependências
+# 2. Dependências
 pip install -r requirements.txt
+playwright install chromium
 
-# 3. Configurar variáveis
+# 3. Variáveis
 cp .env.example .env
-# editar .env com as credenciais
+# editar .env
 
-# 4. Executar
-streamlit run streamlit_app_multiagent.py
+# 4. Subir API
+uvicorn backend.app.main:app --reload --port 8000
 ```
 
-Acessa em http://localhost:8501.
+- API: http://localhost:8000/api/v1
+- Docs Swagger: http://localhost:8000/docs
+- Health: http://localhost:8000/api/v1/health
 
-## Deploy no Railway
+### Frontend (Angular)
 
-O projeto está configurado para deploy direto no [Railway](https://railway.app)
-via Nixpacks (sem Dockerfile). Arquivos relevantes:
+```powershell
+cd frontend
+npm install
+ng serve --open
+```
 
-- `Procfile` — comando de start
-- `railway.toml` — configuração de build, healthcheck e restart policy
-- `nixpacks.toml` — fixa Python 3.12 e gcc para build de wheels
-- `runtime.txt` — versão Python (`python-3.12`)
-- `.streamlit/config.toml` — headless, `showErrorDetails = true`
-- `.env.example` — template de todas as variáveis de ambiente
+Acessa em http://localhost:4200. O frontend já está apontado para `http://localhost:8000/api/v1` em dev (ver `frontend/src/environments/environment.ts`).
 
-### Passo a passo
+### UI legada (Streamlit, opcional)
 
-1. **Push do código para o GitHub** (público ou privado).
-2. Acessar [railway.app](https://railway.app) e conectar com GitHub.
-3. **New Project → Deploy from GitHub repo** → selecionar o repositório.
-4. Railway detecta automaticamente como projeto Python via Nixpacks.
-5. Ir em **Variables** e adicionar TODAS as variáveis listadas no `.env.example`
-   (RAPIDAPI_KEY, BUSCAMILHAS_CHAVE, BUSCAMILHAS_SENHA, ECONOMILHAS_API_KEY,
-   MCP_BEARER_TOKEN, GROQ_API_KEY, etc).
-6. Aguardar o primeiro deploy (~3-5 minutos).
-7. Em **Settings → Networking**, clicar em **Generate Domain** para obter a
-   URL pública (algo como `xxxx.up.railway.app`).
-8. (Opcional) **Settings → Networking → Custom Domain** para apontar um
-   domínio próprio.
+Mantida durante a transição. A partir da raiz do repositório:
 
-### Healthcheck
+```powershell
+streamlit run legacy_streamlit/streamlit_app_multiagent.py
+```
 
-Streamlit expõe nativamente `/_stcore/health`. Já configurado no
-`railway.toml` — Railway vai marcar o serviço como saudável só quando o
-endpoint responder 200.
-
-### Logs
-
-Diferente do Streamlit Cloud, Railway entrega **stdout/stderr completos**
-em **Deployments → View logs**. O `showErrorDetails = true` em
-`.streamlit/config.toml` garante que tracebacks reais apareçam, sem o
-"redacted to prevent data leaks".
-
-### Recursos
-
-Plano gratuito do Railway (~US$5/mês de créditos) cobre:
-- 8 GB RAM (vs. 1 GB do Streamlit Cloud)
-- 8 vCPU compartilhadas
-- Filesystem efêmero gravável (`/tmp` e CWD)
-- Auto-deploy via `git push`
+Veja [legacy_streamlit/README_DEPRECATION.md](legacy_streamlit/README_DEPRECATION.md).
 
 ## Variáveis de ambiente
 
-Ver `.env.example` para a lista completa. Mínimo para subir:
+Ver `.env.example` para a lista completa. Mínimo:
 
-- `RAPIDAPI_KEY` — chave Kayak (RapidAPI)
-- `BUSCAMILHAS_CHAVE` + `BUSCAMILHAS_SENHA` — credenciais BuscaMilhas
-- `GROQ_API_KEY` — para o intent parser em PT-BR
-- `ECONOMILHAS_API_KEY` — opcional, provedor alternativo de milhas
-- `MCP_BEARER_TOKEN` — opcional, MCP Award Search
+| Variável | Quando é necessário |
+|---|---|
+| `RAPIDAPI_KEY` | Kayak (cash) |
+| `BUSCAMILHAS_CHAVE` + `BUSCAMILHAS_SENHA` | BuscaMilhas (milhas) |
+| `ECONOMILHAS_API_KEY` | Economilhas (milhas, opcional) |
+| `MCP_BEARER_TOKEN` | MCP Award Finder (opcional) |
+| `GROQ_API_KEY` | Summarizer pós-ranking (opcional) |
+| `SKIPLAGGED_ENABLED` | `1` (default) — `0` desliga o provider |
+| `ENABLE_AI_SUMMARY` | `1` ativa o resumo via LLM no /search |
 
-> **Nota:** o projeto usa **Groq** (cloud de inferência LLM, console.groq.com),
-> não **Grok** (xAI). Variável correta: `GROQ_API_KEY`.
+> **Groq, não Grok**. O projeto usa Groq Cloud (console.groq.com) via litellm.
 
-## Estrutura
+## Deploy
+
+`Procfile` e `railway.toml` já configurados para FastAPI:
 
 ```
-streamlit_app_multiagent.py     # ponto de entrada Streamlit
-pcd/                            # núcleo de negócio
-├── agents/                     # smart_quote, segment_split, miles_match
-├── adapters/                   # kayak, buscamilhas, mcp_award
-├── core/                       # schema, ranking, conversion, formatter
-├── nlp/                        # intent_parser (Groq + regex fallback)
-└── cache.py                    # cache TTL em memória
-miles_app/                      # cliente BuscaMilhas + iata_resolver
-ui/                             # styles, formatters, renderer
-kayak_client.py                 # cliente RapidAPI/Kayak
-economilhas_client.py           # cliente Economilhas
-mcp_client.py                   # cliente MCP Award
+web: uvicorn backend.app.main:app --host 0.0.0.0 --port ${PORT:-8000}
 ```
 
-## Cache
+Healthcheck Railway: `/api/v1/health` (responde 200 com lista de adapters registrados).
 
-O cache é em memória (`pcd/cache.py`), TTL de 10 minutos. No Railway o
-processo persiste entre requests, mas reinicia em deploys (igual ao
-Streamlit Cloud). Próximo passo: migrar para Redis quando a separação
-backend acontecer.
+Para subir o frontend em produção: build com `ng build` e servir `frontend/dist/` por trás de Nginx ou similar; apontar para o domínio do backend via `environment.prod.ts`.
+
+## Testes
+
+```powershell
+# Backend
+pytest pcd/tests/
+
+# Frontend
+cd frontend
+ng test
+```
+
+## Documentação adicional
+
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — Diagrama textual das camadas + responsabilidades.
+- [docs/SKIPLAGGED_PROVIDER.md](docs/SKIPLAGGED_PROVIDER.md) — Como o provider Skiplagged funciona, cache, feature flag, debug.
+- [legacy_streamlit/README_DEPRECATION.md](legacy_streamlit/README_DEPRECATION.md) — Status do Streamlit legado.

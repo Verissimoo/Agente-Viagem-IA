@@ -1,0 +1,31 @@
+<section class="smart-quote" *ngIf="result() as r">
+  <header>
+    <h3>Programas recomendados para essa rota</h3>
+    <p>Considerando as companhias que operam {{ r.origin }} → {{ r.destination }} e o valor atual de cada milheiro.</p>
+  </header>
+
+  <div *ngIf="loading()" class="muted">Calculando...</div>
+  <div *ngIf="error()" class="muted error">{{ error() }}</div>
+
+  <table *ngIf="r.programs.length">
+    <thead>
+      <tr>
+        <th>Programa</th>
+        <th class="num">BRL / milha</th>
+        <th class="num">Milhas estimadas</th>
+        <th>Cias cobertas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of r.programs">
+        <td>{{ p.label }}</td>
+        <td class="num">R$ {{ p.cost_per_mile_brl.toFixed(4) }}</td>
+        <td class="num">{{ p.miles_equivalent ? formatBRL(p.miles_equivalent) : '—' }}</td>
+        <td class="carriers">
+          <span class="chip" *ngFor="let c of p.covers_carriers.slice(0, 8)">{{ airlineName(c) }}</span>
+          <span class="more" *ngIf="p.covers_carriers.length > 8">+{{ p.covers_carriers.length - 8 }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>

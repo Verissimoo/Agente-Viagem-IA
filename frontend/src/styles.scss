@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ===== Design tokens — paleta PassagensComDesconto ===== */
+:root {
+  /* Surfaces */
+  --bg-page:      #f5f6f8;
+  --bg-elevated:  #ffffff;
+  --bg-subtle:    #f8f9fa;
+  --bg-chip:      #f1f3f4;
+  --bg-info:      #e8f0fe;
+  --bg-success:   #e6f4ea;
+  --bg-warning:   #fef7e0;
+  --bg-danger:    #fce8e6;
+  --bg-hidden:    #fffdf6;
+
+  /* Borders */
+  --border:        #e1e3e8;
+  --border-strong: #b8bcc4;
+  --border-subtle: #f1f3f4;
+  --border-warm:   #e8d8a3;
+
+  /* Text */
+  --text:           #1a1d23;
+  --text-secondary: #3c4043;
+  --text-muted:     #5f6368;
+  --text-disabled:  #9aa0a6;
+  --text-on-accent: #ffffff;
+
+  /* Accent (continua o azul tech, usado em CTAs secundários e links) */
+  --accent:         #1a73e8;
+  --accent-strong:  #1557b0;
+  --accent-soft:    #e8f0fe;
+  --success:        #137333;
+  --warning:        #b06000;
+  --danger:         #c5221f;
+
+  /* Brand PCD (vermelho corporativo) — usado em CTAs primários, header, logo */
+  --brand:          #c8102e;
+  --brand-strong:   #a30c25;
+  --brand-soft:     #fdecef;
+  --brand-on:       #ffffff;
+  --brand-gradient: linear-gradient(135deg, #c8102e 0%, #9c0822 100%);
+
+  /* Tipografia */
+  --font-sans: 'Inter', 'Google Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Misc */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 10px 32px rgba(15, 23, 42, 0.08);
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 14px;
+}
+
+:root[data-theme="dark"] {
+  --bg-page:      #0f1115;
+  --bg-elevated:  #1a1d23;
+  --bg-subtle:    #232730;
+  --bg-chip:      #2c2f34;
+  --bg-info:      #1a2a44;
+  --bg-success:   #16321c;
+  --bg-warning:   #3a2f12;
+  --bg-danger:    #3a1f1d;
+  --bg-hidden:    #2a2615;
+
+  --border:        #2c3038;
+  --border-strong: #5f6368;
+  --border-subtle: #232730;
+  --border-warm:   #5a4d2c;
+
+  --text:           #e8eaed;
+  --text-secondary: #bdc1c6;
+  --text-muted:     #9aa0a6;
+  --text-disabled:  #6a7079;
+  --text-on-accent: #16181c;
+
+  --accent:         #8ab4f8;
+  --accent-strong:  #aecbfa;
+  --accent-soft:    #1a2a44;
+  --success:        #81c995;
+  --warning:        #fdd663;
+  --danger:         #f28b82;
+
+  /* Brand mantém vermelho mais saturado mesmo em dark */
+  --brand:          #e84660;
+  --brand-strong:   #c8102e;
+  --brand-soft:     #3a1820;
+  --brand-on:       #ffffff;
+  --brand-gradient: linear-gradient(135deg, #e84660 0%, #c8102e 100%);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
+  background: var(--bg-page);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.15s ease, color 0.15s ease;
+  letter-spacing: -0.005em;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a { color: inherit; }
+
+::selection {
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+}
+
+/* A logo PCD foi desenhada pra fundo escuro (PASSAGENS e DESCONTO são brancos,
+   apenas o avião e "COM" são vermelhos). Por isso o wrapper sempre tem fundo
+   escuro — mesmo em light mode — pra logo aparecer completa. */

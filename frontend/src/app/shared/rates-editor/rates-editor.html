@@ -1,0 +1,220 @@
+<div class="drawer-backdrop" (click)="close.emit()"></div>
+<aside class="drawer" role="dialog" aria-label="Configurações">
+  <header>
+    <h2>Configurações</h2>
+    <button type="button" class="close" (click)="close.emit()" aria-label="Fechar">×</button>
+  </header>
+
+  <nav class="drawer-tabs">
+    <button type="button" [class.active]="activeTab() === 'rates'" (click)="setTab('rates')">
+      Tarifas
+    </button>
+    <button type="button" [class.active]="activeTab() === 'sources'" (click)="setTab('sources')">
+      Fontes
+    </button>
+    <button type="button" [class.active]="activeTab() === 'advanced'" (click)="setTab('advanced')">
+      Avançado
+    </button>
+  </nav>
+
+  <div class="drawer-body">
+  <!-- ── Aba TARIFAS ── -->
+  <ng-container *ngIf="activeTab() === 'rates'">
+    <p class="hint">
+      Defina o custo médio de cada milha (BRL/milha) por programa. Quantidades diferentes podem ter preços diferentes — adicione faixas conforme a tabela do seu provedor.
+    </p>
+
+    <div *ngIf="loading()" class="status">Carregando...</div>
+    <div *ngIf="error()" class="status error">{{ error() }}</div>
+
+    <div class="program-list" *ngIf="!loading()">
+      <article class="program" *ngFor="let prog of programs()">
+        <h3>{{ prog.label }} <span class="key">{{ prog.key }}</span></h3>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Até (milhas)</th>
+              <th>BRL/milha</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tier of prog.tiers; let i = index">
+              <td>
+                <input
+                  *ngIf="i < prog.tiers.length - 1"
+                  type="number"
+                  min="1"
+                  step="1000"
+                  [(ngModel)]="tier.max_miles"
+                />
+                <span *ngIf="i === prog.tiers.length - 1" class="last-tier">Acima</span>
+              </td>
+              <td>
+                <input type="number" min="0.001" step="0.001" [(ngModel)]="tier.rate" />
+              </td>
+              <td>
+                <button
+                  *ngIf="prog.tiers.length > 1"
+                  type="button"
+                  class="remove"
+                  (click)="removeTier(prog, i)"
+                  aria-label="Remover faixa"
+                >×</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="add-tier" (click)="addTier(prog)">
+          + adicionar faixa
+        </button>
+      </article>
+    </div>
+
+    <div class="extra-config" *ngIf="!loading()">
+      <h3>Configurações extras</h3>
+      <label>
+        Programa de referência para Hidden City
+        <select [(ngModel)]="estimationProgramValue">
+          <option *ngFor="let p of programs()" [value]="p.key">{{ p.label }}</option>
+        </select>
+      </label>
+      <label>
+        Taxa fallback internacional (BRL/milha)
+        <input type="number" min="0.001" step="0.001" [(ngModel)]="fallbackRateValue" />
+      </label>
+    </div>
+  </ng-container>
+
+  <!-- ── Aba FONTES ── -->
+  <ng-container *ngIf="activeTab() === 'sources'">
+    <p class="hint">
+      Escolha o provedor de milhas e quais companhias/programas o pipeline consulta.
+      "Ambos" roda BuscaMilhas e Economilhas em paralelo (recomendado).
+    </p>
+
+    <section class="config-section">
+      <h3>Provedor de busca de milhas</h3>
+      <div class="radio-row">
+        <label class="radio">
+          <input type="radio" name="provedor" [checked]="settings.provedorMilhas() === 'buscamilhas'" (change)="setProvedor('buscamilhas')" />
+          <span>BuscaMilhas</span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="provedor" [checked]="settings.provedorMilhas() === 'economilhas'" (change)="setProvedor('economilhas')" />
+          <span>Economilhas</span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="provedor" [checked]="settings.provedorMilhas() === 'both'" (change)="setProvedor('both')" />
+          <span>Ambos</span>
+        </label>
+      </div>
+    </section>
+
+    <section *ngIf="settings.showsBuscamilhas()" class="config-section">
+      <h3 class="section-mini">🇧🇷 Nacionais (BuscaMilhas)</h3>
+      <div class="companhias-grid">
+        <label class="chip-check" *ngFor="let c of COMPANHIAS_NACIONAIS">
+          <input type="checkbox" [checked]="isCompanhiaOn(c)" (change)="toggleCompanhia(c, $event)" />
+          <span>{{ c }}</span>
+        </label>
+      </div>
+
+      <h3 class="section-mini section-mini-spaced">🌎 Internacionais (BuscaMilhas)</h3>
+      <div class="companhias-grid">
+        <label class="chip-check" *ngFor="let c of COMPANHIAS_INTERNACIONAIS">
+          <input type="checkbox" [checked]="isCompanhiaOn(c)" (change)="toggleCompanhia(c, $event)" />
+          <span>{{ c }}</span>
+        </label>
+      </div>
+    </section>
+
+    <section *ngIf="settings.showsEconomilhas()" class="config-section">
+      <h3 class="section-mini">💎 Programas Economilhas</h3>
+      <div class="programs-list">
+        <label class="program-row" *ngFor="let p of settings.ALL_PROGRAMS">
+          <input type="checkbox" [checked]="isProgramOn(p)" (change)="toggleProgram(p, $event)" />
+          <span>{{ settings.PROGRAM_LABEL[p] }}</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="config-section">
+      <h3 class="section-mini">💰 Dinheiro</h3>
+      <label class="toggle-row">
+        <input type="checkbox" [checked]="settings.includeKayak()" (change)="settings.setIncludeKayak($any($event.target).checked)" />
+        <span>
+          <strong>Kayak</strong>
+          <small>Fonte primária de tarifas cash — comparado contra milhas no veredito.</small>
+        </span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [checked]="settings.includeMcp()" (change)="settings.setIncludeMcp($any($event.target).checked)" />
+        <span>
+          <strong>MCP Award + Qatar</strong>
+          <small>Cotação internacional via MCP — Avios, Asia Miles e Qatar Privilege.</small>
+        </span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [checked]="settings.includeSkiplagged()" (change)="settings.setIncludeSkiplagged($any($event.target).checked)" />
+        <span>
+          <strong>Skiplagged</strong>
+          <small>Hidden city + split cash. Não influencia a melhor data da Cotação Inteligente.</small>
+        </span>
+      </label>
+    </section>
+  </ng-container>
+
+  <!-- ── Aba AVANÇADO ── -->
+  <ng-container *ngIf="activeTab() === 'advanced'">
+    <p class="hint">
+      Opções para debug e ambientes controlados. Mantenha desligado em produção.
+    </p>
+
+    <section class="config-section">
+      <label class="toggle-row">
+        <input type="checkbox" [checked]="settings.useFixtures()" (change)="settings.setUseFixtures($any($event.target).checked)" />
+        <span>
+          <strong>Dados estáticos (Mock)</strong>
+          <small>Substitui as chamadas HTTP por payloads pré-gravados. Útil para reproduzir bugs sem queimar quota.</small>
+        </span>
+      </label>
+      <label class="toggle-row">
+        <input type="checkbox" [checked]="settings.forceRefreshDefault()" (change)="settings.setForceRefreshDefault($any($event.target).checked)" />
+        <span>
+          <strong>Sempre forçar refresh</strong>
+          <small>Toda busca ignora cache. Mais lento, mas garante tarifas atuais — útil antes de fechar venda.</small>
+        </span>
+      </label>
+    </section>
+
+    <section class="config-section danger">
+      <button type="button" class="ghost" (click)="settings.reset()">Restaurar padrões</button>
+    </section>
+  </ng-container>
+  </div><!-- /.drawer-body -->
+
+  <footer>
+    <button type="button" class="ghost" (click)="close.emit()">Cancelar</button>
+    <button
+      *ngIf="activeTab() === 'rates'"
+      type="button"
+      class="primary"
+      (click)="save()"
+      [disabled]="saving() || loading()"
+    >
+      {{ saving() ? 'Salvando...' : 'Salvar tarifas' }}
+    </button>
+    <button
+      *ngIf="activeTab() !== 'rates'"
+      type="button"
+      class="primary"
+      (click)="close.emit()"
+      title="Configurações de Fontes e Avançado salvam automaticamente"
+    >
+      Concluir
+    </button>
+  </footer>
+</aside>

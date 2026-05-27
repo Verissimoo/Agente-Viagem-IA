@@ -1,0 +1,212 @@
+<section class="smart-explore">
+  <header>
+    <div>
+      <h3>Cotação Inteligente</h3>
+      <p>Análise automática de várias datas no Kayak, mapeamento de programas e identificação da melhor data.</p>
+    </div>
+    <button
+      *ngIf="result"
+      type="button"
+      class="ghost-btn"
+      (click)="retryExplore.emit()"
+      [disabled]="loading"
+    >
+      Refazer análise
+    </button>
+  </header>
+
+  <div *ngIf="loading" class="status loading">
+    <div class="spinner"></div>
+    <p>Explorando datas no Kayak...</p>
+  </div>
+
+  <div *ngIf="error" class="alert error">{{ error }}</div>
+
+  <ng-container *ngIf="result as r">
+    <!-- ── Trio de cards: Melhor dia / Sua data / Economia ── -->
+    <div class="trio">
+      <div class="trio-card best">
+        <span class="trio-label">Melhor dia</span>
+        <span class="trio-date">{{ formatLongDate(r.best_date) }}</span>
+        <span class="trio-price">R$ {{ formatPrice(r.best_price_brl) }}</span>
+      </div>
+      <div class="trio-card requested">
+        <span class="trio-label">Sua data solicitada</span>
+        <span class="trio-date">{{ formatLongDate(r.requested_date) }}</span>
+        <span class="trio-price">R$ {{ formatPrice(r.requested_date_price_brl) }}</span>
+      </div>
+      <div class="trio-card savings" [class.no-savings]="r.is_already_best">
+        <span class="trio-label">Economia potencial</span>
+        <ng-container *ngIf="r.is_already_best; else hasSavings">
+          <span class="trio-headline">Nenhuma</span>
+          <span class="trio-sub">Você escolheu bem!</span>
+        </ng-container>
+        <ng-template #hasSavings>
+          <span class="trio-headline">R$ {{ formatPrice(r.savings_brl) }}</span>
+          <span class="trio-sub">trocando para {{ formatLongDate(r.best_date) }}</span>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- ── Banner de estabilidade ── -->
+    <div *ngIf="r.stability_message" class="alert" [class.success]="r.stability === 'stable'" [class.info]="r.stability === 'savings'">
+      <strong *ngIf="r.stability === 'stable'">Preços estáveis no período.</strong>
+      <strong *ngIf="r.stability === 'savings'">Vale comparar datas.</strong>
+      {{ r.stability_message }}
+    </div>
+
+    <!-- ── Calendário de barras ── -->
+    <div class="calendar-section">
+      <div class="cal-header">
+        <span class="cal-title">Calendário de preços</span>
+        <span class="cal-hint">Clique em uma data para ver os voos disponíveis</span>
+      </div>
+      <div class="chart-area" [style.--max-bars]="cells.length">
+        <div class="grid-lines">
+          <div class="grid-line" *ngFor="let _ of [0,1,2,3]"></div>
+        </div>
+        <button
+          type="button"
+          class="bar-col"
+          *ngFor="let cell of cells"
+          [class.best]="cell.date === r.best_date"
+          [class.requested]="cell.date === r.requested_date && cell.date !== r.best_date"
+          [class.selected]="cell.date === selectedDate"
+          [title]="cell.label + ' · R$ ' + formatPrice(cell.min_price_brl) + ' (' + cell.offer_count + ' ofertas)'"
+          (click)="onPickDate(cell.date)"
+        >
+          <div class="bar-tags">
+            <span *ngIf="cell.date === r.best_date" class="tag best-tag">Melhor dia ✓</span>
+            <span *ngIf="cell.date === r.requested_date && cell.date !== r.best_date" class="tag requested-tag">Sua data</span>
+          </div>
+          <div class="bar-value">R$ {{ formatPrice(cell.min_price_brl) }}</div>
+          <div class="bar-wrap">
+            <div class="bar" [style.height.%]="cell.barPct"></div>
+          </div>
+          <div class="bar-label">{{ cell.shortLabel }}</div>
+          <div class="bar-airline" *ngIf="cell.carriers.length">
+            {{ airlineName(cell.carriers[0].iata) }}
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Phase 2: cotação completa por data ── -->
+    <div class="quote-area">
+      <div *ngIf="quoting" class="status loading">
+        <div class="spinner"></div>
+        <p>Cotando milhas e Skiplagged para {{ selectedDate }}...</p>
+      </div>
+
+      <div *ngIf="quoteError" class="alert error">{{ quoteError }}</div>
+
+      <!-- Bloco MELHOR OFERTA NA DATA SELECIONADA -->
+      <ng-container *ngIf="quoteResult as q">
+        <div *ngIf="q.best_offer_on_date as best" class="best-on-date">
+          <div class="bod-header">
+            <span class="bod-tag">Melhor oferta na data selecionada — {{ formatLongDate(q.date) }}</span>
+          </div>
+          <div class="bod-body">
+            <div class="bod-left">
+              <strong class="bod-carrier">{{ best.carrier_name }}</strong>
+              <span class="bod-flight" *ngIf="best.flight_number">{{ best.flight_number }}</span>
+              <div class="bod-times" *ngIf="best.departure_time">
+                {{ best.departure_time }} → {{ best.arrival_time }}
+                <span *ngIf="best.stops != null"> · {{ best.stops === 0 ? 'Direto' : best.stops + ' escala' + (best.stops > 1 ? 's' : '') }}</span>
+                <span *ngIf="best.duration_min"> · {{ formatDuration(best.duration_min) }}</span>
+              </div>
+            </div>
+            <div class="bod-right">
+              <div class="bod-market">R$ {{ formatPrice(best.price_market_brl) }} <span class="bod-market-tag">mercado Kayak</span></div>
+              <div class="bod-sell">Preço de venda (markup {{ best.markup_pct }}%): <strong>R$ {{ formatPrice(best.price_with_markup_brl) }}</strong></div>
+            </div>
+          </div>
+          <div class="bod-programs" *ngIf="best.programs_emitting.length">
+            <span class="bod-programs-label">Programas que emitem essa companhia:</span>
+            <span
+              *ngFor="let p of best.programs_emitting"
+              class="chip"
+              [class.own]="p.own_carrier"
+              [class.award]="p.award_partner && !p.own_carrier"
+              [title]="'R$ ' + p.cost_per_mile_brl.toFixed(4) + ' / milha'"
+            >
+              {{ p.label }}<span *ngIf="p.own_carrier"> · próprio</span><span *ngIf="p.award_partner && !p.own_carrier"> · award</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Cotação Completa (espelha legado): abas + planilha + Veredito + Ranking + Itinerário -->
+        <app-quote-complete [result]="q"></app-quote-complete>
+
+        <!-- Ações persistentes após cotar milhas — permite quebrar trecho mesmo
+             depois da cotação concluída, e recotar milhas sem trocar de data. -->
+        <div *ngIf="!splitOpened" class="post-quote-actions">
+          <p class="pqa-hint">Quer comparar com a opção de quebrar o trecho via hub?</p>
+          <div class="cta-pair">
+            <button type="button" class="ghost-btn" (click)="onSplitForDate()">
+              Quebrar trecho nesta data
+            </button>
+            <button type="button" class="ghost-btn subtle" (click)="onQuoteForDate()">
+              Recotar milhas
+            </button>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Estado: data selecionada mas ainda sem cotação Phase 2 -->
+      <div *ngIf="selectedDate && !quoting && !quoteResult && !quoteError" class="decision-panel">
+        <header class="decision-header">
+          <h4>Próximo passo</h4>
+          <p>Você selecionou <strong>{{ formatLongDate(selectedDate) }}</strong>. Como quer continuar?</p>
+        </header>
+        <div class="decision-cards">
+          <button type="button" class="decision-card primary" (click)="onQuoteForDate()">
+            <div class="dc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12c0 1-9 9-9 9s-9-8-9-9 4-9 9-9 9 8 9 9z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </div>
+            <div class="dc-body">
+              <strong>Buscar milhas</strong>
+              <span>Cotação completa (BuscaMilhas + Economilhas + Skiplagged) na data escolhida.</span>
+            </div>
+          </button>
+          <button type="button" class="decision-card" (click)="onSplitForDate()">
+            <div class="dc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <div class="dc-body">
+              <strong>Quebrar trecho</strong>
+              <span>Compra dois bilhetes via hub (GRU/GIG/BSB) — pode sair mais barato que voo direto.</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Estado: usuário trocou de data depois de uma cotação -->
+      <div *ngIf="quoteStale && selectedDate && !quoting" class="stale-banner warn">
+        <div>
+          <strong>Dados desatualizados.</strong>
+          A data ativa mudou para <strong>{{ formatLongDate(selectedDate) }}</strong>.
+          Clique para gerar a cotação completa atualizada.
+        </div>
+        <div class="cta-pair">
+          <button type="button" class="primary-btn" (click)="onQuoteForDate()">
+            Buscar milhas para esta data
+          </button>
+          <button type="button" class="ghost-btn" (click)="onSplitForDate()">
+            Quebrar trecho nesta data
+          </button>
+        </div>
+      </div>
+
+      <!-- Hub de conexão e checkbox de bagagem agora vivem DENTRO do
+           split-section (são contexto da quebra de trecho, não do itinerário
+           de cotação completa). -->
+
+    </div>
+  </ng-container>
+</section>
