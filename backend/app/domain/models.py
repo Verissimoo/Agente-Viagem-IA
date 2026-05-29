@@ -27,6 +27,7 @@ class SourceType(str, Enum):
     BUSCAMILHAS_LATAM = "buscamilhas_latam"
     BUSCAMILHAS_GOL = "buscamilhas_gol"
     BUSCAMILHAS_AZUL = "buscamilhas_azul"
+    BUSCAMILHAS_AZUL_CASH = "buscamilhas_azul_cash"  # Cash oficial Azul (tarifa com lucro embutido pra agência)
     BUSCAMILHAS_TAP = "buscamilhas_tap"
     BUSCAMILHAS_IBERIA = "buscamilhas_iberia"
     BUSCAMILHAS_AMERICAN = "buscamilhas_american"
@@ -47,6 +48,7 @@ class Scenario(str, Enum):
     HIDDEN_CITY = "hidden_city"     # Trecho com layover-destination — o passageiro desembarca na conexão
     SPLIT_CASH = "split_cash"       # Quebra de trecho em dinheiro (ex.: GIG-GRU + GRU-SSA mais barato que GIG-SSA)
     SPLIT_MILES = "split_miles"     # Quebra de trecho usando milhas
+    AZUL_OFFICIAL = "azul_official" # Cash oficial Azul via BuscaMilhas — agência vende com lucro incluso
 
 
 class SearchRequest(BaseModel):

@@ -47,7 +47,9 @@ def compute_search_dates(
         
     elif mode == "plusminus" or (flex_days > 0 and mode == "none"):
         # Se flex_days estiver presente mas modo for none (config manual antiga), assume plusminus
-        flex = min(flex_days or 0, 3) # Limite de ±3
+        # Cap em ±7 dias (15 datas total) — mesmo guardrail do modo "range".
+        # Acima disso, latência total fica inviável (15 × N providers × 5-30s cada).
+        flex = min(flex_days or 0, 7)
         dates = expand_dates(base_date, flex)
         
     else:

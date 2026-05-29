@@ -2,9 +2,9 @@ import json
 import os
 import time
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
-from backend.app.domain.models import SearchRequest, UnifiedOffer, SourceType, TripType, Itinerary, Segment, LayoverCategory
+from backend.app.domain.models import SearchRequest, UnifiedOffer, SourceType, TripType, Itinerary, Segment, LayoverCategory, Scenario
 from backend.app.providers.base import BaseSearchAdapter
 from backend.app.infrastructure.config import config
 from backend.app.domain.errors import OfflineModeError
@@ -32,13 +32,25 @@ def _parse_time(date_str: str, time_str: str) -> datetime:
         return datetime.now()
 
 class BaseBuscaMilhasAdapter(BaseSearchAdapter):
-    def __init__(self, companhia: str, source_type: SourceType, airline_code: str, somente_milhas: bool = True, somente_pagante: bool = False, internacional: bool = False):
+    def __init__(
+        self,
+        companhia: str,
+        source_type: SourceType,
+        airline_code: str,
+        somente_milhas: bool = True,
+        somente_pagante: bool = False,
+        internacional: bool = False,
+        scenario_override: Optional[Scenario] = None,
+    ):
         self.companhia = companhia
         self.source_type = source_type
         self.airline_code = airline_code
         self.somente_milhas = somente_milhas
         self.somente_pagante = somente_pagante
         self.internacional = internacional
+        # Quando setado, força todas as ofertas geradas a terem esse scenario
+        # (ex.: AZUL_OFFICIAL para o adapter de cash oficial da Azul).
+        self.scenario_override = scenario_override
 
     def search(self, request: SearchRequest, use_fixtures: bool = False, debug_dump: bool = False) -> List[UnifiedOffer]:
         if use_fixtures:
@@ -135,6 +147,8 @@ class BaseBuscaMilhasAdapter(BaseSearchAdapter):
                         "taxes_brl_in": volta.get("Taxas (R$)"),
                         "taxes_brl": (ida.get("Taxas (R$)", 0.0) or 0.0) + (volta.get("Taxas (R$)", 0.0) or 0.0),
                     }
+                    if self.scenario_override is not None:
+                        kwargs["scenario"] = self.scenario_override
                     if is_miles:
                         kwargs.update({
                             "miles_out": ida.get("Milhas"),
@@ -166,6 +180,8 @@ class BaseBuscaMilhasAdapter(BaseSearchAdapter):
                         "layover_out": LayoverCategory.DIRECT,
                         "taxes_brl": ida.get("Taxas (R$)"),
                     }
+                    if self.scenario_override is not None:
+                        kwargs["scenario"] = self.scenario_override
                     if is_miles:
                         kwargs.update({
                             "miles": ida.get("Milhas"),
@@ -196,6 +212,22 @@ class BuscaMilhasGolAdapter(BaseBuscaMilhasAdapter):
 class BuscaMilhasAzulAdapter(BaseBuscaMilhasAdapter):
     def __init__(self):
         super().__init__("AZUL", SourceType.BUSCAMILHAS_AZUL, "AD", somente_milhas=False, somente_pagante=False)
+
+
+class BuscaMilhasAzulCashAdapter(BaseBuscaMilhasAdapter):
+    """Tarifa cash OFICIAL da Azul via BuscaMilhas.
+
+    Diferente do AzulAdapter genérico (que pode trazer mix de milhas + cash):
+    aqui forçamos `somente_pagante=True` para vir SÓ cash, e marcamos cada
+    oferta com `scenario=AZUL_OFFICIAL` para o frontend rotular como
+    "Azul Oficial" (tarifa que a agência consegue revender com lucro embutido).
+    """
+    def __init__(self):
+        super().__init__(
+            "AZUL", SourceType.BUSCAMILHAS_AZUL_CASH, "AD",
+            somente_milhas=False, somente_pagante=True,
+            scenario_override=Scenario.AZUL_OFFICIAL,
+        )
 
 class BuscaMilhasTapAdapter(BaseBuscaMilhasAdapter):
     def __init__(self):

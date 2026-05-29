@@ -115,22 +115,27 @@ def _resolve_program(
     program: str = "",
     source: Optional[SourceType] = None,
 ) -> Optional[str]:
-    """Returns the program key in rates.json, or None if no match."""
+    """Returns the program key in rates.json, or None if no match.
+
+    Prioriza matches MAIS LONGOS — "AZUL PELO MUNDO" tem precedência sobre
+    "AZUL" pra evitar mistura ("Azul Pelo Mundo" pega rate genérico de AZUL).
+    """
     programs = _programs()
+    # Ordena chaves do mais longo pro mais curto pra priorizar match específico.
+    keys_sorted = sorted(
+        (k for k in programs if k != "DEFAULT"),
+        key=lambda k: -len(k),
+    )
 
     prog = (program or "").upper()
     if prog:
-        for key in programs:
-            if key == "DEFAULT":
-                continue
+        for key in keys_sorted:
             if key in prog:
                 return key
 
     air = (airline or "").upper()
     if air:
-        for key in programs:
-            if key == "DEFAULT":
-                continue
+        for key in keys_sorted:
             if key in air:
                 return key
 

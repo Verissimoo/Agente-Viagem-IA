@@ -11,28 +11,36 @@ from backend.app.services.conversion import (
 
 
 def test_cost_per_mile_zero_volume_is_first_tier():
-    """No `miles` arg → uses the first tier (most expensive per-mile)."""
+    """No `miles` arg → uses the first tier (mais caro por milha, faixa pequena)."""
     rate = cost_per_mile(program="LATAM")
-    assert rate == pytest.approx(0.0350)
+    # LATAM "Até 17K" — primeira faixa = R$ 30,00/mil = 0.0300
+    assert rate == pytest.approx(0.0300)
 
 
 def test_cost_per_mile_tiered_by_volume():
-    assert cost_per_mile(program="LATAM", miles=5000)   == pytest.approx(0.0350)
-    assert cost_per_mile(program="LATAM", miles=30000)  == pytest.approx(0.0290)
-    assert cost_per_mile(program="LATAM", miles=100000) == pytest.approx(0.0260)
-    assert cost_per_mile(program="LATAM", miles=300000) == pytest.approx(0.0240)
+    # Faixas LATAM (tabela PCD 2026-05-22):
+    # Até 17K → 30,00 | 18-24K → 29,00 | 25-49K → 27,00 | 50-74K → 26,25
+    # 75-99K → 25,75 | 100K+ → 25,25
+    assert cost_per_mile(program="LATAM", miles=5000)   == pytest.approx(0.0300)
+    assert cost_per_mile(program="LATAM", miles=20000)  == pytest.approx(0.0290)
+    assert cost_per_mile(program="LATAM", miles=30000)  == pytest.approx(0.0270)
+    assert cost_per_mile(program="LATAM", miles=60000)  == pytest.approx(0.02625)
+    assert cost_per_mile(program="LATAM", miles=80000)  == pytest.approx(0.02575)
+    assert cost_per_mile(program="LATAM", miles=200000) == pytest.approx(0.02525)
 
 
 def test_cost_per_mile_at_tier_boundary():
-    """Boundary belongs to the lower tier (max_miles is inclusive)."""
-    assert cost_per_mile(program="LATAM", miles=10000) == pytest.approx(0.0350)
-    assert cost_per_mile(program="LATAM", miles=10001) == pytest.approx(0.0290)
+    """Boundary belongs to the lower tier (max_miles é inclusivo)."""
+    assert cost_per_mile(program="LATAM", miles=17000) == pytest.approx(0.0300)
+    assert cost_per_mile(program="LATAM", miles=17001) == pytest.approx(0.0290)
+    assert cost_per_mile(program="LATAM", miles=24000) == pytest.approx(0.0290)
+    assert cost_per_mile(program="LATAM", miles=24001) == pytest.approx(0.0270)
 
 
 def test_cost_per_mile_uses_source_when_program_missing():
+    """GOL agora é single-tier R$ 16,00/mil."""
     rate = cost_per_mile(source=SourceType.BUSCAMILHAS_GOL, miles=80000)
-    # GOL tier 3 (50001-150000) = 0.0185
-    assert rate == pytest.approx(0.0185)
+    assert rate == pytest.approx(0.0160)
 
 
 def test_cost_per_mile_international_fallback_for_mcp_award():
@@ -47,8 +55,8 @@ def test_cost_per_mile_default_when_nothing_matches():
 
 
 def test_miles_to_brl_uses_appropriate_tier():
-    # 100k LATAM @ tier 3 (0.0260) = 2600
-    assert miles_to_brl(100000, program="LATAM") == pytest.approx(2600.0)
+    # 100k LATAM @ faixa 100K+ (0.02525) = 2525
+    assert miles_to_brl(100000, program="LATAM") == pytest.approx(2525.0)
 
 
 def test_estimate_miles_for_brl_converges_to_tier():

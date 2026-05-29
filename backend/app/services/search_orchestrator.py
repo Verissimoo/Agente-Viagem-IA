@@ -15,6 +15,7 @@ from backend.app.providers.kayak.adapter import KayakAdapter
 from backend.app.providers.mcp_award.adapter import McpAwardAdapter, McpQatarAdapter
 from backend.app.providers.buscamilhas.adapter import (
     BuscaMilhasLatamAdapter, BuscaMilhasGolAdapter, BuscaMilhasAzulAdapter,
+    BuscaMilhasAzulCashAdapter,
     BuscaMilhasTapAdapter, BuscaMilhasIberiaAdapter,
     BuscaMilhasAmericanAdapter, BuscaMilhasInterlineAdapter,
     BuscaMilhasCopaAdapter,
@@ -36,6 +37,10 @@ _ADAPTER_MAP = {
     "LATAM":             BuscaMilhasLatamAdapter,
     "GOL":               BuscaMilhasGolAdapter,
     "AZUL":              BuscaMilhasAzulAdapter,
+    # Cash OFICIAL da Azul via BuscaMilhas — sempre roda em paralelo (na
+    # _ALWAYS_INCLUDE abaixo) porque é uma tarifa estratégica pra agência
+    # (consegue vender com lucro incluso).
+    "AZUL_CASH":         BuscaMilhasAzulCashAdapter,
     "TAP":               BuscaMilhasTapAdapter,
     "IBERIA":            BuscaMilhasIberiaAdapter,
     "AMERICAN":          BuscaMilhasAmericanAdapter,
@@ -55,12 +60,12 @@ _ADAPTER_MAP = {
 }
 
 # Limite de buscas concorrentes. Cobre as ~10 cias do mapa + Economilhas + Skiplagged.
-_MAX_PARALLEL_ADAPTERS = 12
+_MAX_PARALLEL_ADAPTERS = 14
 
 # Fontes sempre injetadas além das companhias selecionadas pelo usuário.
 # Economilhas é uma chamada agregada (todos os programas em 1 hit) então
 # sempre roda; Skiplagged é hidden-city/split cash, sem cia atrelada.
-_ALWAYS_INCLUDE = ["ECONOMILHAS", "SKIPLAGGED"]
+_ALWAYS_INCLUDE = ["ECONOMILHAS", "SKIPLAGGED", "AZUL_CASH"]
 
 
 def _parse_iatas_from_prompt(prompt: str) -> Tuple[str, str]:
