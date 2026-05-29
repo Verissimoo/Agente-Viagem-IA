@@ -51,6 +51,21 @@ app.include_router(miles_match.router, prefix=API_V1_PREFIX)
 app.include_router(smart_quote.router, prefix=API_V1_PREFIX)
 app.include_router(validate.router, prefix=API_V1_PREFIX)
 
+# Chat product — independente do gerencial. Carrega só se a feature flag estiver
+# ligada (CHAT_ENABLED=1). Import lazy pra não derrubar o boot do gerencial
+# se langgraph/anthropic estiverem ausentes em algum ambiente.
+from backend.app.chat.config import settings as _chat_settings  # noqa: E402
+if _chat_settings.enabled:
+    try:
+        from backend.app.api.v1.chat import router as chat_router
+        app.include_router(chat_router, prefix=API_V1_PREFIX)
+    except Exception as _chat_import_error:
+        import logging as _logging
+        _logging.getLogger(__name__).warning(
+            "Chat product não carregado (%s) — instale dependências (langgraph, "
+            "langchain-anthropic, psycopg) para habilitar.", _chat_import_error,
+        )
+
 
 @app.get("/")
 def root():

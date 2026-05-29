@@ -1,0 +1,140 @@
+"""DTOs HTTP do produto chat — separados do domínio interno.
+
+Mantém transport (`api/v1/chat`) desacoplado de `chat/domain/models.py`.
+Quando o domínio mudar, mexemos só nos mappers, não em todos os DTOs.
+"""
+from __future__ import annotations
+
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, ConfigDict, Field
+
+# Re-export pra rotas reusarem
+__all__ = [
+    "LoginRequestDTO", "RegisterRequestDTO", "SessionResponseDTO",
+    "ThreadDTO", "ThreadListResponseDTO", "CreateThreadRequestDTO",
+    "MessageDTO", "MessageListResponseDTO",
+    "SendMessageRequestDTO", "SendMessageResponseDTO",
+    "ApproveOfferRequestDTO", "QuoteDTO", "QuoteListResponseDTO",
+    "RateTierDTO", "ProgramRatesDTO", "RatesResponseDTO", "RatesUpdateRequestDTO",
+]
+
+
+# ─── Auth ──────────────────────────────────────────────────────────
+class LoginRequestDTO(BaseModel):
+    email: str = Field(..., min_length=3, max_length=200)
+    password: str = Field(..., min_length=1, max_length=200)
+
+
+class RegisterRequestDTO(BaseModel):
+    email: str = Field(..., min_length=3, max_length=200)
+    password: str = Field(..., min_length=8, max_length=200)
+    display_name: Optional[str] = Field(None, max_length=120)
+    store_name: Optional[str] = Field(None, max_length=120)
+
+
+class SessionResponseDTO(BaseModel):
+    user_id: str
+    email: str
+    display_name: Optional[str] = None
+    store_name: Optional[str] = None
+    access_token: str
+
+
+# ─── Threads ───────────────────────────────────────────────────────
+class ThreadDTO(BaseModel):
+    id: str
+    title: str
+    created_at: datetime
+    updated_at: datetime
+    archived: bool = False
+
+
+class ThreadListResponseDTO(BaseModel):
+    threads: List[ThreadDTO]
+
+
+class CreateThreadRequestDTO(BaseModel):
+    title: Optional[str] = Field(None, max_length=120)
+
+
+# ─── Messages ──────────────────────────────────────────────────────
+class MessageDTO(BaseModel):
+    id: str
+    role: str
+    content: str
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+    created_at: datetime
+
+
+class MessageListResponseDTO(BaseModel):
+    messages: List[MessageDTO]
+
+
+class SendMessageRequestDTO(BaseModel):
+    content: str = Field(..., min_length=1, max_length=8000)
+
+
+class SendMessageResponseDTO(BaseModel):
+    """Resposta SEM streaming — útil pra clientes simples e testes.
+
+    O endpoint streaming retorna SSE em vez deste DTO.
+    """
+    thread_id: str
+    user_message: MessageDTO
+    assistant_message: MessageDTO
+
+
+# ─── Quotes & PDF ──────────────────────────────────────────────────
+class ApproveOfferRequestDTO(BaseModel):
+    thread_id: str
+    offer_id: str
+    # Nome do cliente final (passageiro) — opcional; aparece personalizado no PDF.
+    client_name: Optional[str] = Field(None, max_length=120)
+
+
+class QuoteDTO(BaseModel):
+    id: str
+    thread_id: str
+    status: str
+    approved_offer_id: Optional[str]
+    pdf_path: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+
+
+class QuoteListResponseDTO(BaseModel):
+    quotes: List[QuoteDTO]
+
+
+# ─── Settings: tabela de milhas ────────────────────────────────────
+class RateTierDTO(BaseModel):
+    """Uma faixa de preço: 'até X milhas custa Y BRL por milha'."""
+    max_miles: Optional[int] = Field(
+        None,
+        description="Limite superior da faixa (inclusivo). null = sem limite (faixa topo).",
+    )
+    rate: float = Field(
+        ..., gt=0, le=1.0,
+        description="BRL por milha (ex.: 0.025 = R$ 25 por mil milhas).",
+    )
+
+
+class ProgramRatesDTO(BaseModel):
+    """Conjunto de faixas de um programa (LATAM, GOL, etc)."""
+    program: str = Field(..., min_length=2, max_length=60)
+    tiers: List[RateTierDTO] = Field(..., min_length=1)
+
+
+class RatesResponseDTO(BaseModel):
+    programs: List[ProgramRatesDTO]
+    international_fallback_rate: float = Field(..., gt=0, le=1.0)
+    skiplagged_estimation_program: str
+    updated_at: Optional[datetime] = None
+
+
+class RatesUpdateRequestDTO(BaseModel):
+    programs: List[ProgramRatesDTO] = Field(..., min_length=1)
+    international_fallback_rate: float = Field(..., gt=0, le=1.0)
+    skiplagged_estimation_program: str = Field(..., min_length=2)
