@@ -1,0 +1,20 @@
+# Build do backend no Railway (Nixpacks).
+#
+# O requirements.txt instala só o PACOTE `playwright`; o binário do navegador
+# (chromium) NÃO vem por padrão. O Skiplagged (hidden city / split cash) usa
+# Playwright pra scraping — sem o chromium em produção, essa fonte falha.
+#
+# Aqui, depois do `install` padrão (venv + pip install -r requirements.txt), o
+# `build` baixa o chromium e suas dependências de sistema (--with-deps usa apt;
+# a base do Nixpacks no Railway é Debian, então funciona no build como root).
+#
+# Convive com o railway.toml (que define builder=NIXPACKS, startCommand e
+# healthcheck). Este arquivo só customiza as fases do build.
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["python -m playwright install --with-deps chromium"]
+
+# Garante que o navegador instalado no build seja encontrado em runtime.
+[variables]
+PLAYWRIGHT_BROWSERS_PATH = "/root/.cache/ms-playwright"
