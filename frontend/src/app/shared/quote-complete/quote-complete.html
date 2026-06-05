@@ -193,7 +193,17 @@
             <td class="num">{{ row.real_cost_brl != null ? 'R$ ' + formatBRL(row.real_cost_brl) : '—' }}</td>
             <td class="num">{{ row.taxes_brl != null ? 'R$ ' + formatBRL(row.taxes_brl) : 'R$ 0,00' }}</td>
             <td class="num">{{ row.price_brl != null ? 'R$ ' + formatBRL(row.price_brl) : '—' }}</td>
-            <td class="num">{{ row.price_with_baggage_brl != null ? 'R$ ' + formatBRL(row.price_with_baggage_brl) : '—' }}</td>
+            <td class="num" [title]="row.baggage_note || ''">
+              @if (row.price_with_baggage_brl != null) {
+                R$ {{ formatBRL(row.price_with_baggage_brl) }}
+              } @else if (row.baggage_status === 'not_allowed') {
+                Não permite
+              } @else if (row.baggage_status === 'unknown') {
+                A confirmar
+              } @else {
+                —
+              }
+            </td>
             <td>{{ row.duration_str }}</td>
             <td class="num">{{ row.stops }}</td>
             <td>{{ row.departure_time || '—' }}</td>

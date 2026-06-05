@@ -329,7 +329,11 @@ def send_message(
         slots_in_state.get(k) for k in
         ("origin_iata", "destination_iata", "date_start", "adults")
     )
-    expected_offers = has_essentials and not final_state.get("awaiting_field")
+    expected_offers = (
+        has_essentials
+        and not final_state.get("awaiting_field")
+        and not final_state.get("search_failed_notice")  # orchestrator já avisou de forma específica
+    )
     if expected_offers and not offers_in_metadata:
         logger.warning("WATCHDOG (sync): esperava cotação sem offers. text=%r",
                        safe_text[:120])
@@ -493,7 +497,11 @@ def send_message_stream(
                 slots_in_state.get(k) for k in
                 ("origin_iata", "destination_iata", "date_start", "adults")
             )
-            expected_offers = has_essentials and not final_state.get("awaiting_field")
+            expected_offers = (
+                has_essentials
+                and not final_state.get("awaiting_field")
+                and not final_state.get("search_failed_notice")
+            )
             if expected_offers and not offers_in_metadata:
                 logger.warning(
                     "[chat stream] WATCHDOG: vendedor esperava cotação mas não "

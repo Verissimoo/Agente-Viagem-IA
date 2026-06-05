@@ -11,9 +11,13 @@ Sanitização de nomes de provider e jargão técnico acontece em duas camadas:
 from __future__ import annotations
 
 import logging
+import os
 import re
+import time as _time
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FuturesTimeoutError
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
@@ -22,6 +26,7 @@ from backend.app.ai.agents.hidden_city_validator import (
     validate_hidden_city_with_supplementary,
     validate_split_with_supplementary,
 )
+from backend.app.ai.agents.airlines import carrier_to_program
 from backend.app.ai.agents.kayak_split_optimizer import optimize_split_dates_via_kayak
 from backend.app.ai.agents.routes import classify_route
 from backend.app.ai.agents.llm import get_cached_chat_model
@@ -32,6 +37,43 @@ from backend.app.ai.agents.state import ChatState
 from backend.app.chat.security.output_filter import sanitize_assistant_output
 
 logger = logging.getLogger(__name__)
+
+# Orçamento TOTAL (s) das revalidações do presenter (hidden city / split /
+# otimizador). Elas fazem novas chamadas a provedores; se estourarem, seguimos
+# apresentando as ofertas que já temos (sem enriquecer) em vez de travar a
+# resposta. Ajuste via env PRESENTER_VALIDATION_BUDGET_S.
+try:
+    _PRESENTER_VALIDATION_BUDGET_S = float(os.getenv("PRESENTER_VALIDATION_BUDGET_S", "18"))
+except ValueError:
+    _PRESENTER_VALIDATION_BUDGET_S = 18.0
+
+# A validação de HIDDEN CITY tem orçamento PRÓPRIO e maior: ela busca o bilhete
+# oficial em milhas (ex.: BSB→SSA via FOR) e esse valor é o PREÇO EM EVIDÊNCIA
+# do card — então precisa completar de forma confiável, não pode ser cortado
+# pelo orçamento curto das demais revalidações.
+try:
+    _HIDDEN_CITY_VALIDATION_BUDGET_S = float(os.getenv("HIDDEN_CITY_VALIDATION_BUDGET_S", "35"))
+except ValueError:
+    _HIDDEN_CITY_VALIDATION_BUDGET_S = 35.0
+
+
+def _run_bounded(fn: Callable[[], Any], fallback: Any, timeout_s: float) -> Any:
+    """Roda `fn` com teto de tempo. Se estourar/falhar, devolve `fallback`
+    (as ofertas sem enriquecimento). Threads internas que vazarem terminam em
+    background e o resultado é descartado."""
+    if timeout_s <= 0:
+        return fallback
+    ex = ThreadPoolExecutor(max_workers=1)
+    try:
+        return ex.submit(fn).result(timeout=timeout_s)
+    except FuturesTimeoutError:
+        logger.warning("presenter: validação excedeu o orçamento (%.0fs) — apresentando sem enriquecer", timeout_s)
+        return fallback
+    except Exception as e:
+        logger.warning("presenter: validação falhou (%s) — apresentando sem enriquecer", e)
+        return fallback
+    finally:
+        ex.shutdown(wait=False, cancel_futures=True)
 
 # Quantas ofertas mandar pro LLM no prompt. Mais que isso é ruído + tokens.
 _MAX_OFFERS_IN_PROMPT = 6
@@ -89,7 +131,15 @@ def _summary_line(offer: Dict[str, Any]) -> str:
         parts.append(f"R$ {offer['price_brl']:.0f}")
     if offer.get("miles") is not None:
         tax = f" + R$ {offer['taxes_brl']:.0f}" if offer.get("taxes_brl") else ""
-        parts.append(f"{offer['miles']} mi{tax}")
+        # Inclui o equivalente em BRL JÁ CALCULADO (milhas × valor do milheiro +
+        # taxas). Sem isso o LLM faz a conta de cabeça e erra o valor.
+        eq = offer.get("equivalent_brl")
+        eq_txt = f" ≈ R$ {eq:.0f}" if eq else ""
+        # Programa de milhas ÚNICO e correto (LATAM→LATAM Pass, GOL→Smiles) —
+        # sem isso o LLM inventa/combina ("Smiles/LATAM Pass" num voo LATAM).
+        prog = offer.get("miles_program") or carrier_to_program(offer.get("airline"))
+        prog_txt = f" [{prog}]" if prog else ""
+        parts.append(f"{offer['miles']} mi{tax}{eq_txt}{prog_txt}")
     if offer.get("category"):
         parts.append(offer["category"])
     out = offer.get("outbound") or {}
@@ -103,8 +153,20 @@ def _summary_line(offer: Dict[str, Any]) -> str:
     if cash and alt_eq and alt_eq < cash:
         program = alt.get("airline") or "milhas"
         parts.append(
-            f"⚡ MAIS BARATO em milhas: {alt.get('miles'):,} mi + R$ {alt.get('taxes_brl', 0):.0f} "
-            f"≈ R$ {alt_eq:.0f} ({program}) — economia R$ {cash - alt_eq:.0f}".replace(",", ".")
+            f"⚡ MAIS BARATO em milhas: ≈ R$ {alt_eq:.0f} "
+            f"({alt.get('miles'):,} mi + R$ {alt.get('taxes_brl', 0):.0f} · {program}) "
+            f"— economia R$ {cash - alt_eq:.0f} vs cash do skip".replace(",", ".")
+        )
+
+    # Hidden city VALIDADO em milhas (bilhete oficial passando pela escala): é
+    # ESTE o valor da oferta em milhas — costuma ser o mais barato e deve poder
+    # LIDERAR a recomendação (não o cash do skip).
+    mst = offer.get("miles_same_ticket") or {}
+    if mst.get("equivalent_brl"):
+        parts.append(
+            f"⚡ VALIDADO em milhas: ≈ R$ {mst['equivalent_brl']:.0f} "
+            f"({(mst.get('miles') or 0):,} mi + R$ {(mst.get('taxes_brl') or 0):.0f} · "
+            f"{mst.get('airline') or 'milhas'})".replace(",", ".")
         )
 
     if offer.get("risk_notes"):
@@ -385,6 +447,24 @@ def presenter_node(state: ChatState) -> ChatState:
     # (busca já feita pelos providers BuscaMilhas/Economilhas no orchestrator).
     slots_for_pax = state.get("slots") or {}
     real_destination = slots_for_pax.get("destination_iata") or ""
+
+    # ─── IDA-E-VOLTA: só apresenta ofertas COERENTES (com volta) ──────
+    # Skiplagged (hidden city / cash / split) é só-ida — cobriria só metade da
+    # viagem. Numa busca ida-e-volta, ofertas só-ida (sem inbound) são removidas
+    # dos cards/recomendação; o hidden city ida-e-volta entra SÓ via o card
+    # combinado montado a partir de results["roundtrip_two_oneways"]. Sem este
+    # filtro, uma one-way barata (metade da viagem) dominava o ranking.
+    is_roundtrip = (
+        slots_for_pax.get("trip_type") == "roundtrip"
+        or bool(slots_for_pax.get("return_from") or slots_for_pax.get("date_return"))
+    )
+    if is_roundtrip:
+        def _has_inbound(o: Dict[str, Any]) -> bool:
+            return bool((o.get("inbound") or {}).get("segments"))
+        sanitized_ranked = [o for o in sanitized_ranked if _has_inbound(o)]
+        sanitized_money = [o for o in sanitized_money if _has_inbound(o)]
+        sanitized_miles = [o for o in sanitized_miles if _has_inbound(o)]
+
     if real_destination and sanitized_miles:
         sanitized_money = enrich_hidden_city_offers(
             sanitized_money, sanitized_miles, real_destination=real_destination,
@@ -410,51 +490,69 @@ def presenter_node(state: ChatState) -> ChatState:
             or slots_for_pax.get("flex_mode") in ("plusminus", "range", "plus", "minus")
         )
 
-        import time as _time
         validations_timing = {}
+        # Orçamento total compartilhado: cada validação roda só com o tempo que
+        # sobra. Se acabar, as ofertas seguem pra apresentação sem enriquecer.
+        deadline = _time.monotonic() + _PRESENTER_VALIDATION_BUDGET_S
 
-        # HIDDEN CITY — sempre roda (rota doméstica também tem hidden city
-        # útil, ex.: BSB→SSA com bilhete oficial pra CNF).
+        def _remaining() -> float:
+            return deadline - _time.monotonic()
+
+        # HIDDEN CITY — orçamento PRÓPRIO (maior): o valor validado é o preço em
+        # evidência do card, então precisa completar.
         t0 = _time.monotonic()
-        sanitized_ranked = validate_hidden_city_with_supplementary(
-            sanitized_ranked, real_destination=real_destination,
-            adults=adults_for_search, cabin=cabin_for_search, max_validations=1,
+        hc_deadline = _time.monotonic() + _HIDDEN_CITY_VALIDATION_BUDGET_S
+        sanitized_ranked = _run_bounded(
+            lambda: validate_hidden_city_with_supplementary(
+                sanitized_ranked, real_destination=real_destination,
+                adults=adults_for_search, cabin=cabin_for_search, max_validations=1,
+            ), sanitized_ranked, hc_deadline - _time.monotonic(),
         )
-        sanitized_money = validate_hidden_city_with_supplementary(
-            sanitized_money, real_destination=real_destination,
-            adults=adults_for_search, cabin=cabin_for_search, max_validations=1,
+        sanitized_money = _run_bounded(
+            lambda: validate_hidden_city_with_supplementary(
+                sanitized_money, real_destination=real_destination,
+                adults=adults_for_search, cabin=cabin_for_search, max_validations=1,
+            ), sanitized_money, hc_deadline - _time.monotonic(),
         )
         validations_timing["hidden_city"] = _time.monotonic() - t0
 
         # SPLIT — só pra internacional. Doméstico pula (perda de tempo).
         if not is_domestic:
             t0 = _time.monotonic()
-            sanitized_ranked = validate_split_with_supplementary(
-                sanitized_ranked, adults=adults_for_search,
-                cabin=cabin_for_search, max_validations=1,
+            sanitized_ranked = _run_bounded(
+                lambda: validate_split_with_supplementary(
+                    sanitized_ranked, adults=adults_for_search,
+                    cabin=cabin_for_search, max_validations=1,
+                ), sanitized_ranked, _remaining(),
             )
-            sanitized_money = validate_split_with_supplementary(
-                sanitized_money, adults=adults_for_search,
-                cabin=cabin_for_search, max_validations=1,
+            sanitized_money = _run_bounded(
+                lambda: validate_split_with_supplementary(
+                    sanitized_money, adults=adults_for_search,
+                    cabin=cabin_for_search, max_validations=1,
+                ), sanitized_money, _remaining(),
             )
             validations_timing["split_miles"] = _time.monotonic() - t0
 
         # KAYAK SPLIT OPTIMIZER — só pra internacional com flex.
         if not is_domestic and flex_active:
             t0 = _time.monotonic()
-            sanitized_ranked = optimize_split_dates_via_kayak(
-                sanitized_ranked, adults=adults_for_search,
-                cabin=cabin_for_search, flex_days=3, max_optimizations=1,
+            sanitized_ranked = _run_bounded(
+                lambda: optimize_split_dates_via_kayak(
+                    sanitized_ranked, adults=adults_for_search,
+                    cabin=cabin_for_search, flex_days=3, max_optimizations=1,
+                ), sanitized_ranked, _remaining(),
             )
-            sanitized_money = optimize_split_dates_via_kayak(
-                sanitized_money, adults=adults_for_search,
-                cabin=cabin_for_search, flex_days=3, max_optimizations=1,
+            sanitized_money = _run_bounded(
+                lambda: optimize_split_dates_via_kayak(
+                    sanitized_money, adults=adults_for_search,
+                    cabin=cabin_for_search, flex_days=3, max_optimizations=1,
+                ), sanitized_money, _remaining(),
             )
             validations_timing["kayak_split"] = _time.monotonic() - t0
 
         logger.info(
-            "presenter validations: route=%s domestic=%s flex=%s timings=%s",
-            route_type, is_domestic, flex_active,
+            "presenter validations: route=%s domestic=%s flex=%s budget=%.0fs timings=%s",
+            route_type, is_domestic, flex_active, _PRESENTER_VALIDATION_BUDGET_S,
             {k: f"{v:.1f}s" for k, v in validations_timing.items()},
         )
 
@@ -597,6 +695,121 @@ def presenter_node(state: ChatState) -> ChatState:
         if details:
             sections.append(details)
 
+    # ─── DATAS COMPARADAS — flex de ida+volta resolvido via radar ─────
+    # Quando rodamos o radar (ida × volta), o vendedor PRECISA saber qual
+    # combinação venceu e que comparamos várias.
+    md_info = results.get("multi_date_info") or {}
+    best_per_pair = md_info.get("best_per_pair") or {}
+    if best_per_pair:
+        ranked_combos = sorted(best_per_pair.items(), key=lambda kv: kv[1])
+        scanned = md_info.get("candidates_scanned")
+        sections.append("---")
+        header = "DATAS COMPARADAS (cruzamos ida × volta"
+        if scanned:
+            header += f"; {scanned} combinações varridas"
+        header += " — DIGA a combinação vencedora e o preço ao vendedor):"
+        sections.append(header)
+        for combo, price in ranked_combos[:5]:
+            sections.append(f"  - {combo}: a partir de R$ {price:.0f}")
+
+    # ─── HIDDEN CITY IDA-E-VOLTA = 2 bilhetes só-ida somados ──────────
+    # Hidden city é one-way; o ida-e-volta real é ida (O→D) + volta (D→O)
+    # validadas e SOMADAS. Mostra o breakdown e manda o LLM recomendar o mais
+    # barato validado entre ISTO e o RT normal acima.
+    rt2 = results.get("roundtrip_two_oneways")
+    if rt2 and rt2.get("total_miles"):
+        ida = rt2["ida"]; volta = rt2["volta"]
+        def _legtxt(leg):
+            hc = " (hidden city)" if leg.get("hidden_city") else ""
+            return (f"{leg.get('airline') or '—'}{hc}: {int(leg.get('miles') or 0):,} mi "
+                    f"+ R$ {float(leg.get('taxes_brl') or 0):.0f} ≈ R$ {float(leg['brl']):.0f}").replace(",", ".")
+        sections.append("---")
+        sections.append(
+            "IDA-E-VOLTA EM MILHAS (dois bilhetes só-ida somados — necessário p/ "
+            "hidden city). Se isto for MAIS BARATO que o RT normal acima, é a "
+            "RECOMENDAÇÃO; senão, cite como alternativa:"
+        )
+        sections.append(f"  - Ida ({rt2.get('ida_date')}): {_legtxt(ida)}")
+        sections.append(f"  - Volta ({rt2.get('volta_date')}): {_legtxt(volta)}")
+        sections.append(
+            f"  - TOTAL ida+volta: {int(rt2['total_miles']):,} mi + R$ "
+            f"{float(rt2['total_taxes_brl']):.0f} ≈ R$ {float(rt2['total_brl']):.0f}".replace(",", ".")
+        )
+
+        # Vira também um CARD: junção ida+volta visível, com itinerário das duas
+        # pernas e o breakdown por trecho.
+        ida_segs = ida.get("segments") or []
+        volta_segs = volta.get("segments") or []
+        if ida_segs and volta_segs:
+            same_airline = ida.get("airline") == volta.get("airline")
+            any_hc = bool(rt2.get("any_hidden_city"))
+            combined_card = {
+                "offer_id": f"rt2_{rt2.get('ida_date')}_{rt2.get('volta_date')}",
+                # Só rotula "Hidden City" se ALGUMA perna for de fato hidden city;
+                # senão é só uma junção de 2 bilhetes só-ida normais.
+                "category": "Hidden City · ida e volta" if any_hc else "Ida e volta · 2 bilhetes",
+                "category_why": (
+                    "Ida e volta montado como DOIS bilhetes só-ida"
+                    + (" (inclui hidden city — bilhete vai além de onde o cliente desce)"
+                       if any_hc else "")
+                    + ": ida e volta pesquisadas separadamente e somadas."
+                ),
+                "airline": ida.get("airline") if same_airline
+                else f"{ida.get('airline') or '—'} / {volta.get('airline') or '—'}",
+                "miles": rt2["total_miles"],
+                "taxes_brl": rt2["total_taxes_brl"],
+                "equivalent_brl": rt2["total_brl"],
+                "outbound": {"segments": ida_segs},
+                "inbound": {"segments": volta_segs},
+                "roundtrip_legs": {
+                    "ida": {
+                        "airline": ida.get("airline"), "miles": ida.get("miles"),
+                        "taxes_brl": ida.get("taxes_brl"), "equivalent_brl": ida.get("brl"),
+                        "hidden_city": bool(ida.get("hidden_city")), "date": ida.get("date"),
+                    },
+                    "volta": {
+                        "airline": volta.get("airline"), "miles": volta.get("miles"),
+                        "taxes_brl": volta.get("taxes_brl"), "equivalent_brl": volta.get("brl"),
+                        "hidden_city": bool(volta.get("hidden_city")), "date": volta.get("date"),
+                    },
+                },
+                "risk_notes": (
+                    "Dois bilhetes separados (ida e volta)."
+                    + (" Inclui hidden city — sem bagagem despachada, fora de programa de milhagem."
+                       if rt2.get("any_hidden_city") else "")
+                ),
+            }
+            presented = presented + [combined_card]
+
+    # ─── BAGAGEM DESPACHADA — só quando o cliente pediu mala (23kg) ────
+    # Regra real em services/baggage.py: dado da nossa rede quando há, Smiles
+    # doméstico = R$130/trecho, internacional sem dado = incerto, hidden city =
+    # impossível. O LLM precisa AVISAR isso (sobretudo o caso hidden city).
+    baggage_requested = bool(slots.get("baggage_checked"))
+    if baggage_requested:
+        from backend.app.services.baggage import baggage_from_dict, NOT_ALLOWED, UNKNOWN
+        bag_lines: List[str] = []
+        seen_keys = set()
+        for o in top_for_prompt:
+            cat = o.get("category") or ("milhas" if o.get("miles") else "cash")
+            key = (o.get("airline"), cat, o.get("miles"), o.get("price_brl"))
+            if key in seen_keys:
+                continue
+            seen_keys.add(key)
+            info = baggage_from_dict(o, "IDA")
+            flag = ""
+            if info.status == NOT_ALLOWED:
+                flag = " ⛔"
+            elif info.status == UNKNOWN:
+                flag = " ⚠️"
+            bag_lines.append(f"  - {o.get('airline') or '—'} {cat}:{flag} {info.note}")
+        if bag_lines:
+            sections.append("---")
+            sections.append(
+                "BAGAGEM DESPACHADA (o cliente PEDIU mala de 23kg — você DEVE comentar isto):"
+            )
+            sections.extend(bag_lines)
+
     # Dados auxiliares pro insight
     insight_data = []
     best_date = results.get("best_depart_date")
@@ -614,26 +827,9 @@ def presenter_node(state: ChatState) -> ChatState:
                 f"Diferença direto vs. mais barata: R$ {abs(dpr - cmp):.0f}"
             )
 
-    # Pra hidden city no top com miles_alternative verificada: comparar
-    # cash hidden vs MESMO bilhete em milhas (referência real, não preço médio).
-    for off in presented[:3]:
-        cat = (off.get("category") or "").lower()
-        if "hidden" not in cat:
-            continue
-        cash_price = off.get("price_brl")
-        alt = off.get("miles_alternative") or {}
-        alt_eq = alt.get("equivalent_brl")
-        alt_miles = alt.get("miles")
-        alt_program = alt.get("airline")
-        if cash_price and alt_eq:
-            diff = cash_price - alt_eq
-            sign = "mais barato" if diff > 0 else "mais caro"
-            insight_data.append(
-                f"Hidden city cash R$ {cash_price:.0f} vs mesmo bilhete em "
-                f"{alt_program or 'milhas'} ({alt_miles:,} mi ≈ R$ {alt_eq:.0f}) — "
-                f"hidden é R$ {abs(diff):.0f} {sign}".replace(",", ".")
-            )
-            break   # só pro top hidden — não acumula
+    # NOTA: a comparação cash-hidden vs MESMO bilhete em milhas NÃO entra aqui —
+    # ela já é o destaque da Recomendação (marcador "MAIS BARATO em milhas"). Repetir
+    # no Insight gera redundância. Insight fica pra algo NOVO (data alt., total p/ pax).
     if insight_data:
         sections.append("---")
         sections.append("DADOS PARA INSIGHT:")
@@ -704,6 +900,17 @@ def presenter_node(state: ChatState) -> ChatState:
             "com a cia antes de emitir. ***\n"
         )
 
+    # Preferência de horário (SUAVE): prioriza/destaca, não exclui.
+    time_pref = (slots_for_pax.get("time_preference") or "").strip()
+    time_note = ""
+    if time_pref:
+        _tl = {"manha": "manhã", "tarde": "tarde", "noite": "noite", "madrugada": "madrugada"}.get(time_pref, time_pref)
+        time_note = (
+            f"\n*** PREFERÊNCIA DE HORÁRIO: o cliente prefere voar de {_tl}. "
+            "PRIORIZE e destaque as ofertas que partem nesse período (veja os horários "
+            "nos trechos); mencione isso. NÃO exclua as demais — é preferência suave. ***\n"
+        )
+
     try:
         model = get_cached_chat_model(primary=True)
         sys = SystemMessage(content=presenter_system_prompt())
@@ -711,7 +918,7 @@ def presenter_node(state: ChatState) -> ChatState:
             f"Rota: {rota} · {pax_label}\n"
             f"Total de ofertas analisadas: {len(presented)} "
             f"(dinheiro: {len(sanitized_money)}, milhas: {len(sanitized_miles)})\n"
-            f"{filter_note}{pax_note}{pax_breakdowns_text}\n"
+            f"{filter_note}{pax_note}{time_note}{pax_breakdowns_text}\n"
             f"{sections_text}\n\n"
             "Apresente em markdown ao vendedor. Os preços nas ofertas são por "
             "adulto; use os TOTAIS ESTIMADOS já calculados na seção 'TOTAIS "
@@ -761,6 +968,17 @@ def presenter_node(state: ChatState) -> ChatState:
             }
             presented_with_breakdown.append(o_copy)
         presented = presented_with_breakdown
+
+    # O 1º card vira "RECOMENDADA" no frontend (isBest = idx 0). Ordena pelo
+    # MESMO custo que a mensagem usa pra recomendar (menor valor validado:
+    # equivalente em milhas, hidden city validado, ou cash) → o mais barato
+    # fica em 1º e bate com o texto.
+    def _reco_cost(o: Dict[str, Any]) -> float:
+        mst = o.get("miles_same_ticket") or {}
+        cands = [o.get("equivalent_brl"), mst.get("equivalent_brl"), o.get("price_brl")]
+        vals = [float(c) for c in cands if c]
+        return min(vals) if vals else 9e9
+    presented = sorted(presented, key=_reco_cost)
 
     msg = AIMessage(
         content=safe_text,

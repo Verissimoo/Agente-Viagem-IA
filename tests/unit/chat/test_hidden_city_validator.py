@@ -248,11 +248,15 @@ class TestSupplementaryValidation(unittest.TestCase):
                 tools_mod.run_search = original
 
         self.assertEqual(len(out), 1)
-        self.assertIn("miles_alternative", out[0])
-        alt = out[0]["miles_alternative"]
+        # A busca suplementar (bilhete OFICIAL via escala) agora vai num campo
+        # separado `miles_same_ticket` — não sobrescreve mais o award direto.
+        self.assertIn("miles_same_ticket", out[0])
+        alt = out[0]["miles_same_ticket"]
         self.assertTrue(alt.get("validated"))
         self.assertEqual(alt.get("miles"), 15000)
         self.assertTrue(alt.get("exact_route_match"))
+        self.assertEqual(alt.get("ticket_destination"), "CNF")
+        self.assertEqual(alt.get("via_hub"), "SSA")
 
 
 class TestSplitValidation(unittest.TestCase):

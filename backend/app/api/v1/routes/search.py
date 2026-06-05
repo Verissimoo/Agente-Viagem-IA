@@ -58,6 +58,7 @@ def search(payload: SearchRequestDTO) -> SearchResponseDTO:
             flex_mode=payload.flex_mode,
             date_end=payload.date_end,
             companhias=payload.companhias,
+            baggage_checked=payload.baggage_checked,
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Falha no pipeline: {e}") from e

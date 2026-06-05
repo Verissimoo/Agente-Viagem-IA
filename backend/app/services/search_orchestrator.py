@@ -1,10 +1,12 @@
 """Pipeline orchestrator — fans out across all providers, ranks, returns top-N."""
 from __future__ import annotations
 
+import os
 import re
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import TimeoutError as FuturesTimeoutError
 from datetime import date, timedelta
 from typing import Optional, Tuple
 
@@ -62,6 +64,15 @@ _ADAPTER_MAP = {
 # Limite de buscas concorrentes. Cobre as ~10 cias do mapa + Economilhas + Skiplagged.
 _MAX_PARALLEL_ADAPTERS = 14
 
+# Orçamento de tempo da fase de adapters (s). Se um provider trava ou demora
+# além disso, seguimos com o que já voltou (resultado parcial) em vez de
+# segurar a resposta inteira. Default folgado pra caber o Skiplagged (~20s) no
+# caso normal; ajuste via env SEARCH_ADAPTER_BUDGET_S em produção.
+try:
+    _ADAPTER_BUDGET_S = float(os.getenv("SEARCH_ADAPTER_BUDGET_S", "30"))
+except ValueError:
+    _ADAPTER_BUDGET_S = 30.0
+
 # Fontes sempre injetadas além das companhias selecionadas pelo usuário.
 # Economilhas é uma chamada agregada (todos os programas em 1 hit) então
 # sempre roda; Skiplagged é hidden-city/split cash, sem cia atrelada.
@@ -95,6 +106,7 @@ def _build_search_request(
     flex_return: bool,
     flex_mode: str,
     trip_type_override: Optional[TripType] = None,
+    baggage_checked: bool = False,
 ) -> SearchRequest:
     """Monta o SearchRequest. UI passa todos os campos; CLI cai no parser
     de IATAs e em datas default (hoje + 30 dias)."""
@@ -129,7 +141,7 @@ def _build_search_request(
         trip_type=trip_type_final,
         adults=1,
         cabin=CabinClass.ECONOMY,
-        baggage_checked=False,
+        baggage_checked=baggage_checked,
         direct_only=direct_only,
         flex_days=flex_days,
         flex_return=flex_return,
@@ -206,16 +218,21 @@ def _execute_dates_x_adapters_parallel(
 
     aggregated = []
     workers = min(_MAX_PARALLEL_ADAPTERS, len(tasks))
-    with ThreadPoolExecutor(max_workers=workers) as ex:
-        futures = {
-            ex.submit(
-                _run_one_adapter, cia_up, cls, req_i, use_fixtures, debug_dump,
-            ): (cia_up, req_i, dt_id)
-            for cia_up, cls, req_i, dt_id in tasks
-        }
-        for fut in as_completed(futures):
+    # Sem `with`: não queremos bloquear no __exit__ esperando stragglers além
+    # do orçamento — abandonamos o que não voltou a tempo.
+    ex = ThreadPoolExecutor(max_workers=workers)
+    futures = {
+        ex.submit(
+            _run_one_adapter, cia_up, cls, req_i, use_fixtures, debug_dump,
+        ): (cia_up, req_i, dt_id)
+        for cia_up, cls, req_i, dt_id in tasks
+    }
+    done_count = 0
+    try:
+        for fut in as_completed(futures, timeout=_ADAPTER_BUDGET_S):
             _cia_meta, req_meta, dt_id = futures[fut]
             cia_up, offers, error, elapsed_ms = fut.result()
+            done_count += 1
             stage_name = f"adapter_search_{cia_up.lower()}{dt_id}"
             if error is not None:
                 tracer.log_event(
@@ -234,6 +251,23 @@ def _execute_dates_x_adapters_parallel(
                     f"DEBUG: Adapter {cia_up} retornou {len(offers)} ofertas "
                     f"para {req_meta.date_start} em {elapsed_ms:.0f}ms"
                 )
+    except FuturesTimeoutError:
+        pending = [(futures[f][0], futures[f][1]) for f in futures if not f.done()]
+        for cia_up, req_meta in pending:
+            tracer.log_event(
+                stage=f"adapter_search_{cia_up.lower()}_budget",
+                status="error", latency_ms=int(_ADAPTER_BUDGET_S * 1000),
+                offers_count=0, error="budget_exceeded",
+            )
+        print(
+            f"[orchestrator] orçamento de {_ADAPTER_BUDGET_S:.0f}s estourado — "
+            f"{done_count}/{len(futures)} adapters concluíram; seguindo com "
+            f"parcial ({len(pending)} abandonados: {[c for c, _ in pending]})"
+        )
+    finally:
+        # Não espera os stragglers: eles terminam em background e o resultado é
+        # descartado. cancel_futures evita iniciar os que ainda nem rodaram.
+        ex.shutdown(wait=False, cancel_futures=True)
 
     return aggregated
 
@@ -255,6 +289,7 @@ def run_pipeline(
     date_end: Optional[date] = None,
     companhias: Optional[list] = None,
     trip_type: Optional[TripType] = None,
+    baggage_checked: bool = False,
 ) -> PipelineResult:
     request_id = str(uuid.uuid4())[:8]
     tracer = PipelineTracer(request_id)
@@ -276,6 +311,7 @@ def run_pipeline(
                 flex_return=flex_return,
                 flex_mode=flex_mode,
                 trip_type_override=trip_type,
+                baggage_checked=baggage_checked,
             )
 
         # 2. Stage: date_planning

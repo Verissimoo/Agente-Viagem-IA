@@ -222,6 +222,8 @@ class ParsedIntent(BaseModel):
     adults: int = 1
     cabin: CabinClass = CabinClass.ECONOMY
     direct_only: bool = False
+    # None = vendedor não falou de bagagem; True/False = pediu/dispensou mala despachada.
+    baggage_checked: Optional[bool] = None
 
     # Novos campos de flexibilidade
     flex_mode: str = "none" # "none", "plusminus", "range"

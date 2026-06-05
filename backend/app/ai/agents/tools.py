@@ -32,6 +32,7 @@ def run_search(
     flex_return: bool = False,
     companhias: Optional[List[str]] = None,
     top_n: int = 5,
+    baggage_checked: bool = False,
 ) -> Dict[str, Any]:
     """Executa o pipeline e devolve dict pronto pra consumo pelo Validator/Presenter.
 
@@ -53,6 +54,7 @@ def run_search(
             flex_mode=flex_mode,
             date_end=date_end,
             companhias=companhias,
+            baggage_checked=baggage_checked,
         )
     except Exception as e:
         logger.exception("run_search falhou")

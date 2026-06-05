@@ -184,33 +184,48 @@ def _extract_date_range(text: str) -> Optional[tuple[date, date]]:
     from datetime import date as _date
     today = _date.today()
     lower = text.lower()
+    _MONTHS_RE = (
+        "janeiro|fevereiro|março|marco|abril|maio|junho|julho|agosto|"
+        "setembro|outubro|novembro|dezembro"
+    )
+    month_map = {
+        "janeiro": 1, "fevereiro": 2, "março": 3, "marco": 3, "abril": 4,
+        "maio": 5, "junho": 6, "julho": 7, "agosto": 8,
+        "setembro": 9, "outubro": 10, "novembro": 11, "dezembro": 12,
+    }
 
-    # Padrão: "X a Y de MES" ou "entre X e Y de MES"
+    def _mk(d1: int, mo1: int, d2: int, mo2: int) -> Optional[tuple[date, date]]:
+        year = today.year
+        try:
+            if _date(year, mo2, d2) < today:
+                year += 1
+            start, end = _date(year, mo1, d1), _date(year, mo2, d2)
+            return (start, end) if end >= start else (end, start)
+        except ValueError:
+            return None
+
+    # Padrão: "DD de MES a/ao/até DD de MES" (cada data com seu mês) —
+    # ex.: "15 de setembro ao dia 20 de setembro" / "10 de jun a 2 de jul".
     m = _re.search(
-        r"(?:entre\s+)?(\d{1,2})\s*(?:a|até|e|-)\s*(\d{1,2})\s+de\s+"
-        r"(janeiro|fevereiro|março|marco|abril|maio|junho|julho|agosto|"
-        r"setembro|outubro|novembro|dezembro)",
+        rf"(?:entre\s+)?(\d{{1,2}})\s+(?:de\s+|se\s+)?({_MONTHS_RE})\s+"
+        rf"(?:a|ao|at[ée]|e|-)\s*(?:o\s+)?(?:dia\s+)?(\d{{1,2}})\s+(?:de\s+|se\s+)?({_MONTHS_RE})",
+        lower,
+    )
+    if m:
+        r = _mk(int(m.group(1)), month_map[m.group(2)], int(m.group(3)), month_map[m.group(4)])
+        if r:
+            return r
+
+    # Padrão: "X a Y de MES" ou "entre X e Y de MES" (mês único)
+    m = _re.search(
+        rf"(?:entre\s+)?(\d{{1,2}})\s*(?:a|até|e|-)\s*(\d{{1,2}})\s+(?:de\s+|se\s+)?({_MONTHS_RE})",
         lower,
     )
     if m:
         d1, d2 = int(m.group(1)), int(m.group(2))
-        month_map = {
-            "janeiro": 1, "fevereiro": 2, "março": 3, "marco": 3, "abril": 4,
-            "maio": 5, "junho": 6, "julho": 7, "agosto": 8,
-            "setembro": 9, "outubro": 10, "novembro": 11, "dezembro": 12,
-        }
         month = month_map.get(m.group(3))
         if month:
-            year = today.year
-            try:
-                candidate_end = _date(year, month, d2)
-                if candidate_end < today:
-                    year += 1
-                start = _date(year, month, min(d1, d2))
-                end = _date(year, month, max(d1, d2))
-                return (start, end)
-            except ValueError:
-                return None
+            return _mk(min(d1, d2), month, max(d1, d2), month)
 
     # Padrão: "DD/MM a DD/MM" ou "DD-MM a DD-MM"
     m = _re.search(
@@ -231,6 +246,96 @@ def _extract_date_range(text: str) -> Optional[tuple[date, date]]:
             return None
 
     return None
+
+
+def _all_date_ranges(text: str) -> list[tuple[int, date, date]]:
+    """Acha TODOS os ranges de data no texto, com a posição onde começam.
+    Retorna lista de (pos, start_date, end_date), ordenada por posição.
+    """
+    import re as _re
+    from datetime import date as _date
+    today = _date.today()
+    lower = text.lower()
+    month_map = {
+        "janeiro": 1, "fevereiro": 2, "março": 3, "marco": 3, "abril": 4,
+        "maio": 5, "junho": 6, "julho": 7, "agosto": 8,
+        "setembro": 9, "outubro": 10, "novembro": 11, "dezembro": 12,
+    }
+    found: list[tuple[int, date, date]] = []
+
+    # "X a/e Y [de|se] MES"
+    for m in _re.finditer(
+        r"(\d{1,2})\s*(?:a|até|e|-)\s*(\d{1,2})\s+(?:de\s+|se\s+)?"
+        r"(janeiro|fevereiro|março|marco|abril|maio|junho|julho|agosto|"
+        r"setembro|outubro|novembro|dezembro)",
+        lower,
+    ):
+        d1, d2, month = int(m.group(1)), int(m.group(2)), month_map.get(m.group(3))
+        if not month:
+            continue
+        year = today.year
+        try:
+            if _date(year, month, max(d1, d2)) < today:
+                year += 1
+            found.append((m.start(), _date(year, month, min(d1, d2)), _date(year, month, max(d1, d2))))
+        except ValueError:
+            continue
+
+    # "DD/MM a DD/MM"
+    for m in _re.finditer(
+        r"\b(\d{1,2})[\/\-](\d{1,2})\s*(?:a|até|-)\s*(\d{1,2})[\/\-](\d{1,2})\b",
+        lower,
+    ):
+        d1, mo1, d2, mo2 = (int(g) for g in m.groups())
+        year = today.year
+        try:
+            start, end = _date(year, mo1, d1), _date(year, mo2, d2)
+            if end < today:
+                start, end = _date(year + 1, mo1, d1), _date(year + 1, mo2, d2)
+            found.append((m.start(), start, end))
+        except ValueError:
+            continue
+
+    found.sort(key=lambda x: x[0])
+    return found
+
+
+def _extract_depart_return_windows(
+    text: str,
+) -> tuple[Optional[tuple[date, date]], Optional[tuple[date, date]]]:
+    """Quando o vendedor dá DUAS janelas — ida e volta separadas
+    ('ir entre 10 e 12, voltando entre 25 e 26') — atribui o primeiro range à
+    ida e o segundo à volta. Retorna (janela_ida, janela_volta), cada uma
+    podendo ser None.
+    """
+    import re as _re
+    ranges = _all_date_ranges(text)
+    if len(ranges) >= 2:
+        dep = (ranges[0][1], ranges[0][2])
+        ret = (ranges[1][1], ranges[1][2])
+        return dep, ret
+
+    # Só 1 range explícito: se há marcador de volta + "X a Y" cru depois dele,
+    # herda mês/ano da ida ("ir 10-12 de outubro, voltar entre 20 e 22").
+    if len(ranges) == 1:
+        dep = (ranges[0][1], ranges[0][2])
+        kw = _re.search(r"\b(voltando|voltar|de\s+volta|retorn\w+|regress\w+)\b", text.lower())
+        if kw:
+            tail = text[kw.start():].lower()
+            bare = _re.search(r"(\d{1,2})\s*(?:a|até|e|-)\s*(\d{1,2})", tail)
+            if bare:
+                d1, d2 = int(bare.group(1)), int(bare.group(2))
+                ref = dep[1]
+                try:
+                    return dep, (
+                        date(ref.year, ref.month, min(d1, d2)),
+                        date(ref.year, ref.month, max(d1, d2)),
+                    )
+                except ValueError:
+                    return dep, None
+        return dep, None
+
+    return None, None
 
 
 _NUM_WORDS = {
@@ -418,9 +523,39 @@ def _extract_children_info(text: str) -> Dict[str, Any]:
     return out
 
 
+def is_new_search(intent: Dict[str, Any]) -> bool:
+    """A mensagem define uma rota completa (origem + destino)? Então é um novo
+    pedido de cotação — não deve herdar datas/flex de buscas anteriores."""
+    return bool(intent.get("origin_iata") and intent.get("destination_iata"))
+
+
+# Slots de BUSCA que devem ser zerados quando uma nova rota é informada, pra
+# evitar que um thread fique "envenenado" com datas/janelas/flex de buscas
+# antigas. Passageiros/cabine (adults, children, cabin) NÃO são zerados —
+# costumam valer pro mesmo atendimento.
+_SEARCH_SCOPED_SLOTS = (
+    "date_start", "date_end", "date_return", "return_from", "return_to",
+    "flex_mode", "flex_days", "trip_duration_days", "trip_type",
+    "direct_only", "baggage_checked",
+)
+
+
 def _merge_parsed_intent(slots: IntakeSlots, intent: Dict[str, Any]) -> IntakeSlots:
     """Mescla o que o intent_parser extraiu com o que já temos. Não sobrescreve confirmado."""
     new_slots: IntakeSlots = dict(slots)  # type: ignore[assignment]
+
+    # NOVA BUSCA: rota completa na mensagem → zera datas/flex/janelas anteriores
+    # e sobrescreve a rota. Sem isso, "voo X→Y dia 20 só ida" depois de um teste
+    # de flex herdaria as janelas velhas e buscaria a rota/datas erradas.
+    if is_new_search(intent):
+        for k in _SEARCH_SCOPED_SLOTS:
+            new_slots.pop(k, None)  # type: ignore[misc]
+        new_slots["origin_iata"] = intent["origin_iata"]
+        new_slots["destination_iata"] = intent["destination_iata"]
+        if intent.get("origin_city"):
+            new_slots["origin_city"] = intent["origin_city"]
+        if intent.get("destination_city"):
+            new_slots["destination_city"] = intent["destination_city"]
 
     def _set_if_empty(key: str, value: Any) -> None:
         if value is not None and not new_slots.get(key):
@@ -452,6 +587,10 @@ def _merge_parsed_intent(slots: IntakeSlots, intent: Dict[str, Any]) -> IntakeSl
     if intent.get("direct_only") is not None and not new_slots.get("direct_only"):
         new_slots["direct_only"] = bool(intent["direct_only"])
 
+    # Bagagem despachada: None = vendedor não mencionou; só grava quando explícito.
+    if intent.get("baggage_checked") is not None and new_slots.get("baggage_checked") is None:
+        new_slots["baggage_checked"] = bool(intent["baggage_checked"])
+
     # Resolve cidade → IATA quando temos só nome — com fallback de variações
     if new_slots.get("origin_city") and not new_slots.get("origin_iata"):
         iatas = _resolve_city_smart(new_slots["origin_city"])
@@ -469,8 +608,14 @@ def _missing_required(slots: IntakeSlots) -> Optional[str]:
     for f in _REQUIRED_FIELDS:
         if not slots.get(f):
             return f
+    # Roundtrip precisa de volta — mas uma JANELA de volta (return_from/to) ou
+    # uma DURAÇÃO de viagem (trip_duration_days dentro de um range) já bastam:
+    # o orchestrator deriva as datas de volta a partir delas.
     if slots.get("trip_type") == "roundtrip" and not slots.get("date_return"):
-        return "date_return"
+        has_return_window = bool(slots.get("return_from") and slots.get("return_to"))
+        has_duration = bool(slots.get("trip_duration_days") and slots.get("date_end"))
+        if not (has_return_window or has_duration):
+            return "date_return"
     return None
 
 
@@ -495,10 +640,12 @@ def intake_node(state: ChatState) -> ChatState:
             break
 
     # Passada barata regex/heurística
+    new_search = False
     if last_user_msg:
         try:
             parsed = parse_intent_ptbr(last_user_msg)
             parsed_dict = parsed.model_dump() if hasattr(parsed, "model_dump") else dict(parsed)
+            new_search = is_new_search(parsed_dict)
             slots = _merge_parsed_intent(slots, parsed_dict)
         except Exception as e:
             errors.append(f"intent_parser falhou: {e}")
@@ -510,6 +657,11 @@ def intake_node(state: ChatState) -> ChatState:
         for m in messages
     )
 
+    # Em NOVA busca, os extratores de data/janela/duração olham SÓ a mensagem
+    # atual — senão frases de flex de buscas antigas no histórico voltam a ser
+    # aplicadas (thread "envenenado").
+    extraction_text = last_user_msg if new_search else history_text
+
     # Crianças/bebês (parser oficial não cobre).
     if history_text:
         kid_info = _extract_children_info(history_text)
@@ -518,8 +670,8 @@ def intake_node(state: ChatState) -> ChatState:
                 slots[k] = v  # type: ignore[literal-required]
 
     # Datas em formato abreviado tipo "10/out" (parser não cobre).
-    if history_text and not slots.get("date_start"):
-        d = _extract_date_fallback(history_text)
+    if extraction_text and not slots.get("date_start"):
+        d = _extract_date_fallback(extraction_text)
         if d:
             slots["date_start"] = d.isoformat()
 
@@ -537,9 +689,21 @@ def intake_node(state: ChatState) -> ChatState:
                 slots["destination_iata"] = iatas[0]
                 slots.setdefault("destination_city", dest_raw)
 
-    # Range "1 a 13 de junho" / "01/06 a 13/06" — vira flex_mode=range
-    if history_text:
-        rng = _extract_date_range(history_text)
+    # Duas janelas (ida + volta separadas): "ir entre 10 e 12, voltando entre 25 e 26".
+    if extraction_text and not (slots.get("return_from") and slots.get("return_to")):
+        dep_w, ret_w = _extract_depart_return_windows(extraction_text)
+        if ret_w:
+            slots["trip_type"] = "roundtrip"
+            slots["flex_mode"] = "range"
+            if dep_w:
+                slots["date_start"] = dep_w[0].isoformat()
+                slots["date_end"] = dep_w[1].isoformat()
+            slots["return_from"] = ret_w[0].isoformat()
+            slots["return_to"] = ret_w[1].isoformat()
+
+    # Range "1 a 13 de junho" / "01/06 a 13/06" — vira flex_mode=range (só ida).
+    if extraction_text and not (slots.get("return_from") and slots.get("return_to")):
+        rng = _extract_date_range(extraction_text)
         if rng:
             ds, de = rng
             slots.setdefault("flex_mode", "range")
@@ -550,13 +714,34 @@ def intake_node(state: ChatState) -> ChatState:
             slots["date_end"] = de.isoformat()
 
     # Duração da viagem ("viagem de 3 dias", "fim de semana")
-    if history_text and not slots.get("trip_duration_days"):
-        dur = _extract_trip_duration(history_text)
+    if extraction_text and not slots.get("trip_duration_days"):
+        dur = _extract_trip_duration(extraction_text)
         if dur:
             slots["trip_duration_days"] = dur
             # Se tem duração, é roundtrip implícito
             if slots.get("trip_type") in (None, "oneway"):
                 slots["trip_type"] = "roundtrip"
+
+    # ─── INTERPRETAÇÃO POR LLM (primária; o regex acima é fallback) ────
+    # A LLM vê a conversa inteira e devolve os blocos de filtro estruturados
+    # (rota, janela de ida, janela de volta, flex, mala, direto, horário). Em
+    # frases naturais ela é bem mais robusta que o regex. Quando resolve rota +
+    # datas com confiança, SOBRESCREVE os slots de busca; se cair, ficam os do
+    # regex. IATA/datas são validados de forma determinística no `to_slots`.
+    if history_text:
+        try:
+            from backend.app.ai.agents.interpreter import interpret, to_slots
+            raw = interpret(history_text, today=date.today())
+            if raw:
+                llm = to_slots(raw, today=date.today())
+                if llm.get("origin_iata") and llm.get("destination_iata"):
+                    # Interpretação completa da conversa → limpa janelas/flex
+                    # antigos (evita herdar de turnos passados) e aplica a da LLM.
+                    for k in ("date_end", "return_from", "return_to", "trip_duration_days"):
+                        slots.pop(k, None)  # type: ignore[misc]
+                    slots.update(llm)  # type: ignore[typeddict-item]
+        except Exception as e:
+            errors.append(f"llm_interpreter: {e}")
 
     # Se tava aguardando a direção da flex, tenta extrair da resposta.
     if state.get("awaiting_field") == "flex_direction" and last_user_msg:

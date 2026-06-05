@@ -249,6 +249,7 @@ export interface QuoteForDateRequestDTO {
   return_date?: string | null;
   adults?: number;
   cabin?: CabinClass;
+  baggage_checked?: boolean;
   include_skiplagged?: boolean;
   include_buscamilhas?: boolean;
   include_economilhas?: boolean;
@@ -272,6 +273,11 @@ export interface TableRowDTO {
   price_brl: number | null;
   price_with_markup_brl: number | null;
   price_with_baggage_brl: number | null;
+  // Bagagem despachada (23kg), por trecho/passageiro:
+  // 'included' | 'addable' | 'not_allowed' (hidden city) | 'unknown' (internacional sem dado)
+  baggage_status: string | null;
+  baggage_note: string | null;
+  baggage_extra_brl: number | null;
   duration_min: number | null;
   duration_str: string;
   stops: number;

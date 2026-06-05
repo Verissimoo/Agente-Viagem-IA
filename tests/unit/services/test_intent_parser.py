@@ -28,6 +28,41 @@ def test_parse_direct_synonyms(direct_phrase: str):
     assert intent.direct_only is True
 
 
+@pytest.mark.parametrize(
+    "phrase",
+    ["com mala despachada", "com bagagem despachada", "23kg", "bagagem de 23kg", "com mala"],
+)
+def test_parse_baggage_requested(phrase: str):
+    intent = parse_intent_regex(f"BSB para SSA {phrase}")
+    assert intent.baggage_checked is True
+
+
+@pytest.mark.parametrize(
+    "phrase",
+    ["só mochila", "apenas bagagem de mão", "sem bagagem despachada", "sem mala"],
+)
+def test_parse_baggage_declined(phrase: str):
+    intent = parse_intent_regex(f"BSB para SSA {phrase}")
+    assert intent.baggage_checked is False
+
+
+def test_parse_baggage_unmentioned_is_none():
+    intent = parse_intent_regex("BSB para SSA dia 20/07/2026")
+    assert intent.baggage_checked is None
+
+
+def test_route_not_confused_by_dates_in_sentence():
+    # Regressão: frase longa com datas no meio fazia o regex capturar
+    # "voo de brasilia" como origem → IATA lixo "VOO". Deve resolver BSB→SSA.
+    intent = parse_intent_regex(
+        "Quero um voo ida e volta podendo ir entre o dia 10 e 12 de setembro, "
+        "e voltando entre 25 e 26 de setembro, seria um voo de Brasília para "
+        "Salvador, veja o valor mais barato e me retorne a cotação"
+    )
+    assert intent.origin_iata == "BSB"
+    assert intent.destination_iata == "SSA"
+
+
 def test_parse_cabin_business():
     intent = parse_intent_regex("BSB para GRU executiva 20/06/2027")
     assert intent.cabin == CabinClass.BUSINESS

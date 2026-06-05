@@ -1,8 +1,27 @@
 "use client";
 
+import { Fragment } from "react";
 import { AlertTriangle, FileDown, Plane, CheckCircle2, Clock } from "lucide-react";
 import type { Offer } from "@/lib/api";
 import { formatBRL, formatDate, formatMiles, formatTime } from "@/lib/format";
+
+/** Minutos de espera entre a chegada de um segmento e a partida do próximo. */
+function layoverMinutes(arrISO?: string | null, depISO?: string | null): number | null {
+  if (!arrISO || !depISO) return null;
+  const arr = new Date(arrISO).getTime();
+  const dep = new Date(depISO).getTime();
+  if (isNaN(arr) || isNaN(dep) || dep <= arr) return null;
+  return Math.round((dep - arr) / 60000);
+}
+
+function formatLayover(min: number | null): string {
+  if (min == null) return "";
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  if (h && m) return `${h}h${m.toString().padStart(2, "0")}`;
+  if (h) return `${h}h`;
+  return `${m}min`;
+}
 
 interface OfferCardProps {
   offer: Offer;
@@ -47,31 +66,67 @@ export default function OfferCard({
           </h3>
         </div>
         <div className="text-right">
-          {offer.price_brl != null && (
-            <div className="text-2xl font-bold text-gray-900 dark:text-zinc-100 leading-none">
-              {formatBRL(offer.price_brl)}
-            </div>
-          )}
-          {offer.miles != null && (
-            <>
-              <div className={[
-                "font-semibold text-gray-700 dark:text-zinc-300 leading-none",
-                offer.price_brl != null ? "mt-1 text-sm" : "text-xl",
-              ].join(" ")}>
-                {formatMiles(offer.miles)}
-                {offer.taxes_brl ? (
-                  <span className="text-gray-500 dark:text-zinc-500 font-normal">
-                    {" + " + formatBRL(offer.taxes_brl)}
-                  </span>
-                ) : ""}
-              </div>
-              {offer.equivalent_brl != null && offer.price_brl == null && (
-                <div className="mt-1 text-xs text-gray-500 dark:text-zinc-400 italic">
-                  ≈ {formatBRL(offer.equivalent_brl)} total
-                </div>
-              )}
-            </>
-          )}
+          {(() => {
+            // Hidden city com bilhete validado em milhas: o PREÇO EM EVIDÊNCIA é
+            // o voo real validado (ex.: BSB→SSA via FOR, 11.850 mi); o cash vira
+            // referência pequena.
+            const isHC = (offer.category || "").toLowerCase().includes("hidden");
+            const v = offer.miles_same_ticket;
+            if (isHC && v && v.miles) {
+              return (
+                <>
+                  {v.equivalent_brl != null && (
+                    <div className="text-2xl font-bold text-gray-900 dark:text-zinc-100 leading-none">
+                      ≈ {formatBRL(v.equivalent_brl)}
+                    </div>
+                  )}
+                  <div className="mt-1 text-sm font-semibold text-gray-700 dark:text-zinc-300 leading-tight">
+                    {formatMiles(v.miles)}
+                    {v.taxes_brl ? (
+                      <span className="text-gray-500 dark:text-zinc-500 font-normal">{" + " + formatBRL(v.taxes_brl)}</span>
+                    ) : ""}
+                    {v.airline ? (
+                      <span className="text-gray-500 dark:text-zinc-500 font-normal">{" · " + v.airline}</span>
+                    ) : ""}
+                  </div>
+                  {offer.price_brl != null && (
+                    <div className="mt-1 text-[11px] text-gray-400 dark:text-zinc-500">
+                      cash {formatBRL(offer.price_brl)} <span className="italic">(ref.)</span>
+                    </div>
+                  )}
+                </>
+              );
+            }
+            return (
+              <>
+                {offer.price_brl != null && (
+                  <div className="text-2xl font-bold text-gray-900 dark:text-zinc-100 leading-none">
+                    {formatBRL(offer.price_brl)}
+                  </div>
+                )}
+                {offer.miles != null && (
+                  <>
+                    <div className={[
+                      "font-semibold text-gray-700 dark:text-zinc-300 leading-none",
+                      offer.price_brl != null ? "mt-1 text-sm" : "text-xl",
+                    ].join(" ")}>
+                      {formatMiles(offer.miles)}
+                      {offer.taxes_brl ? (
+                        <span className="text-gray-500 dark:text-zinc-500 font-normal">
+                          {" + " + formatBRL(offer.taxes_brl)}
+                        </span>
+                      ) : ""}
+                    </div>
+                    {offer.equivalent_brl != null && offer.price_brl == null && (
+                      <div className="mt-1 text-xs text-gray-500 dark:text-zinc-400 italic">
+                        ≈ {formatBRL(offer.equivalent_brl)} total
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
 
@@ -81,12 +136,52 @@ export default function OfferCard({
         </p>
       )}
 
+      {/* Hidden city: deixa CLARO o bilhete oficial (origem → destino final) e
+          onde o cliente realmente desce — senão o itinerário fica confuso. */}
+      {(() => {
+        const segs = offer.outbound?.segments || [];
+        const isHC = (offer.category || "").toLowerCase().includes("hidden");
+        if (!isHC || !offer.passenger_disembark_at || segs.length < 2) return null;
+        const officialDest = segs[segs.length - 1].destination;
+        return (
+          <div className="mb-3 text-[11px] bg-amber-50/60 dark:bg-amber-500/10 border border-amber-200/60 dark:border-amber-500/30 rounded-lg px-3 py-1.5 text-amber-800 dark:text-amber-200">
+            Bilhete oficial: <strong>{segs[0].origin} → {officialDest}</strong>
+            {" · "}cliente desce em <strong className="text-amber-600 dark:text-amber-400">{offer.passenger_disembark_at}</strong> (destino real) e descarta o trecho até {officialDest}
+          </div>
+        );
+      })()}
+
       {offer.outbound?.segments && offer.outbound.segments.length > 0 && (
         <Leg title="Ida" segments={offer.outbound.segments} />
       )}
       {offer.inbound?.segments && offer.inbound.segments.length > 0 && (
         <Leg title="Volta" segments={offer.inbound.segments} />
       )}
+
+      {/* Breakdown por perna quando o ida-e-volta foi montado como 2 bilhetes
+          só-ida (hidden city). Mostra ida + volta somadas no total acima. */}
+      {offer.roundtrip_legs && (offer.roundtrip_legs.ida || offer.roundtrip_legs.volta) ? (
+        <div className="mt-3 text-[11px] bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 rounded-lg px-3 py-2 text-blue-800 dark:text-blue-200 space-y-0.5">
+          <div className="font-semibold">Como somamos (dois bilhetes só-ida):</div>
+          {(["ida", "volta"] as const).map((k) => {
+            const leg = offer.roundtrip_legs?.[k];
+            if (!leg) return null;
+            return (
+              <div key={k} className="flex items-center gap-1.5">
+                <span className="uppercase text-[10px] tracking-wider text-blue-500 dark:text-blue-400 w-10">{k}</span>
+                <span>
+                  {leg.airline || "—"}
+                  {leg.hidden_city ? <span className="text-amber-600 dark:text-amber-400"> · hidden city</span> : ""}
+                  {" · "}
+                  <strong>{new Intl.NumberFormat("pt-BR").format(leg.miles || 0)} mi</strong>
+                  {leg.taxes_brl ? <> + {formatBRL(leg.taxes_brl)}</> : ""}
+                  {leg.equivalent_brl ? <span className="italic"> (≈ {formatBRL(leg.equivalent_brl)})</span> : ""}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
 
       {offer.risk_notes && (
         <div className="mt-3 flex items-start gap-2 text-xs bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-lg px-3 py-2 text-amber-800 dark:text-amber-200">
@@ -149,8 +244,8 @@ export default function OfferCard({
               <span className="font-semibold">
                 {offer.miles_alternative.is_split
                   ? "Mesmo split em milhas"
-                  : offer.miles_alternative.validated
-                    ? "Mesmo bilhete em milhas"
+                  : offer.miles_alternative.to_destination
+                    ? `Em milhas até ${offer.miles_alternative.to_destination} (mais barato)`
                     : "Em milhas (mesmo trecho)"}:
               </span>
               {offer.miles_alternative.validated && (
@@ -221,6 +316,19 @@ export default function OfferCard({
         </div>
       ) : null}
 
+      {/* O valor do bilhete validado já é a MANCHETE (preço em evidência). Aqui
+          só a nota de confiança com a rota física confirmada em milhas. */}
+      {offer.miles_same_ticket && offer.miles_same_ticket.miles ? (
+        <div className="mt-2 flex items-start gap-1.5 text-[11px] text-emerald-700 dark:text-emerald-300 border-l-2 border-emerald-300 dark:border-emerald-600/40 pl-2">
+          <span className="font-medium">✓ Bilhete validado em milhas</span>
+          {offer.miles_same_ticket.ticket_destination && offer.miles_same_ticket.via_hub ? (
+            <span className="text-emerald-600/80 dark:text-emerald-400/70">
+              — {offer.miles_same_ticket.airline} até {offer.miles_same_ticket.ticket_destination}, com escala em {offer.miles_same_ticket.via_hub} (onde o cliente desce)
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
       <div className="mt-4 flex justify-end">
         {readonly ? (
           <span className="text-xs text-gray-400 dark:text-zinc-500 italic">
@@ -258,9 +366,10 @@ function Leg({
   const last = segments[segments.length - 1];
   const stops = segments.length - 1;
 
-  // Hidden city: mostra cada segmento separadamente com flag visual.
-  // Usados: normais; descartados: strikethrough + cinza.
+  // Split de trecho, hidden city e qualquer conexão: SEMPRE detalhar cada
+  // segmento + a cidade de escala e os horários. Só voo direto vira resumo.
   const hasDiscarded = segments.some((s) => s.discarded);
+  const detailed = stops >= 1 || hasDiscarded;
 
   return (
     <div className="border-t border-gray-100 dark:border-zinc-800 pt-3 mt-3 first:border-t-0 first:pt-0 first:mt-0">
@@ -273,43 +382,63 @@ function Leg({
         </span>
       </div>
 
-      {hasDiscarded ? (
-        // Hidden city: cada segmento em linha, descartados com strikethrough
+      {detailed ? (
+        // Cada segmento em uma linha + linha de conexão (hub + tempo de espera)
+        // entre eles. Descartados (hidden city) ficam com strikethrough.
         <div className="space-y-1">
           {segments.map((seg, idx) => {
             const isDiscarded = !!seg.discarded;
+            const next = segments[idx + 1];
+            const lay = next ? formatLayover(layoverMinutes(seg.arrival_dt, next.departure_dt)) : "";
             return (
-              <div
-                key={idx}
-                className={[
-                  "flex items-center gap-3 text-sm transition-colors",
-                  isDiscarded
-                    ? "text-gray-400 dark:text-zinc-600 line-through italic"
-                    : "text-gray-900 dark:text-zinc-100",
-                ].join(" ")}
-              >
-                <Plane size={14} className={isDiscarded ? "text-gray-300 dark:text-zinc-700" : "text-gray-400 dark:text-zinc-500"} />
-                <span className="font-semibold tabular-nums">{formatTime(seg.departure_dt)}</span>
-                <span className="font-medium">{seg.origin}</span>
-                <span className="text-gray-300 dark:text-zinc-600">→</span>
-                <span className="font-medium">{seg.destination}</span>
-                <span className="font-semibold tabular-nums">{formatTime(seg.arrival_dt)}</span>
-                {seg.carrier && (
-                  <span className="text-xs text-gray-500 dark:text-zinc-400">
-                    {seg.carrier}
-                  </span>
+              <Fragment key={idx}>
+                <div
+                  className={[
+                    "flex items-center gap-3 text-sm transition-colors",
+                    isDiscarded
+                      ? "text-gray-400 dark:text-zinc-600 line-through italic"
+                      : "text-gray-900 dark:text-zinc-100",
+                  ].join(" ")}
+                >
+                  <Plane size={14} className={isDiscarded ? "text-gray-300 dark:text-zinc-700" : "text-gray-400 dark:text-zinc-500"} />
+                  <span className="font-semibold tabular-nums">{formatTime(seg.departure_dt)}</span>
+                  <span className="font-medium">{seg.origin}</span>
+                  <span className="text-gray-300 dark:text-zinc-600">→</span>
+                  <span className="font-medium">{seg.destination}</span>
+                  <span className="font-semibold tabular-nums">{formatTime(seg.arrival_dt)}</span>
+                  {seg.carrier && (
+                    <span className="text-xs text-gray-500 dark:text-zinc-400">
+                      {seg.carrier}
+                    </span>
+                  )}
+                  {isDiscarded && (
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 ml-auto no-underline not-italic">
+                      descartado
+                    </span>
+                  )}
+                </div>
+                {next && !isDiscarded && (
+                  <div className="flex items-center gap-1.5 pl-[26px] text-[11px] text-gray-500 dark:text-zinc-400">
+                    <span className="text-gray-300 dark:text-zinc-600">↳</span>
+                    {next.discarded ? (
+                      // Fronteira usado→descartado: é AQUI que o passageiro desce.
+                      <span>
+                        cliente desembarca em <span className="font-semibold text-amber-600 dark:text-amber-400">{seg.destination}</span> (destino real)
+                      </span>
+                    ) : (
+                      <span>
+                        conexão em <span className="font-semibold text-gray-700 dark:text-zinc-300">{seg.destination}</span>
+                        {lay ? <> · {lay} de espera</> : ""}
+                      </span>
+                    )}
+                  </div>
                 )}
-                {isDiscarded && (
-                  <span className="text-[10px] uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 ml-auto no-underline not-italic">
-                    descartado
-                  </span>
-                )}
-              </div>
+              </Fragment>
             );
           })}
         </div>
       ) : (
-        // Padrão (split, cash, milhas): resumo origem→destino
+        // Voo direto: resumo origem→destino
         <div className="flex items-center gap-3 text-sm">
           <Plane size={14} className="text-gray-400 dark:text-zinc-500" />
           <span className="font-semibold text-gray-900 dark:text-zinc-100 tabular-nums">{formatTime(first.departure_dt)}</span>
@@ -317,9 +446,7 @@ function Leg({
           <span className="text-gray-300 dark:text-zinc-600">→</span>
           <span className="text-gray-500 dark:text-zinc-400 font-medium">{last.destination}</span>
           <span className="font-semibold text-gray-900 dark:text-zinc-100 tabular-nums">{formatTime(last.arrival_dt)}</span>
-          <span className="text-gray-400 dark:text-zinc-500 text-xs ml-auto">
-            {stops === 0 ? "Direto" : `${stops} ${stops > 1 ? "conexões" : "conexão"}`}
-          </span>
+          <span className="text-gray-400 dark:text-zinc-500 text-xs ml-auto">Direto</span>
         </div>
       )}
     </div>

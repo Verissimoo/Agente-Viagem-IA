@@ -475,6 +475,7 @@ class QuoteForDateRequest(BaseModel):
     return_date: date | None = Field(None, description="Data de volta; quando setada habilita roundtrip")
     adults: int = Field(1, ge=1, le=9)
     cabin: CabinClass = CabinClass.ECONOMY
+    baggage_checked: bool = Field(False, description="Cliente pediu mala despachada (23kg)")
     include_skiplagged: bool = True
     include_buscamilhas: bool = True
     include_economilhas: bool = True
@@ -581,7 +582,12 @@ class TableRow(BaseModel):
     real_cost_brl: float | None   # milhas em BRL + taxas (ou só price_brl pra cash)
     price_brl: float | None       # preço cash (None se for milhas pura)
     price_with_markup_brl: float | None  # cash com markup 10% (Kayak)
-    price_with_baggage_brl: float | None  # estimativa com bagagem (cash + R$80, milhas + 5k mi)
+    price_with_baggage_brl: float | None  # preço deste trecho + mala despachada (None se não permitido/incerto)
+    # Bagagem despachada (23kg), por trecho/passageiro — ver services/baggage.py:
+    #   "included" | "addable" | "not_allowed" (hidden city) | "unknown" (internacional sem dado)
+    baggage_status: str | None = None
+    baggage_note: str | None = None
+    baggage_extra_brl: float | None = None   # custo adicional da mala neste trecho (por passageiro)
     duration_min: int | None
     duration_str: str     # "1h20m"
     stops: int
@@ -783,14 +789,16 @@ def _build_table_row(
     # Markup 10% só faz sentido para cash do Kayak.
     price_with_markup = round(price_final * KAYAK_MARKUP, 2) if (is_kayak_cash and price_final is not None) else None
 
-    # VALOR C/ MALA: cash + R$80 fixo, milhas + 5000 mi adicionais (estimativa).
-    if miles is not None and real_cost is not None and miles > 0:
-        rate_per_mile = (real_cost - float(taxes or 0)) / miles
-        price_with_bag = round(real_cost + 5000 * rate_per_mile, 2)
-    elif price_final is not None:
-        base = price_with_markup if price_with_markup is not None else price_final
-        price_with_bag = round(base + 80.0, 2)
+    # VALOR C/ MALA: regra real (services/baggage.py). Fonte da nossa rede quando
+    # traz o tier com mala; Smiles doméstico = R$130/trecho; internacional sem
+    # dado = incerto; hidden city = não permitido.
+    from backend.app.services.baggage import baggage_for_row, ADDABLE, INCLUDED
+    bag_info = baggage_for_row(offer, itinerary, leg, real_cost=real_cost)
+    base_price = price_with_markup if price_with_markup is not None else price_final
+    if bag_info.status in (ADDABLE, INCLUDED) and base_price is not None and bag_info.extra_brl is not None:
+        price_with_bag = round(base_price + bag_info.extra_brl, 2)
     else:
+        # not_allowed (hidden city) / unknown (internacional sem dado) / sem preço base.
         price_with_bag = None
 
     src_label_map = {
@@ -830,6 +838,9 @@ def _build_table_row(
         price_brl=price_final,
         price_with_markup_brl=price_with_markup,
         price_with_baggage_brl=price_with_bag,
+        baggage_status=bag_info.status,
+        baggage_note=bag_info.note,
+        baggage_extra_brl=bag_info.extra_brl,
         duration_min=itinerary.duration_min if itinerary else None,
         duration_str=_format_duration(itinerary.duration_min if itinerary else None),
         stops=stops,
@@ -1199,6 +1210,10 @@ def _quote_hidden_city_alternatives(
             # Filtra matched que tem horário compatível (±60min).
             # Skiplagged devolve datetime tz-aware, BuscaMilhas naive —
             # normalizamos para naive antes de comparar.
+            # Cidade onde o passageiro desembarca (escala do hidden city, ex.: SSA).
+            # A oferta de milhas só serve se o itinerário REALMENTE passar por ela —
+            # um direto BSB→CNF tem o mesmo destino oficial mas não dá onde descer.
+            layover = (o.layover_city or "").upper() or None
             compatible = []
             seg0_dt = seg0.departure_dt.replace(tzinfo=None) if seg0.departure_dt else None
             for mo in matched:
@@ -1207,8 +1222,17 @@ def _quote_hidden_city_alternatives(
                     continue
                 m_dt = mseg.departure_dt.replace(tzinfo=None)
                 delta_min = abs((m_dt - seg0_dt).total_seconds()) / 60
-                if delta_min <= 60:
-                    compatible.append(mo)
+                if delta_min > 60:
+                    continue
+                # Escala intermediária = destino de todo segmento exceto o último.
+                if layover:
+                    intermediate = {
+                        (s.destination or "").upper()
+                        for s in mo.outbound.segments[:-1]
+                    }
+                    if layover not in intermediate:
+                        continue
+                compatible.append(mo)
             # Ordena por milhas asc
             compatible.sort(key=lambda mo: mo.miles or 0)
             # Pega top 5 alternativas
@@ -1841,6 +1865,7 @@ def quote_for_date(payload: QuoteForDateRequest) -> QuoteForDateResponse:
         adults=payload.adults,
         cabin=payload.cabin,
         trip_type=trip_type,
+        baggage_checked=payload.baggage_checked,
     )
 
     tasks: list = []

@@ -7,7 +7,8 @@ from typing import Optional, Dict, Any
 from backend.app.domain.models import ParsedIntent, TripType, CabinClass
 from backend.app.providers.buscamilhas.iata_resolver import resolve_city_to_iatas, normalize_city_key
 
-IATA_STOPWORDS = {"UMA", "IDA", "VOL", "PRA", "COM", "TEM", "SAO", "DIA", "PRO", "VOU", "ELA", "ELE", "EST", "NOS", "POR"}
+IATA_STOPWORDS = {"UMA", "IDA", "VOL", "PRA", "COM", "TEM", "SAO", "DIA", "PRO", "VOU", "ELA", "ELE", "EST", "NOS", "POR",
+                  "VOO", "VER", "VEJA", "MES", "SEI", "SER"}
 
 def clean_text_ptbr(text: str) -> str:
     """
@@ -149,14 +150,18 @@ def parse_intent_regex(text: str) -> ParsedIntent:
     intent.date_start, intent.date_return = _extract_dates(text_for_dates)
 
     # 2. Trip Type
-    is_oneway_explicit = any(k in text_lower for k in [
-        "apenas ida", "somente ida", "só ida", "so ida", "one way", "oneway",
-    ])
-    if any(k in text_lower for k in ["ida e volta", "volta dia", "retorno", "roundtrip"]) and not is_oneway_explicit:
+    # "volta"/"retorno" como PALAVRA (não pega 'revolta', e 'ida' não pega 'Flórida').
+    has_volta = bool(re.search(r"\b(volta|retorno|roundtrip)\b", text_lower)) or "ida e volta" in text_lower
+    is_oneway_explicit = (
+        any(k in text_lower for k in ["apenas ida", "somente ida", "só ida", "so ida", "one way", "oneway"])
+        # "voo de ida", "passagem de ida", "só ida" — 'ida' sem nenhuma 'volta' = só ida.
+        or (bool(re.search(r"\bida\b", text_lower)) and not has_volta)
+    )
+    if has_volta and not is_oneway_explicit:
         intent.trip_type = TripType.ROUNDTRIP
     else:
         intent.trip_type = TripType.ONEWAY
-        # "Apenas ida" → não usar 2a data como volta (vira janela de flex)
+        # Só ida → a 2a data NÃO é volta (vira fim da janela de flex).
         if is_oneway_explicit:
             intent.date_return = None
         
@@ -164,8 +169,35 @@ def parse_intent_regex(text: str) -> ParsedIntent:
     # Padrão 1: de <orig> para <dest> (com lookahead para descartar datas/flex)
     # Padrão 2: <orig> para <dest>
     # Padrão 3: <orig> -> <dest>
-    
-    _STOP = r"dia|em|na|no|ida|volta|data|flex|±|com|para\s+o|as|às|apenas|somente"
+
+    # Remove o RUÍDO de datas/flex ANTES de extrair a rota — senão frases como
+    # "...26 de setembro, seria um voo de brasília para salvador" fazem o regex
+    # casar no "de setembro" e capturar lixo como origem (ex.: "VOO").
+    _months_re = "|".join(sorted(_MONTHS_PTBR.keys(), key=len, reverse=True))
+    route_text = text_lower
+    route_text = re.sub(r"\bde\s+volta\b", " ", route_text)                       # "de volta" não é rota
+    route_text = re.sub(r"\b\d{1,2}\s*(?:a|até|ate|e|-)\s*\d{1,2}\b", " ", route_text)  # "10 e 12"
+    # Remove "de/se setembro" como UNIDADE (senão sobra um "de" órfão que o
+    # regex de rota confunde com "de <origem>").
+    route_text = re.sub(rf"\b(?:de|se|d[eo])\s+(?:{_months_re})\b", " ", route_text)
+    route_text = re.sub(rf"\b(?:{_months_re})\b", " ", route_text)                # meses soltos
+    route_text = re.sub(
+        r"\b(?:dia|entre|voltando|voltar|retornando|retorno|regressar|podendo|"
+        r"seria|partindo|saindo)\b", " ", route_text,
+    )
+    route_text = re.sub(r"\bse\b", " ", route_text)                              # conector typo "se setembro"
+    # Frases de tipo de viagem grudam no destino ("salvador só ida") — remove.
+    route_text = re.sub(
+        r"\b(?:ida\s+e\s+volta|s[óo]\s+ida|somente\s+ida|apenas\s+ida|"
+        r"one\s*way|oneway|round\s*trip|roundtrip)\b", " ", route_text,
+    )
+    route_text = re.sub(r"\b\d{1,4}\b", " ", route_text)                         # números restantes
+    route_text = re.sub(r"\s+", " ", route_text).strip()
+
+    _STOP = (
+        r"dia|em|na|no|ida|volta|data|flex|±|com|para\s+o|as|às|apenas|somente|"
+        r"veja|vendo|melhor|valor|barato|retorne|cotacao|cotação|preco|preço|me\b"
+    )
     patterns = [
         # de X para Y
         rf"\bde\s+(?P<orig>.+?)\s+(?:para|pra|to)\s+(?P<dest>.+?)(?=\s+(?:{_STOP})\b|\s+\d+|$)",
@@ -174,10 +206,10 @@ def parse_intent_regex(text: str) -> ParsedIntent:
         # X -> Y
         rf"(?P<orig>.+?)\s*(?:->|=>)\s*(?P<dest>.+?)(?=\s+(?:{_STOP})\b|\s+\d+|$)",
     ]
-    
+
     extracted = False
     for p in patterns:
-        match = re.search(p, text_lower)
+        match = re.search(p, route_text)
         if match:
             origin_raw = match.group("orig").strip()
             dest_raw = match.group("dest").strip()
@@ -215,7 +247,23 @@ def parse_intent_regex(text: str) -> ParsedIntent:
     ]
     if any(re.search(p, text_lower) for p in direct_patterns):
         intent.direct_only = True
-        
+
+    # 4b. Bagagem despachada (23kg). None = não mencionado; True/False = explícito.
+    bag_no_patterns = [
+        r"sem\s+bagagem\s+despachada", r"sem\s+mala\s+despachada", r"sem\s+despachar",
+        r"s[óo]\s+(?:bagagem\s+de\s+)?m[ãa]o", r"apenas\s+(?:bagagem\s+de\s+)?m[ãa]o",
+        r"s[óo]\s+mochila", r"apenas\s+mochila", r"sem\s+mala", r"sem\s+bagagem",
+    ]
+    bag_yes_patterns = [
+        r"com\s+bagagem\s+despachada", r"bagagem\s+despachada", r"mala\s+despachada",
+        r"despachar\s+(?:a\s+)?(?:mala|bagagem)", r"com\s+mala", r"com\s+bagagem",
+        r"\b23\s*kg\b", r"\b23kg\b", r"bagagem\s+de\s+23", r"mala\s+de\s+23",
+    ]
+    if any(re.search(p, text_lower) for p in bag_no_patterns):
+        intent.baggage_checked = False
+    elif any(re.search(p, text_lower) for p in bag_yes_patterns):
+        intent.baggage_checked = True
+
     # 5. Cabine
     if "executiva" in text_lower or "business" in text_lower:
         intent.cabin = CabinClass.BUSINESS

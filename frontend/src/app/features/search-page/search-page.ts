@@ -69,6 +69,7 @@ export class SearchPageComponent {
     date_start: this.tomorrow(),
     adults: 1,
     direct_only: false,
+    baggage_checked: false,
     flex_mode: 'none',
     flex_days: 0,
     top_n: 20,
@@ -410,6 +411,7 @@ export class SearchPageComponent {
         date: iso,
         return_date: this.form.date_return || null,
         adults: this.form.adults || 1,
+        baggage_checked: this.form.baggage_checked || false,
         include_kayak: true,
       })
       .subscribe({

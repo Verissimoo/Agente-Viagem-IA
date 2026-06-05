@@ -223,6 +223,9 @@ def enrich_hidden_city_offers(
                 "taxes_brl": alt.get("taxes_brl"),
                 "equivalent_brl": alt.get("equivalent_brl"),
                 "offer_id": alt.get("offer_id"),
+                # Award DIRETO até onde o passageiro desce (destino real), não o
+                # bilhete oficial do hidden city.
+                "to_destination": real_destination,
             }
         out.append(offer)
     return out
@@ -309,18 +312,24 @@ def supplementary_miles_search_for_hidden_city(
         return None
 
     # Filtra ofertas que fazem escala no destino REAL do passageiro (valida que
-    # é o mesmo bilhete físico do hidden city, não outra rota qualquer).
+    # é o MESMO bilhete físico do hidden city). SEM fallback: se nenhum voo em
+    # milhas do bilhete oficial passa pela cidade onde o passageiro desce, NÃO
+    # validamos — devolver um voo qualquer (que não para lá) seria o bug que já
+    # corrigimos antes (validar com o voo errado).
     via_hub = [o for o in miles_offers if _connects_through(o, real_destination)]
-    pool_filtered_by_hub = via_hub if via_hub else miles_offers
+    if not via_hub:
+        logger.info(
+            "supplementary: nenhum voo em milhas %s→%s passa por %s — "
+            "hidden city NÃO validado em milhas",
+            origin, ticket_dest, real_destination,
+        )
+        return None
 
     # PRIORIDADE 1: mesma cia operadora do hidden city + passa pelo hub.
-    # Ex.: hidden G3 BSB→CNF via SSA → preferir Smiles (G3) BSB→CNF via SSA.
+    # Ex.: hidden LA BSB→SSA via FOR → preferir LATAM BSB→SSA via FOR.
     hidden_carrier = _carrier(hidden_offer)
-    same_carrier = [
-        o for o in pool_filtered_by_hub
-        if _carrier(o) == hidden_carrier
-    ]
-    candidates = same_carrier or pool_filtered_by_hub
+    same_carrier = [o for o in via_hub if _carrier(o) == hidden_carrier]
+    candidates = same_carrier or via_hub
 
     def _sort_key(o: Dict[str, Any]) -> float:
         return float(
@@ -522,9 +531,11 @@ def validate_hidden_city_with_supplementary(
             out.append(offer)
             continue
 
-        # SOBRESCREVE miles_alternative existente (cross-reference simples
-        # busca o TRECHO REAL — suplementar busca o BILHETE OFICIAL, mais preciso).
-        # Não pulamos se já tem — substituímos.
+        # NÃO sobrescreve `miles_alternative` (que é o award DIRETO ao destino
+        # real do passageiro — ex.: BSB→SSA, normalmente o mais barato e útil).
+        # A busca suplementar acha o MESMO BILHETE OFICIAL em milhas (ex.:
+        # BSB→FOR passando por SSA) e vai num campo SEPARADO `miles_same_ticket`
+        # como referência. Assim o card mostra os dois.
         validated = supplementary_miles_search_for_hidden_city(
             offer,
             real_destination=real_destination,
@@ -534,20 +545,20 @@ def validate_hidden_city_with_supplementary(
         if validated:
             offer = dict(offer)
             match_info = validated.get("_supplementary_match") or {}
-            # Pra ofertas em milhas, usa o NOME DO PROGRAMA (Smiles, LATAM Pass)
-            # em vez do código da cia (G3, LA).
             from backend.app.ai.agents.airlines import (
                 miles_program_name, prettify_carrier,
             )
             carrier = validated.get("airline") or ""
             program = miles_program_name(carrier) or prettify_carrier(carrier) or carrier
-            offer["miles_alternative"] = {
-                "airline": program,   # mostra nome do programa diretamente
+            offer["miles_same_ticket"] = {
+                "airline": program,
                 "miles": validated.get("miles"),
                 "taxes_brl": validated.get("taxes_brl"),
                 "equivalent_brl": validated.get("equivalent_brl"),
                 "offer_id": validated.get("offer_id"),
                 "validated": True,
+                "ticket_destination": match_info.get("ticket_destination"),
+                "via_hub": match_info.get("via_hub"),
                 "exact_route_match": match_info.get("exact_route_match", False),
                 "same_carrier_match": match_info.get("same_carrier_match", False),
             }

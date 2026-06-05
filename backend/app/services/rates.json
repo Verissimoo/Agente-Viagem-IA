@@ -13,10 +13,10 @@
       { "max_miles": null,   "rate": 0.02525 }
     ],
     "GOL": [
-      { "max_miles": null,   "rate": 0.01600 }
+      { "max_miles": null,   "rate": 0.02000 }
     ],
     "SMILES": [
-      { "max_miles": null,   "rate": 0.01600 }
+      { "max_miles": null,   "rate": 0.02000 }
     ],
     "AZUL": [
       { "max_miles": null,   "rate": 0.01400 }

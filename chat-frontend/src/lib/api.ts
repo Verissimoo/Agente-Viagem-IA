@@ -54,6 +54,7 @@ export interface Offer {
     offer_id?: string;
     validated?: boolean;          // true se veio de busca suplementar direta na cia
     exact_route_match?: boolean;  // true se rota física bate (escala no destino real)
+    to_destination?: string | null;  // hidden city: award DIRETO até o destino real (ex.: SSA)
     is_split?: boolean;           // true se é validação de split (tem breakdown)
     split_breakdown?: Array<{
       origin: string;
@@ -64,6 +65,24 @@ export interface Offer {
       taxes_brl: number;
       equivalent_brl?: number | null;
     }>;
+  } | null;
+  // Ida-e-volta montado como DOIS bilhetes só-ida (hidden city é one-way):
+  // breakdown por perna que somou pro total do card.
+  roundtrip_legs?: {
+    ida?: { airline?: string | null; miles?: number | null; taxes_brl?: number | null; equivalent_brl?: number | null; hidden_city?: boolean; date?: string | null };
+    volta?: { airline?: string | null; miles?: number | null; taxes_brl?: number | null; equivalent_brl?: number | null; hidden_city?: boolean; date?: string | null };
+  } | null;
+  // Hidden city: o MESMO BILHETE OFICIAL em milhas (ex.: BSB→FOR passando por
+  // SSA), como referência. Quase sempre bem mais caro que o award direto.
+  miles_same_ticket?: {
+    airline?: string;
+    miles?: number | null;
+    taxes_brl?: number | null;
+    equivalent_brl?: number | null;
+    ticket_destination?: string | null;  // destino oficial do bilhete (ex.: FOR)
+    via_hub?: string | null;              // escala onde o passageiro desce (ex.: SSA)
+    validated?: boolean;
+    exact_route_match?: boolean;
   } | null;
   // Otimização de datas via Kayak (só pra splits quando há flex de data)
   kayak_date_optimization?: {

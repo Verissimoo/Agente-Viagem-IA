@@ -38,9 +38,9 @@ def test_cost_per_mile_at_tier_boundary():
 
 
 def test_cost_per_mile_uses_source_when_program_missing():
-    """GOL agora é single-tier R$ 16,00/mil."""
+    """GOL é single-tier R$ 20,00/mil (rates.json)."""
     rate = cost_per_mile(source=SourceType.BUSCAMILHAS_GOL, miles=80000)
-    assert rate == pytest.approx(0.0160)
+    assert rate == pytest.approx(0.0200)
 
 
 def test_cost_per_mile_international_fallback_for_mcp_award():

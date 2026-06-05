@@ -23,8 +23,12 @@ class IntakeSlots(TypedDict, total=False):
     destination_city: str
     destination_iata: str
     date_start: str          # ISO YYYY-MM-DD
-    date_end: Optional[str]  # ISO — fim do range (quando flex_mode=range)
+    date_end: Optional[str]  # ISO — fim do range de IDA (quando flex_mode=range)
     date_return: Optional[str]
+    # Janela de VOLTA própria (ex.: "voltando entre 25 e 27"). Quando presente,
+    # o orchestrator faz cross-product janela-ida × janela-volta via radar Kayak.
+    return_from: Optional[str]   # ISO — início da janela de volta
+    return_to: Optional[str]     # ISO — fim da janela de volta
     trip_type: Literal["oneway", "roundtrip"]
     adults: int
     children: int                    # 2-11 anos
@@ -41,6 +45,9 @@ class IntakeSlots(TypedDict, total=False):
     # Duração da viagem (dias). Usado quando vendedor diz "viagem de 3 dias"
     # dentro de um range de datas — orchestrator gera combinações ida+volta.
     trip_duration_days: int
+    # Preferência de horário (manha/tarde/noite/madrugada) — preferência SUAVE
+    # aplicada na apresentação (prioriza, não exclui).
+    time_preference: str
     notes: str               # observações livres do vendedor (cliente VIP, etc.)
 
 
@@ -86,6 +93,10 @@ class ChatState(TypedDict, total=False):
 
     # Próximo nó (decisão do router/cada nó)
     next_node: Optional[NodeName]
+
+    # Orchestrator já emitiu um aviso específico de "sem tarifas" (ex.: flex
+    # roundtrip sem resultados) — suprime o watchdog genérico.
+    search_failed_notice: bool
 
     # Erros não fatais acumulados (mostrados no debug, não no output)
     errors: List[str]

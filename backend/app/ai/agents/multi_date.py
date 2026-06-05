@@ -78,16 +78,18 @@ def run_multi_date_search(
     all_ranked: List[Dict[str, Any]] = []
     errors: List[str] = []
 
-    def _do_one(ida: date, volta: date) -> Optional[Dict[str, Any]]:
+    def _do_one(ida: date, volta) -> Optional[Dict[str, Any]]:
+        # volta=None → busca SÓ-IDA (flex de ida); senão, ida-e-volta.
         try:
             r = run_search(date_start=ida, date_return=volta, **common_args)
             if not r.get("ok"):
                 errors.append(f"{ida}->{volta}: {r.get('error', '?')}")
                 return None
             # Anota o par no metadata de cada oferta
+            pair_meta = {"ida": ida.isoformat(), "volta": volta.isoformat() if volta else None}
             for off in (r.get("ranked_offers") or []) + (r.get("money_offers") or []) + (r.get("miles_offers") or []):
                 if isinstance(off, dict):
-                    off.setdefault("_multi_pair", {"ida": ida.isoformat(), "volta": volta.isoformat()})
+                    off.setdefault("_multi_pair", pair_meta)
             return r
         except Exception as e:
             logger.exception("multi-date search falhou para %s->%s", ida, volta)
@@ -124,14 +126,16 @@ def run_multi_date_search(
     best_per_pair: Dict[str, float] = {}
     for o in all_ranked:
         p = o.get("_multi_pair") or {}
-        key = f"{p.get('ida')} → {p.get('volta')}"
+        key = f"{p.get('ida')} → {p.get('volta')}" if p.get("volta") else f"{p.get('ida')}"
         val = _sort_key(o)
         if key not in best_per_pair or val < best_per_pair[key]:
             best_per_pair[key] = val
 
     return {
         "ok": True,
-        "request_id": "multi-" + "-".join(f"{i.isoformat()}_{v.isoformat()}" for i, v in date_pairs[:3]),
+        "request_id": "multi-" + "-".join(
+            (f"{i.isoformat()}_{v.isoformat()}" if v else i.isoformat()) for i, v in date_pairs[:3]
+        ),
         "best_overall": all_ranked[0] if all_ranked else None,
         "best_money": all_money[0] if all_money else None,
         "best_miles": all_miles[0] if all_miles else None,
@@ -149,7 +153,7 @@ def run_multi_date_search(
         "direct_filter_warning": None,
         "multi_date_info": {
             "pairs_searched": [
-                {"ida": p[0].isoformat(), "volta": p[1].isoformat()} for p in date_pairs
+                {"ida": p[0].isoformat(), "volta": p[1].isoformat() if p[1] else None} for p in date_pairs
             ],
             "best_per_pair": best_per_pair,
             "errors": errors,
