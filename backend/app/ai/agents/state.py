@@ -49,6 +49,12 @@ class IntakeSlots(TypedDict, total=False):
     # aplicada na apresentação (prioriza, não exclui).
     time_preference: str
     notes: str               # observações livres do vendedor (cliente VIP, etc.)
+    # Confirmação internacional (flex > 3 dias): Fase 1 (radar) seta estes; a
+    # resposta do vendedor na Fase 2 os consome e limpa. Search-scoped (uma busca
+    # nova os zera — ver intake._SEARCH_SCOPED_SLOTS).
+    intl_awaiting_confirmation: bool
+    intl_radar_dates: Optional[list]
+    intl_confirmation: Optional[dict]   # {direct_day, hub_day, direct_by_date, hub_by_date}
 
 
 # Routes possíveis decididas pelo router.

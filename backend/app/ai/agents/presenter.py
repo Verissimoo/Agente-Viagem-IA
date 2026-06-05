@@ -432,8 +432,273 @@ def _detail_offer_segments(offer: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _intl_leg_txt(leg: Dict[str, Any]) -> str:
+    """Linha pré-calculada de uma perna/rota internacional (milhas ou cash+10%)."""
+    air = leg.get("airline") or "—"
+    brl = float(leg.get("brl") or leg.get("total_brl") or 0)
+    if leg.get("kind") == "miles":
+        prog = leg.get("program")
+        ptxt = f" [{prog}]" if prog else ""
+        return (f"{air}: {int(leg.get('miles') or 0):,} mi + R$ "
+                f"{float(leg.get('taxes_brl') or 0):.0f} ≈ R$ {brl:.0f}{ptxt}"
+                ).replace(",", ".")
+    return f"{air}: ≈ R$ {brl:.0f} (tarifa de mercado +10%)"
+
+
+def _hub_leg_dto(leg: Dict[str, Any], label: str) -> Dict[str, Any]:
+    """DTO de uma perna do hub-split pro card: milhas + programa próprios e, se
+    o cash dela for mais barato, a dica de emissão melhor."""
+    dto: Dict[str, Any] = {
+        "label": label,
+        "airline": leg.get("airline") or "—",
+        "kind": leg.get("kind") or "miles",
+        "miles": leg.get("miles"),
+        "taxes_brl": leg.get("taxes_brl"),
+        "program": leg.get("program"),
+        "equivalent_brl": leg.get("brl"),
+    }
+    cc = leg.get("cash_cheaper")
+    if cc:
+        dto["cash_cheaper"] = {
+            "cash_brl": cc.get("cash_brl"),
+            "savings_brl": cc.get("savings_brl"),
+            "airline": cc.get("airline"),
+        }
+    return dto
+
+
+def _intl_option_card(opt: Dict[str, Any]) -> Dict[str, Any]:
+    """Converte uma opção de quote_international em card pro frontend."""
+    typ = opt.get("type")
+    day = opt.get("date") or ""
+    total = float(opt.get("total_brl") or 0)
+    if typ == "hub_split":
+        intl = opt.get("intl_leg") or {}
+        dom = opt.get("domestic_leg") or {}
+        hub = opt.get("hub") or "GRU"
+        segs = (dom.get("segments") or []) + (intl.get("segments") or [])
+        # Milhas NÃO são somadas (programas diferentes — Smiles + Miles&Go não
+        # se misturam). Cada perna vai separada em `split_legs`, com seu programa
+        # e, se o cash dela for mais barato, a dica de procurar emissão melhor.
+        return {
+            "offer_id": f"intl_hub_{hub}_{day}",
+            "category": f"Quebra de trecho via {hub} · 2 bilhetes",
+            "category_why": (
+                f"Bilhete doméstico até {hub} + bilhete internacional a partir de "
+                f"{hub}, comprados separados — soma costuma sair mais barata que o direto."
+            ),
+            "airline": f"{dom.get('airline') or '—'} + {intl.get('airline') or '—'}",
+            "miles": None,        # ver split_legs (cada perna tem programa próprio)
+            "equivalent_brl": total,
+            "outbound": {"segments": segs},
+            "split_legs": {
+                "domestic": _hub_leg_dto(dom, "Trecho nacional"),
+                "international": _hub_leg_dto(intl, "Trecho internacional"),
+            },
+            "risk_notes": (
+                "Dois bilhetes separados (doméstico + internacional): sem reproteção "
+                "se a conexão atrasar. Reserve folga entre os voos."
+            ),
+        }
+    if typ == "skip_split":
+        return {
+            "offer_id": f"intl_skip_{day}_{round(total)}",
+            "category": "Split · rota alternativa (milhas)",
+            "category_why": "Trecho dividido em bilhetes separados — mais barato, porém arriscado.",
+            "airline": opt.get("airline") or "—",
+            "miles": opt.get("miles"),
+            "taxes_brl": opt.get("taxes_brl"),
+            "equivalent_brl": total,
+            "outbound": {"segments": opt.get("segments") or []},
+            "risk_notes": "Bilhetes separados por trecho, sem reproteção. Mais barato, mas não recomendado.",
+        }
+    if typ == "direct_cash":
+        return {
+            "offer_id": f"intl_cash_{day}",
+            "category": "Direto · sem milhas (cash +10%)",
+            "category_why": (
+                "Voo mais barato encontrado, mas de companhia sem programa de "
+                "milhas plugado na nossa rede — preço de mercado com +10%."
+            ),
+            "airline": opt.get("airline") or "—",
+            "price_brl": opt.get("cash_brl"),
+            "equivalent_brl": total,
+            "outbound": {"segments": opt.get("segments") or []},
+            "risk_notes": "Sem programa de milhas plugado pra essa cia (preço de mercado +10%).",
+        }
+    # direct_miles
+    return {
+        "offer_id": f"intl_miles_{day}_{(opt.get('airline') or '').upper()}",
+        "category": "Direto · milhas",
+        "airline": opt.get("airline") or "—",
+        "miles": opt.get("miles"),
+        "taxes_brl": opt.get("taxes_brl"),
+        "equivalent_brl": total,
+        "miles_program": opt.get("program"),
+        "outbound": {"segments": opt.get("segments") or []},
+    }
+
+
+def _present_international(state: ChatState, options: List[Dict[str, Any]], *,
+                          reference: Optional[Dict[str, Any]] = None,
+                          market_signal: Optional[Dict[str, Any]] = None) -> ChatState:
+    """Apresenta as opções de quebra de trecho internacional (direto + hub-split
+    + skip-split), liderando pela mais barata VALIDADA. Valores já vêm
+    pré-calculados de quote_international — o LLM só repassa, nunca recalcula."""
+    slots = state.get("slots") or {}
+    o_iata = slots.get("origin_iata", "?")
+    d_iata = slots.get("destination_iata", "?")
+    rota = f"{o_iata} → {d_iata}"
+
+    # Ordena por preço, MAS separa o skip (Tipo 2 / Skiplagged): mesmo quando é
+    # numericamente o mais barato, ele NÃO lidera nem é recomendado — vai por
+    # último, marcado como arriscado. A RECOMENDADA é a mais barata "segura"
+    # (milhas / cash sem programa / quebra de trecho nacional).
+    by_price = sorted(options, key=lambda o: float(o.get("total_brl") or 9e9))
+    safe = [o for o in by_price if o.get("type") != "skip_split"]
+    skip = [o for o in by_price if o.get("type") == "skip_split"]
+    ordered = safe + skip
+
+    _LABEL = {
+        "direct_miles": "DIRETO (milhas)",
+        "direct_cash": "DIRETO (cash +10% — sem milhas plugadas pra essa cia)",
+        "hub_split": "QUEBRA DE TRECHO NACIONAL (bilhete nacional até o hub + internacional)",
+        "skip_split": "SPLIT alternativo (bilhetes separados — mais barato, porém ARRISCADO)",
+    }
+    lines: List[str] = []
+    for i, opt in enumerate(ordered, 1):
+        typ = opt.get("type")
+        total = float(opt.get("total_brl") or 0)
+        day = opt.get("date") or "—"
+        tag = " ⭐ RECOMENDADA" if i == 1 and typ != "skip_split" else ""
+        lines.append(f"  {i}. {_LABEL.get(typ, typ)} · partida {day} · TOTAL ≈ R$ {total:.0f}{tag}")
+        if typ == "hub_split":
+            intl = opt.get("intl_leg") or {}
+            dom = opt.get("domestic_leg") or {}
+            # Pernas separadas (cada uma com seu programa) — contexto pro LLM;
+            # o detalhe de milhas e a dica de cash-mais-barato vivem NO CARD.
+            _hub = opt.get("hub") or "GRU"
+            lines.append(f"       • nacional {o_iata}→{_hub}: {_intl_leg_txt(dom)}")
+            lines.append(f"       • internacional {_hub}→{d_iata}: {_intl_leg_txt(intl)}")
+        elif typ == "skip_split":
+            for b in (opt.get("breakdown") or []):
+                lines.append(
+                    f"       • {b.get('airline') or '—'} {b.get('origin','')}→{b.get('destination','')}: "
+                    f"{int(b.get('miles') or 0):,} mi + R$ {float(b.get('taxes_brl') or 0):.0f}".replace(",", ".")
+                )
+            lines.append("       ⚠️ mais barato, MAS bilhetes separados sem reproteção — NÃO recomende.")
+        elif typ == "direct_cash":
+            lines.append(f"       • {_intl_leg_txt({'kind': 'cash', **opt})}")
+            lines.append("       ⚠️ é a mais barata achada, MAS não temos programa de milhas plugado pra essa cia.")
+        else:  # direct_miles
+            lines.append(f"       • {_intl_leg_txt({'kind': 'miles', **opt})}")
+
+    cheapest = ordered[0] if ordered else {}
+    cheapest_date = cheapest.get("date") or "—"
+    dates_found = sorted({o.get("date") for o in ordered if o.get("date")})
+
+    # Nota de MERCADO (só texto): o Kayak achou um preço que NÃO conseguimos em
+    # milhas — o vendedor precisa saber pra buscar emissão melhor.
+    market_note = ""
+    if market_signal and market_signal.get("price_brl"):
+        ms_d = market_signal.get("date") or ""
+        try:
+            ms_d = datetime.fromisoformat(ms_d).strftime("%d/%m") if ms_d else ""
+        except Exception:
+            pass
+        market_note = (
+            f"\nMERCADO (avise no texto): o voo direto aparece por ~R$ "
+            f"{float(market_signal['price_brl']):.0f}"
+            + (f" em {ms_d}" if ms_d else "")
+            + " no mercado, mas NÃO encontramos esse preço nos nossos programas de "
+            f"milhas. Referência com nosso markup (+10%): ~R$ "
+            f"{float(market_signal.get('price_markup_brl') or 0):.0f}. Diga isso pro "
+            "vendedor (sem citar fonte/site)."
+        )
+
+    # Referência de OUTRAS datas (regra: sempre mostrar) — só cash, sem milhas.
+    ref_note = ""
+    ref_by = (reference or {}).get("direct_by_date") or {}
+    if ref_by:
+        others = sorted((iso for iso in ref_by if iso not in dates_found),
+                        key=lambda k: ref_by[k])[:4]
+        if others:
+            def _fmt(iso):
+                try:
+                    return datetime.fromisoformat(iso).strftime("%d/%m")
+                except Exception:
+                    return iso
+            ref_note = "\nREFERÊNCIA de outras datas (mercado): " + " · ".join(
+                f"{_fmt(iso)} ~R$ {float(ref_by[iso]):.0f}" for iso in others
+            ) + " — MOSTRE como referência pro vendedor comparar."
+
+    sections = (
+        f"Rota: {rota} (internacional, só-ida)\n"
+        f"Data mais barata encontrada: {cheapest_date}. "
+        f"Datas analisadas nos cards: {', '.join(dates_found) or '—'}.\n"
+        "OPÇÕES VALIDADAS (já ordenadas; valores PRÉ-CALCULADOS, NÃO recalcule):\n"
+        + "\n".join(lines) + market_note + ref_note + "\n\n"
+        "Como apresentar (markdown conciso):\n"
+        f"- COMECE a mensagem dizendo que a data mais barata encontrada foi {cheapest_date}.\n"
+        "- NÃO fale de milhas no texto (nem quantidade, nem nome de programa, nem "
+        "'em milhas') — isso aparece SÓ nos cards. No texto, use o valor em R$.\n"
+        "- LIDERE pela ⭐ RECOMENDADA (a 1ª — a mais barata segura), citando cia e R$.\n"
+        "- Destaque a QUEBRA DE TRECHO NACIONAL (bilhete nacional até GRU + "
+        "internacional separado) quando existir — é a opção que o vendedor quer ver.\n"
+        "- Se houver DIRETO cash +10%, diga que é a mais barata mas que não temos "
+        "como encontrá-la pela nossa rede (preço de mercado).\n"
+        "- O SPLIT alternativo (se aparecer) é só pra registro: cite por último, "
+        "avise que é arriscado (bilhetes separados) e NÃO o recomende, mesmo barato.\n"
+        "- Se houver nota de MERCADO, repasse-a: existe um preço de mercado que "
+        "não conseguimos nos programas de milhas (cite o valor de referência +10%). "
+        "Esta é a ÚNICA situação em que você menciona 'milhas' no texto.\n"
+        "- Se houver REFERÊNCIA de outras datas, liste-as pro vendedor comparar.\n"
+        "- Mencione que comparamos várias datas se houver mais de uma."
+    )
+
+    try:
+        model = get_cached_chat_model(primary=True)
+        sys = SystemMessage(content=presenter_system_prompt())
+        resp = model.invoke([sys, HumanMessage(content=sections)])
+        text = resp.content if isinstance(resp.content, str) else str(resp.content)
+    except Exception as e:
+        logger.warning("LLM falhou no presenter internacional (%s) — fallback", e)
+        text = f"**{rota}** — opções (recomendada primeiro):\n" + "\n".join(
+            f"{i}. {_LABEL.get(o.get('type'), o.get('type'))}: ≈ R$ {float(o.get('total_brl') or 0):.0f} ({o.get('date')})"
+            for i, o in enumerate(ordered, 1)
+        )
+
+    cards = [_intl_option_card(o) for o in ordered]
+    safe_text = sanitize_assistant_output(text)
+    msg = AIMessage(
+        content=safe_text,
+        additional_kwargs={
+            "offers": cards, "rota": rota,
+            "presented_at": datetime.now(timezone.utc).isoformat(),
+        },
+    )
+    return {
+        **state,
+        "presented_offers": cards,
+        "presented_at": datetime.now(timezone.utc).isoformat(),
+        "messages": [msg],
+        "next_node": "end",
+    }
+
+
 def presenter_node(state: ChatState) -> ChatState:
     results = state.get("search_results") or {}
+
+    # Quebra de trecho INTERNACIONAL: opções já validadas/ordenadas pelo
+    # orchestrator. Branch dedicado — não passa pelo fluxo de validação doméstico.
+    intl_options = results.get("international_options")
+    if intl_options:
+        return _present_international(
+            state, intl_options,
+            reference=results.get("intl_reference"),
+            market_signal=results.get("intl_market_signal"),
+        )
+
     ranked = results.get("ranked_offers") or []
     money = results.get("money_offers") or []
     miles = results.get("miles_offers") or []

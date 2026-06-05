@@ -333,6 +333,7 @@ def send_message(
         has_essentials
         and not final_state.get("awaiting_field")
         and not final_state.get("search_failed_notice")  # orchestrator já avisou de forma específica
+        and not slots_in_state.get("intl_awaiting_confirmation")  # Fase 1: pergunta intencional
     )
     if expected_offers and not offers_in_metadata:
         logger.warning("WATCHDOG (sync): esperava cotação sem offers. text=%r",
@@ -456,7 +457,17 @@ def send_message_stream(
 
             final_state: Dict[str, Any] = {}
             try:
-                for chunk in get_graph().stream(state, stream_mode="updates"):
+                # stream_mode duplo: "updates" (transição de nó) + "custom"
+                # (progresso emitido DE DENTRO de um nó via get_stream_writer —
+                # ex.: a quebra de trecho internacional, que leva minutos). Com
+                # múltiplos modos, cada item vem como (modo, chunk).
+                for mode, chunk in get_graph().stream(
+                    state, stream_mode=["updates", "custom"]
+                ):
+                    if mode == "custom":
+                        if isinstance(chunk, dict) and chunk.get("progress"):
+                            yield _sse("status", {"text": chunk["progress"], "node": "orchestrator"})
+                        continue
                     if not isinstance(chunk, dict):
                         continue
                     for node_name, partial_state in chunk.items():
@@ -501,6 +512,10 @@ def send_message_stream(
                 has_essentials
                 and not final_state.get("awaiting_field")
                 and not final_state.get("search_failed_notice")
+                # Etapa de confirmação internacional (Fase 1): a resposta É uma
+                # pergunta intencional ("quer a busca na melhor data?") — sem
+                # offers de propósito. Não é o assistente "alucinando".
+                and not slots_in_state.get("intl_awaiting_confirmation")
             )
             if expected_offers and not offers_in_metadata:
                 logger.warning(

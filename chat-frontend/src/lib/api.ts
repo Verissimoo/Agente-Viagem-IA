@@ -29,6 +29,21 @@ export interface Message {
   created_at: string;
 }
 
+export interface HubLeg {
+  label?: string;                    // "Trecho nacional" / "Trecho internacional"
+  airline?: string | null;
+  kind?: "miles" | "cash";
+  miles?: number | null;
+  taxes_brl?: number | null;
+  program?: string | null;           // programa de milhas desta perna
+  equivalent_brl?: number | null;
+  cash_cheaper?: {                   // o mesmo trecho sai mais barato em dinheiro
+    cash_brl?: number | null;
+    savings_brl?: number | null;     // quanto mais barato que em milhas
+    airline?: string | null;
+  } | null;
+}
+
 export interface Offer {
   offer_id: string;
   airline?: string;
@@ -71,6 +86,13 @@ export interface Offer {
   roundtrip_legs?: {
     ida?: { airline?: string | null; miles?: number | null; taxes_brl?: number | null; equivalent_brl?: number | null; hidden_city?: boolean; date?: string | null };
     volta?: { airline?: string | null; miles?: number | null; taxes_brl?: number | null; equivalent_brl?: number | null; hidden_city?: boolean; date?: string | null };
+  } | null;
+  // Quebra de trecho (hub split): cada perna tem PROGRAMA de milhas próprio —
+  // mostradas separadas (não somar milhas). `cash_cheaper` sinaliza que o
+  // mesmo trecho sai mais barato em dinheiro → procurar emissão melhor.
+  split_legs?: {
+    domestic?: HubLeg;
+    international?: HubLeg;
   } | null;
   // Hidden city: o MESMO BILHETE OFICIAL em milhas (ex.: BSB→FOR passando por
   // SSA), como referência. Quase sempre bem mais caro que o award direto.

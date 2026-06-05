@@ -12,9 +12,21 @@ import logging
 from datetime import date
 from typing import Any, Dict, List, Optional
 
+from backend.app.ai.agents.routes import classify_route
 from backend.app.services.search_orchestrator import run_pipeline
 
 logger = logging.getLogger(__name__)
+
+
+def _companies_for_route(origin: str, destination: str) -> Optional[List[str]]:
+    """Companhias a consultar conforme a rota. Internacional → TODAS (inclui
+    TAP, Iberia, American, Copa, Interline); doméstico → None (o pipeline usa
+    o default nacional LATAM/GOL/AZUL). Sem isso, voos internacionais só
+    buscavam milhas em LATAM/GOL/AZUL e ignoravam os programas internacionais."""
+    if classify_route(origin, destination) == "international":
+        from backend.app.providers.buscamilhas.client import COMPANHIAS_TODAS
+        return list(COMPANHIAS_TODAS)
+    return None
 
 
 def run_search(
@@ -39,6 +51,11 @@ def run_search(
     Não levanta — falha vira `{"ok": False, "error": "..."}` para o agente
     decidir como recuperar (perguntar de novo, sugerir outra data, etc.).
     """
+    # Internacional precisa consultar os programas internacionais (TAP, Iberia,
+    # American, Copa, Interline) — senão só busca milhas em LATAM/GOL/AZUL.
+    if companhias is None:
+        companhias = _companies_for_route(origin, destination)
+
     try:
         result = run_pipeline(
             prompt="",

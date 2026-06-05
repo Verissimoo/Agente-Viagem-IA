@@ -9,17 +9,117 @@ explorável. Se passar do limite, devolve mensagem amigável e não busca.
 from __future__ import annotations
 
 import logging
-from datetime import date as _date
-from typing import Any, Optional
+import os
+import re
+from datetime import date as _date, timedelta
+from typing import Any, List, Optional
 
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
 
+from backend.app.ai.agents.routes import classify_route
 from backend.app.ai.agents.state import ChatState, IntakeSlots
 from backend.app.ai.agents.tools import run_search
 from backend.app.chat.security.audit import get_audit_logger
 from backend.app.chat.security.rate_limit import RateLimitExceeded, get_rate_limiter
 
 logger = logging.getLogger(__name__)
+
+# Confirmação (flex internacional > 3 dias): reconhece um "sim" do vendedor.
+_AFFIRM_RE = re.compile(
+    r"\b(sim|pode|confirm\w*|isso|aham|claro|ok|okay|beleza|blz|fechad\w*|"
+    r"aprov\w*|positivo|prossegu\w*|segue|seguir|vai|manda|bora|quero|"
+    r"faz|faça|busca\w*|pesquis\w*|valida\w*)\b",
+    re.IGNORECASE,
+)
+
+
+def _latest_human_text(state: ChatState) -> str:
+    for m in reversed(state.get("messages") or []):
+        if isinstance(m, HumanMessage):
+            return m.content if isinstance(m.content, str) else str(m.content)
+    return ""
+
+
+def _is_affirmative(text: str) -> bool:
+    return bool(_AFFIRM_RE.search(text or ""))
+
+
+def _pick_listed_date(text: str, candidate_isos: List[str]) -> Optional[_date]:
+    """Se o vendedor citar o DIA de uma das datas oferecidas (ex.: '22' ou
+    '22/10'), devolve essa data — pra ele escolher outra da lista, não a 1ª."""
+    for iso in candidate_isos:
+        d = _parse_iso_date(iso)
+        if not d:
+            continue
+        if re.search(rf"\b{d.day}\b", text) or d.strftime("%d/%m") in text:
+            return d
+    return None
+
+
+def _intl_confirmation_message(
+    state: ChatState, slots: IntakeSlots, *, origin: str, destination: str,
+    date_start: _date, date_end: Optional[_date], adults: int, cabin: str,
+) -> Optional[ChatState]:
+    """FASE 1 da confirmação internacional: radar Kayak das DUAS rotas (direto
+    origin→dest e hub HUB→dest) acha a melhor data de cada uma (podem diferir) +
+    referência das outras datas, e PEDE confirmação pra rodar as DUAS buscas
+    aprofundadas. Devolve o state (next_node=end) ou None se o radar vier vazio."""
+    from backend.app.services.international_split import radar_international
+    dates = _sample_dates(date_start, date_end, cap=6)
+    try:
+        rad = radar_international(origin=origin, destination=destination,
+                                 dates=dates, adults=adults, cabin=cabin)
+    except Exception as e:
+        logger.warning("orchestrator: radar de confirmação falhou: %s", e)
+        return None
+
+    dir_days = rad["direct"]["days"]
+    dir_by = rad["direct"]["by_date"]
+    rad_hubs = rad.get("hubs") or {}
+    if not dir_days and not rad_hubs:
+        return None
+
+    def _fmt(iso: str) -> str:
+        d = _parse_iso_date(iso)
+        return d.strftime("%d/%m") if d else iso
+
+    dir_day = dir_days[0].isoformat() if dir_days else None
+    # Melhor dia de cada hub (GRU, VCP).
+    hubs_best = {h: info["days"][0].isoformat() for h, info in rad_hubs.items() if info.get("days")}
+
+    parts = [f"Comparei o mercado para **{origin} → {destination}** no período:\n"]
+    if dir_day:
+        p = dir_by.get(dir_day)
+        parts.append(f"• **Voo direto** {origin}→{destination}: melhor em **{_fmt(dir_day)}**"
+                     + (f" (~R$ {float(p):.0f})" if p else ""))
+    for hub, hday in hubs_best.items():
+        ph = (rad_hubs[hub]["by_date"] or {}).get(hday)
+        parts.append(f"• **Via {hub}** {hub}→{destination} (quebra de trecho): "
+                     f"melhor em **{_fmt(hday)}**" + (f" (~R$ {float(ph):.0f})" if ph else ""))
+    # Referência das outras datas do direto (regra: sempre mostrar).
+    others = sorted((iso for iso in dir_by if iso != dir_day), key=lambda k: dir_by[k])[:4]
+    if others:
+        ref_txt = " · ".join(f"{_fmt(iso)} ~R$ {float(dir_by[iso]):.0f}" for iso in others)
+        parts.append(f"\nReferência de outras datas (direto): {ref_txt}")
+    parts.append(
+        "\nQuer que eu rode as **buscas aprofundadas** (voo direto + quebra de "
+        "trecho via hub)? Responda **sim** — ou me diga outra data."
+    )
+
+    new_slots = {
+        **slots,
+        "intl_awaiting_confirmation": True,
+        "intl_confirmation": {
+            "direct_day": dir_day, "hubs": hubs_best,
+            "direct_by_date": dir_by,
+            "hubs_by_date": {h: info["by_date"] for h, info in rad_hubs.items()},
+        },
+        "intl_radar_dates": [d.isoformat() for d in dir_days[:3]],
+    }
+    return {
+        **state, "slots": new_slots, "next_node": "end",
+        "messages": [AIMessage(content="\n".join(parts))],
+    }
 
 
 def _parse_iso_date(value: Optional[str]) -> Optional[_date]:
@@ -29,6 +129,21 @@ def _parse_iso_date(value: Optional[str]) -> Optional[_date]:
         return _date.fromisoformat(value)
     except ValueError:
         return None
+
+
+def _sample_dates(start: _date, end: Optional[_date], cap: int = 8) -> List[_date]:
+    """Amostra uniforme de datas no intervalo [start, end] (no máx `cap`).
+    O radar Kayak varre essas datas pra escolher a melhor — varrer todas as 16
+    de um range seria caro demais; amostrar mantém a latência sob controle."""
+    if not end or end <= start:
+        return [start]
+    span = (end - start).days
+    n = min(cap, span + 1)
+    if n <= 1:
+        return [start]
+    step = span / (n - 1)
+    days = sorted({start + timedelta(days=round(i * step)) for i in range(n)})
+    return days
 
 
 def orchestrator_node(state: ChatState) -> ChatState:
@@ -114,6 +229,125 @@ def orchestrator_node(state: ChatState) -> ChatState:
     return_to = _parse_iso_date(slots.get("return_to"))
     single_return = _parse_iso_date(slots.get("date_return"))
     trip_type = slots.get("trip_type") or "oneway"
+
+    # ─── INTERNACIONAL SÓ-IDA: quebra de trecho (2 tipos) ─────────────
+    # Rota internacional só-ida → orquestra direto + hub-split (Tipo 1) +
+    # skip-split (Tipo 2), cada perna validada em milhas. O radar Kayak escolhe
+    # o melhor dia (amostra ≤4 datas do intervalo) e a validação cara roda só
+    # nele. Round-trip internacional ainda cai no fluxo normal (escopo futuro).
+    #
+    # FEATURE FLAG (default OFF): esta orquestração faz ~6-8 scrapes pesados e
+    # leva ~2min (piso de scraping externo, não removível por trim). Por isso
+    # fica desligada por padrão — o internacional segue no run_search normal
+    # (~40-50s). Ligue com INTERNATIONAL_SPLIT_ENABLED=1 pra testar/validar.
+    _intl_split_on = os.getenv("INTERNATIONAL_SPLIT_ENABLED", "0") == "1"
+    if (_intl_split_on and trip_type != "roundtrip"
+            and classify_route(origin, destination) == "international"):
+        from backend.app.services.international_split import quote_international
+
+        # Progresso ao vivo: emite via stream writer do LangGraph → o SSE do chat
+        # mostra "buscando trecho X…" em tempo real. Fora de um stream vira no-op.
+        try:
+            from langgraph.config import get_stream_writer
+            _writer = get_stream_writer()
+        except Exception:
+            _writer = None
+
+        def _progress(msg: str) -> None:
+            if _writer:
+                try:
+                    _writer({"progress": msg})
+                except Exception:
+                    pass
+
+        _adults = int(slots.get("adults", 1))
+        _cabin = slots.get("cabin", "economy")
+
+        def _deep_search(use_slots: IntakeSlots, *,
+                         direct_days: Optional[List[_date]] = None,
+                         hubs: Optional[dict] = None,
+                         reference: Optional[dict] = None,
+                         dates: Optional[List[_date]] = None) -> Optional[ChatState]:
+            """Busca cara e validada → state pro presenter, ou None se vier vazio.
+            Datas: explícitas (melhor dia de cada rota, da Fase 1) ou um range."""
+            try:
+                q = quote_international(
+                    origin=origin, destination=destination,
+                    dates=dates, direct_days=direct_days, hubs=hubs, reference=reference,
+                    adults=_adults, cabin=_cabin, on_progress=_progress,
+                )
+            except Exception as e:
+                logger.warning("orchestrator: quote_international falhou: %s", e)
+                return None
+            if q and q.get("options"):
+                audit.log(
+                    "search.run.international_split",
+                    user_id=user_id, thread_id=thread_id,
+                    detail={"origin": origin, "destination": destination,
+                            "options": len(q["options"]),
+                            "direct_days": q.get("direct_days"), "hubs": q.get("hubs")},
+                )
+                return {
+                    **state, "slots": use_slots, "next_node": "presenter",
+                    "search_results": {
+                        "ok": True, "international_options": q["options"],
+                        "intl_reference": q.get("reference"),
+                        "intl_market_signal": q.get("market_signal"),
+                    },
+                }
+            return None
+
+        awaiting = bool(slots.get("intl_awaiting_confirmation"))
+        flex_span = (date_end_parsed - date_start).days if (date_end_parsed and date_end_parsed > date_start) else 0
+
+        # FASE 2: vendedor confirmou → roda as buscas, cada rota na SUA melhor
+        # data (direto na melhor de origin→dest; cada hub na melhor dele). Se ele
+        # citou outra data, ela vira o dia do DIRETO.
+        if awaiting:
+            conf = slots.get("intl_confirmation") or {}
+            text = _latest_human_text(state)
+            hubs_conf = conf.get("hubs") or {}
+            hubs_days = {h: _parse_iso_date(v) for h, v in hubs_conf.items() if _parse_iso_date(v)}
+            dir_day = _parse_iso_date(conf.get("direct_day"))
+            if dir_day is None:
+                # Radar do direto falhou na Fase 1 → NUNCA usa date_start (era o
+                # bug: buscava 10/09 ignorando a data mapeada). Usa a melhor data
+                # de hub conhecida (data barata real do intervalo).
+                hub_dates = sorted(d for d in hubs_days.values() if d)
+                dir_day = hub_dates[0] if hub_dates else date_start
+                logger.info("orchestrator: direct_day ausente (radar flaky) → usando %s", dir_day)
+            picked = _pick_listed_date(text, list(slots.get("intl_radar_dates") or []))
+            if picked:
+                dir_day = picked
+            elif not _is_affirmative(text):
+                logger.info("orchestrator: confirmação ambígua (%r) — seguindo nas melhores datas", text[:60])
+            cleared = {**slots, "intl_awaiting_confirmation": False,
+                       "intl_confirmation": None, "intl_radar_dates": None}
+            res = _deep_search(cleared, direct_days=[dir_day],
+                               hubs=hubs_days or None, reference=conf or None)
+            if res is not None:
+                return res
+            slots = cleared  # vazio → segue no fluxo normal com slots limpos
+
+        # FASE 1: flex > 3 dias e ainda não confirmou → radar + pergunta.
+        elif flex_span > 3:
+            phase1 = _intl_confirmation_message(
+                state, slots, origin=origin, destination=destination,
+                date_start=date_start, date_end=date_end_parsed, adults=_adults, cabin=_cabin,
+            )
+            if phase1 is not None:
+                return phase1
+            res = _deep_search(slots, dates=_sample_dates(date_start, date_end_parsed, cap=6))
+            if res is not None:
+                return res
+
+        # Flex ≤ 3 dias (ou data única) → busca direta, sem confirmação.
+        else:
+            res = _deep_search(slots, dates=_sample_dates(date_start, date_end_parsed, cap=6))
+            if res is not None:
+                return res
+
+        logger.info("orchestrator: international_split vazio; fallback busca normal")
 
     is_rt_flex = trip_type == "roundtrip" and (
         (return_from and return_to)

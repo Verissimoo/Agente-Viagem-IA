@@ -537,6 +537,10 @@ _SEARCH_SCOPED_SLOTS = (
     "date_start", "date_end", "date_return", "return_from", "return_to",
     "flex_mode", "flex_days", "trip_duration_days", "trip_type",
     "direct_only", "baggage_checked",
+    # Confirmação internacional: uma busca NOVA não pode herdar o "aguardando
+    # confirmação", as datas de radar nem o pacote de confirmação anterior
+    # (thread poisoning).
+    "intl_awaiting_confirmation", "intl_radar_dates", "intl_confirmation",
 )
 
 

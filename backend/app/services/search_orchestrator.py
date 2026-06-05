@@ -321,10 +321,18 @@ def run_pipeline(
             info["offers_count"] = len(search_plan)
 
         companhias_ativas = list(companhias) if companhias else list(COMPANHIAS_NACIONAIS)
+        # Economilhas pode estar sem créditos (HTTP 402) — desligar via env evita
+        # gastar tempo de orçamento tentando puxá-la. BuscaMilhas cobre as milhas.
+        _econ_on = os.getenv("ECONOMILHAS_ENABLED", "1") == "1"
         # Skiplagged sempre roda (não depende de seleção de cia)
         for extra in _ALWAYS_INCLUDE:
+            if extra == "ECONOMILHAS" and not _econ_on:
+                continue
             if extra not in (c.upper() for c in companhias_ativas):
                 companhias_ativas.append(extra)
+        # Defesa: se o usuário passou ECONOMILHAS explicitamente mas está off, remove.
+        if not _econ_on:
+            companhias_ativas = [c for c in companhias_ativas if c.upper() != "ECONOMILHAS"]
 
         # 3. Stage: produto cartesiano (datas × adapters) num único pool.
         # Antes: loop sequencial de datas × pool paralelo de adapters →

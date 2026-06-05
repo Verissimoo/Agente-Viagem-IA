@@ -124,6 +124,14 @@ export default function OfferCard({
                     )}
                   </>
                 )}
+                {/* Quebra de trecho: milhas vivem por perna (split_legs), então
+                    o cabeçalho mostra só o TOTAL em R$ (soma das pernas). */}
+                {offer.miles == null && offer.price_brl == null && offer.equivalent_brl != null && (
+                  <div className="text-2xl font-bold text-gray-900 dark:text-zinc-100 leading-none">
+                    {formatBRL(offer.equivalent_brl)}
+                    <span className="ml-1 text-xs font-normal text-gray-500 dark:text-zinc-400 italic">total</span>
+                  </div>
+                )}
               </>
             );
           })()}
@@ -177,6 +185,52 @@ export default function OfferCard({
                   {leg.taxes_brl ? <> + {formatBRL(leg.taxes_brl)}</> : ""}
                   {leg.equivalent_brl ? <span className="italic"> (≈ {formatBRL(leg.equivalent_brl)})</span> : ""}
                 </span>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+
+      {offer.split_legs && (offer.split_legs.domestic || offer.split_legs.international) ? (
+        <div className="mt-3 text-[11px] bg-blue-50 dark:bg-blue-500/10 border border-blue-200 dark:border-blue-500/30 rounded-lg px-3 py-2 text-blue-800 dark:text-blue-200 space-y-1">
+          <div className="font-semibold">Cada bilhete em milhas (programas diferentes — não somar):</div>
+          {(["domestic", "international"] as const).map((k) => {
+            const leg = offer.split_legs?.[k];
+            if (!leg) return null;
+            return (
+              <div key={k} className="space-y-0.5">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-[10px] tracking-wide text-blue-500 dark:text-blue-400 shrink-0">
+                    {leg.label || (k === "domestic" ? "Nacional" : "Internacional")}
+                  </span>
+                  <span>
+                    {leg.airline || "—"}
+                    {leg.kind === "miles" ? (
+                      <>
+                        {" · "}
+                        <strong>{new Intl.NumberFormat("pt-BR").format(leg.miles || 0)} mi</strong>
+                        {leg.taxes_brl ? <> + {formatBRL(leg.taxes_brl)}</> : ""}
+                        {leg.program ? <span className="text-blue-500 dark:text-blue-400"> · {leg.program}</span> : ""}
+                        {leg.equivalent_brl ? <span className="italic"> (≈ {formatBRL(leg.equivalent_brl)})</span> : ""}
+                      </>
+                    ) : (
+                      <>
+                        {" · "}
+                        <strong>{leg.equivalent_brl ? formatBRL(leg.equivalent_brl) : "—"}</strong>
+                        <span className="italic"> (dinheiro)</span>
+                      </>
+                    )}
+                  </span>
+                </div>
+                {leg.cash_cheaper ? (
+                  <div className="flex items-start gap-1.5 text-[10.5px] text-emerald-700 dark:text-emerald-300 pl-1">
+                    <span>💡</span>
+                    <span>
+                      Esse trecho sai <strong>{formatBRL(leg.cash_cheaper.cash_brl || 0)}</strong> em dinheiro
+                      {leg.cash_cheaper.savings_brl ? <> ({formatBRL(leg.cash_cheaper.savings_brl)} mais barato que em milhas)</> : ""} — vale procurar uma emissão melhor pra ele.
+                    </span>
+                  </div>
+                ) : null}
               </div>
             );
           })}
