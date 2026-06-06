@@ -64,6 +64,21 @@ class BaseBuscaMilhasAdapter(BaseSearchAdapter):
             if config.PCD_OFFLINE:
                 raise OfflineModeError("BuscaMilhas")
                 
+            # `Internacional` precisa refletir a ROTA, não um flag fixo por cia.
+            # Azul/GOL/LATAM voam doméstico E internacional; com flag fixo False,
+            # voos internacionais dessas cias (ex.: Azul GYN→MAD cash) eram
+            # buscados como domésticos e o BuscaMilhas voltava vazio.
+            from backend.app.ai.agents.routes import is_br_iata
+            o, d = request.origin[0], request.destination[0]
+            intl = self.internacional or not (is_br_iata(o) and is_br_iata(d))
+
+            # CASH-only (AZUL_CASH) em rota INTERNACIONAL: o BuscaMilhas não tem
+            # inventário cash internacional da Azul (só milhas) → erro 9000
+            # persistente. Pula pra não gastar ~13s/data à toa. O voo cash barato
+            # (OTA/Azul direto) entra como referência de mercado via Kayak.
+            if self.somente_pagante and intl:
+                return []
+
             raw_data = search_flights_buscamilhas(
                 companhia=self.companhia,
                 origem=request.origin[0],
@@ -74,7 +89,7 @@ class BaseBuscaMilhasAdapter(BaseSearchAdapter):
                 classe=request.cabin.value,
                 somente_milhas=self.somente_milhas,
                 somente_pagante=self.somente_pagante,
-                internacional=self.internacional
+                internacional=intl,
             )
 
             # Debug Dump

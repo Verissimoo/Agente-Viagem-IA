@@ -13,6 +13,7 @@ Degrada com elegância: pares que falham são ignorados, nunca derrubam a varred
 from __future__ import annotations
 
 import logging
+import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from datetime import date
@@ -21,6 +22,15 @@ from typing import List, Optional, Tuple
 from backend.app.domain.models import CabinClass, SearchRequest, TripType, UnifiedOffer
 
 logger = logging.getLogger(__name__)
+
+# Teto de navegadores Playwright SIMULTÂNEOS no radar. Cada Chromium consome
+# ~250MB; em host com pouca RAM (Railway) muitos em paralelo causam OOM e o
+# processo é morto (crash-loop → 500 em tudo). Default conservador; suba em
+# host com mais memória via RADAR_MAX_BROWSERS.
+try:
+    _RADAR_MAX_BROWSERS = max(1, int(os.getenv("RADAR_MAX_BROWSERS", "3")))
+except ValueError:
+    _RADAR_MAX_BROWSERS = 3
 
 Pair = Tuple[date, Optional[date]]
 
@@ -103,7 +113,7 @@ def scan_dates(
     destination: str,
     adults: int = 1,
     cabin="economy",
-    max_workers: int = 8,
+    max_workers: int = _RADAR_MAX_BROWSERS,
 ) -> RadarResult:
     """Varre os pares no Kayak e devolve-os ranqueados pelo menor cash.
     Se o Kayak vier vazio, cai pra amostra de milhas."""
@@ -182,7 +192,7 @@ def _scan_miles_sample(
 
 def scan_skip_pairs(
     pairs: List[Pair], *, origin: str, destination: str,
-    adults: int = 1, cabin="economy", max_workers: int = 4,
+    adults: int = 1, cabin="economy", max_workers: int = _RADAR_MAX_BROWSERS,
 ) -> dict:
     """Comparativo de mercado via SKIPLAGGED (hidden city/split, SEM validação de
     milhas) das combinações ida-e-volta: Skip ida (O→D) + Skip volta (D→O), pega

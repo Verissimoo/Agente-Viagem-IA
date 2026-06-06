@@ -22,7 +22,6 @@ KAYAK_MARKUP, validate_split_with_supplementary, sanitize_offers.
 from __future__ import annotations
 
 import logging
-from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timedelta
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -261,17 +260,15 @@ def radar_international(*, origin: str, destination: str, dates: List[date],
         ranked = [date.fromisoformat(k) for k in sorted(by, key=lambda k: by[k])]
         return ranked, by
 
-    # DIRETO primeiro e SOZINHO (navegador Playwright limpo = mais confiável; é a
-    # rota prioritária). Rodar 3 Chromium em paralelo fazia o direto voltar vazio.
+    # SEQUENCIAL de propósito (memória): cada _route pode abrir matriz + fallback
+    # por-data (vários Chromium). Rodar direto + hubs em paralelo somava navegadores
+    # demais e estourava a RAM do Railway (OOM → crash-loop → 500 em tudo).
     dir_days, dir_by = _route(origin, destination)
-    # Hubs depois, no máximo 2 em paralelo (menos contenção que 3).
     hubs: Dict[str, Any] = {}
-    with ThreadPoolExecutor(max_workers=min(2, len(HUBS))) as ex:
-        f_hubs = {h: ex.submit(_route, h, destination) for h in HUBS}
-        for h, f in f_hubs.items():
-            days, by = f.result()
-            if days:
-                hubs[h] = {"days": days, "by_date": by}
+    for h in HUBS:
+        days, by = _route(h, destination)
+        if days:
+            hubs[h] = {"days": days, "by_date": by}
 
     return {
         "direct": {"days": dir_days, "by_date": dir_by},
