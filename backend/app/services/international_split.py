@@ -45,8 +45,30 @@ def _center_and_flex(dates: List[date]):
     return center, flex
 
 
+def _scan_dates_fallback(origin: str, dest: str, iso_dates: List[str],
+                         adults: int, cabin) -> Dict[str, float]:
+    """Fallback do radar quando a MATRIZ do Kayak falha (ex.: Madrid não renderiza
+    a matriz flex). Usa o scraping POR DATA (scan_dates) — mais lento, porém
+    confiável pras rotas que a matriz não cobre. Amostra poucas datas."""
+    from backend.app.services.date_radar import scan_dates
+    pairs = []
+    for s in iso_dates:
+        try:
+            pairs.append((date.fromisoformat(s), None))
+        except ValueError:
+            pass
+    if not pairs:
+        return {}
+    try:
+        r = scan_dates(pairs, origin=origin, destination=dest, adults=adults, cabin=cabin)
+    except Exception as e:
+        logger.warning("fallback per-date %s→%s falhou: %s", origin, dest, e)
+        return {}
+    return {k: float(v) for k, v in (r.price_by_pair or {}).items() if v}
+
+
 def _kayak_matrix(origin: str, dest: str, center: date, flex: int,
-                  requested: set, attempts: int = 2) -> Dict[str, float]:
+                  requested: set, attempts: int = 1) -> Dict[str, float]:
     """Preços por data via a MATRIZ de datas flexíveis do Kayak (1 call) — bate
     com o calendário que o vendedor vê no site. Filtra só as datas pedidas.
     Faz retry: a raspagem é flaky e uma rota voltar vazia quebra o fluxo."""
@@ -223,8 +245,19 @@ def radar_international(*, origin: str, destination: str, dates: List[date],
     full = [ds[0] + timedelta(days=i) for i in range((ds[-1] - ds[0]).days + 1)]
     requested = {d.isoformat() for d in full}
 
+    # Amostra de datas pro fallback por-data (poucas, pra não explodir o tempo).
+    sample_iso = sorted(requested)
+    if len(sample_iso) > 4:
+        step = (len(sample_iso) - 1) / 3
+        sample_iso = [sample_iso[round(i * step)] for i in range(4)]
+
     def _route(o: str, d: str):
         by = _kayak_matrix(o, d, center, flex, requested)
+        if not by:
+            # Matriz vazia (ex.: Madrid não renderiza a matriz flex) → fallback
+            # por-data, que é confiável pras rotas que a matriz não cobre.
+            logger.info("intl radar: matriz vazia %s→%s — fallback por-data", o, d)
+            by = _scan_dates_fallback(o, d, sample_iso, adults, cabin)
         ranked = [date.fromisoformat(k) for k in sorted(by, key=lambda k: by[k])]
         return ranked, by
 
@@ -325,6 +358,16 @@ def quote_international(*, origin: str, destination: str,
                          "hubs_by_date": {h: i["by_date"] for h, i in rad["hubs"].items()}}
     direct_days = direct_days or []
     hubs = hubs or {}
+
+    # ROBUSTEZ: se a matriz Kayak falhou/veio vazia, NÃO desiste do split (era o
+    # bug: caía no fluxo normal sem confirmação nem quebra de trecho). Usa as
+    # próprias datas do range — sem o ranking do radar, mas ainda valida em milhas.
+    if dates and not direct_days:
+        logger.warning("intl: radar do direto vazio — fallback pras datas do range")
+        direct_days = sorted(dates)[:2]
+    if dates and not hubs:
+        logger.warning("intl: radar dos hubs vazio — fallback pras datas do range")
+        hubs = {h: sorted(dates)[0] for h in HUBS}
 
     options: List[Dict[str, Any]] = []
 

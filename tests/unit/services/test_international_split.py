@@ -164,6 +164,34 @@ def test_quote_international_combines_direct_and_hub_split(monkeypatch):
     assert opts[0]["type"] == "direct_miles"
 
 
+def test_quote_international_fallback_when_radar_empty(monkeypatch):
+    """ROBUSTEZ: matriz Kayak vazia (falhou) NÃO pode zerar o split — usa as
+    datas do range e ainda valida em milhas. Senão cai no fluxo normal (bug)."""
+    day = date(2026, 9, 10)
+    monkeypatch.setattr(
+        "backend.app.services.international_split.radar_international",
+        lambda **k: {"direct": {"days": [], "by_date": {}}, "hubs": {}},
+    )
+    monkeypatch.setattr("backend.app.ai.agents.sanitizer.sanitize_offers", lambda o: o)
+    monkeypatch.setattr(
+        "backend.app.ai.agents.hidden_city_validator.validate_split_with_supplementary",
+        lambda o, **k: [],
+    )
+
+    def fake_run_search(*, origin, destination, **k):
+        if (origin, destination) == ("GYN", "MAD"):
+            return {"ok": True, "money_offers": [], "miles_offers": [
+                _miles_offer("GYN", "MAD", eq=2000, miles=70000, taxes=100,
+                             dep="2026-09-10T20:00:00", arr="2026-09-11T10:00:00",
+                             airline="LATAM", prog="LATAM Pass")]}
+        return {"ok": True, "money_offers": [], "miles_offers": []}
+
+    monkeypatch.setattr("backend.app.ai.agents.tools.run_search", fake_run_search)
+    q = isplit.quote_international(origin="GYN", destination="MAD",
+                                  dates=[day, date(2026, 9, 11)])
+    assert any(o["type"] == "direct_miles" for o in q["options"])   # não desistiu
+
+
 def test_hub_split_skips_domestic_that_misses_connection(monkeypatch):
     day = date(2026, 10, 15)
 

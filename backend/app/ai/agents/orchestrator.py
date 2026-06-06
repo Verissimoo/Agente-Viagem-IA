@@ -77,6 +77,11 @@ def _intl_confirmation_message(
     dir_by = rad["direct"]["by_date"]
     rad_hubs = rad.get("hubs") or {}
     if not dir_days and not rad_hubs:
+        logger.warning(
+            "orchestrator[intl]: radar de confirmação VAZIO p/ %s→%s (matriz Kayak "
+            "falhou?) — pula confirmação, vai direto pra busca validada",
+            origin, destination,
+        )
         return None
 
     def _fmt(iso: str) -> str:
@@ -339,6 +344,11 @@ def orchestrator_node(state: ChatState) -> ChatState:
 
         awaiting = bool(slots.get("intl_awaiting_confirmation"))
         flex_span = (date_end_parsed - date_start).days if (date_end_parsed and date_end_parsed > date_start) else 0
+        logger.info(
+            "orchestrator[intl]: %s→%s oneway | awaiting=%s flex_span=%d (start=%s end=%s) → %s",
+            origin, destination, awaiting, flex_span, date_start, date_end_parsed,
+            "FASE2" if awaiting else ("FASE1-confirmação" if flex_span > 3 else "direto-sem-confirmação"),
+        )
 
         # FASE 2: vendedor confirmou → roda as buscas, cada rota na SUA melhor
         # data (direto na melhor de origin→dest; cada hub na melhor dele). Se ele
@@ -387,7 +397,11 @@ def orchestrator_node(state: ChatState) -> ChatState:
             if res is not None:
                 return res
 
-        logger.info("orchestrator: international_split vazio; fallback busca normal")
+        logger.warning(
+            "orchestrator[intl]: split internacional NÃO produziu opções p/ %s→%s "
+            "— caindo no fluxo normal (sem quebra de trecho). Verificar scraping.",
+            origin, destination,
+        )
 
     is_rt_flex = trip_type == "roundtrip" and (
         (return_from and return_to)
