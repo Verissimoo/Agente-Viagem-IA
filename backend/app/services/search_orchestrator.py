@@ -290,6 +290,7 @@ def run_pipeline(
     companhias: Optional[list] = None,
     trip_type: Optional[TripType] = None,
     baggage_checked: bool = False,
+    always_include: Optional[list] = None,
 ) -> PipelineResult:
     request_id = str(uuid.uuid4())[:8]
     tracer = PipelineTracer(request_id)
@@ -324,8 +325,10 @@ def run_pipeline(
         # Economilhas pode estar sem créditos (HTTP 402) — desligar via env evita
         # gastar tempo de orçamento tentando puxá-la. BuscaMilhas cobre as milhas.
         _econ_on = os.getenv("ECONOMILHAS_ENABLED", "1") == "1"
-        # Skiplagged sempre roda (não depende de seleção de cia)
-        for extra in _ALWAYS_INCLUDE:
+        # Fontes sempre injetadas. `always_include` permite restringir (ex.: VCP =
+        # só Azul → always_include=["AZUL_CASH"], sem Skiplagged/Economilhas).
+        _always = _ALWAYS_INCLUDE if always_include is None else always_include
+        for extra in _always:
             if extra == "ECONOMILHAS" and not _econ_on:
                 continue
             if extra not in (c.upper() for c in companhias_ativas):

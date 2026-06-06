@@ -31,6 +31,50 @@ def test_to_slots_two_windows():
     assert s["time_preference"] == "manha"
 
 
+def test_to_slots_duration_plus_window_is_sliding():
+    # "viagem de 10 dias entre 10 e 25" → janela de ida + duração, SEM volta fixa
+    # (o planner desliza: 10→20, 11→21, …). Regressão do bug "só varreu 10→20".
+    raw = {
+        "origin_city": "Brasília", "destination_city": "Fortaleza",
+        "trip_type": "roundtrip",
+        "depart": {"from": "2099-09-10", "to": "2099-09-25"},
+        "return": None, "trip_duration_days": 10, "flexible_dates": True,
+    }
+    s = to_slots(raw, today=date(2099, 1, 1))
+    assert s["date_start"] == "2099-09-10" and s["date_end"] == "2099-09-25"
+    assert s["trip_duration_days"] == 10
+    assert s["flex_mode"] == "range" and s["trip_type"] == "roundtrip"
+    assert not s.get("return_from")           # volta NÃO é fixada
+
+
+def test_to_slots_duration_window_drops_fixed_return():
+    # Mesmo se a LLM colapsar e mandar volta fixa, com duração+janela a volta cai.
+    raw = {
+        "origin_city": "Brasília", "destination_city": "Fortaleza",
+        "trip_type": "roundtrip",
+        "depart": {"from": "2099-09-10", "to": "2099-09-25"},
+        "return": {"from": "2099-09-20", "to": "2099-09-20"},
+        "trip_duration_days": 10,
+    }
+    s = to_slots(raw, today=date(2099, 1, 1))
+    assert s["date_end"] == "2099-09-25" and s["trip_duration_days"] == 10
+    assert not s.get("return_from") and not s.get("return_to")
+
+
+def test_to_slots_multi_airport_city_top2():
+    # São Paulo tem 3 aeroportos; busca os 2 principais (GRU internacional + VCP
+    # Azul), NÃO só o 1º alfabético (CGH doméstico). Regressão do voo Azul VCP perdido.
+    raw = {
+        "origin_city": "São Paulo", "destination_city": "Lisboa",
+        "depart": {"from": "2099-09-06", "to": "2099-09-06"}, "trip_type": "oneway",
+    }
+    s = to_slots(raw, today=date(2099, 1, 1))
+    assert s["origin_iata"] == "GRU"                    # primário = hub internacional
+    assert s["origin_iatas"] == ["GRU", "VCP"]          # top-2 (sem CGH doméstico)
+    assert s["destination_iata"] == "LIS"
+    assert not s.get("destination_iatas")               # Lisboa é único aeroporto
+
+
 def test_to_slots_oneway_baggage_direct():
     raw = {
         "origin_city": "Recife", "destination_city": "Fortaleza",

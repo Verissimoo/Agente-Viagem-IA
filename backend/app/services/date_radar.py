@@ -178,3 +178,42 @@ def _scan_miles_sample(
         price_by_pair={_pair_label(i, v): equiv_by_pair[(i, v)] for i, v in ranked},
         source="miles_sample",
     )
+
+
+def scan_skip_pairs(
+    pairs: List[Pair], *, origin: str, destination: str,
+    adults: int = 1, cabin="economy", max_workers: int = 4,
+) -> dict:
+    """Comparativo de mercado via SKIPLAGGED (hidden city/split, SEM validação de
+    milhas) das combinações ida-e-volta: Skip ida (O→D) + Skip volta (D→O), pega
+    o mais barato de cada perna e soma. Só pra REFERÊNCIA, não pra fechar venda.
+
+    Deduplica as pernas (combos deslizantes compartilham datas) pra não raspar à
+    toa. Devolve {label_da_combo: total_skip_brl}."""
+    from backend.app.providers.skiplagged.adapter import SkiplaggedAdapter
+    cab = _coerce_cabin(cabin)
+
+    legs = {}
+    for ida, volta in pairs:
+        legs[(origin, destination, ida)] = None
+        legs[(destination, origin, volta)] = None
+
+    def _one(leg):
+        o, d, day = leg
+        offers = _safe_search(SkiplaggedAdapter, _req_for_pair(o, d, day, None, adults, cab))
+        prices = [float(x.price_brl) for x in offers if x.price_brl]
+        return leg, (min(prices) if prices else None)
+
+    cheapest: dict = {}
+    with ThreadPoolExecutor(max_workers=min(len(legs), max_workers) or 1) as ex:
+        for f in as_completed([ex.submit(_one, lg) for lg in legs]):
+            leg, price = f.result()
+            cheapest[leg] = price
+
+    out: dict = {}
+    for ida, volta in pairs:
+        pi = cheapest.get((origin, destination, ida))
+        pv = cheapest.get((destination, origin, volta))
+        if pi is not None and pv is not None:
+            out[_pair_label(ida, volta)] = round(pi + pv, 2)
+    return out

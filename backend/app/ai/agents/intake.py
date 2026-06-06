@@ -541,6 +541,7 @@ _SEARCH_SCOPED_SLOTS = (
     # confirmação", as datas de radar nem o pacote de confirmação anterior
     # (thread poisoning).
     "intl_awaiting_confirmation", "intl_radar_dates", "intl_confirmation",
+    "origin_iatas", "destination_iatas",
 )
 
 

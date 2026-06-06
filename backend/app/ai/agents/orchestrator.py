@@ -131,6 +131,46 @@ def _parse_iso_date(value: Optional[str]) -> Optional[_date]:
         return None
 
 
+# Aeroportos com CIA EXCLUSIVA: VCP é hub só da Azul (nenhuma outra cia tem
+# itinerário internacional saindo de lá). Restringir a busca a Azul (milhas +
+# cash/Azul Oficial) corta o tempo — sem varrer as 8 cias, Skiplagged, etc.
+_AIRPORT_RESTRICT = {
+    "VCP": {"companhias": ["AZUL"], "always_include": ["AZUL_CASH"]},
+}
+
+
+def _merge_origin_searches(origins: List[str], kw: dict) -> dict:
+    """Cidade multi-aeroporto (São Paulo=GRU/VCP): roda run_search por aeroporto
+    e JUNTA as ofertas, pra não perder voo barato de aeroporto secundário (ex.:
+    Azul VCP→LIS). Sequencial de propósito — pipelines paralelos disputam os
+    semáforos e voltam incompletos. O presenter re-ranqueia; aqui só concatena."""
+    results = []
+    for o in origins:
+        try:
+            r = run_search(origin=o, **{**kw, **_AIRPORT_RESTRICT.get(o, {})})
+        except Exception as e:
+            logger.warning("orchestrator: run_search origem %s falhou: %s", o, e)
+            continue
+        if r.get("ok"):
+            results.append(r)
+    if not results:
+        return {"ok": False, "error": "todas as origens falharam"}
+    merged = dict(results[0])
+    for key in ("ranked_offers", "money_offers", "miles_offers"):
+        seen: set = set()
+        combined: list = []
+        for r in results:
+            for off in (r.get(key) or []):
+                oid = off.get("offer_id")
+                if oid and oid in seen:
+                    continue
+                if oid:
+                    seen.add(oid)
+                combined.append(off)
+        merged[key] = combined
+    return merged
+
+
 def _sample_dates(start: _date, end: Optional[_date], cap: int = 8) -> List[_date]:
     """Amostra uniforme de datas no intervalo [start, end] (no máx `cap`).
     O radar Kayak varre essas datas pra escolher a melhor — varrer todas as 16
@@ -402,6 +442,18 @@ def orchestrator_node(state: ChatState) -> ChatState:
                 info["candidates_scanned"] = len(pairs)
                 info["radar_prices"] = radar.price_by_pair
 
+                # COMPARATIVO via SKIP nas TOP-3 datas do Kayak (sem validação de
+                # milhas) — hidden city/split ida+volta como referência extra.
+                try:
+                    from backend.app.services.date_radar import scan_skip_pairs
+                    info["skip_prices"] = scan_skip_pairs(
+                        top, origin=origin, destination=destination,
+                        adults=int(slots.get("adults", 1)),
+                        cabin=slots.get("cabin", "economy"),
+                    )
+                except Exception as e:
+                    logger.warning("orchestrator: skip sweep falhou: %s", e)
+
                 # HIDDEN CITY ida-e-volta = DOIS bilhetes só-ida somados (hidden
                 # city é one-way). Cota a melhor data do radar como ida (O→D) +
                 # volta (D→O) separadas e soma. O presenter compara com o RT
@@ -454,8 +506,11 @@ def orchestrator_node(state: ChatState) -> ChatState:
     # todas as datas num único pool paralelo e o ranking escolhe a mais barata —
     # eficiente. (O radar Kayak-first só compensa no ROUNDTRIP, onde o
     # cross-product ida×volta é grande; em ida-só ele só adiciona overhead.)
-    result = run_search(
-        origin=origin,
+    # Cidade multi-aeroporto (São Paulo=GRU/VCP, Rio=GIG/SDU): busca os TOP-2
+    # aeroportos e junta — senão perde voo barato de aeroporto secundário (ex.:
+    # Azul VCP→LIS, que sumia quando a origem virava só CGH/GRU).
+    origins = [o for o in (slots.get("origin_iatas") or [origin]) if o][:2]
+    _search_kw = dict(
         destination=destination,
         date_start=date_start,
         date_return=_parse_iso_date(slots.get("date_return")),
@@ -468,6 +523,10 @@ def orchestrator_node(state: ChatState) -> ChatState:
         flex_return=bool(slots.get("flex_return", False)),
         baggage_checked=bool(slots.get("baggage_checked") or False),
     )
+    if len(origins) > 1:
+        result = _merge_origin_searches(origins, _search_kw)
+    else:
+        result = run_search(origin=origins[0], **_search_kw)
 
     if not result.get("ok"):
         audit.log(

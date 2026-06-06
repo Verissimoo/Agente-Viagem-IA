@@ -40,6 +40,8 @@ Schema (use null quando o cliente não mencionou):
 
 Regras de interpretação:
 - "ida entre 10 e 12 de julho e volta 20 ou 21 de julho" → trip_type=roundtrip, depart={{from:2026-07-10,to:2026-07-12}}, return={{from:2026-07-20,to:2026-07-21}}, flexible_dates=true.
+- "viagem de N dias" + uma JANELA de ida ("entre X e Y") → trip_type=roundtrip, depart={{from:X, to:Y}}, trip_duration_days=N, return=null, flexible_dates=true. NÃO calcule a volta — o sistema desliza a duração dentro da janela. Ex.: "viagem de 10 dias entre os dias 10 e 25 de setembro" → depart={{from:2026-09-10, to:2026-09-25}}, trip_duration_days=10, return=null, flexible_dates=true.
+- "viagem de N dias a partir de X" (sem janela) → depart={{from:X, to:X}}, trip_duration_days=N, return=null.
 - "só ida" / "somente ida" → trip_type=oneway, return=null.
 - "a data mais barata entre X e Y" → janela X..Y, flexible_dates=true.
 - Default: adults=1, children=0, infants=0, cabin="economy", direct_only=false.
@@ -87,11 +89,13 @@ def to_slots(raw: Dict[str, Any], *, today: date) -> Dict[str, Any]:
     from backend.app.nlp.intent_parser import IATA_STOPWORDS
     from backend.app.providers.buscamilhas.iata_resolver import resolve_city_to_iatas
 
-    def _iata(city: Any) -> Optional[str]:
+    def _iatas(city: Any, n: int = 2) -> list:
+        """Top-N aeroportos da cidade (resolver já vem ordenado por relevância).
+        Cidade multi-aeroporto (São Paulo=GRU/VCP) → busca os 2 principais."""
         if not city:
-            return None
+            return []
         codes = [c for c in (resolve_city_to_iatas(str(city)) or []) if c.upper() not in IATA_STOPWORDS]
-        return codes[0] if codes else None
+        return codes[:n]
 
     def _d(s: Any) -> Optional[date]:
         try:
@@ -102,14 +106,18 @@ def to_slots(raw: Dict[str, Any], *, today: date) -> Dict[str, Any]:
 
     out: Dict[str, Any] = {}
 
-    oi = _iata(raw.get("origin_city"))
-    di = _iata(raw.get("destination_city"))
-    if oi:
-        out["origin_iata"] = oi
+    oi_list = _iatas(raw.get("origin_city"))
+    di_list = _iatas(raw.get("destination_city"))
+    if oi_list:
+        out["origin_iata"] = oi_list[0]
         out["origin_city"] = str(raw.get("origin_city"))
-    if di:
-        out["destination_iata"] = di
+        if len(oi_list) > 1:
+            out["origin_iatas"] = oi_list          # cidade multi-aeroporto
+    if di_list:
+        out["destination_iata"] = di_list[0]
         out["destination_city"] = str(raw.get("destination_city"))
+        if len(di_list) > 1:
+            out["destination_iatas"] = di_list
 
     dep = raw.get("depart") or {}
     ret = raw.get("return") or {}
@@ -137,6 +145,13 @@ def to_slots(raw: Dict[str, Any], *, today: date) -> Dict[str, Any]:
     if isinstance(dur, int) and dur > 0:
         out["trip_duration_days"] = dur
         out.setdefault("trip_type", "roundtrip")
+        # Duração + JANELA de ida = viagem deslizante (10→20, 11→21, …). A volta
+        # é derivada (ida+duração), então NÃO fixa volta — senão vira RT fixo e
+        # só uma combinação é varrida. (Se não há janela de ida, mantém a volta.)
+        if out.get("date_end"):
+            out.pop("return_from", None)
+            out.pop("return_to", None)
+            out["flex_mode"] = "range"
 
     if raw.get("baggage_checked") is not None:
         out["baggage_checked"] = bool(raw["baggage_checked"])

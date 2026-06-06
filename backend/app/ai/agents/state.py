@@ -55,6 +55,10 @@ class IntakeSlots(TypedDict, total=False):
     intl_awaiting_confirmation: bool
     intl_radar_dates: Optional[list]
     intl_confirmation: Optional[dict]   # {direct_day, hub_day, direct_by_date, hub_by_date}
+    # Cidades multi-aeroporto (São Paulo=GRU/VCP, Rio=GIG/SDU): top-2 aeroportos
+    # pra busca varrer ambos e não perder voo barato de aeroporto secundário.
+    origin_iatas: Optional[list]
+    destination_iatas: Optional[list]
 
 
 # Routes possíveis decididas pelo router.

@@ -43,6 +43,7 @@ def run_search(
     date_end: Optional[date] = None,
     flex_return: bool = False,
     companhias: Optional[List[str]] = None,
+    always_include: Optional[List[str]] = None,
     top_n: int = 5,
     baggage_checked: bool = False,
 ) -> Dict[str, Any]:
@@ -71,6 +72,7 @@ def run_search(
             flex_mode=flex_mode,
             date_end=date_end,
             companhias=companhias,
+            always_include=always_include,
             baggage_checked=baggage_checked,
         )
     except Exception as e:

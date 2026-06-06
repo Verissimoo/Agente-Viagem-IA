@@ -9,16 +9,19 @@ _RAW_CITY_TO_IATAS = {
     # BRASIL
     "Brasilia": ["BSB"],
     "BSB": ["BSB"],
-    "Sao Paulo": ["CGH", "GRU", "VCP"],
-    "Sampa": ["CGH", "GRU", "VCP"],
-    "SP": ["CGH", "GRU", "VCP"],
+    # Ordem por RELEVÂNCIA (hub principal/internacional primeiro) — `_iata` usa o
+    # 1º como primário e a busca varre os top-2. GRU (maior hub intl) e VCP (hub
+    # internacional da Azul) antes de CGH (doméstico, sem voo internacional).
+    "Sao Paulo": ["GRU", "VCP", "CGH"],
+    "Sampa": ["GRU", "VCP", "CGH"],
+    "SP": ["GRU", "VCP", "CGH"],
     "Guarulhos": ["GRU"],
     "Congonhas": ["CGH"],
     "Viracopos": ["VCP"],
     "Campinas": ["VCP"],
-    "Rio de Janeiro": ["SDU", "GIG"],
-    "Rio": ["SDU", "GIG"],
-    "RJ": ["SDU", "GIG"],
+    "Rio de Janeiro": ["GIG", "SDU"],
+    "Rio": ["GIG", "SDU"],
+    "RJ": ["GIG", "SDU"],
     "Galeao": ["GIG"],
     "Santos Dumont": ["SDU"],
     "Belo Horizonte": ["CNF", "PLU"],

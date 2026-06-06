@@ -965,17 +965,27 @@ def presenter_node(state: ChatState) -> ChatState:
     # combinação venceu e que comparamos várias.
     md_info = results.get("multi_date_info") or {}
     best_per_pair = md_info.get("best_per_pair") or {}
-    if best_per_pair:
-        ranked_combos = sorted(best_per_pair.items(), key=lambda kv: kv[1])
-        scanned = md_info.get("candidates_scanned")
+    radar_prices = md_info.get("radar_prices") or {}
+    skip_prices = md_info.get("skip_prices") or {}
+    # COMPARATIVO DE MERCADO: o radar varre TODAS as combinações ida×volta (Kayak)
+    # — mostramos todas como referência, não só as 3 validadas. O Skip (hidden
+    # city/split, top-3) entra como referência extra por combo quando há.
+    market = radar_prices or best_per_pair
+    if market:
+        ranked_combos = sorted(market.items(), key=lambda kv: kv[1])
         sections.append("---")
-        header = "DATAS COMPARADAS (cruzamos ida × volta"
-        if scanned:
-            header += f"; {scanned} combinações varridas"
-        header += " — DIGA a combinação vencedora e o preço ao vendedor):"
-        sections.append(header)
-        for combo, price in ranked_combos[:5]:
-            sections.append(f"  - {combo}: a partir de R$ {price:.0f}")
+        sections.append(
+            f"DATAS COMPARADAS NO MERCADO ({len(market)} combinações ida×volta varridas "
+            "— MOSTRE VÁRIAS ao vendedor como referência, não só a vencedora):"
+        )
+        for combo, price in ranked_combos[:8]:
+            skip_txt = f" · via Skip ~R$ {skip_prices[combo]:.0f}" if skip_prices.get(combo) else ""
+            sections.append(f"  - {combo}: ~R$ {price:.0f} (Kayak){skip_txt}")
+        if best_per_pair:
+            win = min(best_per_pair, key=lambda k: best_per_pair[k])
+            sections.append(
+                f"  → VALIDADA (mais barata, vira card): {win} a partir de R$ {best_per_pair[win]:.0f}"
+            )
 
     # ─── HIDDEN CITY IDA-E-VOLTA = 2 bilhetes só-ida somados ──────────
     # Hidden city é one-way; o ida-e-volta real é ida (O→D) + volta (D→O)
