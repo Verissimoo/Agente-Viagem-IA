@@ -7,13 +7,16 @@ profundidade contra bugs de autorização em camadas superiores.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from backend.app.chat.domain.models import (
+    BugReport,
     ChatMessage,
     ChatThread,
     Quote,
     QuoteStatus,
+    QuoteValidation,
+    ValidationKind,
     User,
 )
 
@@ -74,3 +77,28 @@ class ChatRepository(ABC):
 
     @abstractmethod
     def list_quotes(self, user_id: str, *, status: Optional[QuoteStatus] = None) -> List[Quote]: ...
+
+    # --- Validações internas (sistema vs. manual) ---
+    @abstractmethod
+    def create_validation(self, validation: QuoteValidation) -> QuoteValidation: ...
+
+    @abstractmethod
+    def list_validations(
+        self, user_id: str, *, kind: Optional[ValidationKind] = None,
+        limit: int = 200, offset: int = 0,
+    ) -> List[QuoteValidation]: ...
+
+    @abstractmethod
+    def list_validations_by_thread(self, thread_id: str, user_id: str) -> List[QuoteValidation]: ...
+
+    @abstractmethod
+    def validation_stats(self, user_id: str) -> Dict[str, Any]: ...
+
+    # --- Bug reports ---
+    @abstractmethod
+    def create_bug_report(self, report: BugReport) -> BugReport: ...
+
+    @abstractmethod
+    def list_bug_reports(
+        self, user_id: str, *, status: Optional[str] = None, limit: int = 200,
+    ) -> List[BugReport]: ...

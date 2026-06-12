@@ -165,3 +165,59 @@ class MilesHealthcheckResponseDTO(BaseModel):
     ok_count: int
     empty_count: int
     error_count: int
+
+
+# ─── Validações internas (sistema vs. manual) ───────────────────────
+class CreateValidationRequestDTO(BaseModel):
+    thread_id: str = Field(..., max_length=64)
+    message_id: Optional[str] = Field(None, max_length=64)
+    offer_id: Optional[str] = Field(None, max_length=120)
+    kind: str = Field(..., pattern="^(validated|corrected)$")
+    system_offer: Dict[str, Any] = Field(default_factory=dict)
+    found_airline: Optional[str] = Field(None, max_length=120)
+    found_program: Optional[str] = Field(None, max_length=120)
+    emission_method: Optional[str] = Field(None, max_length=40)
+    found_value_brl: Optional[float] = None
+    found_miles: Optional[int] = None
+    observations: Optional[str] = Field(None, max_length=2000)
+
+
+class QuoteValidationDTO(BaseModel):
+    id: str
+    thread_id: str
+    message_id: Optional[str] = None
+    offer_id: Optional[str] = None
+    kind: str
+    system_offer: Dict[str, Any] = Field(default_factory=dict)
+    found_airline: Optional[str] = None
+    found_program: Optional[str] = None
+    emission_method: Optional[str] = None
+    found_value_brl: Optional[float] = None
+    found_miles: Optional[int] = None
+    observations: Optional[str] = None
+    created_at: str
+
+
+class ValidationStatsDTO(BaseModel):
+    total: int
+    validated_count: int
+    corrected_count: int
+    accuracy_pct: float
+    avg_delta_brl: Optional[float] = None
+    by_method: Dict[str, int] = Field(default_factory=dict)
+    by_airline: Dict[str, int] = Field(default_factory=dict)
+
+
+class CreateBugReportRequestDTO(BaseModel):
+    thread_id: str = Field(..., max_length=64)
+    description: str = Field(..., min_length=1, max_length=2000)
+    context: Dict[str, Any] = Field(default_factory=dict)
+
+
+class BugReportDTO(BaseModel):
+    id: str
+    thread_id: str
+    description: str
+    context: Dict[str, Any] = Field(default_factory=dict)
+    status: str
+    created_at: str

@@ -30,10 +30,17 @@ interface OfferCardProps {
   onApprove: (offerId: string) => void;
   isBest?: boolean;
   readonly?: boolean;
+  // Validação interna (sistema vs. manual) — só ativa no card recomendado do
+  // último turno (showValidationControls). Cards antigos só mostram o badge.
+  validationState?: "none" | "validated" | "corrected";
+  showValidationControls?: boolean;
+  onValidate?: (offerId: string) => void;
+  onOpenCorrection?: (offerId: string) => void;
 }
 
 export default function OfferCard({
   offer, approving, approvedOfferId, onApprove, isBest, readonly,
+  validationState = "none", showValidationControls, onValidate, onOpenCorrection,
 }: OfferCardProps) {
   const isApproved = approvedOfferId === offer.offer_id;
 
@@ -409,6 +416,36 @@ export default function OfferCard({
           </button>
         )}
       </div>
+
+      {/* Validação interna (discreto — não compete com Aprovar). */}
+      {(showValidationControls || validationState !== "none") && (
+        <div className="mt-2 pt-2 border-t border-gray-100 dark:border-zinc-800 flex flex-wrap items-center gap-2">
+          {validationState === "validated" ? (
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:ring-emerald-500/30">
+              <CheckCircle2 size={13} /> Resultado validado
+            </span>
+          ) : validationState === "corrected" ? (
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-md bg-amber-50 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:ring-amber-500/30">
+              Correção registrada
+            </span>
+          ) : showValidationControls ? (
+            <>
+              <button
+                onClick={() => onValidate?.(offer.offer_id)}
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md ring-1 ring-emerald-300 text-emerald-700 hover:bg-emerald-50 dark:ring-emerald-500/40 dark:text-emerald-300 dark:hover:bg-emerald-500/10 transition-colors"
+              >
+                <CheckCircle2 size={13} /> Resultado validado
+              </button>
+              <button
+                onClick={() => onOpenCorrection?.(offer.offer_id)}
+                className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md ring-1 ring-amber-300 text-amber-700 hover:bg-amber-50 dark:ring-amber-500/40 dark:text-amber-300 dark:hover:bg-amber-500/10 transition-colors"
+              >
+                Encontrei melhor
+              </button>
+            </>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

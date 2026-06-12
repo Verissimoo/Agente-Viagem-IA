@@ -3,8 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { Bug } from "lucide-react";
+
 import ApproveModal from "@/components/approve-modal";
+import BugReportModal from "@/components/bug-report-modal";
 import Composer from "@/components/composer";
+import CorrectionPanel, { type CorrectionData } from "@/components/correction-panel";
 import MessageBubble from "@/components/message-bubble";
 import OfferCard from "@/components/offer-card";
 import Sidebar from "@/components/sidebar";
@@ -12,8 +16,10 @@ import ThinkingBubble from "@/components/thinking-bubble";
 import { MessageSkeleton } from "@/components/skeleton";
 import {
   ApiError,
+  bugReports,
   quotes,
   threads,
+  validations,
   type Message,
   type Offer,
   type Session,
@@ -35,6 +41,14 @@ export default function ChatPage() {
   const [approvedOfferId, setApprovedOfferId] = useState<string | null>(null);
   const [pendingApproveOfferId, setPendingApproveOfferId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Validação interna (sistema vs. manual)
+  const [validationsByOffer, setValidationsByOffer] = useState<Record<string, "validated" | "corrected">>({});
+  const [correctionOfferId, setCorrectionOfferId] = useState<string | null>(null);
+  const [savingValidation, setSavingValidation] = useState(false);
+  // Reportar bug
+  const [bugOpen, setBugOpen] = useState(false);
+  const [bugLoading, setBugLoading] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -84,10 +98,20 @@ export default function ChatPage() {
     setActiveThreadId(id);
     setApprovedOfferId(null);
     setMessages([]);
+    setValidationsByOffer({});
+    setCorrectionOfferId(null);
     setMessagesLoading(true);
     try {
-      const { messages } = await threads.messages(s.access_token, id);
+      // Mensagens + validações em paralelo (não serializa; validações não
+      // bloqueiam a renderização das mensagens).
+      const [{ messages }, vals] = await Promise.all([
+        threads.messages(s.access_token, id),
+        validations.byThread(s.access_token, id).catch(() => []),
+      ]);
       setMessages(messages);
+      const map: Record<string, "validated" | "corrected"> = {};
+      for (const v of vals) if (v.offer_id) map[v.offer_id] = v.kind;
+      setValidationsByOffer(map);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Falha carregando mensagens");
     } finally {
@@ -211,6 +235,75 @@ export default function ChatPage() {
     return Array.isArray(offers) ? (offers as Offer[]) : [];
   }
 
+  // Snapshot autossuficiente da oferta do SISTEMA (a tabela comparativa não
+  // depende da thread existir).
+  function snapshotOf(offer: Offer): Record<string, unknown> {
+    const segs = offer.outbound?.segments || [];
+    const route = segs.length
+      ? [segs[0].origin, ...segs.map((s) => s.destination)].join("→")
+      : "";
+    return {
+      offer_id: offer.offer_id, airline: offer.airline ?? null,
+      category: offer.category ?? null, price_brl: offer.price_brl ?? null,
+      miles: offer.miles ?? null, taxes_brl: offer.taxes_brl ?? null,
+      equivalent_brl: offer.equivalent_brl ?? null, route,
+    };
+  }
+
+  function msgIdOfOffer(offerId: string): string | undefined {
+    const m = messages.find((mm) => offersOf(mm).some((o) => o.offer_id === offerId));
+    return m?.id;
+  }
+
+  async function handleValidate(offer: Offer) {
+    if (!session || !activeThreadId) return;
+    const id = offer.offer_id;
+    setValidationsByOffer((p) => ({ ...p, [id]: "validated" }));  // otimista
+    try {
+      await validations.create(session.access_token, {
+        thread_id: activeThreadId, message_id: msgIdOfOffer(id), offer_id: id,
+        kind: "validated", system_offer: snapshotOf(offer),
+      });
+    } catch (err) {
+      setValidationsByOffer((p) => { const n = { ...p }; delete n[id]; return n; });
+      setError(err instanceof ApiError ? err.message : "Falha ao validar");
+    }
+  }
+
+  async function handleSaveCorrection(offer: Offer, data: CorrectionData) {
+    if (!session || !activeThreadId) return;
+    const id = offer.offer_id;
+    setSavingValidation(true);
+    setValidationsByOffer((p) => ({ ...p, [id]: "corrected" }));  // otimista
+    try {
+      await validations.create(session.access_token, {
+        thread_id: activeThreadId, message_id: msgIdOfOffer(id), offer_id: id,
+        kind: "corrected", system_offer: snapshotOf(offer), ...data,
+      });
+      setCorrectionOfferId(null);
+    } catch (err) {
+      setValidationsByOffer((p) => { const n = { ...p }; delete n[id]; return n; });
+      setError(err instanceof ApiError ? err.message : "Falha ao salvar correção");
+    } finally {
+      setSavingValidation(false);
+    }
+  }
+
+  async function handleBugSubmit(description: string) {
+    if (!session || !activeThreadId) return;
+    setBugLoading(true);
+    try {
+      await bugReports.create(session.access_token, activeThreadId, description);
+      setBugOpen(false);
+      setToast("Bug reportado — obrigado!");
+      setTimeout(() => setToast(null), 3000);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Falha ao reportar bug");
+    } finally {
+      setBugLoading(false);
+    }
+  }
+
   // Última mensagem com ofertas — só nela mostramos botão de aprovar
   // (turnos antigos ficam read-only no histórico).
   const lastWithOffersId = (() => {
@@ -272,17 +365,35 @@ export default function ChatPage() {
                           · {offers.length} {offers.length === 1 ? "oferta" : "ofertas"}
                         </span>
                       </div>
-                      {offers.map((offer, idx) => (
-                        <OfferCard
-                          key={offer.offer_id}
-                          offer={offer}
-                          approving={approving === offer.offer_id}
-                          approvedOfferId={isLatest ? approvedOfferId : null}
-                          onApprove={isLatest ? handleApprove : () => {}}
-                          isBest={isLatest && idx === 0 && !approvedOfferId}
-                          readonly={!isLatest}
-                        />
-                      ))}
+                      {offers.map((offer, idx) => {
+                        const vState = validationsByOffer[offer.offer_id];  // undefined = sem estado
+                        // Controles só no card recomendado do último turno e sem
+                        // estado ainda; cards antigos com validação só mostram o badge.
+                        const showCtrls = isLatest && idx === 0 && !vState;
+                        return (
+                          <div key={offer.offer_id}>
+                            <OfferCard
+                              offer={offer}
+                              approving={approving === offer.offer_id}
+                              approvedOfferId={isLatest ? approvedOfferId : null}
+                              onApprove={isLatest ? handleApprove : () => {}}
+                              isBest={isLatest && idx === 0 && !approvedOfferId}
+                              readonly={!isLatest}
+                              validationState={vState ?? "none"}
+                              showValidationControls={showCtrls}
+                              onValidate={() => handleValidate(offer)}
+                              onOpenCorrection={() => setCorrectionOfferId(offer.offer_id)}
+                            />
+                            {correctionOfferId === offer.offer_id && (
+                              <CorrectionPanel
+                                saving={savingValidation}
+                                onSave={(data) => handleSaveCorrection(offer, data)}
+                                onCancel={() => setCorrectionOfferId(null)}
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -304,6 +415,17 @@ export default function ChatPage() {
           </div>
         </div>
 
+        {activeThreadId && (
+          <div className="max-w-3xl mx-auto w-full px-4 flex justify-end">
+            <button
+              onClick={() => setBugOpen(true)}
+              className="inline-flex items-center gap-1.5 text-[11px] text-gray-400 hover:text-amber-600 dark:text-zinc-500 dark:hover:text-amber-400 transition-colors py-1"
+            >
+              <Bug size={13} /> Reportar bug
+            </button>
+          </div>
+        )}
+
         <Composer
           disabled={sending}
           onSend={handleSend}
@@ -322,6 +444,19 @@ export default function ChatPage() {
           if (!approving) setPendingApproveOfferId(null);
         }}
       />
+
+      <BugReportModal
+        open={bugOpen}
+        loading={bugLoading}
+        onConfirm={handleBugSubmit}
+        onCancel={() => { if (!bugLoading) setBugOpen(false); }}
+      />
+
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 anim-fade-in-up px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium shadow-lg">
+          {toast}
+        </div>
+      )}
 
       <style jsx global>{`
         .custom-scroll::-webkit-scrollbar { width: 8px; }

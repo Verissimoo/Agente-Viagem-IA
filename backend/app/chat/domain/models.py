@@ -90,6 +90,52 @@ class ChatThread(BaseModel):
     archived: bool = False
 
 
+class ValidationKind(str, Enum):
+    """Resultado da avaliação interna de uma cotação do sistema."""
+    VALIDATED = "validated"        # o sistema acertou (bateu com a realidade)
+    CORRECTED = "corrected"        # o vendedor achou algo melhor manualmente
+
+
+# Métodos de emissão (string livre vinda do front — não enum rígido).
+EMISSION_METHODS = ("milhas", "cash_cia", "ota", "hidden_city", "split", "outro")
+
+
+class QuoteValidation(BaseModel):
+    """Registro de validação/correção de uma cotação — base da tabela comparativa
+    sistema vs. manual. AUTOSSUFICIENTE: carrega o snapshot da oferta do sistema,
+    então sobrevive mesmo se a thread for apagada (sem FK cascade)."""
+    model_config = ConfigDict(use_enum_values=False)
+
+    id: str = Field(default_factory=_new_id)
+    user_id: str
+    thread_id: str
+    message_id: Optional[str] = None     # mensagem do assistente com o card
+    offer_id: Optional[str] = None       # offer_id do card validado/corrigido
+    kind: ValidationKind
+    system_offer: Dict[str, Any] = Field(default_factory=dict)  # snapshot do sistema
+    # Correção manual (só quando kind=CORRECTED):
+    found_airline: Optional[str] = None
+    found_program: Optional[str] = None  # programa de milhas (Smiles, LATAM Pass…)
+    emission_method: Optional[str] = None
+    found_value_brl: Optional[float] = None
+    found_miles: Optional[int] = None
+    observations: Optional[str] = None
+    created_at: datetime = Field(default_factory=_utcnow)
+
+
+class BugReport(BaseModel):
+    """Relato de bug do vendedor — thread_id + descrição + contexto mínimo."""
+    model_config = ConfigDict(use_enum_values=False)
+
+    id: str = Field(default_factory=_new_id)
+    user_id: str
+    thread_id: str
+    description: str
+    context: Dict[str, Any] = Field(default_factory=dict)
+    status: str = "open"
+    created_at: datetime = Field(default_factory=_utcnow)
+
+
 class Quote(BaseModel):
     """Cotação salva — pode ter sido aprovada (PDF emitido) ou só proposta.
 

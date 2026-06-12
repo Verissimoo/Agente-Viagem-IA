@@ -53,7 +53,10 @@ from backend.app.api.v1.chat.deps import (
 )
 from backend.app.api.v1.chat.schemas import (
     ApproveOfferRequestDTO,
+    BugReportDTO,
+    CreateBugReportRequestDTO,
     CreateThreadRequestDTO,
+    CreateValidationRequestDTO,
     LoginRequestDTO,
     MessageDTO,
     MessageListResponseDTO,
@@ -63,6 +66,7 @@ from backend.app.api.v1.chat.schemas import (
     ProgramRatesDTO,
     QuoteDTO,
     QuoteListResponseDTO,
+    QuoteValidationDTO,
     RatesResponseDTO,
     RatesUpdateRequestDTO,
     RateTierDTO,
@@ -72,15 +76,19 @@ from backend.app.api.v1.chat.schemas import (
     SessionResponseDTO,
     ThreadDTO,
     ThreadListResponseDTO,
+    ValidationStatsDTO,
 )
 from backend.app.chat.auth import AuthError, AuthSession, get_auth_provider
 from backend.app.chat.config import settings
 from backend.app.chat.domain.models import (
+    BugReport,
     ChatMessage,
     ChatThread,
     MessageRole,
     Quote,
     QuoteStatus,
+    QuoteValidation,
+    ValidationKind,
 )
 from backend.app.chat.repository import ChatRepository
 from backend.app.chat.security.audit import AuditLogger
@@ -962,3 +970,157 @@ def miles_healthcheck_endpoint(
         empty_count=sum(1 for r in results if r.status == "empty"),
         error_count=sum(1 for r in results if r.status in ("error", "timeout")),
     )
+
+
+# ─── Validação interna (sistema vs. manual) + bug reports ───────────
+# CRUD puro: INSERT/SELECT diretos, sem LLM/provider. Zero impacto no pipeline
+# de busca. thread_id sem FK cascade → registros sobrevivem ao delete da thread.
+
+def _validation_to_dto(v: QuoteValidation) -> QuoteValidationDTO:
+    return QuoteValidationDTO(
+        id=v.id, thread_id=v.thread_id, message_id=v.message_id, offer_id=v.offer_id,
+        kind=v.kind.value if isinstance(v.kind, ValidationKind) else v.kind,
+        system_offer=v.system_offer, found_airline=v.found_airline,
+        found_program=v.found_program, emission_method=v.emission_method,
+        found_value_brl=v.found_value_brl, found_miles=v.found_miles,
+        observations=v.observations, created_at=v.created_at.isoformat(),
+    )
+
+
+@router.post("/validations", response_model=QuoteValidationDTO)
+def create_validation_endpoint(
+    payload: CreateValidationRequestDTO,
+    session: AuthSession = SessionDep,
+    repo: ChatRepository = RepoDep,
+    audit: AuditLogger = AuditDep,
+) -> QuoteValidationDTO:
+    """Registra que a cotação do sistema foi VALIDADA (acertou) ou CORRIGIDA
+    (vendedor achou melhor). Autossuficiente (snapshot system_offer)."""
+    kind = ValidationKind(payload.kind)
+    if kind == ValidationKind.CORRECTED and not (payload.found_value_brl or payload.found_miles):
+        raise HTTPException(status_code=400, detail="Correção exige valor (R$) ou milhas.")
+
+    # Confere posse da thread — mas NÃO falha se já foi deletada (snapshot basta).
+    try:
+        if repo.get_thread(payload.thread_id, session.user_id) is None:
+            logger.warning("validation: thread %s ausente/deletada — aceitando assim mesmo", payload.thread_id)
+    except Exception:
+        pass
+
+    obs = payload.observations
+    if obs:
+        obs = sanitize_user_message(obs, max_chars=2000).text
+
+    v = QuoteValidation(
+        user_id=session.user_id, thread_id=payload.thread_id, message_id=payload.message_id,
+        offer_id=payload.offer_id, kind=kind, system_offer=payload.system_offer or {},
+        found_airline=payload.found_airline if kind == ValidationKind.CORRECTED else None,
+        found_program=payload.found_program if kind == ValidationKind.CORRECTED else None,
+        emission_method=payload.emission_method if kind == ValidationKind.CORRECTED else None,
+        found_value_brl=payload.found_value_brl if kind == ValidationKind.CORRECTED else None,
+        found_miles=payload.found_miles if kind == ValidationKind.CORRECTED else None,
+        observations=obs if kind == ValidationKind.CORRECTED else None,
+    )
+    saved = repo.create_validation(v)
+    audit.log("validation.create", user_id=session.user_id,
+              detail={"kind": payload.kind, "offer_id": payload.offer_id})
+    return _validation_to_dto(saved)
+
+
+@router.get("/validations/stats", response_model=ValidationStatsDTO)
+def validation_stats_endpoint(
+    session: AuthSession = SessionDep, repo: ChatRepository = RepoDep,
+) -> ValidationStatsDTO:
+    return ValidationStatsDTO(**repo.validation_stats(session.user_id))
+
+
+@router.get("/validations/export")
+def validation_export_endpoint(
+    session: AuthSession = SessionDep, repo: ChatRepository = RepoDep,
+) -> StreamingResponse:
+    """CSV da tabela comparativa (pra análise fora do app)."""
+    cols = ["created_at", "kind", "route", "system_airline", "system_value_brl",
+            "found_airline", "found_program", "emission_method", "found_value_brl",
+            "found_miles", "delta_brl", "observations"]
+
+    def _gen():
+        import csv, io
+        buf = io.StringIO()
+        w = csv.writer(buf)
+        w.writerow(cols)
+        yield buf.getvalue(); buf.seek(0); buf.truncate(0)
+        for v in repo.list_validations(session.user_id, limit=5000):
+            so = v.system_offer or {}
+            sys_val = so.get("equivalent_brl") or so.get("price_brl")
+            delta = (float(sys_val) - float(v.found_value_brl)) if (sys_val and v.found_value_brl) else ""
+            w.writerow([
+                v.created_at.isoformat(),
+                v.kind.value if isinstance(v.kind, ValidationKind) else v.kind,
+                so.get("route", ""), so.get("airline", ""), sys_val if sys_val is not None else "",
+                v.found_airline or "", v.found_program or "", v.emission_method or "",
+                v.found_value_brl if v.found_value_brl is not None else "",
+                v.found_miles if v.found_miles is not None else "",
+                round(delta, 2) if delta != "" else "", (v.observations or "").replace("\n", " "),
+            ])
+            yield buf.getvalue(); buf.seek(0); buf.truncate(0)
+
+    return StreamingResponse(
+        _gen(), media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=validacoes.csv"},
+    )
+
+
+@router.get("/validations", response_model=List[QuoteValidationDTO])
+def list_validations_endpoint(
+    kind: Optional[str] = None, limit: int = 200, offset: int = 0,
+    session: AuthSession = SessionDep, repo: ChatRepository = RepoDep,
+) -> List[QuoteValidationDTO]:
+    k = ValidationKind(kind) if kind in ("validated", "corrected") else None
+    items = repo.list_validations(session.user_id, kind=k, limit=min(limit, 500), offset=offset)
+    return [_validation_to_dto(v) for v in items]
+
+
+@router.get("/threads/{thread_id}/validations", response_model=List[QuoteValidationDTO])
+def thread_validations_endpoint(
+    thread_id: str, session: AuthSession = SessionDep, repo: ChatRepository = RepoDep,
+) -> List[QuoteValidationDTO]:
+    """Pra a UI marcar os cards já validados/corrigidos ao reabrir a thread."""
+    return [_validation_to_dto(v) for v in repo.list_validations_by_thread(thread_id, session.user_id)]
+
+
+@router.post("/bug-reports", response_model=BugReportDTO)
+def create_bug_report_endpoint(
+    payload: CreateBugReportRequestDTO,
+    session: AuthSession = SessionDep,
+    repo: ChatRepository = RepoDep,
+    audit: AuditLogger = AuditDep,
+) -> BugReportDTO:
+    desc = sanitize_user_message(payload.description, max_chars=2000).text
+    context = dict(payload.context or {})
+    # Completa com a última mensagem do assistente (consulta leve), se não veio.
+    if "last_assistant_message_id" not in context:
+        try:
+            msgs = repo.list_messages(payload.thread_id, session.user_id, limit=20)
+            last_ai = next((m for m in reversed(msgs) if m.role == MessageRole.ASSISTANT), None)
+            if last_ai:
+                context["last_assistant_message_id"] = last_ai.id
+        except Exception:
+            pass
+    b = BugReport(user_id=session.user_id, thread_id=payload.thread_id,
+                  description=desc, context=context)
+    saved = repo.create_bug_report(b)
+    audit.log("bug_report.create", user_id=session.user_id, detail={"thread_id": payload.thread_id})
+    return BugReportDTO(id=saved.id, thread_id=saved.thread_id, description=saved.description,
+                        context=saved.context, status=saved.status,
+                        created_at=saved.created_at.isoformat())
+
+
+@router.get("/bug-reports", response_model=List[BugReportDTO])
+def list_bug_reports_endpoint(
+    status: Optional[str] = None, session: AuthSession = SessionDep,
+    repo: ChatRepository = RepoDep,
+) -> List[BugReportDTO]:
+    items = repo.list_bug_reports(session.user_id, status=status)
+    return [BugReportDTO(id=b.id, thread_id=b.thread_id, description=b.description,
+                         context=b.context, status=b.status, created_at=b.created_at.isoformat())
+            for b in items]

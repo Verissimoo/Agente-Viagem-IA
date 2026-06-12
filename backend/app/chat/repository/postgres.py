@@ -17,11 +17,14 @@ from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
 
 from backend.app.chat.domain.models import (
+    BugReport,
     ChatMessage,
     ChatThread,
     MessageRole,
     Quote,
     QuoteStatus,
+    QuoteValidation,
+    ValidationKind,
     User,
 )
 from backend.app.chat.repository.interface import ChatRepository
@@ -371,8 +374,169 @@ class PostgresRepository(ChatRepository):
             cur.execute(sql, params)
             return [_row_to_quote(r) for r in cur.fetchall()]
 
+    # ──────────── validações internas ────────────
+    def create_validation(self, validation: QuoteValidation) -> QuoteValidation:
+        v = validation
+        kind = v.kind.value if isinstance(v.kind, ValidationKind) else v.kind
+        with self._conn() as conn, conn.cursor() as cur:
+            # Idempotência: mesmo user+offer+kind → devolve o existente (ON CONFLICT).
+            cur.execute(
+                """
+                INSERT INTO chat.quote_validations
+                    (id, user_id, thread_id, message_id, offer_id, kind, system_offer,
+                     found_airline, found_program, emission_method, found_value_brl,
+                     found_miles, observations, created_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                ON CONFLICT (user_id, offer_id, kind) WHERE offer_id IS NOT NULL
+                DO NOTHING
+                RETURNING *;
+                """,
+                (v.id, v.user_id, v.thread_id, v.message_id, v.offer_id, kind,
+                 _jsonb(v.system_offer), v.found_airline, v.found_program,
+                 v.emission_method, v.found_value_brl, v.found_miles, v.observations,
+                 v.created_at),
+            )
+            row = cur.fetchone()
+            conn.commit()
+            if row:
+                return _row_to_validation(row)
+            # Conflito → já existia; busca e devolve.
+            cur.execute(
+                "SELECT * FROM chat.quote_validations "
+                "WHERE user_id=%s AND offer_id=%s AND kind=%s LIMIT 1;",
+                (v.user_id, v.offer_id, kind),
+            )
+            existing = cur.fetchone()
+            return _row_to_validation(existing) if existing else v
+
+    def list_validations(
+        self, user_id: str, *, kind: Optional[ValidationKind] = None,
+        limit: int = 200, offset: int = 0,
+    ) -> List[QuoteValidation]:
+        sql = "SELECT * FROM chat.quote_validations WHERE user_id=%s"
+        params: list = [user_id]
+        if kind is not None:
+            sql += " AND kind=%s"
+            params.append(kind.value if isinstance(kind, ValidationKind) else kind)
+        sql += " ORDER BY created_at DESC LIMIT %s OFFSET %s;"
+        params += [limit, offset]
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(sql, tuple(params))
+            return [_row_to_validation(r) for r in cur.fetchall()]
+
+    def list_validations_by_thread(self, thread_id: str, user_id: str) -> List[QuoteValidation]:
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM chat.quote_validations "
+                "WHERE thread_id=%s AND user_id=%s ORDER BY created_at DESC;",
+                (thread_id, user_id),
+            )
+            return [_row_to_validation(r) for r in cur.fetchall()]
+
+    def validation_stats(self, user_id: str) -> dict:
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT
+                  COUNT(*)                                              AS total,
+                  COUNT(*) FILTER (WHERE kind='validated')              AS validated,
+                  COUNT(*) FILTER (WHERE kind='corrected')              AS corrected,
+                  AVG(COALESCE((system_offer->>'equivalent_brl')::numeric,
+                               (system_offer->>'price_brl')::numeric) - found_value_brl)
+                    FILTER (WHERE kind='corrected' AND found_value_brl IS NOT NULL)
+                                                                        AS avg_delta
+                  FROM chat.quote_validations WHERE user_id=%s;
+                """,
+                (user_id,),
+            )
+            agg = cur.fetchone() or {}
+            cur.execute(
+                "SELECT emission_method AS k, COUNT(*) AS n FROM chat.quote_validations "
+                "WHERE user_id=%s AND kind='corrected' AND emission_method IS NOT NULL "
+                "GROUP BY emission_method;",
+                (user_id,),
+            )
+            by_method = {r["k"]: int(r["n"]) for r in cur.fetchall()}
+            cur.execute(
+                "SELECT found_airline AS k, COUNT(*) AS n FROM chat.quote_validations "
+                "WHERE user_id=%s AND kind='corrected' AND found_airline IS NOT NULL "
+                "GROUP BY found_airline;",
+                (user_id,),
+            )
+            by_airline = {r["k"]: int(r["n"]) for r in cur.fetchall()}
+        validated = int(agg.get("validated") or 0)
+        corrected = int(agg.get("corrected") or 0)
+        denom = validated + corrected
+        avg_delta = agg.get("avg_delta")
+        return {
+            "total": int(agg.get("total") or 0),
+            "validated_count": validated,
+            "corrected_count": corrected,
+            "accuracy_pct": round(100.0 * validated / denom, 1) if denom else 0.0,
+            "avg_delta_brl": round(float(avg_delta), 2) if avg_delta is not None else None,
+            "by_method": by_method,
+            "by_airline": by_airline,
+        }
+
+    # ──────────── bug reports ────────────
+    def create_bug_report(self, report: BugReport) -> BugReport:
+        b = report
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO chat.bug_reports
+                    (id, user_id, thread_id, description, context, status, created_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s) RETURNING *;
+                """,
+                (b.id, b.user_id, b.thread_id, b.description, _jsonb(b.context),
+                 b.status, b.created_at),
+            )
+            row = cur.fetchone()
+            conn.commit()
+            return _row_to_bug(row) if row else b
+
+    def list_bug_reports(
+        self, user_id: str, *, status: Optional[str] = None, limit: int = 200,
+    ) -> List[BugReport]:
+        sql = "SELECT * FROM chat.bug_reports WHERE user_id=%s"
+        params: list = [user_id]
+        if status is not None:
+            sql += " AND status=%s"
+            params.append(status)
+        sql += " ORDER BY created_at DESC LIMIT %s;"
+        params.append(limit)
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(sql, tuple(params))
+            return [_row_to_bug(r) for r in cur.fetchall()]
+
 
 # ──────────── row → domain mappers ────────────
+
+def _row_to_validation(row: dict) -> QuoteValidation:
+    so = row.get("system_offer")
+    if isinstance(so, str):
+        so = json.loads(so)
+    return QuoteValidation(
+        id=row["id"], user_id=row["user_id"], thread_id=row["thread_id"],
+        message_id=row.get("message_id"), offer_id=row.get("offer_id"),
+        kind=ValidationKind(row["kind"]), system_offer=so or {},
+        found_airline=row.get("found_airline"), found_program=row.get("found_program"),
+        emission_method=row.get("emission_method"),
+        found_value_brl=float(row["found_value_brl"]) if row.get("found_value_brl") is not None else None,
+        found_miles=row.get("found_miles"), observations=row.get("observations"),
+        created_at=_to_aware(row["created_at"]),
+    )
+
+
+def _row_to_bug(row: dict) -> BugReport:
+    ctx = row.get("context")
+    if isinstance(ctx, str):
+        ctx = json.loads(ctx)
+    return BugReport(
+        id=row["id"], user_id=row["user_id"], thread_id=row["thread_id"],
+        description=row["description"], context=ctx or {}, status=row["status"],
+        created_at=_to_aware(row["created_at"]),
+    )
 
 def _row_to_thread(row: dict) -> ChatThread:
     snap = row["state_snapshot"]

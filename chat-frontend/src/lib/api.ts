@@ -435,3 +435,85 @@ export const quotes = {
     return await resp.blob();
   },
 };
+
+
+// ─── Validação interna (sistema vs. manual) + bug reports ───────────
+export interface QuoteValidation {
+  id: string;
+  thread_id: string;
+  message_id?: string | null;
+  offer_id?: string | null;
+  kind: "validated" | "corrected";
+  system_offer: Record<string, unknown>;
+  found_airline?: string | null;
+  found_program?: string | null;
+  emission_method?: string | null;
+  found_value_brl?: number | null;
+  found_miles?: number | null;
+  observations?: string | null;
+  created_at: string;
+}
+
+export interface ValidationStats {
+  total: number;
+  validated_count: number;
+  corrected_count: number;
+  accuracy_pct: number;
+  avg_delta_brl?: number | null;
+  by_method: Record<string, number>;
+  by_airline: Record<string, number>;
+}
+
+export interface BugReport {
+  id: string;
+  thread_id: string;
+  description: string;
+  context: Record<string, unknown>;
+  status: string;
+  created_at: string;
+}
+
+export interface CreateValidationPayload {
+  thread_id: string;
+  message_id?: string | null;
+  offer_id?: string | null;
+  kind: "validated" | "corrected";
+  system_offer: Record<string, unknown>;
+  found_airline?: string;
+  found_program?: string;
+  emission_method?: string;
+  found_value_brl?: number;
+  found_miles?: number;
+  observations?: string;
+}
+
+export const validations = {
+  create: (token: string, payload: CreateValidationPayload) =>
+    request<QuoteValidation>("/chat/validations", {
+      method: "POST", token, body: JSON.stringify(payload),
+    }),
+  byThread: (token: string, threadId: string) =>
+    request<QuoteValidation[]>(`/chat/threads/${threadId}/validations`, { token }),
+  list: (token: string, kind?: "validated" | "corrected") =>
+    request<QuoteValidation[]>(
+      `/chat/validations${kind ? `?kind=${kind}` : ""}`, { token }),
+  stats: (token: string) =>
+    request<ValidationStats>("/chat/validations/stats", { token }),
+  downloadCsv: async (token: string) => {
+    const resp = await fetch(`${BASE}/chat/validations/export`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!resp.ok) throw new ApiError(resp.status, "Falha ao exportar CSV", null);
+    return await resp.blob();
+  },
+};
+
+export const bugReports = {
+  create: (token: string, threadId: string, description: string,
+           context?: Record<string, unknown>) =>
+    request<BugReport>("/chat/bug-reports", {
+      method: "POST", token,
+      body: JSON.stringify({ thread_id: threadId, description, context: context ?? {} }),
+    }),
+  list: (token: string) => request<BugReport[]>("/chat/bug-reports", { token }),
+};

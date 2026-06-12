@@ -8,13 +8,16 @@ from __future__ import annotations
 
 import threading
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from backend.app.chat.domain.models import (
+    BugReport,
     ChatMessage,
     ChatThread,
     Quote,
     QuoteStatus,
+    QuoteValidation,
+    ValidationKind,
     User,
 )
 from backend.app.chat.repository.interface import ChatRepository
@@ -27,6 +30,8 @@ class InMemoryRepository(ChatRepository):
         self._threads: Dict[str, ChatThread] = {}
         self._messages: Dict[str, List[ChatMessage]] = {}
         self._quotes: Dict[str, Quote] = {}
+        self._validations: List[QuoteValidation] = []
+        self._bug_reports: List[BugReport] = []
 
     # --- Users ---
     def upsert_user(self, user: User) -> User:
@@ -152,3 +157,84 @@ class InMemoryRepository(ChatRepository):
                 out = [q for q in out if q.status == status]
             out.sort(key=lambda q: q.updated_at, reverse=True)
             return out
+
+    # --- Validações internas ---
+    def create_validation(self, validation: QuoteValidation) -> QuoteValidation:
+        with self._lock:
+            # Idempotência: mesmo user+offer+kind → devolve o existente.
+            if validation.offer_id:
+                for v in self._validations:
+                    if (v.user_id == validation.user_id and v.offer_id == validation.offer_id
+                            and v.kind == validation.kind):
+                        return v
+            self._validations.append(validation)
+            return validation
+
+    def list_validations(
+        self, user_id: str, *, kind: Optional[ValidationKind] = None,
+        limit: int = 200, offset: int = 0,
+    ) -> List[QuoteValidation]:
+        with self._lock:
+            out = [v for v in self._validations if v.user_id == user_id]
+            if kind is not None:
+                out = [v for v in out if v.kind == kind]
+            out.sort(key=lambda v: v.created_at, reverse=True)
+            return out[offset:offset + limit]
+
+    def list_validations_by_thread(self, thread_id: str, user_id: str) -> List[QuoteValidation]:
+        with self._lock:
+            return [v for v in self._validations
+                    if v.thread_id == thread_id and v.user_id == user_id]
+
+    def validation_stats(self, user_id: str) -> Dict[str, Any]:
+        with self._lock:
+            vs = [v for v in self._validations if v.user_id == user_id]
+        return _compute_validation_stats(vs)
+
+    # --- Bug reports ---
+    def create_bug_report(self, report: BugReport) -> BugReport:
+        with self._lock:
+            self._bug_reports.append(report)
+            return report
+
+    def list_bug_reports(
+        self, user_id: str, *, status: Optional[str] = None, limit: int = 200,
+    ) -> List[BugReport]:
+        with self._lock:
+            out = [b for b in self._bug_reports if b.user_id == user_id]
+            if status is not None:
+                out = [b for b in out if b.status == status]
+            out.sort(key=lambda b: b.created_at, reverse=True)
+            return out[:limit]
+
+
+def _compute_validation_stats(vs: List[QuoteValidation]) -> Dict[str, Any]:
+    """Agregado em Python (usado pelo memory; o postgres faz via SQL).
+    accuracy = validated / (validated+corrected); delta médio = sistema − manual."""
+    total = len(vs)
+    validated = sum(1 for v in vs if v.kind == ValidationKind.VALIDATED)
+    corrected = total - validated
+    denom = validated + corrected
+    accuracy = round(100.0 * validated / denom, 1) if denom else 0.0
+
+    deltas, by_method, by_airline = [], {}, {}
+    for v in vs:
+        if v.kind != ValidationKind.CORRECTED:
+            continue
+        sys_val = (v.system_offer or {}).get("equivalent_brl") or (v.system_offer or {}).get("price_brl")
+        if sys_val is not None and v.found_value_brl is not None:
+            deltas.append(float(sys_val) - float(v.found_value_brl))
+        if v.emission_method:
+            by_method[v.emission_method] = by_method.get(v.emission_method, 0) + 1
+        if v.found_airline:
+            by_airline[v.found_airline] = by_airline.get(v.found_airline, 0) + 1
+
+    return {
+        "total": total,
+        "validated_count": validated,
+        "corrected_count": corrected,
+        "accuracy_pct": accuracy,
+        "avg_delta_brl": round(sum(deltas) / len(deltas), 2) if deltas else None,
+        "by_method": by_method,
+        "by_airline": by_airline,
+    }
