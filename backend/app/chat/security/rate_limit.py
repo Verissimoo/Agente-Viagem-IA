@@ -66,6 +66,15 @@ class RateLimiter:
             window_s=3600.0,
         )
 
+    def check_miles_healthcheck(self, user_id: str) -> None:
+        # Diagnóstico faz N chamadas reais — limite baixo por minuto.
+        self._check(
+            user_id,
+            "miles_healthcheck",
+            max_hits=settings.miles_healthcheck_rate_per_min,
+            window_s=60.0,
+        )
+
 
 @lru_cache(maxsize=1)
 def get_rate_limiter() -> RateLimiter:

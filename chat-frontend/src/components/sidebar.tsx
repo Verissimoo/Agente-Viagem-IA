@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  Plus, MessageSquare, LogOut, Moon, Sun, ChevronUp, Trash2, Loader2, Settings,
+  Plus, MessageSquare, LogOut, Moon, Sun, ChevronUp, Trash2, Loader2, Settings, Activity,
 } from "lucide-react";
 import type { Thread, Session } from "@/lib/api";
 import { useTheme } from "@/lib/theme";
@@ -211,6 +211,14 @@ export default function Sidebar({
               onClick={() => setMenuOpen(false)}
             >
               <Settings size={14} className="text-zinc-400" /> Tabela de milhas
+            </Link>
+            <div className="h-px bg-zinc-800" />
+            <Link
+              href="/settings/diagnostics"
+              className="w-full px-3 py-2.5 text-sm text-left text-zinc-200 hover:bg-zinc-800/80 flex items-center gap-2"
+              onClick={() => setMenuOpen(false)}
+            >
+              <Activity size={14} className="text-zinc-400" /> Status dos programas
             </Link>
             <div className="h-px bg-zinc-800" />
             <button

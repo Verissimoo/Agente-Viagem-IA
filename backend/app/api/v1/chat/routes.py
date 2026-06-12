@@ -27,6 +27,24 @@ from fastapi.responses import Response, StreamingResponse
 from langchain_core.messages import AIMessage, HumanMessage
 
 from backend.app.ai.agents.graph import get_graph
+from backend.app.ai.agents.intake import looks_like_new_quote
+
+# Campos de RESULTADO que NÃO podem sobreviver a uma nova cotação no mesmo
+# thread — senão o router vê `presented_offers` e vai pra refinement (repetindo
+# o resultado anterior). Limpos antes de invocar o grafo quando a mensagem do
+# usuário parece abrir uma busca nova.
+_RESULT_STATE_FIELDS = (
+    "presented_offers", "presented_at", "search_results",
+    "validation_report", "approved_offer_id", "quote_id",
+)
+
+
+def _clear_results_if_new_quote(state: dict, user_text: str) -> None:
+    """Zera os campos de resultado do turno anterior se a mensagem abre uma nova
+    cotação (rota nova). Mutação in-place no state que vai pro grafo."""
+    if looks_like_new_quote(user_text):
+        for k in _RESULT_STATE_FIELDS:
+            state.pop(k, None)
 from backend.app.api.v1.chat.deps import (
     AuditDep,
     RepoDep,
@@ -39,6 +57,9 @@ from backend.app.api.v1.chat.schemas import (
     LoginRequestDTO,
     MessageDTO,
     MessageListResponseDTO,
+    MilesHealthcheckRequestDTO,
+    MilesHealthcheckResponseDTO,
+    ProgramHealthDTO,
     ProgramRatesDTO,
     QuoteDTO,
     QuoteListResponseDTO,
@@ -298,6 +319,7 @@ def send_message(
 
     # 7. Estado inicial: continua do snapshot armazenado, ou começa zerado
     state = dict(thread.state_snapshot or {})
+    _clear_results_if_new_quote(state, sanitized.text)  # nova cotação → não repete resultado
     state.update({
         "user_id": session.user_id,
         "thread_id": thread_id,
@@ -444,6 +466,7 @@ def send_message_stream(
     history = repo.list_messages(thread_id, session.user_id, limit=50)
     lc_messages = _to_langchain_messages(history)
     state = dict(thread.state_snapshot or {})
+    _clear_results_if_new_quote(state, sanitized.text)  # nova cotação → não repete resultado
     state.update({
         "user_id": session.user_id,
         "thread_id": thread_id,
@@ -893,4 +916,49 @@ def _persist_assistant_only(
         thread_id=thread_id,
         user_message=_msg_to_dto(user_msg),
         assistant_message=_msg_to_dto(assistant_msg),
+    )
+
+
+@router.post("/diagnostics/miles-healthcheck", response_model=MilesHealthcheckResponseDTO)
+def miles_healthcheck_endpoint(
+    payload: MilesHealthcheckRequestDTO | None = None,
+    session: AuthSession = SessionDep,
+    audit: AuditLogger = AuditDep,
+) -> MilesHealthcheckResponseDTO:
+    """Diagnóstico INTERNO do vendedor logado: testa cada programa de MILHAS em
+    rotas-canário (busca real, hoje+30, só-ida). Expõe nomes de programa de
+    propósito (não passa pelo output_filter do chat). Auth + rate-limit baixo
+    (faz N chamadas reais às APIs de milhas)."""
+    from dataclasses import asdict
+    from datetime import datetime, timezone
+    import time as _time
+
+    try:
+        get_rate_limiter().check_miles_healthcheck(session.user_id)
+    except RateLimitExceeded as e:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Muitos testes seguidos — aguarde {int(e.retry_in_s)}s e tente de novo.",
+        )
+
+    programs = payload.programs if payload else None
+    audit.log("miles_healthcheck.run", user_id=session.user_id,
+              detail={"programs": programs or "all"})
+
+    from backend.app.services.miles_healthcheck import run_miles_healthcheck
+    t0 = _time.perf_counter()
+    try:
+        results = run_miles_healthcheck(programs)
+    except Exception as e:  # pipeline nunca derruba — mas o endpoint não pode 500 cru
+        logger.exception("miles_healthcheck falhou")
+        raise HTTPException(status_code=500, detail=f"Falha no health-check: {e}")
+    total_ms = round((_time.perf_counter() - t0) * 1000.0, 1)
+
+    return MilesHealthcheckResponseDTO(
+        results=[ProgramHealthDTO(**asdict(r)) for r in results],
+        ran_at=datetime.now(timezone.utc).isoformat(),
+        total_ms=total_ms,
+        ok_count=sum(1 for r in results if r.status == "ok"),
+        empty_count=sum(1 for r in results if r.status == "empty"),
+        error_count=sum(1 for r in results if r.status in ("error", "timeout")),
     )

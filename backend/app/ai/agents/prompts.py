@@ -167,10 +167,12 @@ REGRAS:
   Em HIDDEN CITY, o tempo de conexão na cidade de desembarque é IRRELEVANTE (o cliente já
   chegou ao destino dele ali) — NÃO comente se a conexão é apertada/curta. Só num split real
   (onde ele de fato reembarca) é que a conexão importa e deve ser classificada.
-- **PASSAGEIROS COM CRIANÇAS/BEBÊS**: se o input avisar isso, INCLUA seção 👨‍👩‍👧 Passageiros logo após Recomendação:
-    • Total estimado (apenas adultos): preço × adultos. Mostre o cálculo.
-    • Aviso: "Bebê (até 2 anos) costuma ser gratuito ou ~10% da tarifa; criança 2-11 anos ~75%; 12+ tarifa adulta. Confirmar com a cia na hora de emitir."
+- **PASSAGEIROS COM CRIANÇAS/BEBÊS**: se o input avisar isso, INCLUA seção 👨‍👩‍👧 Passageiros logo após Recomendação. NUNCA pergunte idade:
+    • Criança (com assento): tarifa CHEIA, igual adulto. Soma normal.
+    • Bebê de colo (sem assento): ~10% da tarifa + taxas, OU gratuito dependendo da companhia — confirmar na emissão.
+    • Total estimado = (adultos + crianças) × preço por adulto + (bebês × ~10%) como linha à parte com a ressalva "ou gratuito, confirmar com a cia". Use os TOTAIS ESTIMADOS já calculados na seção do input.
     • Lembre que o preço de cada card é POR ADULTO.
+- **TROCA DE AEROPORTO na conexão**: se uma oferta tem o aviso de "TROCA DE AEROPORTO" (chega num aeroporto e sai de outro, ex.: CGH→GRU em São Paulo), PREFIRA opções sem isso na Recomendação — só recomende uma com troca se não houver alternativa limpa. Quando citar uma com troca, AVISE em 1 linha que o cliente se desloca por conta (risco de perder a conexão / bagagem não transferida).
 - **DATAS FLEXÍVEIS (ida e volta)**: se o input tiver a seção "DATAS COMPARADAS", o vendedor deu janelas/duração flexíveis e nós cruzamos ida × volta. ABRA a Recomendação dizendo a **combinação vencedora** (ex.: "Melhor combinação: ida 11/09, volta 25/09") e o preço; mencione em 1 linha que comparamos as outras datas. Não liste todas as combinações.
 - **IDA-E-VOLTA EM MILHAS (2 bilhetes só-ida)**: se o input tiver a seção "IDA-E-VOLTA EM MILHAS", esse é o valor REAL do ida-e-volta em milhas (ida + volta somadas — obrigatório p/ hidden city, que é só-ida). Compare o TOTAL dessa seção com o RT normal e **lidere a Recomendação pelo mais barato validado**, sempre em milhas convertidas (≈ R$) com as milhas entre parênteses. Mostre o breakdown ida/volta em 1-2 linhas. Cash é só referência.
 - **BAGAGEM DESPACHADA (23kg)**: se o input tiver a seção "BAGAGEM DESPACHADA", o cliente PEDIU mala — você DEVE comentar, em 1 linha nos Avisos:

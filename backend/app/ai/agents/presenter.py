@@ -85,6 +85,8 @@ _FILTER_PATTERNS: List[Tuple[str, str, str]] = [
     # (regex, label_humano, category_target)
     (r"\b(split|quebra de trecho|trecho dividido)\b", "split de trecho", "Split"),
     (r"\b(hidden city|skiplagged|rota alternativa|rota otimizada)\b", "hidden city", "Hidden City"),
+    (r"\b(sem troca de aeroport|sem trocar de aeroport|sem mudar de aeroport|mesmo aeroporto)\w*",
+     "sem troca de aeroporto", "__no_airport_change__"),
     (r"\b(direto|sem escala|n[aã]o.*conex)\b", "voo direto", "__direct__"),
     (r"\b(em milhas|usando milhas|pagar em milhas|pontos)\b", "em milhas", "Milhas"),
     (r"\b(em dinheiro|em cash|n[aã]o.*milhas)\b", "em dinheiro", "Cash direto"),
@@ -117,6 +119,8 @@ def _apply_filter(offers: List[Dict[str, Any]], target: str) -> List[Dict[str, A
             o for o in offers
             if len((o.get("outbound") or {}).get("segments") or []) <= 1
         ]
+    if target == "__no_airport_change__":
+        return [o for o in offers if not _has_airport_change(o)]
     return [
         o for o in offers
         if (o.get("category") or "").lower().startswith(target.lower())
@@ -249,6 +253,27 @@ _RISK_PENALTY = {
 }
 
 
+def _has_airport_change(offer: Dict[str, Any]) -> bool:
+    """True se alguma conexão exige TROCA DE AEROPORTO (auto-transfer): um segmento
+    CHEGA num aeroporto e o PRÓXIMO PARTE de outro (ex.: chega em CGH e sai de GRU,
+    ambos São Paulo). O passageiro se desloca por conta — arriscado, perde a
+    conexão se atrasar e a bagagem não é transferida."""
+    for itin_key in ("outbound", "inbound"):
+        segs = (offer.get(itin_key) or {}).get("segments") or []
+        for i in range(len(segs) - 1):
+            arr = str(segs[i].get("destination") or "").upper().strip()
+            dep = str(segs[i + 1].get("origin") or "").upper().strip()
+            if arr and dep and arr != dep:
+                return True
+    return False
+
+
+# Penalidade FORTE pra troca de aeroporto na conexão — empurra essas opções pra
+# baixo do ranking, então as opções "limpas" (mesmo aeroporto) viram as
+# recomendadas automaticamente, mesmo sendo um pouco mais caras.
+_AIRPORT_CHANGE_PENALTY = 1.30
+
+
 def _recommendation_score(offer: Dict[str, Any]) -> float:
     """Score pra escolher a oferta RECOMENDADA: preço × penalty de risco.
 
@@ -258,7 +283,10 @@ def _recommendation_score(offer: Dict[str, Any]) -> float:
     """
     base = _offer_sort_key(offer)
     bucket = _category_bucket(offer)
-    return base * _RISK_PENALTY.get(bucket, 1.0)
+    score = base * _RISK_PENALTY.get(bucket, 1.0)
+    if _has_airport_change(offer):
+        score *= _AIRPORT_CHANGE_PENALTY
+    return score
 
 
 def smart_diversify(
@@ -894,6 +922,21 @@ def presenter_node(state: ChatState) -> ChatState:
             all_presented = diversified
 
     presented = all_presented
+
+    # TROCA DE AEROPORTO na conexão (chega num aeroporto, sai de outro): marca a
+    # oferta com aviso + flag pro card. O score já empurrou essas pra baixo, então
+    # as "limpas" lideram; aqui só garantimos que, se aparecer, vem sinalizada.
+    _any_airport_change = False
+    for o in presented:
+        if _has_airport_change(o):
+            _any_airport_change = True
+            o["airport_change"] = True
+            note = ("⚠️ TROCA DE AEROPORTO na conexão (chega num aeroporto e sai de "
+                    "outro, ex.: CGH→GRU em São Paulo) — o cliente se desloca por "
+                    "conta, com risco de perder a conexão e a bagagem não ser transferida.")
+            existing = o.get("risk_notes")
+            o["risk_notes"] = f"{existing} · {note}" if existing else note
+
     top_for_prompt = presented[:_MAX_OFFERS_IN_PROMPT]
 
     slots = state.get("slots") or {}
@@ -903,11 +946,10 @@ def presenter_node(state: ChatState) -> ChatState:
     adults = int(slots.get("adults", 1) or 1)
     children = int(slots.get("children", 0) or 0)
     infants = int(slots.get("infants", 0) or 0)
-    ages = slots.get("children_ages") or []
+    # Sem idade: criança (assento, tarifa cheia) vs bebê de colo (~10%).
     pax_parts = [f"{adults} adulto{'s' if adults != 1 else ''}"]
     if children:
-        ages_str = f" ({', '.join(f'{a}a' for a in ages)})" if ages else ""
-        pax_parts.append(f"{children} criança{'s' if children != 1 else ''}{ages_str}")
+        pax_parts.append(f"{children} criança{'s' if children != 1 else ''}")
     if infants:
         pax_parts.append(f"{infants} bebê{'s' if infants != 1 else ''}")
     pax_label = " + ".join(pax_parts)
@@ -1120,6 +1162,14 @@ def presenter_node(state: ChatState) -> ChatState:
             "Mostre só essas — não cite outras categorias. ***\n"
         )
 
+    if _any_airport_change:
+        filter_note += (
+            "\n*** ATENÇÃO: há ofertas com TROCA DE AEROPORTO na conexão (chega num "
+            "aeroporto e sai de outro). LIDERE pelas opções SEM essa troca; se citar "
+            "uma com troca, avise que o cliente se desloca por conta (risco de perder "
+            "a conexão / bagagem não transferida). ***\n"
+        )
+
     # Aviso sobre flex truncado (se aplicável)
     flex_clamp = results.get("flex_clamped_info") if isinstance(results, dict) else None
     if flex_clamp:
@@ -1136,7 +1186,7 @@ def presenter_node(state: ChatState) -> ChatState:
     pax_note = ""
     pax_breakdowns_text = ""
     breakdowns_by_offer_id: Dict[str, Any] = {}
-    if children or infants or len(ages) > 0:
+    if children or infants:
         breakdown_blocks: List[str] = []
         for label, off in [
             ("RECOMENDADA", presented[0] if presented else None),
@@ -1150,7 +1200,7 @@ def presenter_node(state: ChatState) -> ChatState:
                 adult_miles=off.get("miles"),
                 adult_taxes_brl=off.get("taxes_brl"),
                 adults=adults,
-                children_ages=list(ages),
+                children=children,
                 infants=infants,
             )
             if off.get("offer_id"):
@@ -1209,7 +1259,7 @@ def presenter_node(state: ChatState) -> ChatState:
 
     # Calcula breakdown pra TODAS as ofertas — barato e útil pro PDF.
     # Só quando tem pax múltiplo (mais de 1 adulto OU crianças/bebês).
-    needs_breakdown = adults > 1 or children > 0 or infants > 0 or len(ages) > 0
+    needs_breakdown = adults > 1 or children > 0 or infants > 0
     if needs_breakdown:
         presented_with_breakdown = []
         for o in presented:
@@ -1219,7 +1269,7 @@ def presenter_node(state: ChatState) -> ChatState:
                 adult_miles=o.get("miles"),
                 adult_taxes_brl=o.get("taxes_brl"),
                 adults=adults,
-                children_ages=list(ages),
+                children=children,
                 infants=infants,
             )
             o_copy["pax_breakdown"] = {

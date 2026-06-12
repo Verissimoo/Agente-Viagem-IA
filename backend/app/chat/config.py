@@ -30,6 +30,12 @@ class ChatSettings:
     rate_limit_per_minute: int = int(os.getenv("CHAT_RATE_LIMIT_PER_MIN", "30"))
     rate_limit_searches_per_hour: int = int(os.getenv("CHAT_RATE_LIMIT_SEARCH_PER_HOUR", "60"))
 
+    # Health-check de programas de milhas (diagnóstico interno do vendedor). Faz
+    # N chamadas reais às APIs → orçamento de tempo + rate-limit baixo pra não
+    # virar vetor de custo/abuso.
+    miles_healthcheck_budget_s: float = float(os.getenv("MILES_HEALTHCHECK_BUDGET_S", "35"))
+    miles_healthcheck_rate_per_min: int = int(os.getenv("MILES_HEALTHCHECK_RATE_PER_MIN", "4"))
+
     # Neon Postgres (connection string completa) — vazio = repo in-memory
     database_url: str = os.getenv("DATABASE_URL", "")
 

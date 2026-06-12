@@ -1,13 +1,13 @@
 """Estimador de preço total por composição de passageiros.
 
-Baseado em convenções tarifárias amplamente adotadas (IATA + companhias
-domésticas BR):
-- Infant lap (0-1 ano, colo do adulto): ~10% da tarifa adulta
-- Criança (2-11 anos): ~75% da tarifa adulta
-- 12+: tarifa adulta integral
+Política de tarifa (decisão de negócio — SEM idade, só 2 faixas):
+- BEBÊ DE COLO (`infants`, <2 anos, sem assento): ~10% da tarifa adulta + taxas,
+  OU gratuito dependendo da companhia. Multiplicador 0.10 (estimativa).
+- CRIANÇA (`children`, com assento próprio): TARIFA CHEIA, igual adulto.
+  Multiplicador 1.0.
 
-São ESTIMATIVAS — cada cia/tarifa tem regras próprias. O usuário do
-sistema deve confirmar com a cia antes de emitir.
+A distinção bebê-de-colo vs criança vem da PALAVRA que o vendedor usa
+("1 bebê" vs "1 criança"), NÃO da idade — nunca perguntamos idade.
 """
 from __future__ import annotations
 
@@ -15,19 +15,15 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 
-# Multiplicadores médios — ajustáveis se quisermos calibrar por rota.
+# Bebê de colo = ~10% da tarifa adulta (ou gratuito, varia por cia). Criança com
+# assento = tarifa cheia (1.0). Sem faixas de idade.
 INFANT_MULTIPLIER = 0.10
-CHILD_MULTIPLIER = 0.75
-YOUTH_MULTIPLIER = 1.0   # 12+ é adulto
-
-INFANT_MAX_AGE = 1       # 0 e 1 anos = infant lap
-CHILD_MAX_AGE = 11       # 2-11 = criança
 
 
 @dataclass
 class PaxLine:
     """Uma linha do breakdown — 1 passageiro ou um grupo idêntico."""
-    label: str            # "Adulto", "Criança (3 anos, ~75%)", etc.
+    label: str            # "Adulto", "Criança (assento, tarifa cheia)", etc.
     quantity: int
     unit_price_brl: Optional[float] = None
     unit_miles: Optional[int] = None
@@ -44,16 +40,31 @@ class PaxBreakdown:
     grand_total_miles: int = 0
     grand_total_taxes_brl: float = 0.0
     is_miles: bool = False
-    has_estimate: bool = False   # True se algum line é estimativa (criança/bebê)
+    has_estimate: bool = False   # True se há bebê de colo (valor estimado/gratuito)
 
 
-def _categorize(age: int) -> tuple[str, float]:
-    """Retorna (label_categoria, multiplicador)."""
-    if age <= INFANT_MAX_AGE:
-        return (f"Bebê ({age} ano{'s' if age != 1 else ''}, colo, ~{int(INFANT_MULTIPLIER*100)}%)", INFANT_MULTIPLIER)
-    if age <= CHILD_MAX_AGE:
-        return (f"Criança ({age} anos, ~{int(CHILD_MULTIPLIER*100)}%)", CHILD_MULTIPLIER)
-    return (f"Adulto ({age} anos)", YOUTH_MULTIPLIER)
+def _add_group(out: PaxBreakdown, label: str, qty: int, mult: float, *,
+               adult_price_brl, adult_miles, adult_taxes_brl) -> None:
+    """Acrescenta uma linha de `qty` passageiros com multiplicador `mult`."""
+    if qty <= 0:
+        return
+    line = PaxLine(label=label, quantity=qty)
+    if adult_price_brl is not None:
+        unit = round(adult_price_brl * mult, 2)
+        line.unit_price_brl = unit
+        line.line_total_brl = round(unit * qty, 2)
+        out.grand_total_brl += line.line_total_brl
+    if adult_miles is not None:
+        unit_mi = int(round(adult_miles * mult))
+        line.unit_miles = unit_mi
+        line.line_total_miles = unit_mi * qty
+        out.grand_total_miles += line.line_total_miles
+    if adult_taxes_brl is not None:
+        unit_tax = round(adult_taxes_brl * mult, 2) if mult > 0 else 0.0
+        line.unit_taxes_brl = unit_tax
+        line.line_total_taxes_brl = round(unit_tax * qty, 2)
+        out.grand_total_taxes_brl += line.line_total_taxes_brl
+    out.lines.append(line)
 
 
 def estimate_pax_breakdown(
@@ -62,63 +73,26 @@ def estimate_pax_breakdown(
     adult_miles: Optional[int],
     adult_taxes_brl: Optional[float],
     adults: int,
-    children_ages: List[int],
+    children: int = 0,
     infants: int = 0,
 ) -> PaxBreakdown:
-    """Calcula breakdown e total estimado.
+    """Calcula o breakdown e o total estimado, sem idade.
 
-    `infants` é usado se você sabe que tem bebês mas não tem as idades
-    explícitas em children_ages (assume todos com 1 ano).
+    Adultos + crianças (com assento) pagam tarifa cheia; bebês de colo ~10%.
     """
     out = PaxBreakdown(is_miles=adult_miles is not None)
 
-    # Adultos
-    if adults > 0:
-        line = PaxLine(label="Adulto", quantity=adults)
-        if adult_price_brl is not None:
-            line.unit_price_brl = adult_price_brl
-            line.line_total_brl = adult_price_brl * adults
-            out.grand_total_brl += line.line_total_brl
-        if adult_miles is not None:
-            line.unit_miles = adult_miles
-            line.line_total_miles = adult_miles * adults
-            out.grand_total_miles += line.line_total_miles
-        if adult_taxes_brl is not None:
-            line.unit_taxes_brl = adult_taxes_brl
-            line.line_total_taxes_brl = adult_taxes_brl * adults
-            out.grand_total_taxes_brl += line.line_total_taxes_brl
-        out.lines.append(line)
-
-    # Bebês implícitos (sem idade): assume 1 ano
-    extra_ages = list(children_ages)
-    extra_ages.extend([1] * infants)
-
-    # Agrupa por (label/multiplier) — várias crianças com mesma idade viram 1 linha
-    groups: dict[tuple[str, float], int] = {}
-    for age in extra_ages:
-        cat = _categorize(age)
-        groups[cat] = groups.get(cat, 0) + 1
-
-    for (label, mult), qty in groups.items():
-        line = PaxLine(label=label, quantity=qty)
-        if adult_price_brl is not None:
-            unit = round(adult_price_brl * mult, 2)
-            line.unit_price_brl = unit
-            line.line_total_brl = round(unit * qty, 2)
-            out.grand_total_brl += line.line_total_brl
-        if adult_miles is not None:
-            unit_mi = int(round(adult_miles * mult))
-            line.unit_miles = unit_mi
-            line.line_total_miles = unit_mi * qty
-            out.grand_total_miles += line.line_total_miles
-        if adult_taxes_brl is not None:
-            unit_tax = round(adult_taxes_brl * mult, 2) if mult > 0 else 0.0
-            line.unit_taxes_brl = unit_tax
-            line.line_total_taxes_brl = round(unit_tax * qty, 2)
-            out.grand_total_taxes_brl += line.line_total_taxes_brl
-        out.lines.append(line)
-        if mult != 1.0:
-            out.has_estimate = True
+    _add_group(out, "Adulto", adults, 1.0,
+               adult_price_brl=adult_price_brl, adult_miles=adult_miles,
+               adult_taxes_brl=adult_taxes_brl)
+    _add_group(out, "Criança (assento, tarifa cheia)", children, 1.0,
+               adult_price_brl=adult_price_brl, adult_miles=adult_miles,
+               adult_taxes_brl=adult_taxes_brl)
+    _add_group(out, "Bebê de colo (~10% ou gratuito)", infants, INFANT_MULTIPLIER,
+               adult_price_brl=adult_price_brl, adult_miles=adult_miles,
+               adult_taxes_brl=adult_taxes_brl)
+    if infants > 0:
+        out.has_estimate = True
 
     return out
 
@@ -157,5 +131,5 @@ def format_breakdown_text(bd: PaxBreakdown) -> str:
     else:
         rows.append(f"  TOTAL ESTIMADO: R$ {bd.grand_total_brl:.2f}")
     if bd.has_estimate:
-        rows.append("  (criança/bebê é estimativa por convenção de mercado — confirmar com a cia)")
+        rows.append("  (bebê de colo é estimativa ~10% ou gratuito — confirmar com a cia)")
     return "\n".join(rows)

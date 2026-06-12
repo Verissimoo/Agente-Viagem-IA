@@ -8,8 +8,9 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from datetime import date
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
@@ -529,6 +530,25 @@ def is_new_search(intent: Dict[str, Any]) -> bool:
     return bool(intent.get("origin_iata") and intent.get("destination_iata"))
 
 
+# Sinais textuais de uma NOVA cotação (rota nova), mesmo que o IATA ainda não
+# resolva. Usado pelo router/routes pra LIMPAR resultados do turno anterior
+# antes do grafo — senão o router vê presented_offers e vai pra refinement
+# (repetindo o resultado velho). Lê melhor errar pro lado de "é nova busca"
+# (re-pesquisa) que reaproveitar resultado errado.
+_NEW_QUOTE_RE = re.compile(
+    r"\b[a-zà-ú]{3,}\s+(?:para|pra)\s+[a-zà-ú]{3,}"          # "X para/pra Y"
+    r"|[a-z]{2,4}\s*(?:->|→)\s*[a-z]{2,4}"                    # "X -> Y"
+    r"|\b(?:voo|passagem|cota[çc][aã]o)\s+(?:de|para|pra)\b"  # "voo de / passagem para"
+    r"|\bsaindo de\b|\bcom destino a\b",
+    re.IGNORECASE,
+)
+
+
+def looks_like_new_quote(text: str) -> bool:
+    """Heurística leve (regex) — a mensagem parece abrir uma cotação nova?"""
+    return bool(_NEW_QUOTE_RE.search(text or ""))
+
+
 # Slots de BUSCA que devem ser zerados quando uma nova rota é informada, pra
 # evitar que um thread fique "envenenado" com datas/janelas/flex de buscas
 # antigas. Passageiros/cabine (adults, children, cabin) NÃO são zerados —
@@ -740,11 +760,24 @@ def intake_node(state: ChatState) -> ChatState:
             if raw:
                 llm = to_slots(raw, today=date.today())
                 if llm.get("origin_iata") and llm.get("destination_iata"):
-                    # Interpretação completa da conversa → limpa janelas/flex
+                    # Interpretação COMPLETA da conversa → limpa janelas/flex
                     # antigos (evita herdar de turnos passados) e aplica a da LLM.
                     for k in ("date_end", "return_from", "return_to", "trip_duration_days"):
                         slots.pop(k, None)  # type: ignore[misc]
                     slots.update(llm)  # type: ignore[typeddict-item]
+                else:
+                    # Interpretação PARCIAL: aproveita o que veio mesmo sem a rota
+                    # completa. Aplica o lado de rota que resolveu, os NOMES de
+                    # cidade preservados, e os campos não-rota (pax, datas, flex).
+                    _ROUTE_SIDE = ("origin_iata", "origin_iatas", "origin_city",
+                                   "destination_iata", "destination_iatas", "destination_city")
+                    _NON_ROUTE = ("date_start", "date_end", "date_return", "return_from",
+                                  "return_to", "trip_type", "trip_duration_days", "flex_mode",
+                                  "adults", "children", "infants", "baggage_checked",
+                                  "direct_only", "cabin", "time_preference", "notes")
+                    for k in (*_ROUTE_SIDE, *_NON_ROUTE):
+                        if llm.get(k) is not None:
+                            slots[k] = llm[k]  # type: ignore[literal-required]
         except Exception as e:
             errors.append(f"llm_interpreter: {e}")
 
@@ -800,6 +833,28 @@ def intake_node(state: ChatState) -> ChatState:
             "intake loop guard: %d tentativas SEM essentials (falta %s) → mensagem de reset",
             attempts, missing_label,
         )
+        # B2: se falta só o IATA de UMA cidade cujo NOME a gente preservou (não
+        # resolveu na base), pergunta o aeroporto DESSA cidade — melhor que o
+        # reset genérico. Usa o nome guardado pela LLM (BUG 2) / regex.
+        unresolved_city = None
+        if missing_label == "origin_iata" and slots.get("origin_city") and not slots.get("origin_iata"):
+            unresolved_city = slots["origin_city"]
+        elif missing_label == "destination_iata" and slots.get("destination_city") and not slots.get("destination_iata"):
+            unresolved_city = slots["destination_city"]
+        if unresolved_city:
+            ask = (
+                f"Não encontrei o aeroporto de **{unresolved_city}** na minha base. "
+                f"Confirma a cidade/país, ou me passa o código IATA de 3 letras "
+                f"(ex.: Marselha é MRS)."
+            )
+            return {
+                **state, "slots": slots,
+                "intake_complete": False, "awaiting_field": None,
+                "intake_attempts": 0,
+                "messages": [AIMessage(content=ask)],
+                "next_node": "end", "errors": errors,
+            }
+
         readable_missing = {
             "origin_iata": "aeroporto de origem",
             "destination_iata": "aeroporto de destino",
@@ -848,15 +903,11 @@ def intake_node(state: ChatState) -> ChatState:
 
 
 def _children_lack_ages(slots: IntakeSlots) -> bool:
-    """Detecta se há crianças/bebês mas sem todas as idades — não pode
-    cotar sem isso porque a tarifa varia bastante por faixa etária."""
-    children = int(slots.get("children", 0) or 0)
-    infants = int(slots.get("infants", 0) or 0)
-    total_minors = children + infants
-    if total_minors == 0:
-        return False
-    ages = slots.get("children_ages") or []
-    return len(ages) < total_minors
+    """DESATIVADO (decisão de negócio): nunca perguntamos idade. A política é só
+    bebê-de-colo (`infants`, ~10%/gratuito) vs criança-com-assento (`children`,
+    tarifa cheia) — a palavra do vendedor já distingue. A cotação NÃO trava
+    pedindo idade. Ver pricing.py."""
+    return False
 
 
 def _ask_children_ages(slots: IntakeSlots) -> str:

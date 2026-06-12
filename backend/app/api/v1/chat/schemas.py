@@ -138,3 +138,30 @@ class RatesUpdateRequestDTO(BaseModel):
     programs: List[ProgramRatesDTO] = Field(..., min_length=1)
     international_fallback_rate: float = Field(..., gt=0, le=1.0)
     skiplagged_estimation_program: str = Field(..., min_length=2)
+
+
+# ─── Health-check de programas de milhas (diagnóstico interno) ───────
+class ProgramHealthDTO(BaseModel):
+    program: str
+    label: str
+    source_type: str
+    status: str                       # ok | empty | error | timeout
+    offers_count: int
+    latency_ms: float
+    route: str                        # "GRU→MIA"
+    error_kind: Optional[str] = None
+    error_detail: Optional[str] = None
+    checked_at: str
+
+
+class MilesHealthcheckRequestDTO(BaseModel):
+    programs: Optional[List[str]] = None   # vazio/None = todos os programas
+
+
+class MilesHealthcheckResponseDTO(BaseModel):
+    results: List[ProgramHealthDTO]
+    ran_at: str
+    total_ms: float
+    ok_count: int
+    empty_count: int
+    error_count: int

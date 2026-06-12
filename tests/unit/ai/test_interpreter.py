@@ -117,3 +117,29 @@ def test_intake_uses_llm_interpretation(monkeypatch):
     assert s.get("return_from") == "2099-07-20" and s.get("return_to") == "2099-07-21"
     assert s.get("date_start") == "2099-07-10" and s.get("date_end") == "2099-07-12"
     assert s.get("flex_mode") == "range" and s.get("trip_type") == "roundtrip"
+
+
+def test_to_slots_resolves_international_and_pax():
+    # BUG 2: ordem livre + IATA internacional resolve (depende do BUG 1).
+    raw = {
+        "origin_city": "Salvador", "destination_city": "Marselha",
+        "trip_type": "roundtrip", "depart": {"from": "2099-09-21", "to": None},
+        "return": {"from": "2099-10-01", "to": None},
+        "adults": 3, "children": 1, "infants": 0,
+    }
+    s = to_slots(raw, today=date(2099, 1, 1))
+    assert s["origin_iata"] == "SSA" and s["destination_iata"] == "MRS"
+    assert s["adults"] == 3 and s["children"] == 1
+    assert s["date_start"] == "2099-09-21" and s["return_from"] == "2099-10-01"
+    assert s["trip_type"] == "roundtrip"
+
+
+def test_to_slots_preserves_unresolved_city_name():
+    # Cidade que não resolve em IATA → preserva o NOME (não descarta).
+    raw = {"origin_city": "Salvador", "destination_city": "Cidade Totalmente Inexistente",
+           "trip_type": "oneway", "adults": 2}
+    s = to_slots(raw, today=date(2099, 1, 1))
+    assert s["origin_iata"] == "SSA"
+    assert s.get("destination_city") == "Cidade Totalmente Inexistente"
+    assert not s.get("destination_iata")        # não resolveu, mas não sumiu
+    assert s["adults"] == 2

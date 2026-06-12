@@ -371,6 +371,38 @@ export const settings = {
     }),
 };
 
+// ─── Diagnóstico: health-check de programas de milhas ───────────────
+export type ProgramHealthStatus = "ok" | "empty" | "error" | "timeout";
+
+export interface ProgramHealth {
+  program: string;
+  label: string;
+  source_type: string;
+  status: ProgramHealthStatus;
+  offers_count: number;
+  latency_ms: number;
+  route: string;                 // "GRU→MIA"
+  error_kind?: string | null;
+  error_detail?: string | null;
+  checked_at: string;
+}
+
+export interface MilesHealthcheck {
+  results: ProgramHealth[];
+  ran_at: string;
+  total_ms: number;
+  ok_count: number;
+  empty_count: number;
+  error_count: number;
+}
+
+export const diagnostics = {
+  milesHealthcheck: (token: string, programs?: string[]) =>
+    request<MilesHealthcheck>("/chat/diagnostics/miles-healthcheck", {
+      method: "POST", token, body: JSON.stringify({ programs: programs ?? null }),
+    }),
+};
+
 
 export const quotes = {
   approve: (token: string, threadId: string, offerId: string, clientName?: string) =>

@@ -39,6 +39,9 @@ Schema (use null quando o cliente não mencionou):
 }}
 
 Regras de interpretação:
+- A ORDEM dos campos no texto é IRRELEVANTE. "de X para Y", "X -> Y", "saindo de X com destino a Y", "Y, partindo de X", "para Y saindo de X" são EQUIVALENTES: X é sempre origem, Y sempre destino. Pax/datas podem vir no meio da frase.
+- Ex. ordem invertida: "3 adultos e 1 criança, ida 21/09 volta 01/10, para Marselha partindo de Salvador" → origin_city="Salvador", destination_city="Marselha", adults=3, children=1, depart={{from:2026-09-21}}, return={{from:2026-10-01}}, trip_type=roundtrip.
+- Bebê de colo vs criança vem da PALAVRA: "1 bebê"/"colo" → infants=1; "1 criança" → children=1. NUNCA infira idade.
 - "ida entre 10 e 12 de julho e volta 20 ou 21 de julho" → trip_type=roundtrip, depart={{from:2026-07-10,to:2026-07-12}}, return={{from:2026-07-20,to:2026-07-21}}, flexible_dates=true.
 - "viagem de N dias" + uma JANELA de ida ("entre X e Y") → trip_type=roundtrip, depart={{from:X, to:Y}}, trip_duration_days=N, return=null, flexible_dates=true. NÃO calcule a volta — o sistema desliza a duração dentro da janela. Ex.: "viagem de 10 dias entre os dias 10 e 25 de setembro" → depart={{from:2026-09-10, to:2026-09-25}}, trip_duration_days=10, return=null, flexible_dates=true.
 - "viagem de N dias a partir de X" (sem janela) → depart={{from:X, to:X}}, trip_duration_days=N, return=null.
@@ -108,16 +111,21 @@ def to_slots(raw: Dict[str, Any], *, today: date) -> Dict[str, Any]:
 
     oi_list = _iatas(raw.get("origin_city"))
     di_list = _iatas(raw.get("destination_city"))
-    if oi_list:
-        out["origin_iata"] = oi_list[0]
+    # PRESERVA o nome da cidade mesmo quando o IATA não resolve — o intake usa
+    # depois e, se ainda falhar, pergunta o aeroporto DESSA cidade em vez de dar
+    # reframing genérico. Nunca descarta a extração da LLM por falta de IATA.
+    if raw.get("origin_city"):
         out["origin_city"] = str(raw.get("origin_city"))
-        if len(oi_list) > 1:
-            out["origin_iatas"] = oi_list          # cidade multi-aeroporto
-    if di_list:
-        out["destination_iata"] = di_list[0]
+        if oi_list:
+            out["origin_iata"] = oi_list[0]
+            if len(oi_list) > 1:
+                out["origin_iatas"] = oi_list      # cidade multi-aeroporto
+    if raw.get("destination_city"):
         out["destination_city"] = str(raw.get("destination_city"))
-        if len(di_list) > 1:
-            out["destination_iatas"] = di_list
+        if di_list:
+            out["destination_iata"] = di_list[0]
+            if len(di_list) > 1:
+                out["destination_iatas"] = di_list
 
     dep = raw.get("depart") or {}
     ret = raw.get("return") or {}

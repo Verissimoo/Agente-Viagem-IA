@@ -48,3 +48,6 @@ slowapi>=0.1.9,<1.0
 
 # JWT validation contra JWKS (Neon Auth)
 pyjwt[crypto]>=2.9.0,<3.0
+
+# Dataset offline de aeroportos (cidade→IATA global, ~8k aeroportos, sem I/O em runtime)
+airportsdata>=20240000
