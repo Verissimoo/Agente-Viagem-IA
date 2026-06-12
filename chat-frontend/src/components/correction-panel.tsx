@@ -34,7 +34,19 @@ export default function CorrectionPanel({
   const [miles, setMiles] = useState("");
   const [obs, setObs] = useState("");
 
-  const valueNum = value ? Number(value.replace(",", ".")) : undefined;
+  // Formato BR: "." é separador de MILHAR, "," é decimal. "2.000" = 2000,
+  // "2.000,50" = 2000.5, "2,5" = 2.5. (Number cru leria "2.000" como 2.)
+  function parseBRL(s: string): number | undefined {
+    const t = s.trim().replace(/\s/g, "");
+    if (!t) return undefined;
+    const normalized = t.includes(",")
+      ? t.replace(/\./g, "").replace(",", ".")   // tem decimal → ponto é milhar
+      : t.replace(/\./g, "");                     // sem vírgula → ponto é milhar
+    const n = Number(normalized);
+    return Number.isNaN(n) ? undefined : n;
+  }
+
+  const valueNum = parseBRL(value);
   const milesNum = miles ? Number(miles.replace(/\D/g, "")) : undefined;
   const canSave = !!(valueNum || milesNum) && !saving;
 
