@@ -186,9 +186,32 @@ def _run_one_adapter(cia_up, adapter_cls, req, use_fixtures, debug_dump):
         return cia_up, [], e, elapsed_ms
 
 
+# Rótulos legíveis por fonte pro painel de progresso ao vivo (visão do vendedor).
+_PROGRESS_LABELS = {
+    "LATAM": "LATAM (milhas)", "GOL": "Smiles/GOL (milhas)", "AZUL": "TudoAzul (milhas)",
+    "TAP": "TAP (milhas)", "IBERIA": "Iberia (milhas)", "AMERICAN": "American (milhas)",
+    "AMERICAN AIRLINES": "American (milhas)", "INTERLINE": "Interline (milhas)",
+    "COPA": "Copa (milhas)", "MCP_AWARD": "MCP Award (milhas)", "QATAR": "Qatar (milhas)",
+    "ECONOMILHAS": "Economilhas (milhas)", "KAYAK": "Kayak (cash)",
+    "SKIPLAGGED": "Skiplagged (hidden city)", "AZUL_CASH": "Azul Oficial (cash)",
+}
+
+
+def _progress_label(cia: str) -> str:
+    return _PROGRESS_LABELS.get(cia.upper(), cia)
+
+
+def _emit_progress(on_progress, msg: str) -> None:
+    if on_progress:
+        try:
+            on_progress(msg)
+        except Exception:
+            pass
+
+
 def _execute_dates_x_adapters_parallel(
     search_plan, companhias_ativas,
-    use_fixtures, debug_dump, tracer,
+    use_fixtures, debug_dump, tracer, on_progress=None,
 ):
     """Dispara TODAS as combinações (data × adapter) num único pool.
 
@@ -227,19 +250,25 @@ def _execute_dates_x_adapters_parallel(
         ): (cia_up, req_i, dt_id)
         for cia_up, cls, req_i, dt_id in tasks
     }
+    n_cias = len({c.upper() for c in companhias_ativas})
+    _emit_progress(on_progress, f"Consultando {n_cias} fontes em {len(search_plan)} data(s)…")
     done_count = 0
+    total = len(futures)
     try:
         for fut in as_completed(futures, timeout=_ADAPTER_BUDGET_S):
             _cia_meta, req_meta, dt_id = futures[fut]
             cia_up, offers, error, elapsed_ms = fut.result()
             done_count += 1
             stage_name = f"adapter_search_{cia_up.lower()}{dt_id}"
+            day = req_meta.date_start.strftime("%d/%m")
+            label = _progress_label(cia_up)
             if error is not None:
                 tracer.log_event(
                     stage=stage_name, status="error",
                     latency_ms=elapsed_ms, offers_count=0, error=str(error),
                 )
                 print(f"[!] Adapter {cia_up} failed for {req_meta.date_start}: {error}")
+                _emit_progress(on_progress, f"✗ {label} · {day} — sem resposta [{done_count}/{total}]")
             else:
                 tracer.log_event(
                     stage=stage_name, status="end",
@@ -251,6 +280,8 @@ def _execute_dates_x_adapters_parallel(
                     f"DEBUG: Adapter {cia_up} retornou {len(offers)} ofertas "
                     f"para {req_meta.date_start} em {elapsed_ms:.0f}ms"
                 )
+                res = f"{len(offers)} oferta(s)" if offers else "sem tarifa"
+                _emit_progress(on_progress, f"✓ {label} · {day} — {res} [{done_count}/{total}]")
     except FuturesTimeoutError:
         pending = [(futures[f][0], futures[f][1]) for f in futures if not f.done()]
         for cia_up, req_meta in pending:
@@ -291,6 +322,7 @@ def run_pipeline(
     trip_type: Optional[TripType] = None,
     baggage_checked: bool = False,
     always_include: Optional[list] = None,
+    on_progress=None,
 ) -> PipelineResult:
     request_id = str(uuid.uuid4())[:8]
     tracer = PipelineTracer(request_id)
@@ -345,7 +377,7 @@ def run_pipeline(
         t_cart = time.perf_counter()
         offers = _execute_dates_x_adapters_parallel(
             search_plan, companhias_ativas,
-            use_fixtures, debug_dump_buscamilhas, tracer,
+            use_fixtures, debug_dump_buscamilhas, tracer, on_progress=on_progress,
         )
         cart_elapsed_ms = (time.perf_counter() - t_cart) * 1000.0
         tracer.log_event(

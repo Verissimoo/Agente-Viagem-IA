@@ -191,11 +191,31 @@ def _sample_dates(start: _date, end: Optional[_date], cap: int = 8) -> List[_dat
     return days
 
 
+def _make_progress():
+    """Callback de progresso ao vivo: emite via stream writer do LangGraph → o
+    SSE do chat mostra cada passo (provedor/data) no painel. Fora de um stream
+    (send_message normal / testes) vira no-op silencioso."""
+    try:
+        from langgraph.config import get_stream_writer
+        writer = get_stream_writer()
+    except Exception:
+        writer = None
+
+    def _p(msg: str) -> None:
+        if writer:
+            try:
+                writer({"progress": msg})
+            except Exception:
+                pass
+    return _p
+
+
 def orchestrator_node(state: ChatState) -> ChatState:
     slots: IntakeSlots = state.get("slots") or {}  # type: ignore[assignment]
     user_id = state.get("user_id", "")
     thread_id = state.get("thread_id")
     audit = get_audit_logger()
+    _progress = _make_progress()
 
     origin = slots.get("origin_iata")
     destination = slots.get("destination_iata")
@@ -289,21 +309,7 @@ def orchestrator_node(state: ChatState) -> ChatState:
     if (_intl_split_on and trip_type != "roundtrip"
             and classify_route(origin, destination) == "international"):
         from backend.app.services.international_split import quote_international
-
-        # Progresso ao vivo: emite via stream writer do LangGraph → o SSE do chat
-        # mostra "buscando trecho X…" em tempo real. Fora de um stream vira no-op.
-        try:
-            from langgraph.config import get_stream_writer
-            _writer = get_stream_writer()
-        except Exception:
-            _writer = None
-
-        def _progress(msg: str) -> None:
-            if _writer:
-                try:
-                    _writer({"progress": msg})
-                except Exception:
-                    pass
+        # Progresso ao vivo: usa o callback compartilhado (_progress) → SSE custom.
 
         _adults = int(slots.get("adults", 1))
         _cabin = slots.get("cabin", "economy")
@@ -448,6 +454,7 @@ def orchestrator_node(state: ChatState) -> ChatState:
                 direct_only=bool(slots.get("direct_only", False)),
                 baggage_checked=bool(slots.get("baggage_checked") or False),
                 flex_mode="none", flex_days=0,
+                on_progress=_progress,   # painel de processamento ao vivo
             )
             result = run_multi_date_search(date_pairs=top, common_args=common)
             if result.get("ok"):
@@ -536,6 +543,7 @@ def orchestrator_node(state: ChatState) -> ChatState:
         date_end=_parse_iso_date(slots.get("date_end")),
         flex_return=bool(slots.get("flex_return", False)),
         baggage_checked=bool(slots.get("baggage_checked") or False),
+        on_progress=_progress,   # painel de processamento ao vivo (por provedor/data)
     )
     if len(origins) > 1:
         result = _merge_origin_searches(origins, _search_kw)

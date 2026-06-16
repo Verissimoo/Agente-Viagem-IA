@@ -46,6 +46,7 @@ def run_search(
     always_include: Optional[List[str]] = None,
     top_n: int = 5,
     baggage_checked: bool = False,
+    on_progress=None,
 ) -> Dict[str, Any]:
     """Executa o pipeline e devolve dict pronto pra consumo pelo Validator/Presenter.
 
@@ -74,6 +75,7 @@ def run_search(
             companhias=companhias,
             always_include=always_include,
             baggage_checked=baggage_checked,
+            on_progress=on_progress,
         )
     except Exception as e:
         logger.exception("run_search falhou")

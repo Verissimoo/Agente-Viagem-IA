@@ -37,6 +37,9 @@ export default function ChatPage() {
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [statusText, setStatusText] = useState<string>("Processando");
+  // Log detalhado do processamento (cada passo do backend: provedor/data).
+  const [statusLog, setStatusLog] = useState<string[]>([]);
+  const statusLogRef = useRef<HTMLDivElement | null>(null);
   const [approving, setApproving] = useState<string | null>(null);
   const [approvedOfferId, setApprovedOfferId] = useState<string | null>(null);
   const [pendingApproveOfferId, setPendingApproveOfferId] = useState<string | null>(null);
@@ -75,6 +78,13 @@ export default function ChatPage() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, sending, statusText]);
+
+  // Mantém o painel de processamento rolado no passo mais recente.
+  useEffect(() => {
+    if (statusLogRef.current) {
+      statusLogRef.current.scrollTop = statusLogRef.current.scrollHeight;
+    }
+  }, [statusLog]);
 
   async function createNewThread(s: Session, title?: string) {
     setMessagesLoading(true);
@@ -142,6 +152,7 @@ export default function ChatPage() {
     if (!session || !activeThreadId) return;
     setSending(true);
     setStatusText("Processando");
+    setStatusLog([]);
     setError(null);
 
     // Otimismo: mostra a mensagem do usuário imediatamente
@@ -161,7 +172,13 @@ export default function ChatPage() {
           prev.map((x) => (x.id === tempUserMsg.id ? m : x)),
         );
       },
-      onStatus: (label) => setStatusText(label),
+      onStatus: (label) => {
+        setStatusText(label);
+        // Acumula no painel de processamento (ignora repetição consecutiva).
+        setStatusLog((log) =>
+          log[log.length - 1] === label ? log : [...log, label],
+        );
+      },
       onAssistant: (m) => {
         assistantArrived = true;
         setMessages((prev) => [...prev, m]);
@@ -402,8 +419,35 @@ export default function ChatPage() {
             </div>
 
             {sending && (
-              <div className="anim-fade-in">
+              <div className="anim-fade-in space-y-2">
                 <ThinkingBubble text={statusText} />
+                {statusLog.length > 0 && (
+                  <div className="ml-1 max-w-xl rounded-xl border border-zinc-200 dark:border-zinc-700/70 bg-zinc-50 dark:bg-zinc-900/50 px-3 py-2">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">
+                      Processamento
+                    </div>
+                    <div ref={statusLogRef} className="max-h-44 overflow-y-auto space-y-0.5 text-[11px] leading-relaxed font-mono">
+                      {statusLog.map((line, i) => {
+                        const ok = line.startsWith("✓");
+                        const fail = line.startsWith("✗");
+                        const last = i === statusLog.length - 1;
+                        return (
+                          <div
+                            key={i}
+                            className={[
+                              ok ? "text-emerald-600 dark:text-emerald-400"
+                                 : fail ? "text-rose-500 dark:text-rose-400"
+                                 : "text-zinc-500 dark:text-zinc-400",
+                              last ? "font-semibold" : "",
+                            ].join(" ")}
+                          >
+                            {line}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
