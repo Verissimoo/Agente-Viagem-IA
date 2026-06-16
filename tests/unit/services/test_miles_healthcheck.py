@@ -26,11 +26,25 @@ def test_status_ok_empty_error(monkeypatch):
     assert "9000" in res["AMERICAN"].error_detail
 
 
-def test_cash_sources_excluded_from_default(monkeypatch):
+def test_default_program_set(monkeypatch):
     _patch_run(monkeypatch, {})
     progs = {r.program for r in hc.run_miles_healthcheck()}
-    assert not (progs & {"KAYAK", "SKIPLAGGED", "AZUL_CASH"})
-    assert "LATAM" in progs and "AMERICAN" in progs  # milhas presentes
+    # AZUL_CASH e o alias duplicado AMERICAN AIRLINES ficam de fora.
+    assert "AZUL_CASH" not in progs
+    assert "AMERICAN AIRLINES" not in progs
+    # Kayak e Skiplagged ENTRAM (pedido do vendedor); milhas presentes.
+    assert "KAYAK" in progs and "SKIPLAGGED" in progs
+    assert "LATAM" in progs and "AMERICAN" in progs
+
+
+def test_american_not_duplicated(monkeypatch):
+    _patch_run(monkeypatch, {})
+    progs = [r.program for r in hc.run_miles_healthcheck()]
+    assert progs.count("AMERICAN") == 1  # sem o alias duplicado
+
+
+def test_azul_canary_departs_vcp():
+    assert hc._canary("AZUL")[0] == "VCP"
 
 
 def test_dates_are_future_oneway(monkeypatch):

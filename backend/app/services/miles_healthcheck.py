@@ -24,33 +24,37 @@ from backend.app.services.search_orchestrator import _ADAPTER_MAP, _run_one_adap
 
 logger = logging.getLogger(__name__)
 
-# Fontes CASH — NÃO entram no teste de MILHAS.
-_CASH_ONLY = {"KAYAK", "SKIPLAGGED", "AZUL_CASH"}
+# Fontes/chaves EXCLUÍDAS do health-check:
+#   AZUL_CASH — cash da Azul (redundante com TudoAzul milhas; não pedido).
+#   AMERICAN AIRLINES — alias duplicado de AMERICAN (mesmo adapter) → 1 card só.
+# Kayak e Skiplagged ENTRAM (pedido do vendedor — ver se as fontes cash respondem).
+_EXCLUDED = {"AZUL_CASH", "AMERICAN AIRLINES"}
 
 # Rótulos legíveis e SourceType por programa (pro painel).
 _LABELS: Dict[str, str] = {
     "LATAM": "LATAM Pass", "GOL": "Smiles (GOL)", "AZUL": "TudoAzul",
     "TAP": "TAP Miles&Go", "IBERIA": "Iberia Plus", "AMERICAN": "AAdvantage (American)",
-    "AMERICAN AIRLINES": "AAdvantage (American)", "INTERLINE": "Interline",
-    "COPA": "ConnectMiles (Copa)", "MCP_AWARD": "MCP Award",
+    "INTERLINE": "Interline", "COPA": "ConnectMiles (Copa)", "MCP_AWARD": "MCP Award",
     "QATAR": "Qatar Privilege Club", "ECONOMILHAS": "Economilhas (agregador)",
+    "KAYAK": "Kayak (cash)", "SKIPLAGGED": "Skiplagged (hidden city)",
 }
 _SOURCE_TYPE: Dict[str, str] = {
     "LATAM": "buscamilhas_latam", "GOL": "buscamilhas_gol", "AZUL": "buscamilhas_azul",
     "TAP": "buscamilhas_tap", "IBERIA": "buscamilhas_iberia",
-    "AMERICAN": "buscamilhas_american", "AMERICAN AIRLINES": "buscamilhas_american",
-    "INTERLINE": "buscamilhas_interline", "COPA": "buscamilhas_copa",
-    "MCP_AWARD": "mcp_award", "QATAR": "mcp_qatar", "ECONOMILHAS": "economilhas",
+    "AMERICAN": "buscamilhas_american", "INTERLINE": "buscamilhas_interline",
+    "COPA": "buscamilhas_copa", "MCP_AWARD": "mcp_award", "QATAR": "mcp_qatar",
+    "ECONOMILHAS": "economilhas", "KAYAK": "kayak", "SKIPLAGGED": "skiplagged",
 }
 
 # Rotas-canário (trechos com voo garantido). Override por env:
 #   MILES_CANARY_AMERICAN="GRU>JFK"
+# TudoAzul sai de VCP (hub da Azul) — de GRU a Azul quase não tem itinerário.
 _DEFAULT_CANARY: Dict[str, Tuple[str, str]] = {
-    "LATAM": ("GRU", "GIG"), "GOL": ("BSB", "GRU"), "AZUL": ("GRU", "GIG"),
+    "LATAM": ("GRU", "GIG"), "GOL": ("BSB", "GRU"), "AZUL": ("VCP", "REC"),
     "TAP": ("GRU", "LIS"), "IBERIA": ("GRU", "MAD"), "AMERICAN": ("GRU", "MIA"),
-    "AMERICAN AIRLINES": ("GRU", "MIA"), "INTERLINE": ("GRU", "MIA"),
-    "COPA": ("GRU", "PTY"), "MCP_AWARD": ("GRU", "LIS"), "QATAR": ("GRU", "DOH"),
-    "ECONOMILHAS": ("GRU", "GIG"),
+    "INTERLINE": ("GRU", "MIA"), "COPA": ("GRU", "PTY"), "MCP_AWARD": ("GRU", "LIS"),
+    "QATAR": ("GRU", "DOH"), "ECONOMILHAS": ("GRU", "GIG"),
+    "KAYAK": ("GRU", "GIG"), "SKIPLAGGED": ("GRU", "MIA"),
 }
 
 
@@ -78,8 +82,9 @@ class ProgramHealth:
 
 
 def miles_programs() -> List[str]:
-    """Programas de MILHAS testáveis (exclui as fontes só-cash)."""
-    return [p for p in _ADAPTER_MAP if p not in _CASH_ONLY]
+    """Fontes testáveis no health-check (milhas + Kayak/Skiplagged; exclui
+    AZUL_CASH e o alias duplicado AMERICAN AIRLINES)."""
+    return [p for p in _ADAPTER_MAP if p.upper() not in _EXCLUDED]
 
 
 def _budget_s() -> float:
