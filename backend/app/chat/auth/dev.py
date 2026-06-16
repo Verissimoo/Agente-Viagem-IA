@@ -88,6 +88,8 @@ class DevAuthProvider(AuthProvider):
         # email → {"id", "password_hash", "display_name", "store_name"}
         self._accounts: Dict[str, dict] = {}
         self._file = os.getenv("CHAT_DEV_AUTH_FILE", "")
+        # user_ids já garantidos em chat.users (evita SELECT por request).
+        self._provisioned: set = set()
         self._load()
 
     def _load(self) -> None:
@@ -184,4 +186,21 @@ class DevAuthProvider(AuthProvider):
         user_id = payload.get("sub", "")
         if not user_id:
             raise AuthError("Token sem identidade")
+        # Garante o perfil em chat.users (igual ao neon.py). Sem isso, um token
+        # válido cujo usuário sumiu do banco (reset/migração, FS efêmero do
+        # Railway) quebrava o create_thread com ForeignKeyViolation.
+        self._ensure_user(user_id, email)
         return AuthSession(user_id=user_id, email=email, access_token=token)
+
+    def _ensure_user(self, user_id: str, email: str) -> None:
+        if user_id in self._provisioned:
+            return
+        try:
+            repo = get_repository()
+            if repo.get_user(user_id) is None:
+                repo.upsert_user(User(id=user_id, email=email or f"{user_id}@unknown.local"))
+            self._provisioned.add(user_id)
+        except Exception:
+            # Nunca derruba a auth por causa do provisionamento; tenta de novo
+            # no próximo request (não marca como provisionado).
+            pass
