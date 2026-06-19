@@ -36,6 +36,7 @@ _LABELS: Dict[str, str] = {
     "TAP": "TAP Miles&Go", "IBERIA": "Iberia Plus", "AMERICAN": "AAdvantage (American)",
     "INTERLINE": "Interline", "COPA": "ConnectMiles (Copa)", "MCP_AWARD": "MCP Award",
     "QATAR": "Qatar Privilege Club", "ECONOMILHAS": "Economilhas (agregador)",
+    "SEATS_AERO": "Seats.aero (award)",
     "KAYAK": "Kayak (cash)", "SKIPLAGGED": "Skiplagged (hidden city)",
 }
 _SOURCE_TYPE: Dict[str, str] = {
@@ -43,7 +44,8 @@ _SOURCE_TYPE: Dict[str, str] = {
     "TAP": "buscamilhas_tap", "IBERIA": "buscamilhas_iberia",
     "AMERICAN": "buscamilhas_american", "INTERLINE": "buscamilhas_interline",
     "COPA": "buscamilhas_copa", "MCP_AWARD": "mcp_award", "QATAR": "mcp_qatar",
-    "ECONOMILHAS": "economilhas", "KAYAK": "kayak", "SKIPLAGGED": "skiplagged",
+    "ECONOMILHAS": "economilhas", "SEATS_AERO": "seats_aero",
+    "KAYAK": "kayak", "SKIPLAGGED": "skiplagged",
 }
 
 # Rotas-canário (trechos com voo garantido). Override por env:
@@ -54,6 +56,7 @@ _DEFAULT_CANARY: Dict[str, Tuple[str, str]] = {
     "TAP": ("GRU", "LIS"), "IBERIA": ("GRU", "MAD"), "AMERICAN": ("GRU", "MIA"),
     "INTERLINE": ("GRU", "MIA"), "COPA": ("GRU", "PTY"), "MCP_AWARD": ("GRU", "LIS"),
     "QATAR": ("GRU", "DOH"), "ECONOMILHAS": ("GRU", "GIG"),
+    "SEATS_AERO": ("GRU", "MIA"),
     "KAYAK": ("GRU", "GIG"), "SKIPLAGGED": ("GRU", "MIA"),
 }
 

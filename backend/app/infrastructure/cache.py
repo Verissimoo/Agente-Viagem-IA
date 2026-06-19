@@ -36,6 +36,7 @@ _TTL_BY_PREFIX: dict[str, int] = {
     "skiplagged":        CASH_TTL_S,
     "buscamilhas":       MILES_TTL_S,
     "economilhas":       MILES_TTL_S,
+    "seats_aero":        MILES_TTL_S,
     "mcp_award":         MILES_TTL_S,
     "fx_rates":          int(os.getenv("CACHE_FX_TTL_S", "21600")),  # 6h
 }
@@ -166,3 +167,6 @@ def stats() -> dict:
 SEM_KAYAK = threading.BoundedSemaphore(5)
 SEM_BUSCAMILHAS = threading.BoundedSemaphore(3)
 SEM_ECONOMILHAS = threading.BoundedSemaphore(5)
+# seats.aero: quota Pro baixa (1000/dia/key). Serializa para não esgotar quota
+# em buscas com flex de datas (cada data = 1 /search + N /trips).
+SEM_SEATS_AERO = threading.BoundedSemaphore(int(os.getenv("SEATS_AERO_MAX_CONCURRENCY", "3")))
