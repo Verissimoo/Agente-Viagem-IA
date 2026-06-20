@@ -173,7 +173,7 @@ def cost_per_mile(
     # usam a tarifa base internacional (international_fallback_rate, hoje 0.05),
     # editável na UI de tarifas. Evita herdar chaves genéricas (AIR CANADA/FLYING
     # BLUE/…) usadas por outras fontes; granularidade por programa pode vir depois.
-    if source == SourceType.SEATS_AERO:
+    if source in (SourceType.SEATS_AERO, SourceType.AWARDTOOL):
         return _international_fallback()
 
     key = _resolve_program(airline=airline, program=program, source=source)

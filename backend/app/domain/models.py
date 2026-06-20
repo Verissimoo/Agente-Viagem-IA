@@ -38,6 +38,7 @@ class SourceType(str, Enum):
     MCP_QATAR = "mcp_qatar"      # Award Travel Finder (exclusivo Qatar)
     SKIPLAGGED = "skiplagged"    # Skiplagged (hidden-city + split cash)
     SEATS_AERO = "seats_aero"    # seats.aero Partner API (award internacional multi-programa)
+    AWARDTOOL = "awardtool"      # AwardTool (scraping da API interna — award multi-programa)
 
 
 class Scenario(str, Enum):
