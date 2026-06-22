@@ -88,6 +88,30 @@ except ValueError:
 _ALWAYS_INCLUDE = ["ECONOMILHAS", "SEATS_AERO", "AWARDTOOL", "SKIPLAGGED", "AZUL_CASH"]
 
 
+def _excluded_program_tokens() -> set:
+    """Programas de milhas a SUPRIMIR dos resultados (substrings normalizadas).
+    Default: United MileagePlus (sem disponibilidade no momento). Reativar é só
+    setar EXCLUDED_MILES_PROGRAMS="" (vazio) no env."""
+    raw = os.getenv("EXCLUDED_MILES_PROGRAMS", "MileagePlus")
+    return {p.strip().lower().replace(" ", "") for p in raw.split(",") if p.strip()}
+
+
+def _drop_excluded_programs(offers):
+    """Remove ofertas cujo `miles_program` casa com um token excluído (ex.: United
+    MileagePlus). Filtra pelo PROGRAMA — voo operado pela United via OUTRO programa
+    (ex.: Aeroplan) permanece."""
+    tokens = _excluded_program_tokens()
+    if not tokens:
+        return offers
+    out = []
+    for o in offers:
+        prog = (getattr(o, "miles_program", None) or "").lower().replace(" ", "")
+        if prog and any(t in prog for t in tokens):
+            continue
+        out.append(o)
+    return out
+
+
 def _parse_iatas_from_prompt(prompt: str) -> Tuple[str, str]:
     """Extrai dois IATAs do prompt (fallback usado pelo CLI)."""
     iatas = re.findall(r"\b[A-Z]{3}\b", (prompt or "").upper())
@@ -414,6 +438,12 @@ def run_pipeline(
             message=f"{len(companhias_ativas)} adapters x {len(search_plan)} datas",
         )
         all_offers.extend(offers)
+
+        # Suprime programas indisponíveis (ex.: United MileagePlus) antes de tudo.
+        before = len(all_offers)
+        all_offers = _drop_excluded_programs(all_offers)
+        if len(all_offers) != before:
+            print(f"DEBUG: {before - len(all_offers)} oferta(s) de programa excluído removida(s).")
 
         if not all_offers:
             print("DEBUG: Nenhuma oferta encontrada em nenhuma data.")

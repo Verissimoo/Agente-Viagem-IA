@@ -17,9 +17,23 @@ Critérios de match:
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
+
+
+def _supplementary_always_include() -> List[str]:
+    """Fontes injetadas na busca SUPLEMENTAR (valida o mesmo bilhete em milhas).
+
+    Só agregadores de milhas RÁPIDOS (Economilhas + seats.aero). Exclui de
+    propósito AwardTool (Playwright, ~40-90s) e Skiplagged (cash, lento): a
+    validação roda com orçamento curto (~35s) e estourava → `miles_same_ticket`
+    voltava vazio e o card perdia o valor em milhas do bilhete oficial.
+    Override: SUPPLEMENTARY_ALWAYS_INCLUDE="ECONOMILHAS,SEATS_AERO".
+    """
+    raw = os.getenv("SUPPLEMENTARY_ALWAYS_INCLUDE", "ECONOMILHAS,SEATS_AERO")
+    return [p.strip().upper() for p in raw.split(",") if p.strip()]
 
 
 def _first_segment(offer: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -299,6 +313,7 @@ def supplementary_miles_search_for_hidden_city(
             date_start=target_date_obj,
             adults=adults, cabin=cabin,
             top_n=10,
+            always_include=_supplementary_always_include(),
         )
     except Exception as e:
         logger.warning("supplementary search falhou: %s", e)
@@ -396,6 +411,7 @@ def supplementary_miles_search_for_split(
                 origin=leg["origin"], destination=leg["destination"],
                 date_start=leg["dep_date"],
                 adults=adults, cabin=cabin, top_n=5,
+                always_include=_supplementary_always_include(),
             )
         except Exception as e:
             logger.warning("split leg search %s→%s falhou: %s",

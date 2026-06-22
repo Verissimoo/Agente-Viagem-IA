@@ -289,6 +289,19 @@ def _recommendation_score(offer: Dict[str, Any]) -> float:
     return score
 
 
+def _program_key(offer: Dict[str, Any]) -> str:
+    """Chave de diversidade: programa de milhas (ex.: 'prog:smiles') ou, na falta,
+    a companhia ('air:latam'), ou a categoria macro. Usada pra mostrar a melhor
+    tarifa de CADA programa/cia nos cards."""
+    prog = (offer.get("miles_program") or "").strip().lower()
+    if prog:
+        return f"prog:{prog}"
+    air = (offer.get("airline") or "").strip().lower()
+    if air:
+        return f"air:{air}"
+    return _category_bucket(offer)
+
+
 def smart_diversify(
     offers: List[Dict[str, Any]],
     *,
@@ -323,13 +336,16 @@ def smart_diversify(
         selected_ids.add(oid)
         return len(selected) >= max_total
 
-    # 1) Melhor de cada categoria — limita 1 por bucket nessa primeira passada.
-    seen_buckets: set = set()
+    # 1) Melhor tarifa de cada PROGRAMA/COMPANHIA — variação entre programas de
+    # milhas (o vendedor quer ver pelo menos a melhor de cada cia que deu
+    # resultado), não 5 cards do mesmo programa. Cai pra categoria macro quando
+    # não há programa/cia (ex.: skip cash).
+    seen_keys: set = set()
     for o in sorted_offers:
-        bucket = _category_bucket(o)
-        if bucket in seen_buckets:
+        key = _program_key(o)
+        if key in seen_keys:
             continue
-        seen_buckets.add(bucket)
+        seen_keys.add(key)
         if _add(o):
             return selected
 

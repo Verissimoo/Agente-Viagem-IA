@@ -25,7 +25,11 @@ def _companies_for_route(origin: str, destination: str) -> Optional[List[str]]:
     buscavam milhas em LATAM/GOL/AZUL e ignoravam os programas internacionais."""
     if classify_route(origin, destination) == "international":
         from backend.app.providers.buscamilhas.client import COMPANHIAS_TODAS
-        return list(COMPANHIAS_TODAS)
+        # + provedores de award que NÃO são BuscaMilhas (via MCP): QATAR
+        # (Privilege Club) e MCP_AWARD (multi-programa). Sem eles, uma rota como
+        # GRU→DOH nunca consultava o award REAL da Qatar — o card vinha com
+        # milhas ESTIMADAS (≈cash/cpm), não uma cotação de verdade.
+        return list(COMPANHIAS_TODAS) + ["QATAR", "MCP_AWARD"]
     return None
 
 
