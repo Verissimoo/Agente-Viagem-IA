@@ -40,6 +40,8 @@ export default function ChatPage() {
   // Log detalhado do processamento (cada passo do backend: provedor/data).
   const [statusLog, setStatusLog] = useState<string[]>([]);
   const statusLogRef = useRef<HTMLDivElement | null>(null);
+  // Espelho do statusLog pra anexar à mensagem quando ela chega (closure-safe).
+  const accumLogRef = useRef<string[]>([]);
   const [approving, setApproving] = useState<string | null>(null);
   const [approvedOfferId, setApprovedOfferId] = useState<string | null>(null);
   const [pendingApproveOfferId, setPendingApproveOfferId] = useState<string | null>(null);
@@ -159,6 +161,7 @@ export default function ChatPage() {
     setSending(true);
     setStatusText("Processando");
     setStatusLog([]);
+    accumLogRef.current = [];
     setError(null);
 
     // Otimismo: mostra a mensagem do usuário imediatamente
@@ -181,13 +184,19 @@ export default function ChatPage() {
       onStatus: (label) => {
         setStatusText(label);
         // Acumula no painel de processamento (ignora repetição consecutiva).
-        setStatusLog((log) =>
-          log[log.length - 1] === label ? log : [...log, label],
-        );
+        setStatusLog((log) => {
+          const next = log[log.length - 1] === label ? log : [...log, label];
+          accumLogRef.current = next;
+          return next;
+        });
       },
       onAssistant: (m) => {
         assistantArrived = true;
-        setMessages((prev) => [...prev, m]);
+        // Anexa o andamento interno à mensagem pra o vendedor reabrir depois.
+        const withLog = accumLogRef.current.length
+          ? { ...m, metadata: { ...m.metadata, status_log: [...accumLogRef.current] } }
+          : m;
+        setMessages((prev) => [...prev, withLog]);
       },
       onError: (err) => {
         let msg: string;
@@ -256,6 +265,13 @@ export default function ChatPage() {
     if (m.role !== "assistant") return [];
     const offers = m.metadata?.offers;
     return Array.isArray(offers) ? (offers as Offer[]) : [];
+  }
+
+  // Helper: andamento interno da cotação anexado à mensagem (ver depois).
+  function statusLogOf(m: Message): string[] {
+    if (m.role !== "assistant") return [];
+    const log = m.metadata?.status_log;
+    return Array.isArray(log) ? (log as string[]) : [];
   }
 
   // Snapshot autossuficiente da oferta do SISTEMA (a tabela comparativa não
@@ -418,6 +434,30 @@ export default function ChatPage() {
                         );
                       })}
                     </div>
+                  )}
+                  {statusLogOf(m).length > 0 && (
+                    <details className="ml-11">
+                      <summary className="cursor-pointer text-[10px] uppercase tracking-wider font-bold text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 select-none">
+                        🔍 Ver andamento da cotação ({statusLogOf(m).length} etapas)
+                      </summary>
+                      <div className="mt-2 max-w-xl rounded-xl border border-zinc-200 dark:border-zinc-700/70 bg-zinc-50 dark:bg-zinc-900/50 px-3 py-2">
+                        <div className="max-h-60 overflow-y-auto space-y-0.5 text-[11px] leading-relaxed font-mono">
+                          {statusLogOf(m).map((line, i) => {
+                            const ok = line.includes("✓");
+                            const fail = line.includes("✗");
+                            return (
+                              <div key={i} className={
+                                ok ? "text-emerald-600 dark:text-emerald-400"
+                                  : fail ? "text-red-500 dark:text-red-400"
+                                    : "text-zinc-500 dark:text-zinc-400"
+                              }>
+                                {line}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </details>
                   )}
                 </div>
               );

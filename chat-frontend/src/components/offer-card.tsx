@@ -68,9 +68,21 @@ export default function OfferCard({
           <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-brand-50 text-brand-700 dark:bg-brand-600/20 dark:text-brand-200">
             {offer.category || "Padrão"}
           </span>
-          <h3 className="text-lg font-bold mt-1.5 text-gray-900 dark:text-zinc-100">
-            {offer.airline || "—"}
-          </h3>
+          {offer.miles_program ? (
+            <>
+              {/* Programa em destaque (é o que o vendedor emite); companhia do voo abaixo. */}
+              <h3 className="text-lg font-bold mt-1.5 text-brand-700 dark:text-brand-300 leading-tight">
+                {offer.miles_program}
+              </h3>
+              <p className="text-xs font-medium text-gray-500 dark:text-zinc-400 mt-0.5">
+                ✈ {offer.airline || "—"}
+              </p>
+            </>
+          ) : (
+            <h3 className="text-lg font-bold mt-1.5 text-gray-900 dark:text-zinc-100">
+              {offer.airline || "—"}
+            </h3>
+          )}
         </div>
         <div className="text-right">
           {(() => {
@@ -377,16 +389,49 @@ export default function OfferCard({
         </div>
       ) : null}
 
-      {/* O valor do bilhete validado já é a MANCHETE (preço em evidência). Aqui
-          só a nota de confiança com a rota física confirmada em milhas. */}
+      {/* Mesmo BILHETE OFICIAL do hidden city, cotado em milhas na cia do voo
+          (ex.: GRU→SHJ em LATAM, passando por DOH). É o valor que o vendedor
+          emite se quiser fazer o hidden city com milhas. */}
       {offer.miles_same_ticket && offer.miles_same_ticket.miles ? (
-        <div className="mt-2 flex items-start gap-1.5 text-[11px] text-emerald-700 dark:text-emerald-300 border-l-2 border-emerald-300 dark:border-emerald-600/40 pl-2">
-          <span className="font-medium">✓ Bilhete validado em milhas</span>
-          {offer.miles_same_ticket.ticket_destination && offer.miles_same_ticket.via_hub ? (
-            <span className="text-emerald-600/80 dark:text-emerald-400/70">
-              — {offer.miles_same_ticket.airline} até {offer.miles_same_ticket.ticket_destination}, com escala em {offer.miles_same_ticket.via_hub} (onde o cliente desce)
-            </span>
-          ) : null}
+        <div className="mt-2 flex items-start gap-2 text-xs bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 rounded-lg px-3 py-2 text-emerald-800 dark:text-emerald-200">
+          <div className="flex-1">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="font-semibold">
+                Mesmo bilhete em milhas
+                {offer.miles_same_ticket.ticket_destination
+                  ? ` (até ${offer.miles_same_ticket.ticket_destination})`
+                  : ""}:
+              </span>
+              {offer.miles_same_ticket.validated && (
+                <span className="inline-flex items-center px-1.5 py-0 rounded text-[9px] font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-200 uppercase tracking-wider">
+                  ✓ verificado
+                </span>
+              )}
+            </div>
+            <div className="mt-0.5">
+              <strong>
+                {new Intl.NumberFormat("pt-BR").format(offer.miles_same_ticket.miles)} mi
+              </strong>
+              {offer.miles_same_ticket.taxes_brl ? (
+                <> + {formatBRL(offer.miles_same_ticket.taxes_brl)}</>
+              ) : ""}
+              {offer.miles_same_ticket.airline ? (
+                <span className="text-emerald-600/80 dark:text-emerald-300/80">
+                  {" "}· {offer.miles_same_ticket.airline}
+                </span>
+              ) : ""}
+              {offer.miles_same_ticket.equivalent_brl ? (
+                <span className="text-emerald-600/80 dark:text-emerald-300/80 italic">
+                  {" "}(≈ {formatBRL(offer.miles_same_ticket.equivalent_brl)})
+                </span>
+              ) : ""}
+            </div>
+            {offer.miles_same_ticket.via_hub ? (
+              <div className="text-[10px] text-emerald-600/80 dark:text-emerald-300/70 mt-0.5">
+                Escala em {offer.miles_same_ticket.via_hub} (onde o cliente desce) — mesma rota física do hidden city
+              </div>
+            ) : null}
+          </div>
         </div>
       ) : null}
 
