@@ -110,8 +110,8 @@ export default function RatesSettingsPage() {
   const programs = payload?.programs ?? [];
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-zinc-950">
-      <div className="max-w-5xl mx-auto px-4 py-8">
+    <main className="min-h-screen bg-gray-50 dark:bg-[#0a0a0a]">
+      <div className="max-w-5xl mx-auto px-4 py-8 anim-fade-in">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <Link href="/chat" className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-zinc-400 hover:text-brand-600">
@@ -148,8 +148,11 @@ export default function RatesSettingsPage() {
         )}
 
         {loading && (
-          <div className="text-center py-16 text-gray-500 dark:text-zinc-400">
-            <Loader2 size={20} className="animate-spin inline-block mr-2" /> Carregando tabela…
+          <div className="space-y-4">
+            <div className="h-28 rounded-xl bg-gray-100 dark:bg-zinc-900 ring-1 ring-black/5 dark:ring-white/5 animate-pulse" />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-40 rounded-xl bg-gray-100 dark:bg-zinc-900 ring-1 ring-black/5 dark:ring-white/5 animate-pulse" />
+            ))}
           </div>
         )}
 

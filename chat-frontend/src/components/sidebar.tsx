@@ -207,6 +207,7 @@ export default function Sidebar({
             <div className="h-px bg-zinc-800" />
             <Link
               href="/settings/rates"
+              prefetch
               className="w-full px-3 py-2.5 text-sm text-left text-zinc-200 hover:bg-zinc-800/80 flex items-center gap-2"
               onClick={() => setMenuOpen(false)}
             >
@@ -224,6 +225,7 @@ export default function Sidebar({
             <div className="h-px bg-zinc-800" />
             <Link
               href="/validacoes"
+              prefetch
               className="w-full px-3 py-2.5 text-sm text-left text-zinc-200 hover:bg-zinc-800/80 flex items-center gap-2"
               onClick={() => setMenuOpen(false)}
             >
