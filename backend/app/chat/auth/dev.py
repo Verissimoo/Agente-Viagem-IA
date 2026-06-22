@@ -122,11 +122,20 @@ class DevAuthProvider(AuthProvider):
 
     def login(self, email: str, password: str) -> AuthSession:
         email_norm = (email or "").strip().lower()
-        with self._lock:
-            acct = self._accounts.get(email_norm)
-            if not acct or not _verify_password(password, acct["password_hash"]):
-                raise AuthError("Credenciais inválidas")
-            token = self._issue_token(acct["id"], email_norm)
+        # FONTE DE VERDADE: banco (Postgres). O arquivo/memória é só fallback de
+        # compat (contas locais antigas) — em produção o Railway tem FS efêmero,
+        # então a credencial PRECISA estar no banco pra sobreviver a redeploy.
+        acct = None
+        try:
+            acct = get_repository().get_auth_account(email_norm)
+        except Exception:
+            acct = None
+        if acct is None:
+            with self._lock:
+                acct = self._accounts.get(email_norm)
+        if not acct or not _verify_password(password, acct["password_hash"]):
+            raise AuthError("Credenciais inválidas")
+        token = self._issue_token(acct["id"], email_norm)
         return AuthSession(
             user_id=acct["id"],
             email=email_norm,
@@ -149,29 +158,56 @@ class DevAuthProvider(AuthProvider):
         if not password or len(password) < 8:
             raise AuthError("Senha precisa ter pelo menos 8 caracteres")
 
-        with self._lock:
-            if email_norm in self._accounts:
+        repo = get_repository()
+
+        # Já existe credencial com senha? Conflito real.
+        try:
+            if repo.get_auth_account(email_norm) is not None:
                 raise AuthError("Email já cadastrado")
-            user_id = uuid4().hex
+        except AuthError:
+            raise
+        except Exception:
+            pass  # banco indisponível → segue no fallback de arquivo abaixo
+
+        with self._lock:
+            if email_norm in self._accounts and not self._db_ok():
+                raise AuthError("Email já cadastrado")
+
+        # RECUPERAÇÃO: se já existe um PERFIL com esse email (criado antes da
+        # persistência de senha — FS efêmero do Railway apagou a credencial),
+        # reaproveita o MESMO user_id pra preservar as threads/cotações dele.
+        user_id = uuid4().hex
+        try:
+            legacy = repo.get_user_by_email(email_norm)
+            if legacy is not None:
+                user_id = legacy.id
+        except Exception:
+            pass
+
+        password_hash = _hash_password(password)
+
+        # Persiste a credencial no BANCO (sobrevive a redeploy) + perfil.
+        try:
+            repo.upsert_auth_account(
+                user_id=user_id, email=email_norm, password_hash=password_hash,
+                display_name=display_name, store_name=store_name,
+            )
+        except Exception as e:
+            # Sem banco (dev local sem DATABASE_URL): cai no arquivo.
+            from backend.app.chat.auth.interface import AuthError as _AE
+            if not self._file:
+                raise _AE("Cadastro indisponível (sem banco). Configure DATABASE_URL.") from e
+
+        # Espelha em memória/arquivo (compat local + cache no mesmo processo).
+        with self._lock:
             self._accounts[email_norm] = {
-                "id": user_id,
-                "password_hash": _hash_password(password),
-                "display_name": display_name,
-                "store_name": store_name,
+                "id": user_id, "password_hash": password_hash,
+                "display_name": display_name, "store_name": store_name,
             }
             self._persist()
-            token = self._issue_token(user_id, email_norm)
 
-        # Provisiona perfil no repositório
-        get_repository().upsert_user(
-            User(
-                id=user_id,
-                email=email_norm,
-                display_name=display_name,
-                store_name=store_name,
-            )
-        )
-
+        token = self._issue_token(user_id, email_norm)
+        self._provisioned.add(user_id)
         return AuthSession(
             user_id=user_id,
             email=email_norm,
@@ -179,6 +215,15 @@ class DevAuthProvider(AuthProvider):
             display_name=display_name,
             store_name=store_name,
         )
+
+    def _db_ok(self) -> bool:
+        """True se o repositório responde (tem banco). Decide se o conflito de
+        email do arquivo local deve bloquear o registro."""
+        try:
+            get_repository().get_auth_account("__healthcheck__@none.local")
+            return True
+        except Exception:
+            return False
 
     def verify_token(self, token: str) -> AuthSession:
         payload = _JWT.verify(token, self._secret)

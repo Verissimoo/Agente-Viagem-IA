@@ -29,6 +29,21 @@ class ChatRepository(ABC):
     @abstractmethod
     def get_user(self, user_id: str) -> Optional[User]: ...
 
+    # --- Auth (DevAuth persistente — credenciais no banco, não em arquivo) ---
+    @abstractmethod
+    def get_user_by_email(self, email: str) -> Optional[User]: ...
+
+    @abstractmethod
+    def get_auth_account(self, email: str) -> Optional[dict]:
+        """Credencial pra login (id, email, password_hash, display_name, store_name)
+        ou None se não houver senha definida pra esse email."""
+        ...
+
+    @abstractmethod
+    def upsert_auth_account(self, *, user_id: str, email: str, password_hash: str,
+                            display_name: Optional[str] = None,
+                            store_name: Optional[str] = None) -> None: ...
+
     # --- Threads ---
     @abstractmethod
     def create_thread(self, thread: ChatThread) -> ChatThread: ...

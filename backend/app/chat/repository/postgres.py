@@ -74,6 +74,21 @@ class PostgresRepository(ChatRepository):
             # Pre-ping ANTES de devolver conexão do pool (detecta mortas)
             check=_check_connection,
         )
+        self._ensure_auth_schema()
+
+    def _ensure_auth_schema(self) -> None:
+        """Garante a coluna de credencial (DevAuth) sem depender de migration
+        manual. As migrations não rodam no deploy do Railway (Procfile só sobe o
+        uvicorn); sem isso, login/registro persistente quebraria em produção.
+        Idempotente (IF NOT EXISTS)."""
+        try:
+            with self._conn() as conn, conn.cursor() as cur:
+                cur.execute(
+                    "ALTER TABLE chat.users ADD COLUMN IF NOT EXISTS password_hash TEXT"
+                )
+                conn.commit()
+        except Exception as e:
+            logger.warning("ensure_auth_schema falhou (segue sem): %s", e)
 
     def close(self) -> None:
         self._pool.close()
@@ -106,6 +121,59 @@ class PostgresRepository(ChatRepository):
                 store_name=row["store_name"],
                 created_at=_to_aware(row["created_at"]),
             )
+
+    # ──────────── auth (DevAuth persistente) ────────────
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                "SELECT id, email, display_name, store_name, created_at FROM chat.users WHERE email = %s",
+                (email,),
+            )
+            row = cur.fetchone()
+            if not row:
+                return None
+            return User(
+                id=row["id"], email=row["email"],
+                display_name=row["display_name"], store_name=row["store_name"],
+                created_at=_to_aware(row["created_at"]),
+            )
+
+    def get_auth_account(self, email: str) -> Optional[dict]:
+        """Credencial pra login: só retorna se houver senha definida (password_hash
+        não-nulo). Perfil legado sem senha (criado antes da persistência) volta None
+        aqui — o registro reaproveita o id pra preservar threads/quotes."""
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                "SELECT id, email, password_hash, display_name, store_name "
+                "FROM chat.users WHERE email = %s AND password_hash IS NOT NULL",
+                (email,),
+            )
+            row = cur.fetchone()
+            if not row:
+                return None
+            return {
+                "id": row["id"], "email": row["email"],
+                "password_hash": row["password_hash"],
+                "display_name": row["display_name"], "store_name": row["store_name"],
+            }
+
+    def upsert_auth_account(self, *, user_id: str, email: str, password_hash: str,
+                            display_name: Optional[str] = None,
+                            store_name: Optional[str] = None) -> None:
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO chat.users (id, email, display_name, store_name, password_hash, created_at)
+                VALUES (%s, %s, %s, %s, %s, NOW())
+                ON CONFLICT (id) DO UPDATE SET
+                    email = EXCLUDED.email,
+                    display_name = COALESCE(EXCLUDED.display_name, chat.users.display_name),
+                    store_name = COALESCE(EXCLUDED.store_name, chat.users.store_name),
+                    password_hash = EXCLUDED.password_hash;
+                """,
+                (user_id, email, display_name, store_name, password_hash),
+            )
+            conn.commit()
 
     def get_user(self, user_id: str) -> Optional[User]:
         with self._conn() as conn, conn.cursor() as cur:

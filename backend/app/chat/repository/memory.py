@@ -32,6 +32,8 @@ class InMemoryRepository(ChatRepository):
         self._quotes: Dict[str, Quote] = {}
         self._validations: List[QuoteValidation] = []
         self._bug_reports: List[BugReport] = []
+        # email → {id, email, password_hash, display_name, store_name}
+        self._auth: Dict[str, dict] = {}
 
     # --- Users ---
     def upsert_user(self, user: User) -> User:
@@ -42,6 +44,32 @@ class InMemoryRepository(ChatRepository):
     def get_user(self, user_id: str) -> Optional[User]:
         with self._lock:
             return self._users.get(user_id)
+
+    # --- Auth ---
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        with self._lock:
+            e = (email or "").strip().lower()
+            for u in self._users.values():
+                if (u.email or "").strip().lower() == e:
+                    return u
+            acct = self._auth.get(e)
+            return User(id=acct["id"], email=acct["email"],
+                        display_name=acct.get("display_name"),
+                        store_name=acct.get("store_name")) if acct else None
+
+    def get_auth_account(self, email: str) -> Optional[dict]:
+        with self._lock:
+            acct = self._auth.get((email or "").strip().lower())
+            return dict(acct) if acct and acct.get("password_hash") else None
+
+    def upsert_auth_account(self, *, user_id: str, email: str, password_hash: str,
+                            display_name: Optional[str] = None,
+                            store_name: Optional[str] = None) -> None:
+        with self._lock:
+            self._auth[(email or "").strip().lower()] = {
+                "id": user_id, "email": email, "password_hash": password_hash,
+                "display_name": display_name, "store_name": store_name,
+            }
 
     # --- Threads ---
     def create_thread(self, thread: ChatThread) -> ChatThread:
