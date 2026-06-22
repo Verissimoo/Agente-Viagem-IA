@@ -58,6 +58,7 @@ from backend.app.api.v1.chat.schemas import (
     CreateThreadRequestDTO,
     CreateValidationRequestDTO,
     LoginRequestDTO,
+    MarkIdealRequestDTO,
     MessageDTO,
     MessageListResponseDTO,
     MilesHealthcheckRequestDTO,
@@ -67,6 +68,7 @@ from backend.app.api.v1.chat.schemas import (
     QuoteDTO,
     QuoteListResponseDTO,
     QuoteValidationDTO,
+    RankingFeedbackDTO,
     RatesResponseDTO,
     RatesUpdateRequestDTO,
     RateTierDTO,
@@ -88,6 +90,7 @@ from backend.app.chat.domain.models import (
     Quote,
     QuoteStatus,
     QuoteValidation,
+    RankingFeedback,
     ValidationKind,
 )
 from backend.app.chat.repository import ChatRepository
@@ -1086,6 +1089,58 @@ def thread_validations_endpoint(
 ) -> List[QuoteValidationDTO]:
     """Pra a UI marcar os cards já validados/corrigidos ao reabrir a thread."""
     return [_validation_to_dto(v) for v in repo.list_validations_by_thread(thread_id, session.user_id)]
+
+
+# ─── Ranking feedback ("cotação ideal") — rótulo de treino learn-to-rank ───
+@router.post("/ranking/ideal", response_model=RankingFeedbackDTO)
+def mark_ideal_endpoint(
+    payload: MarkIdealRequestDTO,
+    session: AuthSession = SessionDep,
+    repo: ChatRepository = RepoDep,
+    audit: AuditLogger = AuditDep,
+) -> RankingFeedbackDTO:
+    """Vendedor marca, entre as ofertas apresentadas, qual era a IDEAL. Guarda o
+    conjunto de candidatos (snapshot) + a escolhida → semente de treino de ranking.
+    Idempotente por turno (único user+thread+message)."""
+    thread = repo.get_thread(payload.thread_id, session.user_id)
+    candidates: List[Dict[str, Any]] = []
+    search_req: Dict[str, Any] = {}
+    try:
+        msgs = repo.list_messages(payload.thread_id, session.user_id, limit=200)
+        msg = next((m for m in msgs if m.id == payload.message_id), None)
+        if msg:
+            candidates = (msg.metadata or {}).get("offers") or []
+        if thread:
+            search_req = (thread.state_snapshot or {}).get("slots") or {}
+    except Exception as e:
+        logger.warning("mark_ideal: falha lendo candidatos: %s", e)
+
+    fb = RankingFeedback(
+        user_id=session.user_id, thread_id=payload.thread_id,
+        message_id=payload.message_id, ideal_offer_id=payload.offer_id,
+        candidates=candidates, search_request=search_req,
+    )
+    saved = repo.upsert_ranking_feedback(fb)
+    audit.log("ranking.ideal", user_id=session.user_id, thread_id=payload.thread_id,
+              detail={"offer_id": payload.offer_id, "n_candidates": len(candidates)})
+    return RankingFeedbackDTO(
+        id=saved.id, thread_id=saved.thread_id, message_id=saved.message_id,
+        ideal_offer_id=saved.ideal_offer_id, created_at=saved.created_at.isoformat(),
+    )
+
+
+@router.get("/threads/{thread_id}/ranking", response_model=List[RankingFeedbackDTO])
+def thread_ranking_endpoint(
+    thread_id: str, session: AuthSession = SessionDep, repo: ChatRepository = RepoDep,
+) -> List[RankingFeedbackDTO]:
+    """Pra a UI marcar quais ofertas já foram apontadas como ideais ao reabrir a thread."""
+    return [
+        RankingFeedbackDTO(
+            id=f.id, thread_id=f.thread_id, message_id=f.message_id,
+            ideal_offer_id=f.ideal_offer_id, created_at=f.created_at.isoformat(),
+        )
+        for f in repo.list_ranking_feedback_by_thread(thread_id, session.user_id)
+    ]
 
 
 @router.post("/bug-reports", response_model=BugReportDTO)

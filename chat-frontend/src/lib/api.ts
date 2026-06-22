@@ -529,6 +529,26 @@ export const validations = {
   },
 };
 
+// ─── Ranking feedback ("cotação ideal") ─────────────────────────────
+export interface RankingFeedback {
+  id: string;
+  thread_id: string;
+  message_id?: string | null;
+  ideal_offer_id: string;
+  created_at: string;
+}
+
+export const ranking = {
+  // Marca, entre as ofertas de um turno (message_id), qual é a IDEAL.
+  markIdeal: (token: string, threadId: string, messageId: string, offerId: string) =>
+    request<RankingFeedback>("/chat/ranking/ideal", {
+      method: "POST", token,
+      body: JSON.stringify({ thread_id: threadId, message_id: messageId, offer_id: offerId }),
+    }),
+  byThread: (token: string, threadId: string) =>
+    request<RankingFeedback[]>(`/chat/threads/${threadId}/ranking`, { token }),
+};
+
 export const bugReports = {
   create: (token: string, threadId: string, description: string,
            context?: Record<string, unknown>) =>

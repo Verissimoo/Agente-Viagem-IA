@@ -24,6 +24,7 @@ from backend.app.chat.domain.models import (
     Quote,
     QuoteStatus,
     QuoteValidation,
+    RankingFeedback,
     ValidationKind,
     User,
 )
@@ -75,6 +76,32 @@ class PostgresRepository(ChatRepository):
             check=_check_connection,
         )
         self._ensure_auth_schema()
+        self._ensure_ranking_schema()
+
+    def _ensure_ranking_schema(self) -> None:
+        """Cria a tabela de rótulos de ranking ("cotação ideal") no boot, sem
+        depender de migration manual (Railway só sobe o uvicorn). Idempotente.
+        Sem FK (autossuficiente) — o snapshot dos candidatos basta pro treino."""
+        try:
+            with self._conn() as conn, conn.cursor() as cur:
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS chat.ranking_feedback (
+                        id              TEXT PRIMARY KEY,
+                        user_id         TEXT NOT NULL,
+                        thread_id       TEXT NOT NULL,
+                        message_id      TEXT,
+                        ideal_offer_id  TEXT NOT NULL,
+                        candidates      JSONB NOT NULL DEFAULT '[]'::jsonb,
+                        search_request  JSONB NOT NULL DEFAULT '{}'::jsonb,
+                        created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                        UNIQUE (user_id, thread_id, message_id)
+                    );
+                    """
+                )
+                conn.commit()
+        except Exception as e:
+            logger.warning("ensure_ranking_schema falhou (segue sem): %s", e)
 
     def _ensure_auth_schema(self) -> None:
         """Garante a coluna de credencial (DevAuth) sem depender de migration
@@ -546,6 +573,41 @@ class PostgresRepository(ChatRepository):
             "by_airline": by_airline,
         }
 
+    # ──────────── ranking feedback ("cotação ideal") ────────────
+    def upsert_ranking_feedback(self, feedback: RankingFeedback) -> RankingFeedback:
+        f = feedback
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO chat.ranking_feedback
+                    (id, user_id, thread_id, message_id, ideal_offer_id,
+                     candidates, search_request, created_at)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+                ON CONFLICT (user_id, thread_id, message_id) DO UPDATE SET
+                    ideal_offer_id = EXCLUDED.ideal_offer_id,
+                    candidates     = EXCLUDED.candidates,
+                    search_request = EXCLUDED.search_request,
+                    created_at     = EXCLUDED.created_at
+                RETURNING *;
+                """,
+                (f.id, f.user_id, f.thread_id, f.message_id, f.ideal_offer_id,
+                 _jsonb(f.candidates), _jsonb(f.search_request), f.created_at),
+            )
+            row = cur.fetchone()
+            conn.commit()
+            return _row_to_ranking(row) if row else f
+
+    def list_ranking_feedback_by_thread(
+        self, thread_id: str, user_id: str,
+    ) -> List[RankingFeedback]:
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                "SELECT * FROM chat.ranking_feedback "
+                "WHERE thread_id=%s AND user_id=%s ORDER BY created_at DESC;",
+                (thread_id, user_id),
+            )
+            return [_row_to_ranking(r) for r in cur.fetchall()]
+
     # ──────────── bug reports ────────────
     def create_bug_report(self, report: BugReport) -> BugReport:
         b = report
@@ -592,6 +654,20 @@ def _row_to_validation(row: dict) -> QuoteValidation:
         emission_method=row.get("emission_method"),
         found_value_brl=float(row["found_value_brl"]) if row.get("found_value_brl") is not None else None,
         found_miles=row.get("found_miles"), observations=row.get("observations"),
+        created_at=_to_aware(row["created_at"]),
+    )
+
+
+def _row_to_ranking(row: dict) -> RankingFeedback:
+    def _j(v, default):
+        if v is None:
+            return default
+        return json.loads(v) if isinstance(v, str) else v
+    return RankingFeedback(
+        id=row["id"], user_id=row["user_id"], thread_id=row["thread_id"],
+        message_id=row.get("message_id"), ideal_offer_id=row["ideal_offer_id"],
+        candidates=_j(row.get("candidates"), []),
+        search_request=_j(row.get("search_request"), {}),
         created_at=_to_aware(row["created_at"]),
     )
 

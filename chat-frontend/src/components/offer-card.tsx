@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment } from "react";
-import { AlertTriangle, FileDown, Plane, CheckCircle2, Clock } from "lucide-react";
+import { AlertTriangle, FileDown, Plane, CheckCircle2, Clock, Star } from "lucide-react";
 import type { Offer } from "@/lib/api";
 import { formatBRL, formatDate, formatMiles, formatTime } from "@/lib/format";
 
@@ -36,11 +36,17 @@ interface OfferCardProps {
   showValidationControls?: boolean;
   onValidate?: (offerId: string) => void;
   onOpenCorrection?: (offerId: string) => void;
+  // "Cotação ideal" — rótulo de treino de ranking. Selecionável em qualquer
+  // card do turno mais recente; só uma oferta fica marcada por turno.
+  isIdeal?: boolean;
+  showIdealControl?: boolean;
+  onMarkIdeal?: (offerId: string) => void;
 }
 
 export default function OfferCard({
   offer, approving, approvedOfferId, onApprove, isBest, readonly,
   validationState = "none", showValidationControls, onValidate, onOpenCorrection,
+  isIdeal, showIdealControl, onMarkIdeal,
 }: OfferCardProps) {
   const isApproved = approvedOfferId === offer.offer_id;
 
@@ -488,6 +494,25 @@ export default function OfferCard({
                 Encontrei melhor
               </button>
             </>
+          ) : null}
+        </div>
+      )}
+
+      {/* "Cotação ideal" — feedback leve do vendedor (semente de treino de ranking) */}
+      {(showIdealControl || isIdeal) && (
+        <div className="mt-2 flex items-center gap-2">
+          {isIdeal ? (
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-md bg-amber-50 text-amber-700 ring-1 ring-amber-200 dark:bg-amber-400/15 dark:text-amber-300 dark:ring-amber-400/30">
+              <Star size={13} className="fill-current" /> Cotação ideal
+            </span>
+          ) : showIdealControl ? (
+            <button
+              onClick={() => onMarkIdeal?.(offer.offer_id)}
+              title="Marque a melhor opção desse resultado — ajuda o sistema a aprender."
+              className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md ring-1 ring-amber-300 text-amber-700 hover:bg-amber-50 dark:ring-amber-400/40 dark:text-amber-300 dark:hover:bg-amber-400/10 transition-colors"
+            >
+              <Star size={13} /> Marcar como ideal
+            </button>
           ) : null}
         </div>
       )}

@@ -16,6 +16,7 @@ from backend.app.chat.domain.models import (
     Quote,
     QuoteStatus,
     QuoteValidation,
+    RankingFeedback,
     ValidationKind,
     User,
 )
@@ -108,6 +109,17 @@ class ChatRepository(ABC):
 
     @abstractmethod
     def validation_stats(self, user_id: str) -> Dict[str, Any]: ...
+
+    # --- Ranking feedback (rótulo "cotação ideal" — base de treino ML) ---
+    @abstractmethod
+    def upsert_ranking_feedback(self, feedback: RankingFeedback) -> RankingFeedback:
+        """Grava (ou substitui) o rótulo de oferta ideal de um turno
+        (único por user+thread+message)."""
+
+    @abstractmethod
+    def list_ranking_feedback_by_thread(
+        self, thread_id: str, user_id: str,
+    ) -> List[RankingFeedback]: ...
 
     # --- Bug reports ---
     @abstractmethod

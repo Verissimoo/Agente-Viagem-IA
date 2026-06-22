@@ -18,6 +18,7 @@ import {
   ApiError,
   bugReports,
   quotes,
+  ranking,
   threads,
   validations,
   type Message,
@@ -48,6 +49,8 @@ export default function ChatPage() {
   const [error, setError] = useState<string | null>(null);
   // Validação interna (sistema vs. manual)
   const [validationsByOffer, setValidationsByOffer] = useState<Record<string, "validated" | "corrected">>({});
+  // "Cotação ideal" por mensagem (messageId → offerId marcado). Rótulo de treino.
+  const [idealByMessage, setIdealByMessage] = useState<Record<string, string>>({});
   const [correctionOfferId, setCorrectionOfferId] = useState<string | null>(null);
   const [savingValidation, setSavingValidation] = useState(false);
   // Reportar bug
@@ -117,19 +120,24 @@ export default function ChatPage() {
     setApprovedOfferId(null);
     setMessages([]);
     setValidationsByOffer({});
+    setIdealByMessage({});
     setCorrectionOfferId(null);
     setMessagesLoading(true);
     try {
-      // Mensagens + validações em paralelo (não serializa; validações não
-      // bloqueiam a renderização das mensagens).
-      const [{ messages }, vals] = await Promise.all([
+      // Mensagens + validações + "cotação ideal" em paralelo (não bloqueiam a
+      // renderização das mensagens).
+      const [{ messages }, vals, ideals] = await Promise.all([
         threads.messages(s.access_token, id),
         validations.byThread(s.access_token, id).catch(() => []),
+        ranking.byThread(s.access_token, id).catch(() => []),
       ]);
       setMessages(messages);
       const map: Record<string, "validated" | "corrected"> = {};
       for (const v of vals) if (v.offer_id) map[v.offer_id] = v.kind;
       setValidationsByOffer(map);
+      const imap: Record<string, string> = {};
+      for (const r of ideals) if (r.message_id) imap[r.message_id] = r.ideal_offer_id;
+      setIdealByMessage(imap);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Falha carregando mensagens");
     } finally {
@@ -309,6 +317,22 @@ export default function ChatPage() {
     }
   }
 
+  async function handleMarkIdeal(messageId: string, offer: Offer) {
+    if (!session || !activeThreadId) return;
+    const prev = idealByMessage[messageId];
+    setIdealByMessage((p) => ({ ...p, [messageId]: offer.offer_id }));  // otimista
+    try {
+      await ranking.markIdeal(session.access_token, activeThreadId, messageId, offer.offer_id);
+    } catch (err) {
+      setIdealByMessage((p) => {
+        const n = { ...p };
+        if (prev) n[messageId] = prev; else delete n[messageId];
+        return n;
+      });
+      setError(err instanceof ApiError ? err.message : "Falha ao marcar cotação ideal");
+    }
+  }
+
   async function handleSaveCorrection(offer: Offer, data: CorrectionData) {
     if (!session || !activeThreadId) return;
     const id = offer.offer_id;
@@ -422,6 +446,9 @@ export default function ChatPage() {
                               showValidationControls={showCtrls}
                               onValidate={() => handleValidate(offer)}
                               onOpenCorrection={() => setCorrectionOfferId(offer.offer_id)}
+                              isIdeal={idealByMessage[m.id] === offer.offer_id}
+                              showIdealControl={isLatest}
+                              onMarkIdeal={() => handleMarkIdeal(m.id, offer)}
                             />
                             {correctionOfferId === offer.offer_id && (
                               <CorrectionPanel

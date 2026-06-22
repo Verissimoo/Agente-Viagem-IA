@@ -17,6 +17,7 @@ from backend.app.chat.domain.models import (
     Quote,
     QuoteStatus,
     QuoteValidation,
+    RankingFeedback,
     ValidationKind,
     User,
 )
@@ -31,6 +32,7 @@ class InMemoryRepository(ChatRepository):
         self._messages: Dict[str, List[ChatMessage]] = {}
         self._quotes: Dict[str, Quote] = {}
         self._validations: List[QuoteValidation] = []
+        self._ranking: List[RankingFeedback] = []
         self._bug_reports: List[BugReport] = []
         # email → {id, email, password_hash, display_name, store_name}
         self._auth: Dict[str, dict] = {}
@@ -218,6 +220,24 @@ class InMemoryRepository(ChatRepository):
         with self._lock:
             vs = [v for v in self._validations if v.user_id == user_id]
         return _compute_validation_stats(vs)
+
+    # --- Ranking feedback ("cotação ideal") ---
+    def upsert_ranking_feedback(self, feedback: RankingFeedback) -> RankingFeedback:
+        with self._lock:
+            self._ranking = [
+                f for f in self._ranking
+                if not (f.user_id == feedback.user_id and f.thread_id == feedback.thread_id
+                        and f.message_id == feedback.message_id)
+            ]
+            self._ranking.append(feedback)
+            return feedback
+
+    def list_ranking_feedback_by_thread(
+        self, thread_id: str, user_id: str,
+    ) -> List[RankingFeedback]:
+        with self._lock:
+            return [f for f in self._ranking
+                    if f.thread_id == thread_id and f.user_id == user_id]
 
     # --- Bug reports ---
     def create_bug_report(self, report: BugReport) -> BugReport:
