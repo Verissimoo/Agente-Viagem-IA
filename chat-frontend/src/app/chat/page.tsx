@@ -53,8 +53,14 @@ export default function ChatPage() {
   const [bugLoading, setBugLoading] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  // Guard contra o double-invoke de effects do React StrictMode (dev): sem ele,
+  // as duas execuções veem threads=[] (a 1ª thread ainda não persistiu) e cada
+  // uma cria uma "Primeira cotação" → 2 chats vazios no 1º load.
+  const bootstrapped = useRef(false);
 
   useEffect(() => {
+    if (bootstrapped.current) return;
+    bootstrapped.current = true;
     const s = loadSession();
     if (!s) { router.replace("/login"); return; }
     setSession(s);
