@@ -79,24 +79,36 @@ class AwardToolAdapter(BaseSearchAdapter):
 
         origin = request.origin[0]
         destination = request.destination[0]
-        day = request.date_start
         cabin = os.getenv("AWARDTOOL_CABINS", "").strip() or _ALL_CABINS
         programs = _programs()
 
-        day_end = day + timedelta(days=_RANGE_DAYS)
+        # Janela PEDIDA (o orchestrator passa [win_start, win_end] do plano).
+        want_start = request.date_start
+        want_end = request.date_end or want_start
+        if want_end < want_start:
+            want_end = want_start
+        # cap defensivo (flex gigante não vira crawl eterno)
+        max_win = int(os.getenv("AWARDTOOL_MAX_WINDOW_DAYS", "10"))
+        if (want_end - want_start).days > max_win:
+            want_end = want_start + timedelta(days=max_win)
+        # Crawl precisa de range ≥2 dias (range de 1 dia volta vazio).
+        crawl_end = max(want_end, want_start + timedelta(days=_RANGE_DAYS))
+
         try:
             raw = cached_call(
                 "awardtool",
                 {"o": origin.upper(), "d": destination.upper(),
-                 "dd": day.isoformat(), "prog": sorted(programs), "cab": cabin},
+                 "ds": want_start.isoformat(), "de": want_end.isoformat(),
+                 "prog": sorted(programs), "cab": cabin},
                 search_awardtool,
-                origin, destination, day, day_end,
+                origin, destination, want_start, crawl_end,
                 programs=programs, cabin=cabin,
             )
             offers = parse_search_result({"result": raw})
-            # crawleamos uma janela (data..data+N); devolve só a DATA pedida.
+            # devolve só as ofertas DENTRO da janela pedida (descarta o padding do crawl)
             return [o for o in offers
-                    if o.outbound.segments and o.outbound.segments[0].departure_dt.date() == day]
+                    if o.outbound.segments
+                    and want_start <= o.outbound.segments[0].departure_dt.date() <= want_end]
         except AwardToolAuthError as e:
             print(f"[awardtool] auth: {str(e)[:150]}")
             return []

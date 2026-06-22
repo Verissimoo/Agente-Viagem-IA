@@ -191,7 +191,7 @@ def search_awardtool(
 
     email, pw = _creds()
     programs = programs or []
-    budget = budget_s if budget_s is not None else float(os.getenv("AWARDTOOL_BUDGET_S", "60"))
+    budget = budget_s if budget_s is not None else float(os.getenv("AWARDTOOL_BUDGET_S", "80"))
     url = _search_url(origin, destination, date_start, date_end, programs, cabin)
 
     with SEM_AWARDTOOL, sync_playwright() as p:

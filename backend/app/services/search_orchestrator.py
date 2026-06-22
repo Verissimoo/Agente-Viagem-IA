@@ -234,7 +234,14 @@ def _execute_dates_x_adapters_parallel(
     cada cliente (SEM_KAYAK=5, SEM_BUSCAMILHAS=3, SEM_ECONOMILHAS=5) — e
     não a contagem de tasks.
     """
+    # AwardTool é RANGE-NATIVO (1 crawl cobre vários dias). Em vez de N tasks
+    # por data (N crawls de ~40s), roda UMA vez com a janela inteira do plano.
+    _range_native = {"AWARDTOOL"}
+    plan_dates = [r.date_start for r in search_plan]
+    win_start, win_end = min(plan_dates), max(plan_dates)
+
     tasks = []
+    range_done: set = set()
     for req_i in search_plan:
         date_trace_id = f"_{req_i.date_start.isoformat()}"
         if req_i.return_start:
@@ -244,6 +251,14 @@ def _execute_dates_x_adapters_parallel(
             adapter_cls = _ADAPTER_MAP.get(cia_up)
             if adapter_cls is None:
                 print(f"[!] Companhia '{cia_up}' sem adapter — ignorada.")
+                continue
+            if cia_up in _range_native:
+                # uma única task abrangendo [win_start, win_end]
+                if cia_up in range_done:
+                    continue
+                range_done.add(cia_up)
+                rng_req = req_i.model_copy(update={"date_start": win_start, "date_end": win_end})
+                tasks.append((cia_up, adapter_cls, rng_req, "_range"))
                 continue
             tasks.append((cia_up, adapter_cls, req_i, date_trace_id))
 
