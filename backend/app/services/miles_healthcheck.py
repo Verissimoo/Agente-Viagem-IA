@@ -28,7 +28,9 @@ logger = logging.getLogger(__name__)
 #   AZUL_CASH — cash da Azul (redundante com TudoAzul milhas; não pedido).
 #   AMERICAN AIRLINES — alias duplicado de AMERICAN (mesmo adapter) → 1 card só.
 # Kayak e Skiplagged ENTRAM (pedido do vendedor — ver se as fontes cash respondem).
-_EXCLUDED = {"AZUL_CASH", "AMERICAN AIRLINES"}
+# AWARDTOOL fica de fora: é scraping por navegador (~30-60s), não um canário
+# rápido — rodá-lo no health-check estouraria o orçamento e arriscaria ban.
+_EXCLUDED = {"AZUL_CASH", "AMERICAN AIRLINES", "AWARDTOOL"}
 
 # Rótulos legíveis e SourceType por programa (pro painel).
 _LABELS: Dict[str, str] = {

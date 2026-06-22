@@ -12,6 +12,7 @@ ou e-mail/senha ausentes) o adapter retorna [] e não derruba o pipeline.
 ATENÇÃO: o ToS do AwardTool proíbe automação — uso gentil + cache obrigatórios
 (risco de ban da conta). Ver memory/awardtool-scraping.md.
 """
+from backend.app.providers.awardtool.adapter import AwardToolAdapter
 from backend.app.providers.awardtool.cipher import decode_v3
 
-__all__ = ["decode_v3"]
+__all__ = ["AwardToolAdapter", "decode_v3"]

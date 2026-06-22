@@ -37,6 +37,7 @@ _TTL_BY_PREFIX: dict[str, int] = {
     "buscamilhas":       MILES_TTL_S,
     "economilhas":       MILES_TTL_S,
     "seats_aero":        MILES_TTL_S,
+    "awardtool":         MILES_TTL_S,
     "mcp_award":         MILES_TTL_S,
     "fx_rates":          int(os.getenv("CACHE_FX_TTL_S", "21600")),  # 6h
 }

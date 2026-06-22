@@ -24,6 +24,7 @@ from backend.app.providers.buscamilhas.adapter import (
 )
 from backend.app.providers.economilhas.adapter import EconomilhasAdapter
 from backend.app.providers.seats_aero.adapter import SeatsAeroAdapter
+from backend.app.providers.awardtool.adapter import AwardToolAdapter
 from backend.app.providers.skiplagged.adapter import SkiplaggedAdapter
 from backend.app.providers.buscamilhas.client import COMPANHIAS_NACIONAIS
 from backend.app.services.ranking import rank_offers
@@ -61,6 +62,9 @@ _ADAPTER_MAP = {
     # Flying Blue no piloto). Uma chamada cobre vários programas; sem key
     # (SEATS_AERO_API_KEY) o adapter devolve [] e não atrapalha.
     "SEATS_AERO":        SeatsAeroAdapter,
+    # AwardTool: award multi-programa via scraping da conta Pro (Playwright).
+    # PESADO + ToS-sensível → gated por AWARDTOOL_ENABLED (default 0 → []).
+    "AWARDTOOL":         AwardToolAdapter,
     # Skiplagged é COMPLEMENTAR: sempre rodando em paralelo, fornece
     # hidden-city + split-cash. Falha do Skiplagged não derruba o pipeline.
     "SKIPLAGGED":        SkiplaggedAdapter,
@@ -81,7 +85,7 @@ except ValueError:
 # Fontes sempre injetadas além das companhias selecionadas pelo usuário.
 # Economilhas é uma chamada agregada (todos os programas em 1 hit) então
 # sempre roda; Skiplagged é hidden-city/split cash, sem cia atrelada.
-_ALWAYS_INCLUDE = ["ECONOMILHAS", "SEATS_AERO", "SKIPLAGGED", "AZUL_CASH"]
+_ALWAYS_INCLUDE = ["ECONOMILHAS", "SEATS_AERO", "AWARDTOOL", "SKIPLAGGED", "AZUL_CASH"]
 
 
 def _parse_iatas_from_prompt(prompt: str) -> Tuple[str, str]:
@@ -198,6 +202,7 @@ _PROGRESS_LABELS = {
     "AMERICAN AIRLINES": "American (milhas)", "INTERLINE": "Interline (milhas)",
     "COPA": "Copa (milhas)", "MCP_AWARD": "MCP Award (milhas)", "QATAR": "Qatar (milhas)",
     "ECONOMILHAS": "Economilhas (milhas)", "SEATS_AERO": "Seats.aero (award)",
+    "AWARDTOOL": "AwardTool (award)",
     "KAYAK": "Kayak (cash)",
     "SKIPLAGGED": "Skiplagged (hidden city)", "AZUL_CASH": "Azul Oficial (cash)",
 }
