@@ -54,3 +54,6 @@ Thumbs.db
 
 # ── Claude Code ─────────────────────────────────────────────────
 .claude/
+
+# HAR exports (podem conter credenciais/tokens)
+*.har
