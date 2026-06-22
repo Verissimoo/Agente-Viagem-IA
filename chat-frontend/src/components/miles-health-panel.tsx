@@ -41,7 +41,7 @@ const AIRLINE_COVERAGE: { airline: string; keys: string[] }[] = [
   { airline: "TAP Miles&Go",          keys: ["TAP", "AWARDTOOL"] },
   { airline: "Iberia Plus",           keys: ["IBERIA", "ECONOMILHAS", "AWARDTOOL", "SEATS_AERO"] },
   { airline: "AAdvantage (American)", keys: ["AMERICAN", "AWARDTOOL"] },
-  { airline: "Copa ConnectMiles",     keys: ["COPA", "AWARDTOOL", "SEATS_AERO"] },
+  { airline: "Copa ConnectMiles",     keys: ["COPA", "SEATS_AERO"] },
   { airline: "Qatar Privilege Club",  keys: ["QATAR", "AWARDTOOL", "SEATS_AERO"] },
   { airline: "Aeroplan (Air Canada)", keys: ["AWARDTOOL", "SEATS_AERO"] },
   { airline: "Flying Blue (AF/KLM)",  keys: ["AWARDTOOL", "SEATS_AERO"] },
