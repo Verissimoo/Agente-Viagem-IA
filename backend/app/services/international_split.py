@@ -22,6 +22,7 @@ KAYAK_MARKUP, validate_split_with_supplementary, sanitize_offers.
 from __future__ import annotations
 
 import logging
+import os
 from datetime import date, datetime, timedelta
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -29,6 +30,25 @@ logger = logging.getLogger(__name__)
 
 HUB = "GRU"           # hub principal (compat)
 HUBS = ["GRU", "VCP"]  # hubs pra quebra de trecho. VCP = Azul (cash direto + milhas)
+
+
+def _split_always_include() -> List[str]:
+    """Fontes injetadas nas buscas INTERNAS da quebra de trecho.
+
+    Cobre TODOS os provedores do motor de status (incl. AwardTool e Kayak) —
+    o vendedor quer ver milhas em todas as cias disponíveis, sem buracos. Junto
+    com as cias do BuscaMilhas (via `companhias`) + QATAR/MCP_AWARD (rota intl),
+    isso replica a cobertura do health-check.
+
+    ⚠️ AwardTool é Playwright (~40-90s/crawl). Numa quebra com vários hubs isso
+    soma minutos + RAM (vários Chromium). Em host apertado (Railway), tire-o via
+    `SPLIT_ALWAYS_INCLUDE="ECONOMILHAS,SEATS_AERO,SKIPLAGGED,AZUL_CASH,KAYAK"`.
+    """
+    raw = os.getenv(
+        "SPLIT_ALWAYS_INCLUDE",
+        "ECONOMILHAS,SEATS_AERO,AWARDTOOL,SKIPLAGGED,AZUL_CASH,KAYAK",
+    )
+    return [p.strip().upper() for p in raw.split(",") if p.strip()]
 KAYAK_MARKUP = 1.10
 MIN_CONN_MIN = 150   # janela mínima doméstico→internacional (sem bagagem)
 MAX_CONN_MIN = 720   # 12h
@@ -170,9 +190,14 @@ def _hub_leg(money: List[Dict[str, Any]], miles: List[Dict[str, Any]]) -> Option
 
 
 def _direct_miles_per_carrier(miles: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    """Uma opção de voo direto por CIA que retornou em milhas (a mais barata de
-    cada). Prioridade do vendedor: ver milhas em TODAS as companhias com
-    resultado, não só a mais barata global."""
+    """Uma opção por PROGRAMA de milhas que retornou (a mais barata de cada).
+
+    O vendedor quer ver TODOS os programas com resultado (LATAM Pass, Smiles,
+    LifeMiles, Aeroplan, Miles&Smiles, Atmos, Qatar Privilege, ...). Agrupar por
+    COMPANHIA colapsava o award multi-programa do AwardTool/seats.aero — vários
+    programas no MESMO voo (ex.: Qatar via LifeMiles 60k vs Aeroplan 87k) caíam
+    no balde 'Qatar Airways' e só a mais barata sobrevivia. Agrupar por PROGRAMA
+    preserva cada um."""
     from backend.app.ai.agents.airlines import carrier_to_program
     best_by: Dict[str, Dict[str, Any]] = {}
     for o in miles:
@@ -180,11 +205,13 @@ def _direct_miles_per_carrier(miles: List[Dict[str, Any]]) -> List[Dict[str, Any
         if not eq:
             continue
         air = (o.get("airline") or "?")
-        cur = best_by.get(air.upper())
+        prog = o.get("miles_program") or carrier_to_program(air) or air
+        key = str(prog).upper()
+        cur = best_by.get(key)
         if cur is None or float(eq) < cur["total_brl"]:
-            best_by[air.upper()] = {
+            best_by[key] = {
                 "type": "direct_miles", "airline": air,
-                "program": o.get("miles_program") or carrier_to_program(air),
+                "program": prog,
                 "miles": o.get("miles"), "taxes_brl": o.get("taxes_brl"),
                 "total_brl": float(eq), "segments": _segs(o),
             }
@@ -214,12 +241,15 @@ def _direct_cash_unplugged(money: List[Dict[str, Any]],
     return None
 
 
-def _run(origin: str, dest: str, day: date, adults: int, cabin: str) -> Dict[str, Any]:
+def _run(origin: str, dest: str, day: date, adults: int, cabin: str,
+         on_progress: Optional[Callable[[str], None]] = None) -> Dict[str, Any]:
     from backend.app.ai.agents.sanitizer import sanitize_offers
     from backend.app.ai.agents.tools import run_search
     try:
         r = run_search(origin=origin, destination=dest, date_start=day,
-                       adults=adults, cabin=cabin, top_n=10)
+                       adults=adults, cabin=cabin, top_n=10,
+                       always_include=_split_always_include(),
+                       on_progress=on_progress)
     except Exception as e:
         logger.warning("intl-split run_search %s→%s %s falhou: %s", origin, dest, day, e)
         return {"ok": False}
@@ -375,6 +405,12 @@ def quote_international(*, origin: str, destination: str,
         ("direct", "", origin, destination, d) for d in direct_days
     ]
     for hub, hday in hubs.items():
+        # Se a origem JÁ é o hub (ex.: GRU→DOH com hub GRU), não existe perna
+        # nacional — a quebra viraria GRU→DOH (dup do direto) + GRU→GRU (nonsense).
+        # Pula. Idem se o hub for o próprio destino.
+        if hub == origin or hub == destination:
+            _emit(f"Hub {hub} ignorado (origem já é o hub ou é o destino).")
+            continue
         specs.append(("hub_intl", hub, hub, destination, hday))
         specs.append(("hub_dom", hub, origin, hub, hday))
 
@@ -387,7 +423,14 @@ def quote_international(*, origin: str, destination: str,
         else:
             label = f"trecho nacional {origin}→{hub}"
         _emit(f"Buscando {label} em {dy.strftime('%d/%m')}…")
-        results[(kind, hub, dy.isoformat())] = _run(o, dd, dy, adults, cabin)
+        # Callback por perna: prefixa a rota pra o painel mostrar QUAL provider
+        # respondeu em QUAL trecho (ex.: "GRU→DOH · ✓ Qatar (milhas) — 3 ofertas").
+        def _leg_cb(route_tag: str) -> Optional[Callable[[str], None]]:
+            if not on_progress:
+                return None
+            return lambda m: _emit(f"{route_tag} · {m}")
+        results[(kind, hub, dy.isoformat())] = _run(
+            o, dd, dy, adults, cabin, on_progress=_leg_cb(f"{o}→{dd}"))
 
     # 3. DIRETO: milhas em TODAS as cias com resultado + cash Kayak sem programa.
     # O skip-split (Tipo 2) é COLETADO aqui, mas só entra no fim se for o mais

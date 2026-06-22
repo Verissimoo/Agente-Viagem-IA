@@ -23,6 +23,8 @@ from backend.app.providers.buscamilhas.adapter import (
     BuscaMilhasCopaAdapter,
 )
 from backend.app.providers.economilhas.adapter import EconomilhasAdapter
+from backend.app.providers.seats_aero.adapter import SeatsAeroAdapter
+from backend.app.providers.awardtool.adapter import AwardToolAdapter
 from backend.app.providers.skiplagged.adapter import SkiplaggedAdapter
 from backend.app.providers.buscamilhas.client import COMPANHIAS_NACIONAIS
 from backend.app.services.ranking import rank_offers
@@ -56,6 +58,13 @@ _ADAPTER_MAP = {
     # Azul Pelo Mundo, COPA, Iberia, British). BuscaMilhas continua como
     # fallback/complemento por cia.
     "ECONOMILHAS":       EconomilhasAdapter,
+    # seats.aero: award internacional multi-programa (Aeroplan, Lifemiles,
+    # Flying Blue no piloto). Uma chamada cobre vários programas; sem key
+    # (SEATS_AERO_API_KEY) o adapter devolve [] e não atrapalha.
+    "SEATS_AERO":        SeatsAeroAdapter,
+    # AwardTool: award multi-programa via scraping da conta Pro (Playwright).
+    # PESADO + ToS-sensível → gated por AWARDTOOL_ENABLED (default 0 → []).
+    "AWARDTOOL":         AwardToolAdapter,
     # Skiplagged é COMPLEMENTAR: sempre rodando em paralelo, fornece
     # hidden-city + split-cash. Falha do Skiplagged não derruba o pipeline.
     "SKIPLAGGED":        SkiplaggedAdapter,
@@ -76,7 +85,31 @@ except ValueError:
 # Fontes sempre injetadas além das companhias selecionadas pelo usuário.
 # Economilhas é uma chamada agregada (todos os programas em 1 hit) então
 # sempre roda; Skiplagged é hidden-city/split cash, sem cia atrelada.
-_ALWAYS_INCLUDE = ["ECONOMILHAS", "SKIPLAGGED", "AZUL_CASH"]
+_ALWAYS_INCLUDE = ["ECONOMILHAS", "SEATS_AERO", "AWARDTOOL", "SKIPLAGGED", "AZUL_CASH"]
+
+
+def _excluded_program_tokens() -> set:
+    """Programas de milhas a SUPRIMIR dos resultados (substrings normalizadas).
+    Default: United MileagePlus (sem disponibilidade no momento). Reativar é só
+    setar EXCLUDED_MILES_PROGRAMS="" (vazio) no env."""
+    raw = os.getenv("EXCLUDED_MILES_PROGRAMS", "MileagePlus")
+    return {p.strip().lower().replace(" ", "") for p in raw.split(",") if p.strip()}
+
+
+def _drop_excluded_programs(offers):
+    """Remove ofertas cujo `miles_program` casa com um token excluído (ex.: United
+    MileagePlus). Filtra pelo PROGRAMA — voo operado pela United via OUTRO programa
+    (ex.: Aeroplan) permanece."""
+    tokens = _excluded_program_tokens()
+    if not tokens:
+        return offers
+    out = []
+    for o in offers:
+        prog = (getattr(o, "miles_program", None) or "").lower().replace(" ", "")
+        if prog and any(t in prog for t in tokens):
+            continue
+        out.append(o)
+    return out
 
 
 def _parse_iatas_from_prompt(prompt: str) -> Tuple[str, str]:
@@ -192,7 +225,9 @@ _PROGRESS_LABELS = {
     "TAP": "TAP (milhas)", "IBERIA": "Iberia (milhas)", "AMERICAN": "American (milhas)",
     "AMERICAN AIRLINES": "American (milhas)", "INTERLINE": "Interline (milhas)",
     "COPA": "Copa (milhas)", "MCP_AWARD": "MCP Award (milhas)", "QATAR": "Qatar (milhas)",
-    "ECONOMILHAS": "Economilhas (milhas)", "KAYAK": "Kayak (cash)",
+    "ECONOMILHAS": "Economilhas (milhas)", "SEATS_AERO": "Seats.aero (award)",
+    "AWARDTOOL": "AwardTool (award)",
+    "KAYAK": "Kayak (cash)",
     "SKIPLAGGED": "Skiplagged (hidden city)", "AZUL_CASH": "Azul Oficial (cash)",
 }
 
@@ -223,7 +258,14 @@ def _execute_dates_x_adapters_parallel(
     cada cliente (SEM_KAYAK=5, SEM_BUSCAMILHAS=3, SEM_ECONOMILHAS=5) — e
     não a contagem de tasks.
     """
+    # AwardTool é RANGE-NATIVO (1 crawl cobre vários dias). Em vez de N tasks
+    # por data (N crawls de ~40s), roda UMA vez com a janela inteira do plano.
+    _range_native = {"AWARDTOOL"}
+    plan_dates = [r.date_start for r in search_plan]
+    win_start, win_end = min(plan_dates), max(plan_dates)
+
     tasks = []
+    range_done: set = set()
     for req_i in search_plan:
         date_trace_id = f"_{req_i.date_start.isoformat()}"
         if req_i.return_start:
@@ -233,6 +275,14 @@ def _execute_dates_x_adapters_parallel(
             adapter_cls = _ADAPTER_MAP.get(cia_up)
             if adapter_cls is None:
                 print(f"[!] Companhia '{cia_up}' sem adapter — ignorada.")
+                continue
+            if cia_up in _range_native:
+                # uma única task abrangendo [win_start, win_end]
+                if cia_up in range_done:
+                    continue
+                range_done.add(cia_up)
+                rng_req = req_i.model_copy(update={"date_start": win_start, "date_end": win_end})
+                tasks.append((cia_up, adapter_cls, rng_req, "_range"))
                 continue
             tasks.append((cia_up, adapter_cls, req_i, date_trace_id))
 
@@ -388,6 +438,12 @@ def run_pipeline(
             message=f"{len(companhias_ativas)} adapters x {len(search_plan)} datas",
         )
         all_offers.extend(offers)
+
+        # Suprime programas indisponíveis (ex.: United MileagePlus) antes de tudo.
+        before = len(all_offers)
+        all_offers = _drop_excluded_programs(all_offers)
+        if len(all_offers) != before:
+            print(f"DEBUG: {before - len(all_offers)} oferta(s) de programa excluído removida(s).")
 
         if not all_offers:
             print("DEBUG: Nenhuma oferta encontrada em nenhuma data.")

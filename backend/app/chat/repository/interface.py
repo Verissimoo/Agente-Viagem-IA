@@ -16,6 +16,7 @@ from backend.app.chat.domain.models import (
     Quote,
     QuoteStatus,
     QuoteValidation,
+    RankingFeedback,
     ValidationKind,
     User,
 )
@@ -28,6 +29,21 @@ class ChatRepository(ABC):
 
     @abstractmethod
     def get_user(self, user_id: str) -> Optional[User]: ...
+
+    # --- Auth (DevAuth persistente — credenciais no banco, não em arquivo) ---
+    @abstractmethod
+    def get_user_by_email(self, email: str) -> Optional[User]: ...
+
+    @abstractmethod
+    def get_auth_account(self, email: str) -> Optional[dict]:
+        """Credencial pra login (id, email, password_hash, display_name, store_name)
+        ou None se não houver senha definida pra esse email."""
+        ...
+
+    @abstractmethod
+    def upsert_auth_account(self, *, user_id: str, email: str, password_hash: str,
+                            display_name: Optional[str] = None,
+                            store_name: Optional[str] = None) -> None: ...
 
     # --- Threads ---
     @abstractmethod
@@ -93,6 +109,17 @@ class ChatRepository(ABC):
 
     @abstractmethod
     def validation_stats(self, user_id: str) -> Dict[str, Any]: ...
+
+    # --- Ranking feedback (rótulo "cotação ideal" — base de treino ML) ---
+    @abstractmethod
+    def upsert_ranking_feedback(self, feedback: RankingFeedback) -> RankingFeedback:
+        """Grava (ou substitui) o rótulo de oferta ideal de um turno
+        (único por user+thread+message)."""
+
+    @abstractmethod
+    def list_ranking_feedback_by_thread(
+        self, thread_id: str, user_id: str,
+    ) -> List[RankingFeedback]: ...
 
     # --- Bug reports ---
     @abstractmethod

@@ -1,0 +1,327 @@
+{
+ "finish": false,
+ "task_id": "04862056-199e-4ebd-a8cf-c563f390263d",
+ "result": [
+  {
+   "id": "TP_20260715_GRU_LIS_ECONOMY_TP84",
+   "ids": {
+    "flight_id": "TP_20260715_GRU_LIS_TP84",
+    "flight_deduplicate_id": "TP_20260715_GRU_LIS_TP84@53000^41.91^-1|0^0^0|0^0^0|0^0^0"
+   },
+   "cabin_prices": {
+    "Economy": {
+     "miles": 53000,
+     "tax": 41.91,
+     "cash_price": -1,
+     "premium_cabin_percentage": 0,
+     "seats": 9,
+     "segments": [
+      {
+       "cabin": "Economy",
+       "duration": 590.0,
+       "layover": 0,
+       "departure": "GRU",
+       "arrival": "LIS"
+      }
+     ],
+     "transfer_options": [
+      {
+       "program": "capital one",
+       "points": 53000
+      },
+      {
+       "program": "bilt",
+       "points": 53000
+      }
+     ]
+    }
+   },
+   "c_t": "Economy",
+   "p_c": "TP",
+   "a_p": 53000,
+   "c": "USD",
+   "sc": 41.91,
+   "cf": -1,
+   "c_f_r": [],
+   "a_c": "TP",
+   "a_n": "TAP Portugal",
+   "p_p": 0,
+   "o_c_t": "Economy",
+   "payment": {
+    "tax": 41.91,
+    "t": 41.91,
+    "miles": 53000,
+    "m": 53000,
+    "cabin": "Economy",
+    "ca": "Economy",
+    "c": -1
+   },
+   "fare": {
+    "t_m_t": 590.0,
+    "t_t_d": "9h 50m",
+    "d_c": 0,
+    "ps": [
+     {
+      "or": "GRU",
+      "d_t": "2026-07-15T00:45:00",
+      "de": "LIS",
+      "a_t": "2026-07-15T14:35:00",
+      "c_t": "Economy",
+      "s_c_t": "Economy",
+      "ac": "Airbus A330-900Neo",
+      "a_c": "TP",
+      "f_n": "TP84",
+      "l_t": 0,
+      "t_m": 590.0,
+      "d_s": 4915
+     }
+    ]
+   },
+   "ss": 9,
+   "l_s": 1781913542,
+   "p_u": 5389,
+   "d_s": 4915,
+   "advisory": [],
+   "extra_info": {},
+   "url": "https://booking.flytap.com/booking",
+   "date": "2026-07-15",
+   "s_k": "program|TP|GRU|LIS|1:0|20260715",
+   "t_o": [
+    {
+     "program": "bilt",
+     "points": 53000
+    },
+    {
+     "program": "capital one",
+     "points": 53000
+    }
+   ],
+   "transfer_options": [
+    {
+     "program": "bilt",
+     "points": 53000
+    },
+    {
+     "program": "capital one",
+     "points": 53000
+    }
+   ],
+   "r_t": false
+  },
+  {
+   "id": "TP_20260715_GRU_LIS_ECONOMY_TP88",
+   "ids": {
+    "flight_id": "TP_20260715_GRU_LIS_TP88",
+    "flight_deduplicate_id": "TP_20260715_GRU_LIS_TP88@53000^41.91^-1|0^0^0|0^0^0|0^0^0"
+   },
+   "cabin_prices": {
+    "Economy": {
+     "miles": 53000,
+     "tax": 41.91,
+     "cash_price": -1,
+     "premium_cabin_percentage": 0,
+     "seats": 9,
+     "segments": [
+      {
+       "cabin": "Economy",
+       "duration": 590.0,
+       "layover": 0,
+       "departure": "GRU",
+       "arrival": "LIS"
+      }
+     ],
+     "transfer_options": [
+      {
+       "program": "capital one",
+       "points": 53000
+      },
+      {
+       "program": "bilt",
+       "points": 53000
+      }
+     ]
+    }
+   },
+   "c_t": "Economy",
+   "p_c": "TP",
+   "a_p": 53000,
+   "c": "USD",
+   "sc": 41.91,
+   "cf": -1,
+   "c_f_r": [],
+   "a_c": "TP",
+   "a_n": "TAP Portugal",
+   "p_p": 0,
+   "o_c_t": "Economy",
+   "payment": {
+    "tax": 41.91,
+    "t": 41.91,
+    "miles": 53000,
+    "m": 53000,
+    "cabin": "Economy",
+    "ca": "Economy",
+    "c": -1
+   },
+   "fare": {
+    "t_m_t": 590.0,
+    "t_t_d": "9h 50m",
+    "d_c": 1,
+    "ps": [
+     {
+      "or": "GRU",
+      "d_t": "2026-07-15T20:45:00",
+      "de": "LIS",
+      "a_t": "2026-07-16T10:35:00",
+      "c_t": "Economy",
+      "s_c_t": "Economy",
+      "ac": "Airbus A330-900Neo",
+      "a_c": "TP",
+      "f_n": "TP88",
+      "l_t": 0,
+      "t_m": 590.0,
+      "d_s": 4915
+     }
+    ]
+   },
+   "ss": 9,
+   "l_s": 1781913542,
+   "p_u": 5389,
+   "d_s": 4915,
+   "advisory": [],
+   "extra_info": {},
+   "url": "https://booking.flytap.com/booking",
+   "date": "2026-07-15",
+   "s_k": "program|TP|GRU|LIS|1:0|20260715",
+   "t_o": [
+    {
+     "program": "bilt",
+     "points": 53000
+    },
+    {
+     "program": "capital one",
+     "points": 53000
+    }
+   ],
+   "transfer_options": [
+    {
+     "program": "bilt",
+     "points": 53000
+    },
+    {
+     "program": "capital one",
+     "points": 53000
+    }
+   ],
+   "r_t": false
+  },
+  {
+   "id": "TP_20260715_GRU_LIS_ECONOMY_TP82",
+   "ids": {
+    "flight_id": "TP_20260715_GRU_LIS_TP82",
+    "flight_deduplicate_id": "TP_20260715_GRU_LIS_TP82@53000^41.91^-1|0^0^0|0^0^0|0^0^0"
+   },
+   "cabin_prices": {
+    "Economy": {
+     "miles": 53000,
+     "tax": 41.91,
+     "cash_price": -1,
+     "premium_cabin_percentage": 0,
+     "seats": 9,
+     "segments": [
+      {
+       "cabin": "Economy",
+       "duration": 595.0,
+       "layover": 0,
+       "departure": "GRU",
+       "arrival": "LIS"
+      }
+     ],
+     "transfer_options": [
+      {
+       "program": "capital one",
+       "points": 53000
+      },
+      {
+       "program": "bilt",
+       "points": 53000
+      }
+     ]
+    }
+   },
+   "c_t": "Economy",
+   "p_c": "TP",
+   "a_p": 53000,
+   "c": "USD",
+   "sc": 41.91,
+   "cf": -1,
+   "c_f_r": [],
+   "a_c": "TP",
+   "a_n": "TAP Portugal",
+   "p_p": 0,
+   "o_c_t": "Economy",
+   "payment": {
+    "tax": 41.91,
+    "t": 41.91,
+    "miles": 53000,
+    "m": 53000,
+    "cabin": "Economy",
+    "ca": "Economy",
+    "c": -1
+   },
+   "fare": {
+    "t_m_t": 595.0,
+    "t_t_d": "9h 55m",
+    "d_c": 1,
+    "ps": [
+     {
+      "or": "GRU",
+      "d_t": "2026-07-15T15:30:00",
+      "de": "LIS",
+      "a_t": "2026-07-16T05:25:00",
+      "c_t": "Economy",
+      "s_c_t": "Economy",
+      "ac": "Airbus A330-900Neo",
+      "a_c": "TP",
+      "f_n": "TP82",
+      "l_t": 0,
+      "t_m": 595.0,
+      "d_s": 4915
+     }
+    ]
+   },
+   "ss": 9,
+   "l_s": 1781913542,
+   "p_u": 5344,
+   "d_s": 4915,
+   "advisory": [],
+   "extra_info": {},
+   "url": "https://booking.flytap.com/booking",
+   "date": "2026-07-15",
+   "s_k": "program|TP|GRU|LIS|1:0|20260715",
+   "t_o": [
+    {
+     "program": "bilt",
+     "points": 53000
+    },
+    {
+     "program": "capital one",
+     "points": 53000
+    }
+   ],
+   "transfer_options": [
+    {
+     "program": "bilt",
+     "points": 53000
+    },
+    {
+     "program": "capital one",
+     "points": 53000
+    }
+   ],
+   "r_t": false
+  }
+ ],
+ "has_next": true,
+ "record_id": "record_a0e2b3e4f8964b4ebfca569d6d71c6a9at",
+ "status": 200
+}

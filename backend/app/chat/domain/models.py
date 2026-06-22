@@ -123,6 +123,23 @@ class QuoteValidation(BaseModel):
     created_at: datetime = Field(default_factory=_utcnow)
 
 
+class RankingFeedback(BaseModel):
+    """Rótulo de ranking: entre as ofertas APRESENTADAS num turno, o vendedor
+    marcou qual era a IDEAL. É a semente de treino pra learn-to-rank — guarda o
+    conjunto de candidatos (com features) + qual foi a escolhida. Autossuficiente
+    (snapshot dos candidatos), sem FK cascade — sobrevive ao delete da thread."""
+    model_config = ConfigDict(use_enum_values=False)
+
+    id: str = Field(default_factory=_new_id)
+    user_id: str
+    thread_id: str
+    message_id: Optional[str] = None        # mensagem do assistente com os cards
+    ideal_offer_id: str                     # offer_id marcado como ideal
+    candidates: List[Dict[str, Any]] = Field(default_factory=list)  # ofertas mostradas (snapshot)
+    search_request: Dict[str, Any] = Field(default_factory=dict)    # contexto da busca
+    created_at: datetime = Field(default_factory=_utcnow)
+
+
 class BugReport(BaseModel):
     """Relato de bug do vendedor — thread_id + descrição + contexto mínimo."""
     model_config = ConfigDict(use_enum_values=False)

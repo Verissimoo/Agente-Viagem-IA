@@ -3,6 +3,20 @@
 
 const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
 
+// Misconfiguração clássica de produção: o build do Next.js não recebeu
+// NEXT_PUBLIC_API_URL (var é inlinada em build-time), então o bundle caiu no
+// fallback localhost enquanto a página roda num host remoto. Todo fetch morre
+// com TypeError ("Failed to fetch") e a UI só mostrava "Falha criando conversa".
+function apiMisconfigHint(): string {
+  if (typeof window === "undefined") return "";
+  const host = window.location.hostname;
+  const remote = host !== "localhost" && host !== "127.0.0.1";
+  if (remote && BASE.includes("localhost")) {
+    return ` — a aplicação está apontando para ${BASE}. Configure NEXT_PUBLIC_API_URL no build de produção.`;
+  }
+  return ` (servidor: ${BASE})`;
+}
+
 export class ApiError extends Error {
   status: number;
   payload: unknown;
@@ -154,7 +168,14 @@ async function request<T>(
   headers.set("Content-Type", "application/json");
   if (init.token) headers.set("Authorization", `Bearer ${init.token}`);
 
-  const resp = await fetch(`${BASE}${path}`, { ...init, headers });
+  let resp: Response;
+  try {
+    resp = await fetch(`${BASE}${path}`, { ...init, headers });
+  } catch (err) {
+    // Falha de rede (servidor inacessível, CORS, mixed-content, DNS): fetch
+    // rejeita com TypeError. Vira ApiError com status 0 e mensagem acionável.
+    throw new ApiError(0, `Sem conexão com o servidor${apiMisconfigHint()}`, err);
+  }
   const text = await resp.text();
   let body: unknown = null;
   try { body = text ? JSON.parse(text) : null; } catch { body = text; }
@@ -506,6 +527,26 @@ export const validations = {
     if (!resp.ok) throw new ApiError(resp.status, "Falha ao exportar CSV", null);
     return await resp.blob();
   },
+};
+
+// ─── Ranking feedback ("cotação ideal") ─────────────────────────────
+export interface RankingFeedback {
+  id: string;
+  thread_id: string;
+  message_id?: string | null;
+  ideal_offer_id: string;
+  created_at: string;
+}
+
+export const ranking = {
+  // Marca, entre as ofertas de um turno (message_id), qual é a IDEAL.
+  markIdeal: (token: string, threadId: string, messageId: string, offerId: string) =>
+    request<RankingFeedback>("/chat/ranking/ideal", {
+      method: "POST", token,
+      body: JSON.stringify({ thread_id: threadId, message_id: messageId, offer_id: offerId }),
+    }),
+  byThread: (token: string, threadId: string) =>
+    request<RankingFeedback[]>(`/chat/threads/${threadId}/ranking`, { token }),
 };
 
 export const bugReports = {

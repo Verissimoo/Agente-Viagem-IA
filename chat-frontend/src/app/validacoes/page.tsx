@@ -57,8 +57,8 @@ export default function ValidacoesPage() {
     n == null ? "—" : `R$ ${Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 0 })}`;
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-zinc-950 text-gray-800 dark:text-zinc-100">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+    <main className="min-h-screen bg-gray-50 dark:bg-[#0a0a0a] text-gray-800 dark:text-zinc-100">
+      <div className="max-w-6xl mx-auto px-4 py-8 anim-fade-in">
         <div className="flex items-center justify-between mb-6">
           <Link href="/chat" className="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-zinc-400 hover:text-brand-600">
             <ArrowLeft size={16} /> Voltar pro chat
@@ -116,7 +116,15 @@ export default function ValidacoesPage() {
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={6} className="px-3 py-6 text-center text-gray-400">Carregando…</td></tr>
+                Array.from({ length: 5 }).map((_, i) => (
+                  <tr key={i} className="border-t border-gray-100 dark:border-zinc-800">
+                    {Array.from({ length: 6 }).map((__, j) => (
+                      <td key={j} className="px-3 py-2.5">
+                        <div className="h-3 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
+                      </td>
+                    ))}
+                  </tr>
+                ))
               ) : items.length === 0 ? (
                 <tr><td colSpan={6} className="px-3 py-6 text-center text-gray-400">Nenhum registro ainda.</td></tr>
               ) : items.map((v) => {

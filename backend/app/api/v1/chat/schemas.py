@@ -221,3 +221,18 @@ class BugReportDTO(BaseModel):
     context: Dict[str, Any] = Field(default_factory=dict)
     status: str
     created_at: str
+
+
+# ─── Ranking feedback ("cotação ideal") ─────────────────────────────
+class MarkIdealRequestDTO(BaseModel):
+    thread_id: str = Field(..., max_length=64)
+    message_id: str = Field(..., max_length=64)   # mensagem do assistente com os cards
+    offer_id: str = Field(..., max_length=128)    # oferta marcada como ideal
+
+
+class RankingFeedbackDTO(BaseModel):
+    id: str
+    thread_id: str
+    message_id: Optional[str] = None
+    ideal_offer_id: str
+    created_at: str
