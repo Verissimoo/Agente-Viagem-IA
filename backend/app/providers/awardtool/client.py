@@ -119,13 +119,36 @@ def _run_search(p, url: str, budget_s: float) -> List[Dict[str, Any]]:
                 pass
 
     ctx.on("response", on_response)
+
+    def _enable_realtime(pg):
+        """Ativa 'Real-time Search' — sem isso o AwardTool só faz lookup em
+        cache (retorna vazio rápido); com isso dispara o crawl ao vivo."""
+        try:
+            rt = pg.locator("text=/Real-?time Search/i")
+            if rt.count() > 0:
+                rt.first.click(timeout=3000)
+        except Exception:
+            pass
+
     try:
         page = ctx.new_page()
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
         page.wait_for_timeout(2500)
-        # clica o submit AZUL (contained), não "Search History" (text)
-        page.locator("button.MuiButton-contained", has_text="Search").first.click(timeout=8000)
+        _enable_realtime(page)              # liga real-time na home
+        page.wait_for_timeout(600)
+        # Clica o submit AZUL (contained); pode abrir nova aba (/flight).
+        result_page = page
+        try:
+            with ctx.expect_page(timeout=8000) as pop:
+                page.locator("button.MuiButton-contained", has_text="Search").first.click(timeout=8000)
+            result_page = pop.value
+            result_page.wait_for_timeout(2000)
+            _enable_realtime(result_page)   # garante real-time na aba de resultados
+        except Exception:
+            # sem popup (o clique já disparou dentro do `with`): roda na mesma aba
+            result_page = page
 
+        page = result_page
         merged: Dict[str, Dict[str, Any]] = {}
         waited = 0.0
         seen = 0

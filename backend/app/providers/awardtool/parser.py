@@ -141,6 +141,7 @@ def parse_search_result(payload: Dict[str, Any]) -> List[UnifiedOffer]:
     """Converte o JSON decodificado de /search_result_v2 em UnifiedOffers.
     Absorve itens malformados individualmente (nunca levanta)."""
     offers: List[UnifiedOffer] = []
+    seen = set()
     for item in (payload.get("result") or []):
         if not isinstance(item, dict):
             continue
@@ -148,6 +149,13 @@ def parse_search_result(payload: Dict[str, Any]) -> List[UnifiedOffer]:
             offer = _item_to_offer(item)
         except Exception:
             offer = None
-        if offer is not None:
-            offers.append(offer)
+        if offer is None:
+            continue
+        s0 = offer.outbound.segments[0]
+        key = (offer.miles_program, offer.miles, s0.flight_number,
+               s0.departure_dt.isoformat())
+        if key in seen:
+            continue
+        seen.add(key)
+        offers.append(offer)
     return offers

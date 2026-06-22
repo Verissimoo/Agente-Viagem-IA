@@ -14,6 +14,7 @@ Cache de 180s (cada chamada é cara). Falha sempre absorvida → [].
 from __future__ import annotations
 
 import os
+from datetime import timedelta
 from typing import List
 
 from backend.app.domain.errors import OfflineModeError
@@ -28,11 +29,19 @@ from backend.app.providers.awardtool.client import (
 from backend.app.providers.awardtool.parser import parse_search_result
 from backend.app.providers.base import BaseSearchAdapter
 
-# Programas-alvo (códigos IATA do AwardTool). Override: AWARDTOOL_PROGRAMS="AC,AV,IB".
-_DEFAULT_PROGRAMS = ["AC", "AV", "KL", "AY", "IB", "BA", "QR", "AS", "CM", "TP"]
+# Por padrão busca TODOS os programas (programs=[] → param vazio = todos). Filtrar
+# por uma lista específica + todas as cabines estoura o limite de 36 entradas e
+# volta vazio; "todos" já cobre Aeroplan/Flying Blue/TAP/Emirates/etc. Override
+# (raro) via AWARDTOOL_PROGRAMS="AC,AV,IB".
+_DEFAULT_PROGRAMS: List[str] = []
 
-# Cabine do domínio → rótulo do AwardTool.
-_CABIN_MAP = {"economy": "Economy", "business": "Business", "first": "First"}
+# AwardTool é um buscador de RANGE: range de 1 dia (start==end) volta vazio.
+# Crawleamos uma janela curta e filtramos pra data pedida.
+_RANGE_DAYS = int(os.getenv("AWARDTOOL_RANGE_DAYS", "2"))
+
+# Award: buscamos TODAS as cabines (muito mais disponibilidade que só economy);
+# cada oferta carrega a sua cabine. Override raro via AWARDTOOL_CABINS.
+_ALL_CABINS = "Economy&Premium Economy&Business&First"
 
 # Máx. de entradas por busca (dias×programas×cabines) imposto pelo AwardTool.
 _MAX_ENTRIES = 36
@@ -71,19 +80,23 @@ class AwardToolAdapter(BaseSearchAdapter):
         origin = request.origin[0]
         destination = request.destination[0]
         day = request.date_start
-        cabin = _CABIN_MAP.get((request.cabin.value if request.cabin else "economy"), "Economy")
+        cabin = os.getenv("AWARDTOOL_CABINS", "").strip() or _ALL_CABINS
         programs = _programs()
 
+        day_end = day + timedelta(days=_RANGE_DAYS)
         try:
             raw = cached_call(
                 "awardtool",
                 {"o": origin.upper(), "d": destination.upper(),
                  "dd": day.isoformat(), "prog": sorted(programs), "cab": cabin},
                 search_awardtool,
-                origin, destination, day, day,
+                origin, destination, day, day_end,
                 programs=programs, cabin=cabin,
             )
-            return parse_search_result({"result": raw})
+            offers = parse_search_result({"result": raw})
+            # crawleamos uma janela (data..data+N); devolve só a DATA pedida.
+            return [o for o in offers
+                    if o.outbound.segments and o.outbound.segments[0].departure_dt.date() == day]
         except AwardToolAuthError as e:
             print(f"[awardtool] auth: {str(e)[:150]}")
             return []
