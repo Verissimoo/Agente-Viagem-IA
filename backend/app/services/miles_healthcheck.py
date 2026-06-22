@@ -28,9 +28,9 @@ logger = logging.getLogger(__name__)
 #   AZUL_CASH — cash da Azul (redundante com TudoAzul milhas; não pedido).
 #   AMERICAN AIRLINES — alias duplicado de AMERICAN (mesmo adapter) → 1 card só.
 # Kayak e Skiplagged ENTRAM (pedido do vendedor — ver se as fontes cash respondem).
-# AWARDTOOL fica de fora: é scraping por navegador (~30-60s), não um canário
-# rápido — rodá-lo no health-check estouraria o orçamento e arriscaria ban.
-_EXCLUDED = {"AZUL_CASH", "AMERICAN AIRLINES", "AWARDTOOL"}
+# AWARDTOOL ENTRA, mas é browser-based (~40-60s) → quando incluído, o orçamento
+# de tempo do health-check sobe (ver _budget_s) pra não dar falso "timeout".
+_EXCLUDED = {"AZUL_CASH", "AMERICAN AIRLINES"}
 
 # Rótulos legíveis e SourceType por programa (pro painel).
 _LABELS: Dict[str, str] = {
@@ -38,7 +38,7 @@ _LABELS: Dict[str, str] = {
     "TAP": "TAP Miles&Go", "IBERIA": "Iberia Plus", "AMERICAN": "AAdvantage (American)",
     "INTERLINE": "Interline", "COPA": "ConnectMiles (Copa)", "MCP_AWARD": "MCP Award",
     "QATAR": "Qatar Privilege Club", "ECONOMILHAS": "Economilhas (agregador)",
-    "SEATS_AERO": "Seats.aero (award)",
+    "SEATS_AERO": "Seats.aero (award)", "AWARDTOOL": "AwardTool (award)",
     "KAYAK": "Kayak (cash)", "SKIPLAGGED": "Skiplagged (hidden city)",
 }
 _SOURCE_TYPE: Dict[str, str] = {
@@ -46,7 +46,7 @@ _SOURCE_TYPE: Dict[str, str] = {
     "TAP": "buscamilhas_tap", "IBERIA": "buscamilhas_iberia",
     "AMERICAN": "buscamilhas_american", "INTERLINE": "buscamilhas_interline",
     "COPA": "buscamilhas_copa", "MCP_AWARD": "mcp_award", "QATAR": "mcp_qatar",
-    "ECONOMILHAS": "economilhas", "SEATS_AERO": "seats_aero",
+    "ECONOMILHAS": "economilhas", "SEATS_AERO": "seats_aero", "AWARDTOOL": "awardtool",
     "KAYAK": "kayak", "SKIPLAGGED": "skiplagged",
 }
 
@@ -59,6 +59,9 @@ _DEFAULT_CANARY: Dict[str, Tuple[str, str]] = {
     "INTERLINE": ("GRU", "MIA"), "COPA": ("GRU", "PTY"), "MCP_AWARD": ("GRU", "LIS"),
     "QATAR": ("GRU", "DOH"), "ECONOMILHAS": ("GRU", "GIG"),
     "SEATS_AERO": ("GRU", "MIA"),
+    # GRU→LIS tem award abundante em vários programas (Aeroplan/FlyingBlue/TAP/…) →
+    # bom canário pra confirmar que o AwardTool está retornando resultado.
+    "AWARDTOOL": ("GRU", "LIS"),
     "KAYAK": ("GRU", "GIG"), "SKIPLAGGED": ("GRU", "MIA"),
 }
 
@@ -113,6 +116,13 @@ def run_miles_healthcheck(programs: Optional[List[str]] = None, *, adults: int =
 
     d = date_override or (date.today() + timedelta(days=30))
     budget = _budget_s()
+    # AwardTool é browser-based (~40-60s). Quando entra no check, sobe o orçamento
+    # pra não dar falso "timeout" (env AWARDTOOL_HEALTHCHECK_BUDGET_S, default 90).
+    if "AWARDTOOL" in wanted:
+        try:
+            budget = max(budget, float(os.getenv("AWARDTOOL_HEALTHCHECK_BUDGET_S", "90")))
+        except ValueError:
+            budget = max(budget, 90.0)
     now_iso = datetime.now(timezone.utc).isoformat()
 
     def _mk(prog: str, route: str, status: str, offers: int, latency: float,
