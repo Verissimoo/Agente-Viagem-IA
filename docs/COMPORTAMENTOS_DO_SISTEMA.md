@@ -25,6 +25,12 @@
   embaixo (`✈ LATAM`). Cash (sem programa) mostra a companhia no título.
 - **Recomendada = a mais barata SEGURA** (milhas / cash / quebra de trecho nacional).
   Hidden city e skip-split nunca lideram (são arriscados) — vão por último, marcados.
+- **Ida-e-volta sem tarifa casada → NUNCA zerar.** Numa busca RT, ofertas só-ida são
+  filtradas (não confundir meia-viagem com viagem inteira). Mas se as fontes só
+  devolverem só-ida (ex.: long-haul KIX→GRU sem RT casado), **mostrar as opções de
+  IDA com aviso claro** ("só ida; volta à parte") é obrigatório — melhor que cair no
+  watchdog "problema entregando a cotação". O sistema nunca mostra erro genérico
+  quando há opções reais pra exibir.
 - **Mensagem ao cliente NUNCA cita nome de fonte/provedor** (Kayak, Skiplagged,
   AwardTool, seats.aero…). Painéis internos (status, health-check, validação) PODEM.
 

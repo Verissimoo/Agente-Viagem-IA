@@ -773,12 +773,25 @@ def presenter_node(state: ChatState) -> ChatState:
         slots_for_pax.get("trip_type") == "roundtrip"
         or bool(slots_for_pax.get("return_from") or slots_for_pax.get("date_return"))
     )
+    roundtrip_only_oneway = False
     if is_roundtrip:
         def _has_inbound(o: Dict[str, Any]) -> bool:
             return bool((o.get("inbound") or {}).get("segments"))
-        sanitized_ranked = [o for o in sanitized_ranked if _has_inbound(o)]
-        sanitized_money = [o for o in sanitized_money if _has_inbound(o)]
-        sanitized_miles = [o for o in sanitized_miles if _has_inbound(o)]
+        rt_ranked = [o for o in sanitized_ranked if _has_inbound(o)]
+        rt_money = [o for o in sanitized_money if _has_inbound(o)]
+        rt_miles = [o for o in sanitized_miles if _has_inbound(o)]
+        # Só aplica o filtro se SOBROU oferta ida-e-volta. Se os provedores só
+        # devolveram só-ida (ex.: long-haul sem tarifa casada — KIX→GRU), mostrar
+        # as opções de IDA é MUITO melhor que zerar tudo e cair no watchdog "sem
+        # cotação". Marca pro texto avisar que são só-ida.
+        if rt_ranked or rt_money or rt_miles:
+            sanitized_ranked, sanitized_money, sanitized_miles = rt_ranked, rt_money, rt_miles
+        elif sanitized_ranked or sanitized_money:
+            roundtrip_only_oneway = True
+            logger.warning(
+                "presenter: roundtrip sem tarifa casada — fallback p/ só-ida "
+                "(%d ranked, %d money)", len(sanitized_ranked), len(sanitized_money),
+            )
 
     if real_destination and sanitized_miles:
         sanitized_money = enrich_hidden_city_offers(
@@ -1175,6 +1188,15 @@ def presenter_node(state: ChatState) -> ChatState:
         sections.append("DADOS PARA INSIGHT:")
         for d in insight_data:
             sections.append(f"  - {d}")
+
+    if roundtrip_only_oneway:
+        sections.insert(0, (
+            "⚠️ IDA-E-VOLTA SEM TARIFA CASADA: as fontes não retornaram tarifa de "
+            "ida-e-volta pra essa rota. As opções abaixo são SÓ DE IDA. AVISE o "
+            "vendedor (no texto, com clareza) que mostrou só a IDA e que a volta "
+            "precisa ser cotada à parte (ou como 2 bilhetes separados). NÃO "
+            "apresente o preço como se fosse ida-e-volta."
+        ))
 
     sections_text = "\n".join(sections)
 
