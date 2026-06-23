@@ -29,39 +29,21 @@ from backend.app.providers.awardtool.client import (
 from backend.app.providers.awardtool.parser import parse_search_result
 from backend.app.providers.base import BaseSearchAdapter
 
-# PROGRAMAS explícitos (não vazio!). O param vazio (=todos) × todas as cabines ×
-# range estoura o limite de 36 entradas e o AwardTool volta VAZIO — era o bug de
-# "AwardTool sem tarifa" intermitente. Lista curada dos programas resgatáveis do
-# Brasil (mapeados em parser.PROGRAM_LABEL); UA fica de fora (United MileagePlus
-# é suprimido no ranking). ~16 programas × range(2) × 1 cabine = ~32 ≤ 36.
-# Override: AWARDTOOL_PROGRAMS="AC,AV,TK".
-_DEFAULT_PROGRAMS: List[str] = [
-    "AC",  # Aeroplan
-    "AV",  # LifeMiles
-    "AF",  # Flying Blue
-    "AY",  # Finnair Plus
-    "IB",  # Iberia Avios
-    "BA",  # British Avios
-    "QR",  # Qatar Privilege Club
-    "AS",  # Alaska Mileage Plan
-    "CM",  # Copa ConnectMiles
-    "TP",  # TAP Miles&Go
-    "EK",  # Emirates Skywards
-    "EY",  # Etihad Guest
-    "AA",  # American AAdvantage
-    "TK",  # Turkish Miles&Smiles
-    "G3",  # Smiles (GOL)
-    "VS",  # Virgin Atlantic Flying Club
-]
+# PROGRAMAS VAZIO = TODOS. CRÍTICO: o AwardTool cacheia pela combinação EXATA de
+# parâmetros, e a chave que fica QUENTE é a que o site usa por padrão — "todos os
+# programas" (param vazio). Passar uma lista explícita cria uma chave FRIA → volta
+# vazio mesmo a rota tendo disponibilidade. Comprovado ao vivo: vazio+todas cabines
+# = 103 ofertas (Aeroplan/LifeMiles/Alaska/Etihad/Smiles/Turkish); lista de 16 = 0.
+# NÃO especifique programas aqui. Override (raro/debug) via AWARDTOOL_PROGRAMS.
+_DEFAULT_PROGRAMS: List[str] = []
 
 # AwardTool é um buscador de RANGE: range de 1 dia (start==end) volta vazio.
-# Crawleamos uma janela curta e filtramos pra data pedida.
+# Crawleamos uma janela curta e filtramos pra data pedida. _RANGE_DAYS=2 → o
+# crawl vira [dia, dia+2], que é a janela que bate o cache quente do site.
 _RANGE_DAYS = int(os.getenv("AWARDTOOL_RANGE_DAYS", "2"))
 
-# Cabine: SÓ Economy por padrão pra caber no limite de 36 entradas (todas as
-# cabines × N programas × range estourava → vazio). Override via AWARDTOOL_CABINS,
-# ex.: "Economy&Business" (lembre de reduzir AWARDTOOL_PROGRAMS pra não passar 36).
-_DEFAULT_CABINS = "Economy"
+# Cabine: TODAS por padrão — bate o cache quente do site (vazio+todas cabines =
+# 103 ofertas no teste) e traz business/first award. Override via AWARDTOOL_CABINS.
 _ALL_CABINS = "Economy&Premium Economy&Business&First"
 
 # Máx. de entradas por busca (dias×programas×cabines) imposto pelo AwardTool.
@@ -100,7 +82,7 @@ class AwardToolAdapter(BaseSearchAdapter):
 
         origin = request.origin[0]
         destination = request.destination[0]
-        cabin = os.getenv("AWARDTOOL_CABINS", "").strip() or _DEFAULT_CABINS
+        cabin = os.getenv("AWARDTOOL_CABINS", "").strip() or _ALL_CABINS
         programs = _programs()
 
         # Janela PEDIDA (o orchestrator passa [win_start, win_end] do plano).
