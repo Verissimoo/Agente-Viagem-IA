@@ -369,8 +369,14 @@ def smart_diversify(
             if _add(by_date[d]):
                 return selected
 
-    # 3) Preenche com as mais baratas restantes (incluindo 2ª/3ª oferta de buckets já vistos)
+    # 3) Preenche com PROGRAMAS ainda não mostrados (o vendedor quer o MÁXIMO de
+    # companhias diferentes, a melhor de cada — nunca 2 cards do mesmo programa
+    # só pra encher; isso evita cards idênticos quando poucas fontes responderam).
     for o in sorted_offers:
+        key = _program_key(o)
+        if key in seen_keys:
+            continue
+        seen_keys.add(key)
         if _add(o):
             return selected
 
@@ -919,7 +925,8 @@ def presenter_node(state: ChatState) -> ChatState:
             unique_pool,
             base_date_iso=base_date_iso,
             diversify_dates=(flex_days_q > 0),
-            max_total=5,
+            # Mais slots = mais PROGRAMAS distintos no resultado (melhor de cada).
+            max_total=int(os.getenv("MAX_RESULT_CARDS", "8")),
         )
         if len(diversified) > 1:
             buckets_present = {_category_bucket(o) for o in diversified}
