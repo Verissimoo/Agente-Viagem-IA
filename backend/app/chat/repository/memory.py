@@ -36,6 +36,8 @@ class InMemoryRepository(ChatRepository):
         self._bug_reports: List[BugReport] = []
         # email → {id, email, password_hash, display_name, store_name}
         self._auth: Dict[str, dict] = {}
+        # token_hash → {id, user_id, email, expires_at, used_at}
+        self._password_resets: Dict[str, dict] = {}
 
     # --- Users ---
     def upsert_user(self, user: User) -> User:
@@ -72,6 +74,27 @@ class InMemoryRepository(ChatRepository):
                 "id": user_id, "email": email, "password_hash": password_hash,
                 "display_name": display_name, "store_name": store_name,
             }
+
+    # --- Password reset ---
+    def create_password_reset(self, *, reset_id: str, user_id: str, email: str,
+                              token_hash: str, expires_at: Any) -> None:
+        with self._lock:
+            self._password_resets[token_hash] = {
+                "id": reset_id, "user_id": user_id, "email": email,
+                "expires_at": expires_at, "used_at": None,
+            }
+
+    def get_password_reset(self, token_hash: str) -> Optional[Dict[str, Any]]:
+        with self._lock:
+            row = self._password_resets.get(token_hash)
+            return dict(row) if row else None
+
+    def mark_password_reset_used(self, reset_id: str) -> None:
+        with self._lock:
+            for row in self._password_resets.values():
+                if row["id"] == reset_id:
+                    row["used_at"] = datetime.now(timezone.utc)
+                    break
 
     # --- Threads ---
     def create_thread(self, thread: ChatThread) -> ChatThread:
