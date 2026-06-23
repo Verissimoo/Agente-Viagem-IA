@@ -53,3 +53,8 @@ class AuthProvider(ABC):
     def reset_password(self, token: str, new_password: str) -> AuthSession:
         """Valida o token e define a nova senha, devolvendo sessão autenticada."""
         raise NotImplementedError("Reset de senha não suportado por este provider")
+
+    def set_password_direct(self, email: str, new_password: str) -> AuthSession:
+        """Reset SIMPLES (sem e-mail): troca a senha de uma conta existente pelo
+        e-mail. Interino até plugarmos SMTP (aí o fluxo passa por token)."""
+        raise NotImplementedError("Reset de senha não suportado por este provider")

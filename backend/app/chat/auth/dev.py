@@ -312,6 +312,43 @@ class DevAuthProvider(AuthProvider):
             store_name=existing.get("store_name"),
         )
 
+    def set_password_direct(self, email: str, new_password: str) -> AuthSession:
+        """Reset SIMPLES (sem e-mail/token): define a senha de uma conta pelo
+        e-mail e devolve sessão autenticada. Interino até o SMTP entrar.
+
+        Aceita inclusive contas legadas com password_hash NULL (criadas antes da
+        persistência de senha) — é justamente o que destrava o login delas."""
+        email_norm = (email or "").strip().lower()
+        if not new_password or len(new_password) < 8:
+            raise AuthError("Senha precisa ter pelo menos 8 caracteres")
+
+        repo = get_repository()
+        user = None
+        try:
+            user = repo.get_user_by_email(email_norm)
+        except Exception:
+            user = None
+        if user is None:
+            raise AuthError("Conta não encontrada")
+
+        password_hash = _hash_password(new_password)
+        repo.upsert_auth_account(
+            user_id=user.id, email=email_norm, password_hash=password_hash,
+            display_name=user.display_name, store_name=user.store_name,
+        )
+        with self._lock:
+            existing = self._accounts.get(email_norm, {})
+            existing.update({"id": user.id, "email": email_norm, "password_hash": password_hash})
+            self._accounts[email_norm] = existing
+            self._persist()
+
+        token = self._issue_token(user.id, email_norm)
+        self._provisioned.add(user.id)
+        return AuthSession(
+            user_id=user.id, email=email_norm, access_token=token,
+            display_name=user.display_name, store_name=user.store_name,
+        )
+
     def verify_token(self, token: str) -> AuthSession:
         payload = _JWT.verify(token, self._secret)
         email = payload.get("email", "")

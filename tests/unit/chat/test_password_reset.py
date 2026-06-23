@@ -50,6 +50,23 @@ class TestPasswordReset(unittest.TestCase):
         with self.assertRaises(AuthError):
             self.auth.reset_password(token, "curta")
 
+    # ─── Reset SIMPLES (sem e-mail) ────────────────────────────────
+    def test_set_password_direct_troca_e_autentica(self):
+        session = self.auth.set_password_direct("vendedor@pcd.com", "senha-direta-123")
+        self.assertEqual(session.email, "vendedor@pcd.com")
+        self.assertTrue(session.access_token)
+        self.assertTrue(self.auth.login("vendedor@pcd.com", "senha-direta-123").access_token)
+        with self.assertRaises(AuthError):
+            self.auth.login("vendedor@pcd.com", "senha-antiga-123")
+
+    def test_set_password_direct_conta_inexistente(self):
+        with self.assertRaises(AuthError):
+            self.auth.set_password_direct("ninguem@lugar.com", "senha-valida-123")
+
+    def test_set_password_direct_senha_curta(self):
+        with self.assertRaises(AuthError):
+            self.auth.set_password_direct("vendedor@pcd.com", "curta")
+
 
 if __name__ == "__main__":
     unittest.main()

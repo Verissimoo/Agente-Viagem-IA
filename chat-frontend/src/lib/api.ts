@@ -221,6 +221,13 @@ export const auth = {
     request<Session>("/chat/auth/reset-password", {
       method: "POST", body: JSON.stringify({ token, password }),
     }),
+
+  // Reset SIMPLES (sem e-mail): troca a senha pelo e-mail e já autentica.
+  // Interino até o SMTP entrar.
+  resetPasswordSimple: (email: string, password: string) =>
+    request<Session>("/chat/auth/reset-password-simple", {
+      method: "POST", body: JSON.stringify({ email, password }),
+    }),
 };
 
 // ─── Threads ────────────────────────────────────────────────────────

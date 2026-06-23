@@ -77,6 +77,7 @@ from backend.app.api.v1.chat.schemas import (
     RegisterRequestDTO,
     ResetPasswordRequestDTO,
     SendMessageRequestDTO,
+    SetPasswordRequestDTO,
     SendMessageResponseDTO,
     SessionResponseDTO,
     SimpleMessageDTO,
@@ -209,6 +210,29 @@ def reset_password(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
     audit.log("password_reset.ok", user_id=session.user_id,
+              detail={"email": session.email}, ip_address=_client_ip(request))
+    return _session_to_dto(session)
+
+
+@router.post("/auth/reset-password-simple", response_model=SessionResponseDTO)
+def reset_password_simple(
+    payload: SetPasswordRequestDTO,
+    request: Request,
+    audit: AuditLogger = AuditDep,
+) -> SessionResponseDTO:
+    """Reset SIMPLES (sem e-mail): troca a senha pelo e-mail e já autentica.
+    Interino até o SMTP entrar — aí migramos pro fluxo por token."""
+    try:
+        session = get_auth_provider().set_password_direct(payload.email, payload.password)
+    except NotImplementedError as e:
+        raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail=str(e))
+    except AuthError as e:
+        audit.log("password_set.fail", severity="warn",
+                  detail={"email": payload.email, "reason": str(e)},
+                  ip_address=_client_ip(request))
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+    audit.log("password_set.ok", user_id=session.user_id,
               detail={"email": session.email}, ip_address=_client_ip(request))
     return _session_to_dto(session)
 
