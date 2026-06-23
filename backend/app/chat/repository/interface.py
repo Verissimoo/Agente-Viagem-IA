@@ -45,6 +45,21 @@ class ChatRepository(ABC):
                             display_name: Optional[str] = None,
                             store_name: Optional[str] = None) -> None: ...
 
+    # --- Password reset (token de uso único, expira) ---
+    @abstractmethod
+    def create_password_reset(self, *, reset_id: str, user_id: str, email: str,
+                              token_hash: str, expires_at: Any) -> None:
+        """Grava um pedido de reset. `token_hash` é o SHA-256 do token enviado
+        por e-mail (o token cru NUNCA é persistido)."""
+
+    @abstractmethod
+    def get_password_reset(self, token_hash: str) -> Optional[Dict[str, Any]]:
+        """Devolve {id, user_id, email, expires_at, used_at} ou None."""
+
+    @abstractmethod
+    def mark_password_reset_used(self, reset_id: str) -> None:
+        """Marca o token como consumido (não pode ser reusado)."""
+
     # --- Threads ---
     @abstractmethod
     def create_thread(self, thread: ChatThread) -> ChatThread: ...

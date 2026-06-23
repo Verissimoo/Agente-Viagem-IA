@@ -225,6 +225,93 @@ class DevAuthProvider(AuthProvider):
         except Exception:
             return False
 
+    # ──────────── reset de senha (token por e-mail) ────────────
+    _RESET_TTL_S = 60 * 60  # 1 hora
+
+    def request_password_reset(self, email: str) -> Optional[str]:
+        """Gera token de reset, persiste o HASH e envia o link por e-mail.
+
+        Retorna o token cru (usado nos testes); em produção o chamador descarta
+        e responde genérico — nunca revela se o e-mail existe. Se não houver
+        perfil pra esse e-mail, retorna None (e nada é enviado)."""
+        from datetime import datetime, timedelta, timezone
+
+        from backend.app.chat.notify.email import send_password_reset_email
+
+        email_norm = (email or "").strip().lower()
+        repo = get_repository()
+        user = None
+        try:
+            user = repo.get_user_by_email(email_norm)
+        except Exception:
+            user = None
+        if user is None:
+            return None  # sem conta → caller responde genérico mesmo assim
+
+        token = secrets.token_urlsafe(32)
+        token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+        expires_at = datetime.now(timezone.utc) + timedelta(seconds=self._RESET_TTL_S)
+        try:
+            repo.create_password_reset(
+                reset_id=uuid4().hex, user_id=user.id, email=email_norm,
+                token_hash=token_hash, expires_at=expires_at,
+            )
+        except Exception:
+            return None
+
+        base = os.getenv("PASSWORD_RESET_URL_BASE", "").strip().rstrip("/")
+        reset_url = f"{base}?token={token}" if base else f"/reset-password?token={token}"
+        send_password_reset_email(email_norm, reset_url)
+        return token
+
+    def reset_password(self, token: str, new_password: str) -> AuthSession:
+        from datetime import datetime, timezone
+
+        if not new_password or len(new_password) < 8:
+            raise AuthError("Senha precisa ter pelo menos 8 caracteres")
+        if not token:
+            raise AuthError("Token de reset ausente")
+
+        repo = get_repository()
+        token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
+        rec = None
+        try:
+            rec = repo.get_password_reset(token_hash)
+        except Exception:
+            rec = None
+        if not rec:
+            raise AuthError("Link de reset inválido")
+        if rec.get("used_at"):
+            raise AuthError("Este link de reset já foi usado")
+        exp = rec.get("expires_at")
+        if isinstance(exp, datetime) and exp < datetime.now(timezone.utc):
+            raise AuthError("Link de reset expirado — peça um novo")
+
+        email_norm = (rec.get("email") or "").strip().lower()
+        user_id = rec["user_id"]
+        password_hash = _hash_password(new_password)
+        repo.upsert_auth_account(
+            user_id=user_id, email=email_norm, password_hash=password_hash,
+        )
+        try:
+            repo.mark_password_reset_used(rec["id"])
+        except Exception:
+            pass
+
+        with self._lock:
+            existing = self._accounts.get(email_norm, {})
+            existing.update({"id": user_id, "email": email_norm, "password_hash": password_hash})
+            self._accounts[email_norm] = existing
+            self._persist()
+
+        token_jwt = self._issue_token(user_id, email_norm)
+        self._provisioned.add(user_id)
+        return AuthSession(
+            user_id=user_id, email=email_norm, access_token=token_jwt,
+            display_name=existing.get("display_name"),
+            store_name=existing.get("store_name"),
+        )
+
     def verify_token(self, token: str) -> AuthSession:
         payload = _JWT.verify(token, self._secret)
         email = payload.get("email", "")

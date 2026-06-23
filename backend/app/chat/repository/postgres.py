@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 import logging
 from datetime import datetime, timezone
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 from psycopg import Connection
 from psycopg.rows import dict_row
@@ -77,6 +77,7 @@ class PostgresRepository(ChatRepository):
         )
         self._ensure_auth_schema()
         self._ensure_ranking_schema()
+        self._ensure_password_reset_schema()
 
     def _ensure_ranking_schema(self) -> None:
         """Cria a tabela de rótulos de ranking ("cotação ideal") no boot, sem
@@ -218,6 +219,67 @@ class PostgresRepository(ChatRepository):
                 store_name=row["store_name"],
                 created_at=_to_aware(row["created_at"]),
             )
+
+    # ──────────── password reset ────────────
+    def _ensure_password_reset_schema(self) -> None:
+        """Cria a tabela de tokens de reset no boot (Railway não roda migration).
+        Idempotente. Sem FK pra não acoplar à ordem de criação de chat.users."""
+        try:
+            with self._conn() as conn, conn.cursor() as cur:
+                cur.execute(
+                    """
+                    CREATE TABLE IF NOT EXISTS chat.password_resets (
+                        id          TEXT PRIMARY KEY,
+                        user_id     TEXT NOT NULL,
+                        email       TEXT NOT NULL,
+                        token_hash  TEXT NOT NULL UNIQUE,
+                        expires_at  TIMESTAMPTZ NOT NULL,
+                        used_at     TIMESTAMPTZ,
+                        created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+                    );
+                    CREATE INDEX IF NOT EXISTS idx_password_resets_token
+                        ON chat.password_resets (token_hash);
+                    """
+                )
+                conn.commit()
+        except Exception as e:
+            logger.warning("ensure_password_reset_schema falhou (segue sem): %s", e)
+
+    def create_password_reset(self, *, reset_id: str, user_id: str, email: str,
+                              token_hash: str, expires_at: Any) -> None:
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                """
+                INSERT INTO chat.password_resets (id, user_id, email, token_hash, expires_at)
+                VALUES (%s, %s, %s, %s, %s);
+                """,
+                (reset_id, user_id, email, token_hash, expires_at),
+            )
+            conn.commit()
+
+    def get_password_reset(self, token_hash: str) -> Optional[Dict[str, Any]]:
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                "SELECT id, user_id, email, expires_at, used_at "
+                "FROM chat.password_resets WHERE token_hash = %s",
+                (token_hash,),
+            )
+            row = cur.fetchone()
+            if not row:
+                return None
+            return {
+                "id": row["id"], "user_id": row["user_id"], "email": row["email"],
+                "expires_at": _to_aware(row["expires_at"]),
+                "used_at": _to_aware(row["used_at"]) if row["used_at"] else None,
+            }
+
+    def mark_password_reset_used(self, reset_id: str) -> None:
+        with self._conn() as conn, conn.cursor() as cur:
+            cur.execute(
+                "UPDATE chat.password_resets SET used_at = NOW() WHERE id = %s",
+                (reset_id,),
+            )
+            conn.commit()
 
     # ──────────── threads ────────────
     def create_thread(self, thread: ChatThread) -> ChatThread:

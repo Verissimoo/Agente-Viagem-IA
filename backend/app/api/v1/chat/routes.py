@@ -19,6 +19,7 @@ Layout:
 from __future__ import annotations
 
 import logging
+import os
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
@@ -57,6 +58,7 @@ from backend.app.api.v1.chat.schemas import (
     CreateBugReportRequestDTO,
     CreateThreadRequestDTO,
     CreateValidationRequestDTO,
+    ForgotPasswordRequestDTO,
     LoginRequestDTO,
     MarkIdealRequestDTO,
     MessageDTO,
@@ -73,9 +75,11 @@ from backend.app.api.v1.chat.schemas import (
     RatesUpdateRequestDTO,
     RateTierDTO,
     RegisterRequestDTO,
+    ResetPasswordRequestDTO,
     SendMessageRequestDTO,
     SendMessageResponseDTO,
     SessionResponseDTO,
+    SimpleMessageDTO,
     ThreadDTO,
     ThreadListResponseDTO,
     ValidationStatsDTO,
@@ -99,6 +103,7 @@ from backend.app.chat.security.input_filter import (
     InputViolation,
     sanitize_user_message,
 )
+from backend.app.chat.security.content_safety import check_content_safety, refusal_message
 from backend.app.chat.security.jailbreak import detect_jailbreak
 from backend.app.chat.security.output_filter import sanitize_assistant_output
 from backend.app.chat.security.rate_limit import RateLimitExceeded, get_rate_limiter
@@ -153,6 +158,57 @@ def login(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
 
     audit.log("login.ok", user_id=session.user_id,
+              detail={"email": session.email}, ip_address=_client_ip(request))
+    return _session_to_dto(session)
+
+
+@router.post("/auth/forgot-password", response_model=SimpleMessageDTO)
+def forgot_password(
+    payload: ForgotPasswordRequestDTO,
+    request: Request,
+    audit: AuditLogger = AuditDep,
+) -> SimpleMessageDTO:
+    """Dispara o e-mail de redefinição. Resposta SEMPRE genérica — não revela se
+    o e-mail existe (evita enumeração de contas)."""
+    generic = SimpleMessageDTO(
+        message="Se este e-mail tiver uma conta, enviamos um link para redefinir a senha."
+    )
+    try:
+        token = get_auth_provider().request_password_reset(payload.email)
+        audit.log("password_reset.requested", severity="info",
+                  detail={"email": payload.email, "sent": bool(token)},
+                  ip_address=_client_ip(request))
+    except NotImplementedError:
+        # Provider externo (Neon/Stack Auth) trata reset por conta própria.
+        raise HTTPException(
+            status_code=status.HTTP_501_NOT_IMPLEMENTED,
+            detail="Redefinição de senha é feita pelo provedor de identidade.",
+        )
+    except Exception as e:
+        # Falha interna não pode revelar nada nem virar 500 pro usuário.
+        audit.log("password_reset.error", severity="warn",
+                  detail={"email": payload.email, "reason": str(e)},
+                  ip_address=_client_ip(request))
+    return generic
+
+
+@router.post("/auth/reset-password", response_model=SessionResponseDTO)
+def reset_password(
+    payload: ResetPasswordRequestDTO,
+    request: Request,
+    audit: AuditLogger = AuditDep,
+) -> SessionResponseDTO:
+    """Valida o token do e-mail e grava a nova senha, devolvendo sessão pronta."""
+    try:
+        session = get_auth_provider().reset_password(payload.token, payload.password)
+    except NotImplementedError as e:
+        raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail=str(e))
+    except AuthError as e:
+        audit.log("password_reset.fail", severity="warn",
+                  detail={"reason": str(e)}, ip_address=_client_ip(request))
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+    audit.log("password_reset.ok", user_id=session.user_id,
               detail={"email": session.email}, ip_address=_client_ip(request))
     return _session_to_dto(session)
 
@@ -315,6 +371,22 @@ def send_message(
             repo, thread_id, session.user_id, sanitized.text, REFUSAL_JAILBREAK,
         )
 
+    # 4b. Segurança de conteúdo (NSFW / nocivo / off-topic): recusa ANTES do
+    # grafo, economizando token do LLM. Kill-switch: CHAT_CONTENT_SAFETY=0.
+    if os.getenv("CHAT_CONTENT_SAFETY", "1") not in ("0", "false", "False", ""):
+        cs = check_content_safety(sanitized.text)
+        if cs.flagged:
+            audit.log("guardrail.content.blocked",
+                      user_id=session.user_id, thread_id=thread_id,
+                      severity="security",
+                      detail={"category": cs.category, "sample": cs.sample},
+                      ip_address=_client_ip(request),
+                      user_agent=request.headers.get("user-agent"))
+            return _persist_user_and_assistant(
+                repo, thread_id, session.user_id, sanitized.text,
+                refusal_message(cs.category),
+            )
+
     # 5. Persistir mensagem do usuário
     user_msg = ChatMessage(
         thread_id=thread_id, role=MessageRole.USER, content=sanitized.text,
@@ -467,6 +539,26 @@ def send_message_stream(
             yield _sse("message", _msg_to_dto(assistant_msg).model_dump(mode="json"))
             yield _sse("done", {"thread_id": thread_id})
         return StreamingResponse(_refusal_gen(), media_type="text/event-stream")
+
+    # Segurança de conteúdo: recusa ANTES do grafo (economiza token).
+    if os.getenv("CHAT_CONTENT_SAFETY", "1") not in ("0", "false", "False", ""):
+        cs = check_content_safety(sanitized.text)
+        if cs.flagged:
+            audit.log("guardrail.content.blocked",
+                      user_id=session.user_id, thread_id=thread_id, severity="security",
+                      detail={"category": cs.category, "sample": cs.sample})
+            _refusal_text = sanitize_assistant_output(refusal_message(cs.category))
+
+            def _content_refusal_gen():
+                user_msg = ChatMessage(thread_id=thread_id, role=MessageRole.USER, content=sanitized.text)
+                repo.append_message(user_msg, user_id=session.user_id)
+                assistant_msg = ChatMessage(
+                    thread_id=thread_id, role=MessageRole.ASSISTANT, content=_refusal_text,
+                )
+                repo.append_message(assistant_msg, user_id=session.user_id)
+                yield _sse("message", _msg_to_dto(assistant_msg).model_dump(mode="json"))
+                yield _sse("done", {"thread_id": thread_id})
+            return StreamingResponse(_content_refusal_gen(), media_type="text/event-stream")
 
     user_msg = ChatMessage(
         thread_id=thread_id, role=MessageRole.USER, content=sanitized.text,
