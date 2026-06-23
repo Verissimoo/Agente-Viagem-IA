@@ -209,6 +209,25 @@ export const auth = {
 
   me: (token: string) =>
     request<Session>("/chat/auth/me", { token }),
+
+  // Resposta sempre genérica (não revela se o e-mail existe).
+  forgotPassword: (email: string) =>
+    request<{ message: string }>("/chat/auth/forgot-password", {
+      method: "POST", body: JSON.stringify({ email }),
+    }),
+
+  // Troca a senha via token do e-mail; devolve sessão já autenticada.
+  resetPassword: (token: string, password: string) =>
+    request<Session>("/chat/auth/reset-password", {
+      method: "POST", body: JSON.stringify({ token, password }),
+    }),
+
+  // Reset SIMPLES (sem e-mail): troca a senha pelo e-mail e já autentica.
+  // Interino até o SMTP entrar.
+  resetPasswordSimple: (email: string, password: string) =>
+    request<Session>("/chat/auth/reset-password-simple", {
+      method: "POST", body: JSON.stringify({ email, password }),
+    }),
 };
 
 // ─── Threads ────────────────────────────────────────────────────────

@@ -34,12 +34,14 @@ _INJECTION_PATTERNS: List[tuple[str, str]] = [
     (r"developer mode|debug mode|admin mode", "fake_mode"),
     (r"jailbreak", "explicit"),
     # PT-BR
-    (r"ignor[ea]r? (todas|qualquer|as)?\s*(instru[cç][oõ]es|prompts?|regras?)\s+(anteriores|prévias|acima)", "ignore_pt"),
-    (r"esque[çc][ae] (todas|qualquer|as)?\s*(instru[cç][oõ]es|prompts?|regras?)", "forget_pt"),
+    (r"ignor[ea]r?\s+(?:\w+\s+){0,3}(instru[cç][oõ]es|prompts?|regras?)\s+(anteriores|prévias|acima)", "ignore_pt"),
+    (r"esque[çc][ae]\w*\s+(?:\w+\s+){0,3}(instru[cç][oõ]es|prompts?|regras?)", "forget_pt"),
     (r"voc[eê] (n[aã]o é mais|agora é)\s+(uma? )?(assistente|ia|gpt|atendente)", "role_swap_pt"),
     (r"finja (que )?(é|você é|ser)\s+(?!o\s+atendente|a\s+atendente)", "pretend_pt"),
     (r"(revele|mostre|imprima)\s+(seu|o)\s+(prompt|instru[cç][oõ]es|sistema)", "leak_prompt_pt"),
     (r"(qual|quais)\s+(é|são|seu|seus)\s+(prompt|instru[cç][oõ]es)\s+(de\s+sistema|inicial|original)", "leak_prompt_pt"),
+    # Cobre "qual é SEU prompt de sistema", "me diga o system prompt", etc.
+    (r"\b(system\s+prompt|prompt\s+d[eo]\s+sistema)\b", "leak_prompt_sys"),
     (r"modo\s+(desenvolvedor|debug|admin|administrador)", "fake_mode_pt"),
     # Token / format smuggling
     (r"</?(system|instruction|prompt)>", "tag_smuggle"),

@@ -629,6 +629,86 @@ def _merge_parsed_intent(slots: IntakeSlots, intent: Dict[str, Any]) -> IntakeSl
     return new_slots
 
 
+# Prefixos que o vendedor antepõe ao responder origem/destino ("de GRU",
+# "saindo de São Paulo", "para o Rio") e que atrapalham a resolução cidade→IATA.
+_LOC_PREFIX_RE = re.compile(
+    r"^\s*(?:"
+    r"(?:saindo|partindo|vindo|voo|voando)\s+|"   # verbo opcional ("saindo de")
+    r"d[eoa]s?\s+|"                                # de/do/da/des/dos/das
+    r"para\s+|pra\s+|pro\s+|at[ée]\s+|"
+    r"origem[:\s]+|destino[:\s]+|"
+    r"a\s+partir\s+d[eoa]\s+|partir\s+d[eoa]\s+|"
+    r"com\s+destino\s+a\s+|rumo\s+a\s+|"
+    r"eh\s+|é\s+|o\s+|a\s+|os\s+|as\s+"
+    r")+",
+    re.IGNORECASE,
+)
+
+
+def _strip_loc_prefix(text: str) -> str:
+    """Remove preposições/artigos iniciais de uma resposta de local."""
+    return _LOC_PREFIX_RE.sub("", text.strip()).strip(" ,.?!").strip()
+
+
+def _coerce_pax_count(text: str) -> Optional[int]:
+    """Conta adultos de uma resposta curta ('2', 'duas', 'somos 3', 'só eu')."""
+    low = text.lower()
+    if re.search(r"\b(s[óo]\s+eu|sozinh[oa]|eu\s+apenas|apenas\s+eu|s[óo]\s+eu\s+mesmo)\b", low):
+        return 1
+    m = re.search(r"\b(\d{1,2})\b", low)
+    if m:
+        n = int(m.group(1))
+        if 1 <= n <= 9:
+            return n
+    for w, n in _NUM_WORDS.items():
+        if 1 <= n <= 9 and re.search(rf"\b{w}\b", low):
+            return n
+    return None
+
+
+def _apply_awaiting_answer(
+    awaiting: Optional[str], text: str, parsed: Dict[str, Any], slots: IntakeSlots
+) -> None:
+    """Roteamento CIENTE DA PERGUNTA — para TODO campo obrigatório.
+
+    Quando perguntamos um campo específico e o vendedor responde só o valor
+    ('06/08', 'de GRU', '2'), o parser genérico pode jogá-lo no slot errado (ou
+    em nenhum) — e a IA repetia a pergunta (loop). Aqui forçamos a resposta no
+    campo que estávamos aguardando. Idempotente: só preenche se ainda vazio.
+    """
+    if not awaiting or not text or not text.strip():
+        return
+
+    if awaiting in ("date_start", "date_return"):
+        if slots.get(awaiting):
+            return
+        cand = parsed.get(awaiting) or parsed.get("date_start") or parsed.get("date_return")
+        if not isinstance(cand, date):
+            cand = _extract_date_fallback(text)
+        if isinstance(cand, date):
+            slots[awaiting] = cand.isoformat()  # type: ignore[literal-required]
+            if awaiting == "date_return":
+                slots["trip_type"] = "roundtrip"
+
+    elif awaiting in ("origin_iata", "destination_iata"):
+        if slots.get(awaiting):
+            return
+        city_field = "origin_city" if awaiting == "origin_iata" else "destination_city"
+        cleaned = _strip_loc_prefix(text)
+        iatas = _resolve_city_smart(cleaned) or _resolve_city_smart(text)
+        if iatas:
+            slots[awaiting] = iatas[0]  # type: ignore[literal-required]
+            slots.setdefault(city_field, cleaned or text.strip())  # type: ignore[misc]
+
+    elif awaiting == "adults":
+        # O parser põe adults=1 como DEFAULT mesmo sem o vendedor dizer — por
+        # isso aqui sobrescrevemos com a contagem real da resposta (não há como
+        # estar "errado": acabamos de perguntar quantos adultos).
+        n = _coerce_pax_count(text)
+        if n:
+            slots["adults"] = n
+
+
 def _missing_required(slots: IntakeSlots) -> Optional[str]:
     for f in _REQUIRED_FIELDS:
         if not slots.get(f):
@@ -672,6 +752,11 @@ def intake_node(state: ChatState) -> ChatState:
             parsed_dict = parsed.model_dump() if hasattr(parsed, "model_dump") else dict(parsed)
             new_search = is_new_search(parsed_dict)
             slots = _merge_parsed_intent(slots, parsed_dict)
+            # Roteamento CIENTE DA PERGUNTA (todos os obrigatórios): a resposta
+            # curta do vendedor ('06/08', 'de GRU', '2') vai pro campo que
+            # estávamos perguntando — senão o parser genérico a perde e a IA
+            # repete a pergunta (loop). Cobre origem, destino, ida, volta, pax.
+            _apply_awaiting_answer(state.get("awaiting_field"), last_user_msg, parsed_dict, slots)
         except Exception as e:
             errors.append(f"intent_parser falhou: {e}")
 

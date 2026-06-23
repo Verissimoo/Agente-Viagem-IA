@@ -13,6 +13,8 @@ from pydantic import BaseModel, ConfigDict, Field
 # Re-export pra rotas reusarem
 __all__ = [
     "LoginRequestDTO", "RegisterRequestDTO", "SessionResponseDTO",
+    "ForgotPasswordRequestDTO", "ResetPasswordRequestDTO",
+    "SetPasswordRequestDTO", "SimpleMessageDTO",
     "ThreadDTO", "ThreadListResponseDTO", "CreateThreadRequestDTO",
     "MessageDTO", "MessageListResponseDTO",
     "SendMessageRequestDTO", "SendMessageResponseDTO",
@@ -40,6 +42,25 @@ class SessionResponseDTO(BaseModel):
     display_name: Optional[str] = None
     store_name: Optional[str] = None
     access_token: str
+
+
+class ForgotPasswordRequestDTO(BaseModel):
+    email: str = Field(..., min_length=3, max_length=200)
+
+
+class ResetPasswordRequestDTO(BaseModel):
+    token: str = Field(..., min_length=8, max_length=400)
+    password: str = Field(..., min_length=8, max_length=200)
+
+
+class SetPasswordRequestDTO(BaseModel):
+    """Reset simples (sem e-mail): troca a senha pelo e-mail da conta."""
+    email: str = Field(..., min_length=3, max_length=200)
+    password: str = Field(..., min_length=8, max_length=200)
+
+
+class SimpleMessageDTO(BaseModel):
+    message: str
 
 
 # ─── Threads ───────────────────────────────────────────────────────
