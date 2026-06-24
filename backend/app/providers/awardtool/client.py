@@ -106,7 +106,6 @@ def _run_search(p, url: str, budget_s: float) -> List[Dict[str, Any]]:
     ctx = browser.new_context(storage_state=_STATE_PATH, user_agent=_UA,
                               locale="pt-BR", viewport={"width": 1366, "height": 900})
     captured: List[str] = []
-    finished = {"done": False}
 
     def on_response(resp):
         if "search_result_v2" in resp.url and resp.request.method == "POST":
@@ -120,56 +119,89 @@ def _run_search(p, url: str, budget_s: float) -> List[Dict[str, Any]]:
 
     ctx.on("response", on_response)
 
-    def _enable_realtime(pg):
-        """Ativa 'Real-time Search' — sem isso o AwardTool só faz lookup em
-        cache (retorna vazio rápido); com isso dispara o crawl ao vivo."""
+    def _enable_realtime(pg) -> bool:
+        """Liga o 'Real-time Search' clicando o MuiSwitch-switchBase — o elemento
+        que dispara o onChange do React. CRÍTICO: clicar o texto ou dar force-click
+        no <input> escondido NÃO dispara a re-busca; aí o AwardTool só faz lookup
+        em cache (vazio quando frio). Com o switch certo, ele crawleia ao vivo e
+        streama os resultados. Devolve True se ligou (ou já estava ligado)."""
         try:
-            rt = pg.locator("text=/Real-?time Search/i")
-            if rt.count() > 0:
-                rt.first.click(timeout=3000)
+            inp = pg.locator("input.MuiSwitch-input").first
+            if inp.count() and inp.is_checked():
+                return True
         except Exception:
             pass
+        try:
+            sb = pg.locator(
+                "xpath=//*[contains(normalize-space(.),'Real-time')]"
+                "/ancestor-or-self::*[.//span[contains(@class,'MuiSwitch-switchBase')]][1]"
+                "//span[contains(@class,'MuiSwitch-switchBase')]"
+            )
+            if sb.count() > 0:
+                sb.first.click(timeout=4000)
+                pg.wait_for_timeout(500)
+                return True
+        except Exception:
+            pass
+        return False
+
+    def _collect() -> Dict[str, Dict[str, Any]]:
+        m: Dict[str, Dict[str, Any]] = {}
+        for c in captured:
+            try:
+                env = decode_v3(c)
+            except Exception:
+                continue
+            if isinstance(env, dict):
+                for it in env.get("result") or []:
+                    if isinstance(it, dict) and it.get("id"):
+                        m[it["id"]] = it
+        return m
 
     try:
         page = ctx.new_page()
         page.goto(url, wait_until="domcontentloaded", timeout=60000)
         page.wait_for_timeout(2500)
-        _enable_realtime(page)              # liga real-time na home
-        page.wait_for_timeout(600)
         # Clica o submit AZUL (contained); pode abrir nova aba (/flight).
         result_page = page
         try:
             with ctx.expect_page(timeout=8000) as pop:
                 page.locator("button.MuiButton-contained", has_text="Search").first.click(timeout=8000)
             result_page = pop.value
-            result_page.wait_for_timeout(2000)
-            _enable_realtime(result_page)   # garante real-time na aba de resultados
+            result_page.wait_for_timeout(2500)
         except Exception:
             # sem popup (o clique já disparou dentro do `with`): roda na mesma aba
             result_page = page
-
         page = result_page
-        merged: Dict[str, Dict[str, Any]] = {}
+
+        # 1) CACHE primeiro (de graça): se a rota está quente, já volta resultado
+        # e não gastamos um crawl real-time do AwardTool.
+        page.wait_for_timeout(2000)
+        merged = _collect()
+        if merged:
+            return list(merged.values())
+
+        # 2) CACHE FRIO → REAL-TIME (gasta 1 crawl): liga o switch certo e espera o
+        # streaming (chega em N envelopes ao longo de ~20-40s). Para quando os
+        # resultados estabilizam (sem novos por ~6s) ou no orçamento de tempo.
+        if not _enable_realtime(page):
+            return []
         waited = 0.0
-        seen = 0
+        stable = 0.0
+        last = 0
         while waited < budget_s:
             page.wait_for_timeout(1000)
             waited += 1.0
-            # decodifica o que chegou de novo e checa o envelope
-            while seen < len(captured):
-                try:
-                    env = decode_v3(captured[seen])
-                except Exception:
-                    env = None
-                seen += 1
-                if isinstance(env, dict):
-                    for it in env.get("result") or []:
-                        if isinstance(it, dict) and it.get("id"):
-                            merged[it["id"]] = it
-                    if env.get("finish") or env.get("has_next") is False:
-                        finished["done"] = True
-            if finished["done"] and seen >= len(captured):
-                break
+            merged = _collect()
+            n = len(merged)
+            if n > 0:
+                if n == last:
+                    stable += 1.0
+                    if stable >= 6.0:
+                        break
+                else:
+                    stable = 0.0
+                    last = n
         return list(merged.values())
     finally:
         ctx.close(); browser.close()

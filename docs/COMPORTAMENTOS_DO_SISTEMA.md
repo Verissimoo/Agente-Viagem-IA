@@ -44,19 +44,23 @@
 - **United MileagePlus é SUPRIMIDO** dos resultados (`EXCLUDED_MILES_PROGRAMS`,
   default `MileagePlus`) — sem disponibilidade no momento. Reativar = env vazio.
 
-### AwardTool — limitação conhecida (importante)
-- O AwardTool é **intermitente por natureza**: ele cacheia pela combinação EXATA de
-  parâmetros e alterna entre cache quente/frio do lado deles. A MESMA busca volta
-  103 ofertas num minuto e 0 no seguinte.
-- **Programas = VAZIO (todos).** Essa é a chave que o site mantém quente. Lista
-  explícita de programas = chave fria = sempre vazio. **Nunca** especificar programas.
-- **Real-time NÃO é automatizável** (o toggle liga mas a busca não dispara; e
-  automatizar o AwardTool viola o ToS → risco de ban). Então não dá pra forçar o
-  reaquecimento do cache.
-- **Conclusão:** AwardTool é "bônus quando o cache deles está quente". A fonte
-  determinística de award (LifeMiles/Aeroplan/Atmos/etc.) é o **seats.aero** — só
-  falta a **`SEATS_AERO_API_KEY`** (hoje vazia → seats.aero volta vazio). Conseguir
-  essa key resolve award de vez.
+### AwardTool — funcional via real-time automático
+- **Programas = VAZIO (todos).** É a chave de cache que o site mantém quente. Lista
+  explícita = chave fria = vazio. **Nunca** especificar programas.
+- **Cache-primeiro → real-time-se-vazio** (`_run_search`): primeiro lê o cache do
+  AwardTool (de graça); se vier vazio (rota fria), **liga o "Real-time Search"
+  automaticamente** e crawleia ao vivo. Comprovado: rota fria GRU→DOH voltava 0,
+  agora volta ~26 ofertas (Aeroplan/Alaska/Turkish/Smiles/Etihad) em ~25s.
+- **O segredo do real-time:** clicar o `MuiSwitch-switchBase` (o elemento que dispara
+  o onChange do React) — NÃO o texto nem o `<input>` escondido com force-click (esses
+  não disparam a re-busca). Se a UI do AwardTool mudar, é aqui que quebra.
+- **Custo:** o real-time é o "36-Entry" e **consome crédito por crawl**. Por isso o
+  cache-primeiro (nosso TTL 180s + o cache deles) economiza: só gasta crédito quando
+  a rota está fria dos dois lados. Monitorar o saldo de créditos da conta Pro.
+- **Latência:** rota fria = +~25-40s (crawl ao vivo). Rota quente = instantâneo.
+- **ToS:** automatizar o AwardTool é ToS-sensível — uso gentil + cache obrigatórios.
+- **Futuro:** quando houver `SEATS_AERO_API_KEY` (API sem browser/crédito/ToS), migrar
+  o award pra lá. Hoje a key não está disponível pro Brasil → AwardTool é a fonte.
 
 ## 3. Radar de datas PRIMEIRO (flexibilidade alta)
 
