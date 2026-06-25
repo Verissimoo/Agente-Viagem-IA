@@ -305,7 +305,17 @@ def _execute_dates_x_adapters_parallel(
     done_count = 0
     total = len(futures)
     try:
+        from backend.app.ai.agents.cancellation import should_cancel_current
+    except Exception:
+        should_cancel_current = lambda: False  # noqa: E731 (fallback se import falhar)
+    try:
         for fut in as_completed(futures, timeout=_ADAPTER_BUDGET_S):
+            # Cancelamento cooperativo: o vendedor clicou "Interromper" → para de
+            # esperar os provedores e segue com o que já voltou (descartado a
+            # jusante se a cotação foi cancelada).
+            if should_cancel_current():
+                print("[orchestrator] cotação cancelada pelo usuário — abortando fan-out")
+                break
             _cia_meta, req_meta, dt_id = futures[fut]
             cia_up, offers, error, elapsed_ms = fut.result()
             done_count += 1

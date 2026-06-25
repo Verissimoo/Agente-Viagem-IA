@@ -217,6 +217,13 @@ def orchestrator_node(state: ChatState) -> ChatState:
     audit = get_audit_logger()
     _progress = _make_progress()
 
+    # Marca a thread atual no contexto pra o loop de busca poder abortar cedo se
+    # o vendedor clicar "Interromper" (cancelamento cooperativo). Roda no mesmo
+    # thread síncrono do fan-out, então o ContextVar é visível lá embaixo.
+    from backend.app.ai.agents.cancellation import current_thread
+    if thread_id:
+        current_thread.set(thread_id)
+
     origin = slots.get("origin_iata")
     destination = slots.get("destination_iata")
     date_start = _parse_iso_date(slots.get("date_start"))

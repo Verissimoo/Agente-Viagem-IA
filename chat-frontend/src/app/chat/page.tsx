@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-import { Bug } from "lucide-react";
+import { Bug, ChevronRight } from "lucide-react";
 
 import ApproveModal from "@/components/approve-modal";
 import BugReportModal from "@/components/bug-report-modal";
@@ -87,8 +87,11 @@ export default function ChatPage() {
   }, [router]);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, sending, statusText]);
+    // Instantâneo: scroll suave anima a rolagem da lista inteira a cada troca de
+    // chat/atualização → trava. Pula direto pro fim (snappy). Não dependemos de
+    // statusText (o painel de processamento tem o próprio scroll).
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "auto" });
+  }, [messages, sending]);
 
   // Mantém o painel de processamento rolado no passo mais recente.
   useEffect(() => {
@@ -232,6 +235,17 @@ export default function ChatPage() {
         }).catch(() => { /* silent */ });
       },
     });
+  }
+
+  // Interrompe a cotação em andamento (botão durante o processamento).
+  async function handleCancel() {
+    if (!session || !activeThreadId) return;
+    setStatusText("Interrompendo…");
+    try {
+      await threads.cancel(session.access_token, activeThreadId);
+    } catch {
+      /* o stream encerra de qualquer forma; ignora erro do cancel */
+    }
   }
 
   // Clica em "Aprovar e baixar PDF" → abre modal pedindo nome do cliente.
@@ -408,12 +422,15 @@ export default function ChatPage() {
               </div>
             )}
 
-            <div className="space-y-6 stagger">
-            {messages.map((m) => {
+            <div className="space-y-6">
+            {messages.map((m, mi) => {
               const offers = offersOf(m);
               const isLatest = m.id === lastWithOffersId;
+              // Anima só a ÚLTIMA mensagem (entrada da resposta nova). Sem isso,
+              // trocar de chat re-animava a lista toda em cascata → travado.
+              const isLastMsg = mi === messages.length - 1;
               return (
-                <div key={m.id} className="space-y-4 anim-fade-in-up">
+                <div key={m.id} className={isLastMsg ? "space-y-4 anim-fade-in-up" : "space-y-4"}>
                   <MessageBubble message={m} userName={userName} />
                   {offers.length > 0 && (
                     <div className={[
@@ -463,19 +480,20 @@ export default function ChatPage() {
                     </div>
                   )}
                   {statusLogOf(m).length > 0 && (
-                    <details className="ml-11">
-                      <summary className="cursor-pointer text-[10px] uppercase tracking-wider font-bold text-gray-400 dark:text-zinc-500 hover:text-gray-600 dark:hover:text-zinc-300 select-none">
-                        🔍 Ver andamento da cotação ({statusLogOf(m).length} etapas)
+                    <details className="ml-11 group">
+                      <summary className="cursor-pointer inline-flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 select-none transition-colors list-none [&::-webkit-details-marker]:hidden">
+                        <ChevronRight size={13} className="transition-transform duration-200 group-open:rotate-90" />
+                        Ver andamento ({statusLogOf(m).length} etapas)
                       </summary>
-                      <div className="mt-2 max-w-xl rounded-xl border border-zinc-200 dark:border-zinc-700/70 bg-zinc-50 dark:bg-zinc-900/50 px-3 py-2">
-                        <div className="max-h-60 overflow-y-auto space-y-0.5 text-[11px] leading-relaxed font-mono">
+                      <div className="mt-2 max-w-xl rounded-xl bg-zinc-50 dark:bg-zinc-900/50 ring-1 ring-black/5 dark:ring-white/5 px-3.5 py-2.5">
+                        <div className="max-h-60 overflow-y-auto space-y-1 text-[11.5px] leading-relaxed">
                           {statusLogOf(m).map((line, i) => {
                             const ok = line.includes("✓");
                             const fail = line.includes("✗");
                             return (
                               <div key={i} className={
                                 ok ? "text-emerald-600 dark:text-emerald-400"
-                                  : fail ? "text-red-500 dark:text-red-400"
+                                  : fail ? "text-rose-500 dark:text-rose-400"
                                     : "text-zinc-500 dark:text-zinc-400"
                               }>
                                 {line}
@@ -492,14 +510,10 @@ export default function ChatPage() {
             </div>
 
             {sending && (
-              <div className="anim-fade-in space-y-2">
-                <ThinkingBubble text={statusText} />
-                {statusLog.length > 0 && (
-                  <div className="ml-1 max-w-xl rounded-xl border border-zinc-200 dark:border-zinc-700/70 bg-zinc-50 dark:bg-zinc-900/50 px-3 py-2">
-                    <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">
-                      Processamento
-                    </div>
-                    <div ref={statusLogRef} className="max-h-44 overflow-y-auto space-y-0.5 text-[11px] leading-relaxed font-mono">
+              <div className="anim-fade-in">
+                <ThinkingBubble text={statusText} onCancel={handleCancel}>
+                  {statusLog.length > 0 && (
+                    <div ref={statusLogRef} className="max-h-44 overflow-y-auto space-y-1 text-[11.5px] leading-relaxed">
                       {statusLog.map((line, i) => {
                         const ok = line.startsWith("✓");
                         const fail = line.startsWith("✗");
@@ -508,19 +522,20 @@ export default function ChatPage() {
                           <div
                             key={i}
                             className={[
+                              "flex items-start gap-1.5",
                               ok ? "text-emerald-600 dark:text-emerald-400"
                                  : fail ? "text-rose-500 dark:text-rose-400"
                                  : "text-zinc-500 dark:text-zinc-400",
-                              last ? "font-semibold" : "",
+                              last && !ok && !fail ? "opacity-100" : last ? "" : "opacity-70",
                             ].join(" ")}
                           >
-                            {line}
+                            <span>{line}</span>
                           </div>
                         );
                       })}
                     </div>
-                  </div>
-                )}
+                  )}
+                </ThinkingBubble>
               </div>
             )}
 
