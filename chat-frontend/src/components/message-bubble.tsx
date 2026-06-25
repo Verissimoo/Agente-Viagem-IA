@@ -34,10 +34,13 @@ export default function MessageBubble({ message, userName }: MessageBubbleProps)
       {/* Bolha */}
       <div
         className={[
-          "max-w-[78%] px-4 py-3 shadow-sm transition-colors",
+          "px-4 py-3 shadow-sm transition-colors",
           isUser
-            ? "bg-gradient-to-br from-brand-500 to-brand-700 text-white rounded-2xl rounded-tr-md"
-            : "bg-white text-gray-900 rounded-2xl rounded-tl-md ring-1 ring-black/5 dark:bg-zinc-900 dark:text-zinc-100 dark:ring-white/10",
+            // Usuário: bolha justa ao texto, à direita.
+            ? "max-w-[78%] bg-gradient-to-br from-brand-500 to-brand-700 text-white rounded-2xl rounded-tr-md"
+            // Assistente: largura PADRÃO (preenche a coluna) — não muda de
+            // tamanho por mensagem e casa com o balão de processamento.
+            : "flex-1 min-w-0 bg-white text-gray-900 rounded-2xl rounded-tl-md ring-1 ring-black/5 dark:bg-zinc-900 dark:text-zinc-100 dark:ring-white/10",
         ].join(" ")}
       >
         <div className="chat-prose">

@@ -23,8 +23,9 @@ export default function ThinkingBubble({ text = "Pensando", onCancel, children }
         </div>
       </div>
 
-      {/* Balão único: status → log → interromper (tudo integrado) */}
-      <div className="max-w-[80%] min-w-[260px] bg-white text-gray-900 rounded-2xl rounded-tl-md ring-1 ring-black/5 shadow-sm dark:bg-zinc-900 dark:text-zinc-100 dark:ring-white/10 overflow-hidden">
+      {/* Balão único: status → log → interromper. Largura PADRÃO (flex-1) —
+          mesma do balão de resposta, não muda de tamanho conforme o status. */}
+      <div className="flex-1 min-w-0 bg-white text-gray-900 rounded-2xl rounded-tl-md ring-1 ring-black/5 shadow-sm dark:bg-zinc-900 dark:text-zinc-100 dark:ring-white/10 overflow-hidden">
         <div className="px-4 py-3 flex items-center gap-2 min-h-[44px]">
           <span className="text-sm text-gray-600 dark:text-zinc-300 transition-opacity">{text}</span>
           <span className="inline-flex gap-0.5 items-center">

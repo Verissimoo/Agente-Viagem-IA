@@ -87,8 +87,11 @@ export default function ChatPage() {
   }, [router]);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages, sending, statusText]);
+    // Instantâneo: scroll suave anima a rolagem da lista inteira a cada troca de
+    // chat/atualização → trava. Pula direto pro fim (snappy). Não dependemos de
+    // statusText (o painel de processamento tem o próprio scroll).
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "auto" });
+  }, [messages, sending]);
 
   // Mantém o painel de processamento rolado no passo mais recente.
   useEffect(() => {
@@ -419,12 +422,15 @@ export default function ChatPage() {
               </div>
             )}
 
-            <div className="space-y-6 stagger">
-            {messages.map((m) => {
+            <div className="space-y-6">
+            {messages.map((m, mi) => {
               const offers = offersOf(m);
               const isLatest = m.id === lastWithOffersId;
+              // Anima só a ÚLTIMA mensagem (entrada da resposta nova). Sem isso,
+              // trocar de chat re-animava a lista toda em cascata → travado.
+              const isLastMsg = mi === messages.length - 1;
               return (
-                <div key={m.id} className="space-y-4 anim-fade-in-up">
+                <div key={m.id} className={isLastMsg ? "space-y-4 anim-fade-in-up" : "space-y-4"}>
                   <MessageBubble message={m} userName={userName} />
                   {offers.length > 0 && (
                     <div className={[
