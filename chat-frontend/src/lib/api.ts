@@ -249,6 +249,12 @@ export const threads = {
       method: "DELETE", token,
     }),
 
+  // Interrompe a cotação em andamento da thread (botão "Interromper").
+  cancel: (token: string, threadId: string) =>
+    request<{ ok: boolean }>(`/chat/threads/${threadId}/cancel`, {
+      method: "POST", token,
+    }),
+
   send: (token: string, threadId: string, content: string) =>
     request<{
       thread_id: string;

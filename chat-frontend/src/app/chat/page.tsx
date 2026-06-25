@@ -234,6 +234,17 @@ export default function ChatPage() {
     });
   }
 
+  // Interrompe a cotação em andamento (botão durante o processamento).
+  async function handleCancel() {
+    if (!session || !activeThreadId) return;
+    setStatusText("Interrompendo…");
+    try {
+      await threads.cancel(session.access_token, activeThreadId);
+    } catch {
+      /* o stream encerra de qualquer forma; ignora erro do cancel */
+    }
+  }
+
   // Clica em "Aprovar e baixar PDF" → abre modal pedindo nome do cliente.
   function handleApprove(offerId: string) {
     setPendingApproveOfferId(offerId);
@@ -494,6 +505,12 @@ export default function ChatPage() {
             {sending && (
               <div className="anim-fade-in space-y-2">
                 <ThinkingBubble text={statusText} />
+                <button
+                  onClick={handleCancel}
+                  className="ml-1 inline-flex items-center gap-1.5 text-[11px] font-medium text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 border border-rose-200 dark:border-rose-500/30 rounded-md px-2.5 py-1 transition-colors"
+                >
+                  ✕ Interromper cotação
+                </button>
                 {statusLog.length > 0 && (
                   <div className="ml-1 max-w-xl rounded-xl border border-zinc-200 dark:border-zinc-700/70 bg-zinc-50 dark:bg-zinc-900/50 px-3 py-2">
                     <div className="text-[10px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">

@@ -29,6 +29,11 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import Response, StreamingResponse
 from langchain_core.messages import AIMessage, HumanMessage
 
+from backend.app.ai.agents.cancellation import (
+    clear_cancel,
+    is_cancelled,
+    request_cancel,
+)
 from backend.app.ai.agents.graph import get_graph
 from backend.app.ai.agents.intake import looks_like_new_quote
 
@@ -41,13 +46,37 @@ _RESULT_STATE_FIELDS = (
     "validation_report", "approved_offer_id", "quote_id",
 )
 
+# Slots de ROTA/DATA que NÃO podem sobreviver a uma nova cotação no mesmo thread.
+# Passageiros/cabine (adults/children/infants/cabin) PERMANECEM — costumam valer
+# pro mesmo atendimento. A ORIGEM também permanece (raramente muda na mesma
+# conversa, e mantê-la evita re-perguntar algo que o vendedor já deu); o que
+# precisa zerar é o DESTINO + datas/flex/internacional — senão "voo de brasília,
+# ida 25/08" depois de uma busca pra Luxemburgo refazia BSB→LUX em silêncio.
+_NEW_QUOTE_CLEARED_SLOTS = (
+    "destination_iata", "destination_city", "destination_iatas",
+    "date_start", "date_end", "date_return", "return_from", "return_to",
+    "flex_mode", "flex_days", "trip_duration_days", "trip_type",
+    "direct_only", "baggage_checked",
+    "intl_awaiting_confirmation", "intl_radar_dates", "intl_confirmation",
+)
+
 
 def _clear_results_if_new_quote(state: dict, user_text: str) -> None:
-    """Zera os campos de resultado do turno anterior se a mensagem abre uma nova
-    cotação (rota nova). Mutação in-place no state que vai pro grafo."""
-    if looks_like_new_quote(user_text):
-        for k in _RESULT_STATE_FIELDS:
-            state.pop(k, None)
+    """Se a mensagem abre uma nova cotação, zera resultado + slots de rota/data
+    obsoletos E reabre o intake. Sem isso, `intake_complete`/destino do turno
+    anterior persistiam e o grafo pulava o intake, refazendo a rota antiga.
+    Mutação in-place no state que vai pro grafo."""
+    if not looks_like_new_quote(user_text):
+        return
+    for k in _RESULT_STATE_FIELDS:
+        state.pop(k, None)
+    # Reabre o intake pra re-extrair da mensagem nova e perguntar o que faltar.
+    state["intake_complete"] = False
+    state["awaiting_field"] = None
+    slots = state.get("slots")
+    if isinstance(slots, dict):
+        for k in _NEW_QUOTE_CLEARED_SLOTS:
+            slots.pop(k, None)
 
 
 # ─── Guarda de concorrência por thread ─────────────────────────────────────
@@ -389,6 +418,23 @@ def delete_thread(
     return {"ok": True}
 
 
+@router.post("/threads/{thread_id}/cancel")
+def cancel_message(
+    thread_id: str,
+    session: AuthSession = SessionDep,
+    repo: ChatRepository = RepoDep,
+    audit: AuditLogger = AuditDep,
+) -> Dict[str, Any]:
+    """Interrompe a cotação em andamento da thread. O loop de busca checa o sinal
+    e para cedo; o resultado parcial é descartado. Idempotente."""
+    if not repo.get_thread(thread_id, session.user_id):
+        raise HTTPException(status_code=404, detail="Thread não encontrada")
+    request_cancel(thread_id)
+    audit.log("chat.cancel_requested", user_id=session.user_id, thread_id=thread_id,
+              severity="info")
+    return {"ok": True}
+
+
 # ─── Mensagem (núcleo: roda o grafo) ───────────────────────────────
 @router.post("/threads/{thread_id}/messages", response_model=SendMessageResponseDTO)
 def send_message(
@@ -458,6 +504,7 @@ def send_message(
         return _persist_user_and_assistant(
             repo, thread_id, session.user_id, sanitized.text, _BUSY_MESSAGE,
         )
+    clear_cancel(thread_id)  # busca nova começa sem sinal de cancelamento herdado
 
     # 5. Persistir mensagem do usuário
     user_msg = ChatMessage(
@@ -489,6 +536,7 @@ def send_message(
         audit.log("graph.error", user_id=session.user_id, thread_id=thread_id,
                   severity="error", detail={"error": str(e)[:500]})
         _release_thread_slot(thread_id)
+        clear_cancel(thread_id)
         return _persist_assistant_only(
             repo, thread_id, session.user_id, user_msg,
             "Tive um problema processando sua mensagem. Pode tentar de novo?",
@@ -541,6 +589,7 @@ def send_message(
     repo.update_thread(thread)
 
     _release_thread_slot(thread_id)
+    clear_cancel(thread_id)
     return SendMessageResponseDTO(
         thread_id=thread_id,
         user_message=_msg_to_dto(user_msg),
@@ -651,6 +700,9 @@ def send_message_stream(
             yield _sse("done", {"thread_id": thread_id})
         return StreamingResponse(_busy_gen(), media_type="text/event-stream")
 
+    # Começa a busca com o sinal de cancelamento limpo (não herda de turno antigo).
+    clear_cancel(thread_id)
+
     user_msg = ChatMessage(
         thread_id=thread_id, role=MessageRole.USER, content=sanitized.text,
     )
@@ -681,6 +733,10 @@ def send_message_stream(
                 for mode, chunk in get_graph().stream(
                     state, stream_mode=["updates", "custom"]
                 ):
+                    # Cancelamento: o vendedor clicou "Interromper". Para de
+                    # consumir o grafo; o resultado (parcial) é descartado abaixo.
+                    if is_cancelled(thread_id):
+                        break
                     if mode == "custom":
                         if isinstance(chunk, dict) and chunk.get("progress"):
                             yield _sse("status", {"text": chunk["progress"], "node": "orchestrator"})
@@ -707,6 +763,23 @@ def send_message_stream(
                     logger.exception("falha persistindo err_msg")
                 yield _sse("message", _msg_to_dto(err_msg).model_dump(mode="json"))
                 yield _sse("done", {"thread_id": thread_id, "error": True})
+                return
+
+            # Cancelado pelo vendedor: DESCARTA o resultado (não persiste snapshot
+            # obsoleto) e responde de forma curta. O finally limpa o sinal/slot.
+            if is_cancelled(thread_id):
+                audit.log("chat.cancelled", user_id=session.user_id, thread_id=thread_id,
+                          severity="info")
+                cancel_msg = ChatMessage(
+                    thread_id=thread_id, role=MessageRole.ASSISTANT,
+                    content="Busca interrompida. Quando quiser, é só mandar a cotação de novo. 👍",
+                )
+                try:
+                    repo.append_message(cancel_msg, user_id=session.user_id)
+                except Exception:
+                    logger.exception("falha persistindo cancel_msg")
+                yield _sse("message", _msg_to_dto(cancel_msg).model_dump(mode="json"))
+                yield _sse("done", {"thread_id": thread_id, "cancelled": True})
                 return
 
             assistant_text, metadata = _extract_last_assistant(final_state)
@@ -787,8 +860,10 @@ def send_message_stream(
             except Exception:
                 pass
         finally:
-            # Libera o slot SEMPRE: fim normal, erro, ou disconnect (GeneratorExit).
+            # Libera o slot e o sinal de cancelamento SEMPRE: fim normal, erro,
+            # ou disconnect (GeneratorExit).
             _release_thread_slot(thread_id)
+            clear_cancel(thread_id)
 
     return StreamingResponse(
         generator(),
