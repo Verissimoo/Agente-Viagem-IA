@@ -20,6 +20,8 @@ from __future__ import annotations
 
 import logging
 import os
+import threading
+import time
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
@@ -46,6 +48,43 @@ def _clear_results_if_new_quote(state: dict, user_text: str) -> None:
     if looks_like_new_quote(user_text):
         for k in _RESULT_STATE_FIELDS:
             state.pop(k, None)
+
+
+# ─── Guarda de concorrência por thread ─────────────────────────────────────
+# Impede que uma 2ª cotação rode na MESMA thread enquanto a 1ª está em
+# andamento. Sem isso, as duas disputam o `state_snapshot` e a busca que termina
+# DEPOIS escreve estado obsoleto por cima do turno atual — foi o que produziu o
+# "hub internacional aleatório" relatado. Também evita gastar 2 buscas pesadas
+# em paralelo na mesma conversa.
+#
+# In-memory por PROCESSO (1 réplica no Railway hoje). Multi-réplica exigiria
+# lock em banco/redis — anotado como limitação conhecida. TTL protege contra
+# flag presa por exceção não tratada (a thread nunca trava pra sempre).
+_INFLIGHT_LOCK = threading.Lock()
+_INFLIGHT: Dict[str, float] = {}  # thread_id -> monotonic de início
+_INFLIGHT_TTL_S = float(os.getenv("CHAT_INFLIGHT_TTL_S", "180"))
+
+_BUSY_MESSAGE = (
+    "Ainda estou finalizando a cotação anterior desta conversa — só um "
+    "instante que eu já te respondo. 🙏 (se demorar muito, recarregue e tente "
+    "de novo)"
+)
+
+
+def _acquire_thread_slot(thread_id: str) -> bool:
+    """True se conseguiu o slot (thread livre, ou flag antiga já expirada)."""
+    now = time.monotonic()
+    with _INFLIGHT_LOCK:
+        started = _INFLIGHT.get(thread_id)
+        if started is not None and (now - started) < _INFLIGHT_TTL_S:
+            return False
+        _INFLIGHT[thread_id] = now
+        return True
+
+
+def _release_thread_slot(thread_id: str) -> None:
+    with _INFLIGHT_LOCK:
+        _INFLIGHT.pop(thread_id, None)
 from backend.app.api.v1.chat.deps import (
     AuditDep,
     RepoDep,
@@ -411,6 +450,15 @@ def send_message(
                 refusal_message(cs.category),
             )
 
+    # 4c. Guarda de concorrência: uma cotação por vez por thread (evita corrida
+    # de estado / hub aleatório). Já ocupada → responde pedindo um instante.
+    if not _acquire_thread_slot(thread_id):
+        audit.log("chat.concurrent_blocked", user_id=session.user_id, thread_id=thread_id,
+                  severity="info")
+        return _persist_user_and_assistant(
+            repo, thread_id, session.user_id, sanitized.text, _BUSY_MESSAGE,
+        )
+
     # 5. Persistir mensagem do usuário
     user_msg = ChatMessage(
         thread_id=thread_id, role=MessageRole.USER, content=sanitized.text,
@@ -440,6 +488,7 @@ def send_message(
         logger.exception("Grafo falhou para thread %s", thread_id)
         audit.log("graph.error", user_id=session.user_id, thread_id=thread_id,
                   severity="error", detail={"error": str(e)[:500]})
+        _release_thread_slot(thread_id)
         return _persist_assistant_only(
             repo, thread_id, session.user_id, user_msg,
             "Tive um problema processando sua mensagem. Pode tentar de novo?",
@@ -491,6 +540,7 @@ def send_message(
     thread.state_snapshot = snapshot
     repo.update_thread(thread)
 
+    _release_thread_slot(thread_id)
     return SendMessageResponseDTO(
         thread_id=thread_id,
         user_message=_msg_to_dto(user_msg),
@@ -583,6 +633,23 @@ def send_message_stream(
                 yield _sse("message", _msg_to_dto(assistant_msg).model_dump(mode="json"))
                 yield _sse("done", {"thread_id": thread_id})
             return StreamingResponse(_content_refusal_gen(), media_type="text/event-stream")
+
+    # Guarda de concorrência: já há uma cotação rodando nesta thread? Não dispara
+    # uma 2ª (evita corrida de estado / hub aleatório). Responde pedindo um instante.
+    if not _acquire_thread_slot(thread_id):
+        audit.log("chat.concurrent_blocked", user_id=session.user_id, thread_id=thread_id,
+                  severity="info")
+
+        def _busy_gen():
+            user_msg = ChatMessage(thread_id=thread_id, role=MessageRole.USER, content=sanitized.text)
+            repo.append_message(user_msg, user_id=session.user_id)
+            assistant_msg = ChatMessage(
+                thread_id=thread_id, role=MessageRole.ASSISTANT, content=_BUSY_MESSAGE,
+            )
+            repo.append_message(assistant_msg, user_id=session.user_id)
+            yield _sse("message", _msg_to_dto(assistant_msg).model_dump(mode="json"))
+            yield _sse("done", {"thread_id": thread_id})
+        return StreamingResponse(_busy_gen(), media_type="text/event-stream")
 
     user_msg = ChatMessage(
         thread_id=thread_id, role=MessageRole.USER, content=sanitized.text,
@@ -719,6 +786,9 @@ def send_message_stream(
                 yield _sse("done", {"thread_id": thread_id, "error": True})
             except Exception:
                 pass
+        finally:
+            # Libera o slot SEMPRE: fim normal, erro, ou disconnect (GeneratorExit).
+            _release_thread_slot(thread_id)
 
     return StreamingResponse(
         generator(),
