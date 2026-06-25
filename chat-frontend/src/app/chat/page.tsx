@@ -150,19 +150,24 @@ export default function ChatPage() {
 
   async function deleteThread(id: string) {
     if (!session) return;
+    // OTIMISTA: tira da lista e troca de chat NA HORA; a rede roda em background.
+    // Antes esperávamos o DELETE + o carregamento da próxima thread (2 round-trips)
+    // antes de mexer na UI → exclusão travada.
+    const prevList = threadList;
+    const remaining = threadList.filter((t) => t.id !== id);
+    setThreadList(remaining);
+    if (activeThreadId === id) {
+      if (remaining.length > 0) {
+        selectThread(session, remaining[0].id);   // sem await — carrega em paralelo
+      } else {
+        createNewThread(session);
+      }
+    }
     try {
       await threads.remove(session.access_token, id);
-      setThreadList((prev) => prev.filter((t) => t.id !== id));
-      // Se apagou a thread aberta, pula pra próxima ou cria nova
-      if (activeThreadId === id) {
-        const remaining = threadList.filter((t) => t.id !== id);
-        if (remaining.length > 0) {
-          await selectThread(session, remaining[0].id);
-        } else {
-          await createNewThread(session);
-        }
-      }
     } catch (err) {
+      // Falhou → restaura a lista (a thread volta).
+      setThreadList(prevList);
       setError(err instanceof ApiError ? err.message : "Falha excluindo conversa");
     }
   }
