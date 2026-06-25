@@ -110,6 +110,28 @@ def test_responde_adultos_solto_nao_entra_em_loop(monkeypatch, resposta, esperad
 
 
 # ─── Frases completas (one-shot) ───────────────────────────────────
+def test_cidade_intl_ptbr_resolve_luxemburgo(monkeypatch):
+    """BUG (jun/2026): 'brasília para luxemburgo' não entendia o destino — o nome
+    PT-BR 'Luxemburgo' não casava com 'Luxembourg' da base global e não tinha
+    alias. Resolve agora pela tabela curada. (LLM mockado → caminho determinístico.)"""
+    r = run_intake(
+        ["Passagem de brasília para luxemburgo, ida dia 25/08, 1 adulto"], monkeypatch,
+    )
+    assert r.slots.get("origin_iata") == "BSB"
+    assert r.slots.get("destination_iata") == "LUX", "Luxemburgo deveria virar LUX"
+    assert not r.asked_twice("pra onde"), "não pode repetir a pergunta de destino"
+    assert r.reached_search
+
+
+def test_responde_destino_luxemburgo_solto(monkeypatch):
+    """O vendedor respondeu só 'luxemburgo' à pergunta de destino — deve resolver."""
+    r = run_intake(["luxemburgo"], monkeypatch,
+                   slots0={"origin_iata": "BSB", "date_start": "2026-08-25", "adults": 1},
+                   awaiting0="destination_iata")
+    assert r.slots.get("destination_iata") == "LUX"
+    assert r.reached_search
+
+
 def test_oneway_completa_vai_pra_busca(monkeypatch):
     r = run_intake(["GRU para GIG, 15/08/2026, 1 adulto"], monkeypatch)
     assert r.slots.get("origin_iata") == "GRU"

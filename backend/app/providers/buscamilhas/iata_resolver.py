@@ -85,6 +85,8 @@ _RAW_CITY_TO_IATAS = {
     "Zurique": ["ZRH"],
     "Viena": ["VIE"],
     "Bruxelas": ["BRU", "CRL"],
+    "Luxemburgo": ["LUX"],
+    "Luxembourg": ["LUX"],
 
     # AMÉRICA DO SUL
     "Buenos Aires": ["EZE", "AEP"],
@@ -199,6 +201,7 @@ _PTBR_CITY_ALIASES_RAW = {
     "hong kong": "hong kong", "singapura": "singapore", "sidney": "sydney",
     "melburne": "melbourne", "auckland": "auckland", "cairo": "cairo",
     "nairobi": "nairobi", "casablanca": "casablanca", "argel": "algiers",
+    "luxemburgo": "luxembourg",
 }
 _PTBR_CITY_ALIASES = {
     normalize_city_key(k): normalize_city_key(v) for k, v in _PTBR_CITY_ALIASES_RAW.items()
@@ -208,11 +211,22 @@ _PTBR_CITY_ALIASES = {
 def _build_global_index() -> dict:
     """Índice cidade_normalizada → [IATA,...] do dataset offline `airportsdata`
     (~8k aeroportos). Construído UMA vez no import (custo único, sem I/O em
-    runtime). A tabela curada tem prioridade na resolução."""
+    runtime). A tabela curada tem prioridade na resolução.
+
+    Loga o tamanho carregado — se `airportsdata` faltar em produção, o índice
+    fica VAZIO e só as ~150 cidades curadas resolvem (gap enorme e silencioso).
+    Por isso gritamos no log em vez de degradar calado."""
+    import logging
+    _log = logging.getLogger(__name__)
     try:
         import airportsdata
         data = airportsdata.load("IATA")
-    except Exception:
+    except Exception as e:
+        _log.error(
+            "iata_resolver: airportsdata AUSENTE/falhou (%s) — base global VAZIA; "
+            "só ~150 cidades curadas vão resolver. Verifique o requirements no deploy.",
+            e,
+        )
         return {}
     idx: dict = {}
     for code, info in data.items():
@@ -231,6 +245,8 @@ def _build_global_index() -> dict:
     # Ordem determinística e estável (o dataset não traz relevância).
     for k in idx:
         idx[k] = sorted(idx[k])
+    _log.info("iata_resolver: base global carregada — %d cidades / %d aeroportos.",
+              len(idx), len(data))
     return idx
 
 
