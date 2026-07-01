@@ -129,7 +129,8 @@ def fetch_via_playwright(
             pass
 
     try:
-        with sync_playwright() as p:
+        from backend.app.infrastructure.browser import browser_slot
+        with browser_slot(), sync_playwright() as p:
             browser = p.chromium.launch(headless=True)
             try:
                 context = browser.new_context(

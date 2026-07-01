@@ -226,7 +226,8 @@ def search_awardtool(
     budget = budget_s if budget_s is not None else float(os.getenv("AWARDTOOL_BUDGET_S", "80"))
     url = _search_url(origin, destination, date_start, date_end, programs, cabin)
 
-    with SEM_AWARDTOOL, sync_playwright() as p:
+    from backend.app.infrastructure.browser import browser_slot
+    with SEM_AWARDTOOL, browser_slot(), sync_playwright() as p:
         if not Path(_STATE_PATH).exists():
             _login(p, email, pw)
         try:

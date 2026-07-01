@@ -236,7 +236,8 @@ def fetch_via_playwright(
     debug_payload: dict[str, Any] = {"url": target_url}
 
     try:
-        with sync_playwright() as p:
+        from backend.app.infrastructure.browser import browser_slot
+        with browser_slot(), sync_playwright() as p:
             browser = p.chromium.launch(
                 headless=True,
                 args=[
@@ -456,7 +457,8 @@ def fetch_matrix_via_playwright(
     debug_payload: dict[str, Any] = {"url": target_url}
 
     try:
-        with sync_playwright() as p:
+        from backend.app.infrastructure.browser import browser_slot
+        with browser_slot(), sync_playwright() as p:
             browser = p.chromium.launch(
                 headless=True,
                 args=[
