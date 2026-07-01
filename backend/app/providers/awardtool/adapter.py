@@ -82,6 +82,17 @@ class AwardToolAdapter(BaseSearchAdapter):
 
         origin = request.origin[0]
         destination = request.destination[0]
+
+        # Rota DOMÉSTICA: os programas do AwardTool (Aeroplan/LifeMiles/Turkish/…)
+        # não cobrem voo BR interno — é redundante com o BuscaMilhas (Smiles/LATAM/
+        # Azul) e o crawl Playwright (~25-40s no real-time) só ROUBA slot de browser
+        # do Skiplagged, que é a fonte de hidden-city doméstico. Pula (sem abrir
+        # navegador). Reativar: AWARDTOOL_DOMESTIC=1. (mesmo is_br_iata do buscamilhas)
+        from backend.app.ai.agents.routes import is_br_iata
+        if (is_br_iata(origin) and is_br_iata(destination)
+                and os.getenv("AWARDTOOL_DOMESTIC", "0") != "1"):
+            return []
+
         cabin = os.getenv("AWARDTOOL_CABINS", "").strip() or _ALL_CABINS
         programs = _programs()
 

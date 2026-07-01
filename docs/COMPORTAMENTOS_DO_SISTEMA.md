@@ -58,6 +58,15 @@
   cache-primeiro (nosso TTL 180s + o cache deles) economiza: só gasta crédito quando
   a rota está fria dos dois lados. Monitorar o saldo de créditos da conta Pro.
 - **Latência:** rota fria = +~25-40s (crawl ao vivo). Rota quente = instantâneo.
+- **NÃO roda em rota DOMÉSTICA.** Os programas do AwardTool (Aeroplan/LifeMiles/…)
+  não cobrem voo BR interno — é redundante com o BuscaMilhas (Smiles/LATAM/Azul) e o
+  crawl segura um slot de browser por ~25-40s. Como só há `PLAYWRIGHT_MAX_BROWSERS`
+  slots globais (default 2, anti-crash de RAM), o AwardTool doméstico ROUBAVA o slot
+  do **Skiplagged** (a fonte de hidden-city doméstico) → Skiplagged voltava vazio.
+  Fix: AwardTool pula doméstico (adapter). Reativar: `AWARDTOOL_DOMESTIC=1`.
+- **Contenção de browser:** AwardTool + Kayak + Skiplagged dividem `PLAYWRIGHT_MAX_
+  BROWSERS` (2) slots. Com o AwardTool fora do doméstico, Kayak+Skiplagged cabem em 2.
+  Em host com RAM (upgrade), `PLAYWRIGHT_MAX_BROWSERS=3` alivia também o internacional.
 - **ToS:** automatizar o AwardTool é ToS-sensível — uso gentil + cache obrigatórios.
 - **Futuro:** quando houver `SEATS_AERO_API_KEY` (API sem browser/crédito/ToS), migrar
   o award pra lá. Hoje a key não está disponível pro Brasil → AwardTool é a fonte.
