@@ -92,11 +92,15 @@ export default function OfferCard({
         </div>
         <div className="text-right">
           {(() => {
-            // Hidden city com bilhete validado em milhas: o PREÇO EM EVIDÊNCIA é
-            // o voo real validado (ex.: BSB→SSA via FOR, 11.850 mi); o cash vira
-            // referência pequena.
+            // Hidden city: o PREÇO EM EVIDÊNCIA é o VALOR EM MILHAS que o vendedor
+            // EMITE — é ele que "vale", MESMO quando sai mais caro que o cash. Pode
+            // ser o mesmo bilhete oficial (miles_same_ticket) ou o award direto ao
+            // destino real (miles_alternative, ex.: 18.700 mi até SSA). Cash vira ref.
             const isHC = (offer.category || "").toLowerCase().includes("hidden");
-            const v = offer.miles_same_ticket;
+            const mAlt = offer.miles_alternative;
+            const v = (offer.miles_same_ticket && offer.miles_same_ticket.miles)
+              ? offer.miles_same_ticket
+              : (mAlt && mAlt.miles && !mAlt.is_split ? mAlt : null);
             if (isHC && v && v.miles) {
               return (
                 <>
@@ -324,7 +328,11 @@ export default function OfferCard({
                 {offer.miles_alternative.is_split
                   ? "Mesmo split em milhas"
                   : offer.miles_alternative.to_destination
-                    ? `Em milhas até ${offer.miles_alternative.to_destination} (mais barato)`
+                    ? `Em milhas até ${offer.miles_alternative.to_destination}${
+                        offer.miles_alternative.equivalent_brl != null &&
+                        offer.price_brl != null &&
+                        offer.miles_alternative.equivalent_brl < offer.price_brl
+                          ? " (mais barato)" : ""}`
                     : "Em milhas (mesmo trecho)"}:
               </span>
               {offer.miles_alternative.validated && (

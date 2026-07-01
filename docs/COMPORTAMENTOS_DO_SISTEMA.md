@@ -13,13 +13,21 @@
 
 ## 1. Resultados de busca (cards)
 
-- **Máximo de PROGRAMAS diferentes, a melhor tarifa de cada.** O vendedor quer ver o
-  leque (LATAM Pass, Smiles, LifeMiles, Aeroplan, Miles&Smiles, Qatar/Avios, Alaska/
-  Atmos…), não 5 cards do mesmo programa. Diversificação por programa
-  (`smart_diversify` no fluxo normal; `_direct_miles_per_carrier` no split). Até 8
-  cards (`MAX_RESULT_CARDS`).
-- **Nunca 2 cards idênticos.** Não preencher slots repetindo um programa só pra
-  "completar" — se só 3 fontes responderam, mostra 3.
+- **Variedade + no mínimo ~10 resultados.** `smart_diversify` prioriza: (1) melhor
+  de cada PROGRAMA, (2) **pelo menos uma de cada CATEGORIA/FONTE que respondeu**
+  (hidden=Skiplagged, split, cash, milhas, azul_oficial — `source` não sobrevive à
+  sanitização, então a categoria é o proxy de fonte), (3) datas (se flex), (4)
+  **preenche até `MAX_RESULT_CARDS` (default 10)** com as melhores restantes. O
+  vendedor quer o leque, não 3 cards. No split, `_direct_miles_per_carrier`.
+- **Nunca 2 cards IDÊNTICOS.** O fill pula assinatura de conteúdo repetida (mesmo
+  programa+categoria+preço/milhas+1º voo). Mas o MESMO programa em voos/preços
+  diferentes conta como variedade e pode entrar (pra chegar aos ~10).
+- **Hidden city: valor em MILHAS em destaque (é o que vale).** Pra oferta hidden
+  city validada em milhas, a MANCHETE do card é o valor em milhas que o vendedor
+  EMITE — o award direto ao destino real (`miles_alternative`, ex.: 18.700 mi até
+  SSA) ou o mesmo bilhete oficial (`miles_same_ticket`) — **mesmo quando sai mais
+  caro que o cash**. O cash vira referência pequena. "(mais barato)" só aparece
+  quando o valor em milhas é REALMENTE menor que o cash.
 - **Programa em DESTAQUE, companhia do voo ABAIXO.** No card de milhas, o nome do
   programa (o que o vendedor emite) é o título em destaque; a cia operadora vem
   embaixo (`✈ LATAM`). Cash (sem programa) mostra a companhia no título.

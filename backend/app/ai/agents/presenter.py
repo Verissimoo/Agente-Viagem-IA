@@ -302,6 +302,19 @@ def _program_key(offer: Dict[str, Any]) -> str:
     return _category_bucket(offer)
 
 
+def _content_key(offer: Dict[str, Any]) -> tuple:
+    """Assinatura de conteúdo pra dedupe no fill: mesma oferta (programa+categoria+
+    preço/milhas+1º voo) não vira 2 cards. Mas ofertas do MESMO programa em voos/
+    preços diferentes contam como variedade e podem entrar (pra chegar a ~10)."""
+    segs = (offer.get("outbound") or {}).get("segments") or []
+    s0 = segs[0] if segs else {}
+    return (
+        _program_key(offer), _category_bucket(offer),
+        offer.get("price_brl"), offer.get("miles"),
+        str(s0.get("departure_dt") or "")[:16], s0.get("carrier"),
+    )
+
+
 def smart_diversify(
     offers: List[Dict[str, Any]],
     *,
@@ -337,9 +350,7 @@ def smart_diversify(
         return len(selected) >= max_total
 
     # 1) Melhor tarifa de cada PROGRAMA/COMPANHIA — variação entre programas de
-    # milhas (o vendedor quer ver pelo menos a melhor de cada cia que deu
-    # resultado), não 5 cards do mesmo programa. Cai pra categoria macro quando
-    # não há programa/cia (ex.: skip cash).
+    # milhas (a melhor de cada cia que deu resultado).
     seen_keys: set = set()
     for o in sorted_offers:
         key = _program_key(o)
@@ -349,10 +360,22 @@ def smart_diversify(
         if _add(o):
             return selected
 
-    # 2) Se há flex de datas, melhor de cada data adicional (pulando datas já presentes).
+    # 2) Pelo menos UMA de cada CATEGORIA/FONTE que respondeu (hidden=Skiplagged,
+    # split, cash, milhas, azul_oficial). O vendedor quer variedade por origem do
+    # dado, não só por programa. `source` não sobrevive à sanitização, então a
+    # categoria macro é o proxy de fonte.
+    seen_cats = {_category_bucket(o) for o in selected}
+    for o in sorted_offers:
+        cat = _category_bucket(o)
+        if cat in seen_cats:
+            continue
+        seen_cats.add(cat)
+        if _add(o):
+            return selected
+
+    # 3) Se há flex de datas, melhor de cada data adicional (pulando datas já presentes).
     if diversify_dates and base_date_iso:
         seen_dates = {_offer_depart_date(o) for o in selected}
-        # Para cada data não vista, pega a melhor oferta
         by_date: Dict[str, Dict[str, Any]] = {}
         for o in sorted_offers:
             d = _offer_depart_date(o)
@@ -360,7 +383,6 @@ def smart_diversify(
                 continue
             if d not in by_date:
                 by_date[d] = o  # primeira encontrada (mais barata por sort)
-        # Ordena datas: base primeiro, depois pelas mais baratas
         sorted_alt_dates = sorted(
             by_date.keys(),
             key=lambda d: (0 if d == base_date_iso else 1, _offer_sort_key(by_date[d])),
@@ -369,14 +391,15 @@ def smart_diversify(
             if _add(by_date[d]):
                 return selected
 
-    # 3) Preenche com PROGRAMAS ainda não mostrados (o vendedor quer o MÁXIMO de
-    # companhias diferentes, a melhor de cada — nunca 2 cards do mesmo programa
-    # só pra encher; isso evita cards idênticos quando poucas fontes responderam).
+    # 4) PREENCHE até max_total (o vendedor quer no mínimo ~10 opções no total).
+    # Usa as melhores restantes, mas pula card IDÊNTICO (mesma assinatura de
+    # conteúdo) pra não repetir a mesma oferta — variedade real, sem duplicata.
+    seen_content = {_content_key(o) for o in selected}
     for o in sorted_offers:
-        key = _program_key(o)
-        if key in seen_keys:
+        c = _content_key(o)
+        if c in seen_content:
             continue
-        seen_keys.add(key)
+        seen_content.add(c)
         if _add(o):
             return selected
 
@@ -939,7 +962,9 @@ def presenter_node(state: ChatState) -> ChatState:
             base_date_iso=base_date_iso,
             diversify_dates=(flex_days_q > 0),
             # Mais slots = mais PROGRAMAS distintos no resultado (melhor de cada).
-            max_total=int(os.getenv("MAX_RESULT_CARDS", "8")),
+            # Mínimo ~10 opções no total (o vendedor quer variedade: ≥1 por
+            # programa e por fonte que respondeu). Env pra ajustar sem deploy.
+            max_total=int(os.getenv("MAX_RESULT_CARDS", "10")),
         )
         if len(diversified) > 1:
             buckets_present = {_category_bucket(o) for o in diversified}
