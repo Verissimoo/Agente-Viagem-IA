@@ -404,12 +404,17 @@ def quote_international(*, origin: str, destination: str,
     specs: List[Tuple[str, str, str, str, date]] = [
         ("direct", "", origin, destination, d) for d in direct_days
     ]
+    # Se a ORIGEM já é um hub internacional (GRU/VCP), NÃO faz quebra de trecho:
+    # ela já tem voo internacional direto. Rotear por outro hub da mesma região
+    # (ex.: GRU→VCP→MIA) é sem sentido — GRU e VCP são ambos São Paulo. Antes o
+    # código só pulava o hub IGUAL à origem, então GRU→MIA ainda quebrava via VCP.
+    origin_is_hub = origin in HUBS
     for hub, hday in hubs.items():
-        # Se a origem JÁ é o hub (ex.: GRU→DOH com hub GRU), não existe perna
-        # nacional — a quebra viraria GRU→DOH (dup do direto) + GRU→GRU (nonsense).
-        # Pula. Idem se o hub for o próprio destino.
-        if hub == origin or hub == destination:
-            _emit(f"Hub {hub} ignorado (origem já é o hub ou é o destino).")
+        # Pula: origem já é hub internacional · hub == origem · hub == destino.
+        if origin_is_hub or hub == origin or hub == destination:
+            reason = ("origem já é hub internacional" if origin_is_hub
+                      else "origem já é o hub ou é o destino")
+            _emit(f"Hub {hub} ignorado ({reason}).")
             continue
         specs.append(("hub_intl", hub, hub, destination, hday))
         specs.append(("hub_dom", hub, origin, hub, hday))
