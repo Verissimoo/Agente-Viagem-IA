@@ -112,6 +112,40 @@ def _drop_excluded_programs(offers):
     return out
 
 
+def _allowed_program_keys() -> set:
+    """ALLOWLIST de programas (chaves canônicas da rates.json). Vazio = modo
+    DESLIGADO (todos passam). Non-vazio = SÓ os listados aparecem. Habilitar via
+    env MILES_PROGRAM_ALLOWLIST (ex.: só os programas que a agência opera hoje)."""
+    raw = os.getenv("MILES_PROGRAM_ALLOWLIST", "")
+    return {p.strip().upper() for p in raw.split(",") if p.strip()}
+
+
+def _keep_allowed_programs(offers):
+    """Se o allowlist está ligado, mantém só ofertas cujo PROGRAMA (chave canônica)
+    está na lista. Cash puro (sem programa/milhas) sempre passa — o allowlist é de
+    programas de milhas. Programa que não resolve pra uma chave permitida é dropado
+    (ex.: AwardTool devolve Aeroplan/Turkish/Etihad que a agência não opera)."""
+    allowed = _allowed_program_keys()
+    if not allowed:
+        return offers
+    from backend.app.services.conversion import resolve_program_key
+    out = []
+    for o in offers:
+        prog = getattr(o, "miles_program", None)
+        miles = getattr(o, "miles", None)
+        if not prog and not miles:
+            out.append(o)  # cash puro — não é programa de milhas
+            continue
+        canon = resolve_program_key(
+            airline=getattr(o, "airline", "") or "",
+            program=prog or "",
+            source=getattr(o, "source", None),
+        )
+        if canon and canon in allowed:
+            out.append(o)
+    return out
+
+
 def _parse_iatas_from_prompt(prompt: str) -> Tuple[str, str]:
     """Extrai dois IATAs do prompt (fallback usado pelo CLI)."""
     iatas = re.findall(r"\b[A-Z]{3}\b", (prompt or "").upper())
@@ -454,6 +488,13 @@ def run_pipeline(
         all_offers = _drop_excluded_programs(all_offers)
         if len(all_offers) != before:
             print(f"DEBUG: {before - len(all_offers)} oferta(s) de programa excluído removida(s).")
+
+        # Allowlist (se ligado): só programas que a agência opera. Dropa o resto
+        # (ex.: Aeroplan/Turkish/Etihad que o AwardTool devolve mas não emitimos).
+        before = len(all_offers)
+        all_offers = _keep_allowed_programs(all_offers)
+        if len(all_offers) != before:
+            print(f"DEBUG: allowlist removeu {before - len(all_offers)} oferta(s) de programa não operado.")
 
         if not all_offers:
             print("DEBUG: Nenhuma oferta encontrada em nenhuma data.")

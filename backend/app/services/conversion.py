@@ -110,6 +110,18 @@ _SOURCE_TO_PROGRAM: dict[SourceType, str] = {
 }
 
 
+# Labels de award que NÃO casam por substring com a chave da tabela → alias
+# explícito. Ex.: AwardTool devolve "American AAdvantage" mas a chave é
+# "AMERICAN AIRLINES" (uma não é substring da outra), então o valor não aplicava.
+_PROGRAM_LABEL_ALIASES: dict[str, str] = {
+    "AADVANTAGE": "AMERICAN AIRLINES",
+}
+
+# Labels que casariam uma chave ERRADA por substring → forçar não-match (None).
+# Ex.: "Turkish Miles&Smiles" contém "SMILES" (programa da GOL) mas NÃO é Smiles.
+_PROGRAM_LABEL_BLOCK: tuple[str, ...] = ("MILES&SMILES", "MILES & SMILES")
+
+
 def _resolve_program(
     airline: str = "",
     program: str = "",
@@ -128,6 +140,13 @@ def _resolve_program(
     )
 
     prog = (program or "").upper()
+    # Bloqueia falsos-positivos de substring (ex.: Turkish "Miles&Smiles" ≠ Smiles).
+    if any(blk in prog for blk in _PROGRAM_LABEL_BLOCK):
+        return None
+    # Aliases explícitos primeiro (labels que não casam por substring).
+    for alias, canon in _PROGRAM_LABEL_ALIASES.items():
+        if alias in prog and canon in programs:
+            return canon
     if prog:
         for key in keys_sorted:
             if key in prog:
@@ -145,6 +164,16 @@ def _resolve_program(
             return mapped
 
     return None
+
+
+def resolve_program_key(
+    airline: str = "",
+    program: str = "",
+    source: Optional[SourceType] = None,
+) -> Optional[str]:
+    """Chave canônica do programa na rates.json (ou None). Público — usado pelo
+    allowlist de programas no orchestrator."""
+    return _resolve_program(airline=airline, program=program, source=source)
 
 
 def _rate_for_volume(tiers: list[dict], miles_needed: float) -> float:

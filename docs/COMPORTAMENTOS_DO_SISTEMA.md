@@ -43,6 +43,19 @@
   GRU→DOH nunca consultava o award real da Qatar (vinha milhas estimadas).
 - **United MileagePlus é SUPRIMIDO** dos resultados (`EXCLUDED_MILES_PROGRAMS`,
   default `MileagePlus`) — sem disponibilidade no momento. Reativar = env vazio.
+- **ALLOWLIST de programas (só os que a agência OPERA).** O AwardTool devolve o
+  mercado inteiro; a gente só emite/tem pontuação de um subconjunto. Env
+  `MILES_PROGRAM_ALLOWLIST` (chaves canônicas da rates.json, separadas por vírgula):
+  vazio = desligado (todos aparecem); preenchido = **SÓ os listados** aparecem nos
+  cards. **Dinâmico:** habilitar/desabilitar um programa = adicionar/remover a chave
+  na lista (sem mexer em código; reinício pra recarregar). Cash puro nunca é filtrado.
+  Programa que não resolve pra uma chave permitida é dropado (ex.: Aeroplan/Turkish/
+  Etihad que o AwardTool traz). Filtro roda no orchestrator (`_keep_allowed_programs`).
+- **Nome do programa canônico (`conversion._resolve_program`).** Casa o label de
+  cada fonte à chave da rates.json (peso/valor). Casos que não casam por substring
+  têm alias explícito — ex.: AwardTool "American AAdvantage" → `AMERICAN AIRLINES`
+  (senão o valor não aplicava). E block de falso-positivo — "Turkish Miles&Smiles"
+  contém "SMILES" mas **não** é Smiles/GOL → resolve None (fica fora).
 
 ### AwardTool — funcional via real-time automático
 - **Programas = VAZIO (todos).** É a chave de cache que o site mantém quente. Lista
