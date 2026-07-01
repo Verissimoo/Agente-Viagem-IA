@@ -192,6 +192,48 @@ def test_quote_international_fallback_when_radar_empty(monkeypatch):
     assert any(o["type"] == "direct_miles" for o in q["options"])   # não desistiu
 
 
+def test_no_hub_split_when_origin_is_hub(monkeypatch):
+    """BUG (jul/2026): GRU→MIA quebrava trecho via VCP (GRU→VCP + VCP→MIA), sendo
+    que GRU já é hub internacional e GRU/VCP são a mesma região (São Paulo). Com
+    a origem já sendo hub, NÃO deve haver quebra — e as pernas do hub nem devem
+    ser buscadas."""
+    day = date(2026, 10, 20)
+
+    class _Radar:
+        ranked_pairs = [(day, None)]
+        price_by_pair = {}
+        source = "kayak"
+
+    monkeypatch.setattr("backend.app.services.date_radar.scan_dates", lambda *a, **k: _Radar())
+    monkeypatch.setattr("backend.app.ai.agents.sanitizer.sanitize_offers", lambda offers: offers)
+    monkeypatch.setattr(
+        "backend.app.ai.agents.hidden_city_validator.validate_split_with_supplementary",
+        lambda offers, **k: [],
+    )
+
+    seen_routes = []
+
+    def fake_run_search(*, origin, destination, **k):
+        seen_routes.append((origin, destination))
+        if (origin, destination) == ("GRU", "MIA"):
+            return {"ok": True, "money_offers": [], "miles_offers": [
+                _miles_offer("GRU", "MIA", eq=2500, miles=80000, taxes=300,
+                             dep="2026-10-20T22:00:00", arr="2026-10-21T05:00:00",
+                             airline="LATAM", prog="LATAM Pass")]}
+        return {"ok": True, "money_offers": [], "miles_offers": []}
+
+    monkeypatch.setattr("backend.app.ai.agents.tools.run_search", fake_run_search)
+
+    q = isplit.quote_international(origin="GRU", destination="MIA",
+                                  direct_days=[day], hubs={"VCP": day})
+    # Sem quebra de trecho (origem já é hub).
+    assert all(o["type"] != "hub_split" for o in q["options"])
+    # E nenhuma perna via VCP foi sequer buscada (não desperdiça as ~16 fontes).
+    assert not any("VCP" in (o, d) for (o, d) in seen_routes), f"buscou VCP à toa: {seen_routes}"
+    # O voo direto continua vindo normalmente.
+    assert any(o["type"] == "direct_miles" for o in q["options"])
+
+
 def test_hub_split_skips_domestic_that_misses_connection(monkeypatch):
     day = date(2026, 10, 15)
 
