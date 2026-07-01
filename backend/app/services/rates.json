@@ -2,57 +2,73 @@
   "_doc": "Tiered BRL-per-mile rates by program. Sorted ascending by max_miles. The last entry with max_miles=null is the unbounded top tier (mais milhas = mais barato por milha).",
   "_currency": "BRL",
   "_unit": "rate is BRL paid per single mile (= R$/mil ÷ 1000)",
-  "_source": "Tabela interna PCD — atualizada 2026-05-22 (LATAM) / 2026-05-18 (demais)",
+  "_source": "Tabela interna PCD — pesos por programa atualizados 2026-07-01 (milheiro): LATAM 28,5 · Smiles/Azul/Interline 18 · TAP 55 · Avios/Qatar/British/Finnair 64 · Copa 72 · LifeMiles 85 · Alaska 90 · Air France 100.",
   "programs": {
     "LATAM": [
-      { "max_miles": 17000,  "rate": 0.03000 },
-      { "max_miles": 24000,  "rate": 0.02900 },
-      { "max_miles": 49000,  "rate": 0.02700 },
-      { "max_miles": 74000,  "rate": 0.02625 },
-      { "max_miles": 99000,  "rate": 0.02575 },
-      { "max_miles": null,   "rate": 0.02525 }
+      { "max_miles": null,   "rate": 0.02850 }
     ],
     "GOL": [
-      { "max_miles": null,   "rate": 0.02000 }
+      { "max_miles": null,   "rate": 0.01800 }
     ],
     "SMILES": [
-      { "max_miles": null,   "rate": 0.02000 }
+      { "max_miles": null,   "rate": 0.01800 }
     ],
     "AZUL": [
-      { "max_miles": null,   "rate": 0.01400 }
+      { "max_miles": null,   "rate": 0.01800 }
     ],
     "VOE AZUL": [
-      { "max_miles": null,   "rate": 0.01400 }
+      { "max_miles": null,   "rate": 0.01800 }
     ],
     "AZUL PELO MUNDO": [
-      { "max_miles": null,   "rate": 0.01200 }
+      { "max_miles": null,   "rate": 0.01800 }
+    ],
+    "INTERLINE": [
+      { "max_miles": null,   "rate": 0.01800 }
     ],
     "TAP": [
       { "max_miles": null,   "rate": 0.05500 }
     ],
-    "IBERIA": [
-      { "max_miles": null,   "rate": 0.05600 }
-    ],
     "AVIOS": [
-      { "max_miles": null,   "rate": 0.05600 }
+      { "max_miles": null,   "rate": 0.06400 }
     ],
-    "FLYING BLUE": [
+    "IBERIA": [
+      { "max_miles": null,   "rate": 0.06400 }
+    ],
+    "QATAR": [
+      { "max_miles": null,   "rate": 0.06400 }
+    ],
+    "BRITISH AIRWAYS": [
+      { "max_miles": null,   "rate": 0.06400 }
+    ],
+    "FINNAIR": [
+      { "max_miles": null,   "rate": 0.06400 }
+    ],
+    "COPA": [
+      { "max_miles": null,   "rate": 0.07200 }
+    ],
+    "LIFEMILES": [
+      { "max_miles": null,   "rate": 0.08500 }
+    ],
+    "AVIANCA": [
+      { "max_miles": null,   "rate": 0.08500 }
+    ],
+    "ALASKA": [
+      { "max_miles": null,   "rate": 0.09000 }
+    ],
+    "ATMOS": [
       { "max_miles": null,   "rate": 0.09000 }
     ],
     "AMERICAN AIRLINES": [
       { "max_miles": null,   "rate": 0.09000 }
     ],
-    "LIVELO": [
-      { "max_miles": null,   "rate": 0.03300 }
+    "FLYING BLUE": [
+      { "max_miles": null,   "rate": 0.10000 }
     ],
-    "LIFEMILES": [
-      { "max_miles": null,   "rate": 0.07000 }
+    "AIR FRANCE": [
+      { "max_miles": null,   "rate": 0.10000 }
     ],
-    "AVIANCA": [
-      { "max_miles": null,   "rate": 0.07000 }
-    ],
-    "COPA": [
-      { "max_miles": null,   "rate": 0.06000 }
+    "KLM": [
+      { "max_miles": null,   "rate": 0.10000 }
     ],
     "AIR CANADA": [
       { "max_miles": null,   "rate": 0.06500 }
@@ -60,8 +76,8 @@
     "ASIA MILES": [
       { "max_miles": null,   "rate": 0.06000 }
     ],
-    "INTERLINE": [
-      { "max_miles": null,   "rate": 0.02000 }
+    "LIVELO": [
+      { "max_miles": null,   "rate": 0.03300 }
     ],
     "DEFAULT": [
       { "max_miles": null,   "rate": 0.02500 }

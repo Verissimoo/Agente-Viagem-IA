@@ -10,42 +10,50 @@ from backend.app.services.conversion import (
 )
 
 
-def test_cost_per_mile_zero_volume_is_first_tier():
-    """No `miles` arg → uses the first tier (mais caro por milha, faixa pequena)."""
-    rate = cost_per_mile(program="LATAM")
-    # LATAM "Até 17K" — primeira faixa = R$ 30,00/mil = 0.0300
-    assert rate == pytest.approx(0.0300)
+def test_cost_per_mile_program_weights():
+    """Pesos por programa (milheiro ÷ 1000) da tabela PCD 2026-07-01."""
+    assert cost_per_mile(program="LATAM")     == pytest.approx(0.0285)   # 28,5
+    assert cost_per_mile(program="SMILES")    == pytest.approx(0.0180)   # 18
+    assert cost_per_mile(program="AZUL")      == pytest.approx(0.0180)
+    assert cost_per_mile(program="INTERLINE") == pytest.approx(0.0180)
+    assert cost_per_mile(program="TAP")       == pytest.approx(0.0550)   # 55
+    assert cost_per_mile(program="AVIOS")     == pytest.approx(0.0640)   # 64
+    assert cost_per_mile(program="COPA")      == pytest.approx(0.0720)   # 72
 
 
-def test_cost_per_mile_tiered_by_volume():
-    # Faixas LATAM (tabela PCD 2026-05-22):
-    # Até 17K → 30,00 | 18-24K → 29,00 | 25-49K → 27,00 | 50-74K → 26,25
-    # 75-99K → 25,75 | 100K+ → 25,25
-    assert cost_per_mile(program="LATAM", miles=5000)   == pytest.approx(0.0300)
-    assert cost_per_mile(program="LATAM", miles=20000)  == pytest.approx(0.0290)
-    assert cost_per_mile(program="LATAM", miles=30000)  == pytest.approx(0.0270)
-    assert cost_per_mile(program="LATAM", miles=60000)  == pytest.approx(0.02625)
-    assert cost_per_mile(program="LATAM", miles=80000)  == pytest.approx(0.02575)
-    assert cost_per_mile(program="LATAM", miles=200000) == pytest.approx(0.02525)
-
-
-def test_cost_per_mile_at_tier_boundary():
-    """Boundary belongs to the lower tier (max_miles é inclusivo)."""
-    assert cost_per_mile(program="LATAM", miles=17000) == pytest.approx(0.0300)
-    assert cost_per_mile(program="LATAM", miles=17001) == pytest.approx(0.0290)
-    assert cost_per_mile(program="LATAM", miles=24000) == pytest.approx(0.0290)
-    assert cost_per_mile(program="LATAM", miles=24001) == pytest.approx(0.0270)
+def test_rate_for_volume_tier_logic():
+    """A lógica de faixas (_rate_for_volume) segue válida (max_miles inclusivo)."""
+    from backend.app.services.conversion import _rate_for_volume
+    tiers = [
+        {"max_miles": 17000, "rate": 0.030},
+        {"max_miles": 24000, "rate": 0.029},
+        {"max_miles": None,  "rate": 0.025},
+    ]
+    assert _rate_for_volume(tiers, 17000) == pytest.approx(0.030)  # limite = faixa de baixo
+    assert _rate_for_volume(tiers, 17001) == pytest.approx(0.029)
+    assert _rate_for_volume(tiers, 999999) == pytest.approx(0.025)  # topo
 
 
 def test_cost_per_mile_uses_source_when_program_missing():
-    """GOL é single-tier R$ 20,00/mil (rates.json)."""
+    """GOL é single-tier R$ 18,00/mil (rates.json)."""
     rate = cost_per_mile(source=SourceType.BUSCAMILHAS_GOL, miles=80000)
-    assert rate == pytest.approx(0.0200)
+    assert rate == pytest.approx(0.0180)
 
 
-def test_cost_per_mile_international_fallback_for_mcp_award():
+def test_award_uses_program_weight_when_known():
+    """seats.aero/AwardTool agora aplicam o PESO POR PROGRAMA (antes tudo era a
+    tarifa base 0.05). LifeMiles/Alaska/Air France/Qatar via award usam a tabela."""
+    assert cost_per_mile(source=SourceType.SEATS_AERO, program="LifeMiles") == pytest.approx(0.085)
+    assert cost_per_mile(source=SourceType.SEATS_AERO, program="Alaska Mileage Plan") == pytest.approx(0.090)
+    assert cost_per_mile(source=SourceType.SEATS_AERO, program="Flying Blue") == pytest.approx(0.100)
+    assert cost_per_mile(source=SourceType.AWARDTOOL, program="Qatar Privilege Club") == pytest.approx(0.064)
+
+
+def test_award_falls_back_when_program_unknown():
+    """Award com programa NÃO listado (ex.: Aeroplan/Emirates) cai na base intl."""
+    assert cost_per_mile(source=SourceType.SEATS_AERO, program="Emirates Skywards") == pytest.approx(0.05)
     rate = cost_per_mile(source=SourceType.MCP_AWARD, miles=20000)
-    assert rate == pytest.approx(0.05)  # international_fallback_rate
+    assert rate == pytest.approx(0.05)  # sem programa → international_fallback_rate
 
 
 def test_cost_per_mile_default_when_nothing_matches():
@@ -54,9 +62,9 @@ def test_cost_per_mile_default_when_nothing_matches():
     assert rate == pytest.approx(0.025)
 
 
-def test_miles_to_brl_uses_appropriate_tier():
-    # 100k LATAM @ faixa 100K+ (0.02525) = 2525
-    assert miles_to_brl(100000, program="LATAM") == pytest.approx(2525.0)
+def test_miles_to_brl_uses_program_weight():
+    # 100k LATAM @ 0.0285 = 2850
+    assert miles_to_brl(100000, program="LATAM") == pytest.approx(2850.0)
 
 
 def test_estimate_miles_for_brl_converges_to_tier():

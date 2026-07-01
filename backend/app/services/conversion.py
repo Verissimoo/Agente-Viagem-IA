@@ -169,18 +169,16 @@ def cost_per_mile(
     programs = _programs()
     needed = float(miles or 0)
 
-    # seats.aero (award internacional multi-programa): por ora TODOS os programas
-    # usam a tarifa base internacional (international_fallback_rate, hoje 0.05),
-    # editável na UI de tarifas. Evita herdar chaves genéricas (AIR CANADA/FLYING
-    # BLUE/…) usadas por outras fontes; granularidade por programa pode vir depois.
-    if source in (SourceType.SEATS_AERO, SourceType.AWARDTOOL):
-        return _international_fallback()
-
+    # Resolve o PROGRAMA primeiro (inclusive award: seats.aero/AwardTool/MCP) e
+    # usa o peso por programa da tabela — assim os pesos de Alaska/Air France/
+    # LifeMiles/Avios/Qatar etc. aplicam de verdade no award. Só quando o programa
+    # NÃO é identificado é que o award cai na tarifa base internacional.
     key = _resolve_program(airline=airline, program=program, source=source)
     if key:
         return _rate_for_volume(programs[key], needed)
 
-    if source in (SourceType.MCP_AWARD, SourceType.MCP_QATAR):
+    if source in (SourceType.SEATS_AERO, SourceType.AWARDTOOL,
+                  SourceType.MCP_AWARD, SourceType.MCP_QATAR):
         return _international_fallback()
 
     return _rate_for_volume(programs.get("DEFAULT", []), needed)
