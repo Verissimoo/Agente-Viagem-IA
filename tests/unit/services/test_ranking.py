@@ -33,8 +33,8 @@ def _conn_itinerary() -> Itinerary:
     return Itinerary(segments=[_seg(), _seg("AA")])
 
 
-def test_miles_equivalence_uses_tiered_rate_table():
-    """LATAM tier "Até 17K" (0-17k) @ R$ 30,00/mil + R$100 taxas em 10k = R$ 400."""
+def test_miles_equivalence_uses_rate_table():
+    """LATAM = peso 28,5/mil (0.0285) + R$100 taxas em 10k milhas = R$ 385."""
     offer = UnifiedOffer(
         source=SourceType.BUSCAMILHAS_LATAM,
         airline="LA",
@@ -44,12 +44,12 @@ def test_miles_equivalence_uses_tiered_rate_table():
         taxes_brl=100.0,
     )
     _, best, _ = rank_offers([offer])
-    # 10000 * 0.0300 + 100 = 400
-    assert best.equivalent_brl == pytest.approx(400.0)
+    # 10000 * 0.0285 + 100 = 385
+    assert best.equivalent_brl == pytest.approx(385.0)
 
 
 def test_miles_equivalence_high_volume_tier():
-    """At 100k miles LATAM moves to top tier (100K+) @ R$ 25,25/mil = R$ 2625."""
+    """LATAM tem peso ÚNICO (28,5/mil = 0.0285) — sem faixas por volume."""
     offer = UnifiedOffer(
         source=SourceType.BUSCAMILHAS_LATAM,
         airline="LA",
@@ -59,8 +59,8 @@ def test_miles_equivalence_high_volume_tier():
         taxes_brl=100.0,
     )
     _, best, _ = rank_offers([offer])
-    # 100000 * 0.02525 + 100 = 2625
-    assert best.equivalent_brl == pytest.approx(2625.0)
+    # 100000 * 0.0285 + 100 = 2950
+    assert best.equivalent_brl == pytest.approx(2950.0)
 
 
 def test_money_equivalence_is_price_brl():

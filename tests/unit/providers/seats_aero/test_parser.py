@@ -108,13 +108,15 @@ def test_build_roundtrip_offer_sums_miles():
     assert offer.miles_out == 60000 and offer.miles_in == 50000
 
 
-def test_seats_aero_base_rate_is_005_for_all_programs():
-    # Por ora todos os programas do seats.aero usam a tarifa base 0.05
-    # (international_fallback), independente da label/airline da oferta.
+def test_seats_aero_uses_program_weight():
+    # seats.aero agora aplica o PESO POR PROGRAMA da tabela (antes era 0.05 flat).
     from backend.app.domain.models import SourceType as _ST
     from backend.app.services.conversion import cost_per_mile
-    for label in ("Aeroplan (Air Canada)", "Lifemiles (Avianca)", "Flying Blue (AF/KLM)"):
-        assert cost_per_mile(program=label, source=_ST.SEATS_AERO, miles=60000) == 0.05
+    assert cost_per_mile(program="Lifemiles (Avianca)", source=_ST.SEATS_AERO, miles=60000) == 0.085
+    assert cost_per_mile(program="Flying Blue (AF/KLM)", source=_ST.SEATS_AERO, miles=60000) == 0.100
+    assert cost_per_mile(program="Aeroplan (Air Canada)", source=_ST.SEATS_AERO, miles=60000) == 0.065
+    # Programa NÃO listado → cai na tarifa base internacional (0.05).
+    assert cost_per_mile(program="Emirates Skywards", source=_ST.SEATS_AERO, miles=60000) == 0.05
 
 
 def test_synthetic_itinerary_fallback():
